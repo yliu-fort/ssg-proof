@@ -1,0 +1,2657 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue]{hyperref}
+\usepackage{cleveref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{problem}[theorem]{Problem}
+
+\DeclareMathOperator{\val}{val}
+\DeclareMathOperator{\Opt}{Opt}
+\DeclareMathOperator{\opt}{opt}
+\DeclareMathOperator{\lfp}{lfp}
+\newcommand{\Vmax}{V_{\max}}
+\newcommand{\Vmin}{V_{\min}}
+\newcommand{\Vavg}{V_{\mathrm{avg}}}
+\newcommand{\bbone}{\mathbf{1}}
+
+\title{Simple Stochastic Games:\\
+A Self-Contained Development of the Value Problem,\\
+and the Exact Location of the Remaining Gap}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We give a self-contained, fully proved development of the theory
+surrounding the decision problem \textsc{SSG-Value}: given a simple
+stochastic game and a start vertex $v_0$, decide whether
+$\val(v_0)\ge\tfrac12$. Everything asserted below is proved from first
+principles, and every negative statement is witnessed by an explicit
+instance verified in exact rational arithmetic. We establish: a
+quantitative stopping transformation reducing the problem exactly
+(\Cref{thm:stopping-transform}); the complete fixed-point theory of
+stopping games (\Cref{sec:stopping}); a structure theorem identifying the
+set of optimal Max strategies with a combinatorial subcube
+(\Cref{thm:opt-subcube}), together with an explicit witness that the
+hypothesis cannot be dropped (\Cref{ex:nonstopping-nonsubcube}); a
+polynomial special case --- \emph{arbitrary} SSGs with $O(\log N)$
+average vertices (\Cref{thm:few-avg}) --- together with the one-player
+boundary (\Cref{thm:one-player}) and a constraint it imposes on any
+proposed complexity parameter (\Cref{rem:owner-blind}); a subexponential Las~Vegas algorithm of
+expected running time $e^{2\sqrt n}\,\mathrm{poly}(N)$
+(\Cref{thm:subexp}), which is the strongest upper bound we obtain; and a
+\emph{short improving path} theorem (\Cref{thm:short-path}) showing that
+from every strategy some sequence of at most $|\Vmax|$ single strictly
+improving switches reaches an optimal strategy. Consequently the entire
+difficulty of \textsc{SSG-Value} is concentrated in the \emph{selection}
+problem: improving paths of linear length always exist, and no
+polynomial-time rule is known to find one --- the most natural rule
+provably does not, since all-switches can take more than $|\Vmax|$
+iterations and undo its own choices (\Cref{prop:allswitch-overshoot}). We then record four
+refutations that close off specific proof strategies --- the
+all-switches rule does not dominate partial switches
+(\Cref{thm:all-switches-refuted}); the unique-sink orientations induced
+by simple stochastic games on the combined two-player cube can be cyclic
+(\Cref{thm:cyclic-uso}); value
+iteration needs exponentially many steps already on games with no players
+at all (\Cref{thm:vi-lower}); and an
+improving switch need not reduce the Hamming distance to the optimal set,
+so no naive Hamming potential exists (\Cref{thm:hamming-refuted}), with
+seven natural polynomial-time selection rules refuted individually
+(\Cref{prop:rules-fail}), and a family showing that the guarantee of
+\Cref{thm:short-path} is tight --- the switchable vertices worth taking
+can be a $1/|\Vmax|$ fraction of all switchable vertices
+(\Cref{prop:needle}). We show that \textsc{SSG-Value} is
+polynomial-time equivalent to comparing the values of two vertices, and
+that $n$ such comparisons --- one per Max vertex, and not even
+adaptively chosen --- suffice to determine an optimal strategy (we prove
+sufficiency only; no matching lower bound is claimed), indeed that the mere
+order of the average-vertex values already determines the whole value
+vector (\Cref{thm:order-determines})
+(\Cref{thm:compare-equivalence}); the obstruction is therefore that each
+of those $n$ bits is itself an instance of the original problem. Finally
+we state the remaining gap at full strength (\Cref{sec:gap}).
+
+We emphasise at the outset what this document does \emph{not} contain: it
+does not contain a polynomial-time algorithm for \textsc{SSG-Value}, and
+it does not claim one. \Cref{sec:gap} states precisely the missing
+statement, and proves that it is equivalent in strength to the target.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+\subsection{The problem}
+
+\begin{definition}[Simple stochastic game]\label{def:ssg}
+A \emph{simple stochastic game} (SSG) is a finite directed graph $G$ on a
+vertex set
+\[
+  V \;=\; \Vmax \,\cup\, \Vmin \,\cup\, \Vavg \,\cup\, \{t_0,t_1\},
+\]
+a disjoint union, in which the two \emph{sinks} $t_0,t_1$ have no outgoing
+edges and every other vertex has exactly two outgoing edges (parallel
+edges and self-loops are permitted). We write $N := |V|$ and
+$n := |\Vmax|$, and we denote the two successors of a non-sink vertex $v$
+by $v^{(0)}$ and $v^{(1)}$.
+
+A token is placed on a designated start vertex $v_0$ and moved along
+edges. At a vertex of $\Vmax$ the edge is chosen by player Max; at a
+vertex of $\Vmin$ by player Min; at a vertex of $\Vavg$ by a fair coin,
+independently of everything else. Play stops if a sink is reached. Max
+wins if and only if the token reaches $t_1$; every other play, including
+every infinite play, is a win for Min.
+\end{definition}
+
+\begin{definition}[Strategies and values]\label{def:strategies}
+A \emph{positional} (equivalently, pure memoryless) strategy for Max is a
+map $\sigma\colon \Vmax\to V$ with $\sigma(v)\in\{v^{(0)},v^{(1)}\}$;
+positional strategies $\tau$ for Min are defined analogously on $\Vmin$.
+We write $\bar\sigma(v)$ for the successor of $v$ \emph{not} chosen by
+$\sigma$, and $\sigma[S]$ for the strategy obtained from $\sigma$ by
+flipping the choice at every vertex of $S\subseteq\Vmax$; we abbreviate
+$\sigma[\{v\}]$ to $\sigma[v]$.
+
+A pair $(\sigma,\tau)$ of positional strategies turns $G$ into a finite
+Markov chain $M_{\sigma,\tau}$: from $v\in\Vmax$ the token moves to
+$\sigma(v)$ with probability $1$, from $v\in\Vmin$ to $\tau(v)$ with
+probability $1$, and from $v\in\Vavg$ to each of $v^{(0)},v^{(1)}$ with
+probability $\tfrac12$ each. Let
+\[
+  v_{\sigma,\tau}(u)\;:=\;\Pr\nolimits^{M_{\sigma,\tau}}_{u}\bigl[\text{the token reaches } t_1\bigr].
+\]
+The \emph{value} of $G$ at $u$ is
+$\val(u):=\max_\sigma\min_\tau v_{\sigma,\tau}(u)$, the maximum and
+minimum ranging over positional strategies. For a fixed Max strategy
+$\sigma$ we write
+\[
+  \val_\sigma\;:=\;\min_\tau v_{\sigma,\tau}
+\]
+for the pointwise minimum over positional Min strategies --- the value
+Max can guarantee by committing to $\sigma$. By \Cref{thm:determinacy}
+applied to the one-player game obtained by freezing $\sigma$, the minimum
+is attained simultaneously at all vertices by a single positional $\tau$,
+so $\val_\sigma$ is itself of the form $v_{\sigma,\tau}$.
+\end{definition}
+
+\begin{problem}[\textsc{SSG-Value}]\label{prob:main}
+Given an SSG $G$ and a start vertex $v_0$, decide whether
+$\val(v_0)\ge\tfrac12$.
+\end{problem}
+
+The only external fact we import is the following classical determinacy
+statement; everything else in this document is proved from scratch.
+
+\begin{theorem}[Positional determinacy; Shapley, Condon]\label{thm:determinacy}
+For every SSG and every vertex $u$,
+\[
+  \max_\sigma\min_\tau v_{\sigma,\tau}(u)
+  \;=\;\min_\tau\max_\sigma v_{\sigma,\tau}(u),
+\]
+the extrema ranging over positional strategies, and this common value
+equals the value of the game when both players are additionally allowed
+arbitrary history-dependent randomised strategies. Moreover the
+extrema are attained simultaneously at all vertices by a single pair
+$(\sigma^\ast,\tau^\ast)$ of positional strategies.
+\end{theorem}
+
+\subsection{What is proved here, and what is not}
+
+\Cref{prob:main} is not resolved below. What is established is a complete
+and self-contained chain of results that isolates the obstruction
+exactly. The logical skeleton is:
+
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \Cref{sec:operators,sec:stopping}: the Shapley operator, its
+  monotonicity, and --- for \emph{stopping} games --- a proof that its
+  $N$-th iterate, and that of each one-player restriction $T_\sigma$, is a
+  strict contraction, so that each has a unique fixed point
+  (\Cref{thm:contraction}); determinacy and the identification of those
+  fixed points with the values are then proved rather than imported
+  (\Cref{thm:stopping-determinacy}). The operator $T$ itself is in general
+  not a contraction.
+\item \Cref{sec:transform}: an explicit, fully quantitative reduction of
+  \Cref{prob:main} on an arbitrary SSG to the same problem on a stopping
+  SSG of size $O(N(|\Vavg|+\log N))$ (\Cref{thm:stopping-transform}). All constants
+  are computed.
+\item \Cref{sec:special}: a polynomial special case
+  (\Cref{thm:few-avg}) --- arbitrary SSGs with $O(\log N)$ average
+  vertices --- obtained from a positional escape estimate that needs no
+  stopping hypothesis.
+\item \Cref{sec:structure}: the structure of the optimal set.
+  \Cref{thm:opt-subcube} identifies $\Opt$ with a subcube;
+  \Cref{thm:short-path} shows every strategy is joined to $\Opt$ by an
+  improving path of length at most $n$. Explicit instances
+  (\Cref{ex:nonstopping-nonsubcube,ex:pi-fails}) show that the stopping
+  hypothesis is not removable.
+\item \Cref{sec:refutations}: four refutations, each with an explicit
+  instance verified in exact arithmetic, that eliminate specific
+  strategies of proof.
+\item \Cref{sec:selection}: a proof that the problem is polynomial-time
+  equivalent to comparing two vertex values, and that $n$ non-adaptive
+  comparisons determine an optimal strategy
+  (\Cref{thm:compare-equivalence}).
+\item \Cref{sec:randomfacet}: the strongest positive algorithmic result
+  proved here --- a Las~Vegas algorithm of expected running time
+  $e^{2\sqrt n}\,\mathrm{poly}(N)$ (\Cref{thm:subexp}), subexponential but
+  not polynomial.
+\item \Cref{sec:gap}: the exact statement of what is missing, together
+  with a proof that supplying it is equivalent to resolving
+  \Cref{prob:main}.
+\end{enumerate}
+
+\section{The Shapley operator}\label{sec:operators}
+
+Throughout, vectors are indexed by $V$ and compared pointwise: $x\le y$
+means $x(u)\le y(u)$ for all $u$. Let
+\[
+  \mathcal{X}\;:=\;\bigl\{x\in[0,1]^V \;:\; x(t_1)=1,\; x(t_0)=0\bigr\}.
+\]
+
+\begin{definition}\label{def:shapley}
+The \emph{Shapley operator} $T\colon\mathcal{X}\to\mathcal{X}$ is defined
+by $(Tx)(t_1)=1$, $(Tx)(t_0)=0$ and, for a non-sink $v$,
+\[
+  (Tx)(v)\;=\;
+  \begin{cases}
+    \max\bigl(x(v^{(0)}),\,x(v^{(1)})\bigr), & v\in\Vmax,\\[2pt]
+    \min\bigl(x(v^{(0)}),\,x(v^{(1)})\bigr), & v\in\Vmin,\\[2pt]
+    \tfrac12\bigl(x(v^{(0)})+x(v^{(1)})\bigr), & v\in\Vavg.
+  \end{cases}
+\]
+For a Max strategy $\sigma$, the operator $T_\sigma$ is defined by the
+same formulas except that the $\Vmax$ line is replaced by
+$(T_\sigma x)(v)=x(\sigma(v))$. For a pair $(\sigma,\tau)$, the operator
+$T_{\sigma,\tau}$ additionally replaces the $\Vmin$ line by
+$(T_{\sigma,\tau}x)(v)=x(\tau(v))$; it is affine.
+\end{definition}
+
+\begin{lemma}[Monotone, nonexpansive]\label{lem:monotone}
+$T$, every $T_\sigma$ and every $T_{\sigma,\tau}$ map $\mathcal{X}$ into
+$\mathcal{X}$, are monotone ($x\le y\Rightarrow Tx\le Ty$), and are
+nonexpansive in the supremum norm:
+$\lVert Tx-Ty\rVert_\infty\le\lVert x-y\rVert_\infty$.
+\end{lemma}
+
+\begin{proof}
+Each coordinate of $Tx$ is a maximum, a minimum, or a convex combination
+of coordinates of $x$, and each of those three operations preserves
+$[0,1]$, is monotone, and is nonexpansive: for a maximum,
+$|\max(a_1,a_2)-\max(b_1,b_2)|\le\max_i|a_i-b_i|$, and symmetrically for
+a minimum; for a convex combination,
+$\bigl|\tfrac12(a_1+a_2)-\tfrac12(b_1+b_2)\bigr|\le\max_i|a_i-b_i|$. The
+sink coordinates are pinned and contribute $0$ to the difference.
+\end{proof}
+
+\begin{lemma}[Profile values are least fixed points]\label{lem:lfp}
+For every positional pair $(\sigma,\tau)$, the vector $v_{\sigma,\tau}$
+is the least fixed point of $T_{\sigma,\tau}$ in $\mathcal{X}$;
+equivalently, $v_{\sigma,\tau}=\min\{x\in\mathcal{X}:T_{\sigma,\tau}x\le x\}$.
+\end{lemma}
+
+\begin{proof}
+Reachability probabilities in a finite Markov chain satisfy the
+corresponding linear system, so $v_{\sigma,\tau}$ is a fixed point of
+$T_{\sigma,\tau}$. Let $x\in\mathcal{X}$ satisfy
+$T_{\sigma,\tau}x\le x$. Write $p_k(u)$ for the probability of reaching
+$t_1$ from $u$ within $k$ steps; then $p_0=\bbone_{\{t_1\}}\le x$, and by
+induction using monotonicity
+$p_{k+1}=T_{\sigma,\tau}\,p_k\le T_{\sigma,\tau}x\le x$. Since
+$p_k\uparrow v_{\sigma,\tau}$ we get $v_{\sigma,\tau}\le x$. As
+$v_{\sigma,\tau}$ is itself a fixed point, it is the least one and also
+the least prefixed point; this is the Knaster--Tarski characterisation
+made explicit.
+\end{proof}
+
+\begin{remark}\label{rem:no-postfixed}
+The dual statement fails: $x\le T_{\sigma,\tau}x$ does \emph{not} imply
+$x\le v_{\sigma,\tau}$. Taking a single average vertex whose two edges
+both return to itself, and $x\equiv 1$, gives $T_{\sigma,\tau}x=x$ while
+$v_{\sigma,\tau}=0$. This is exactly the phenomenon that the stopping
+hypothesis of the next section removes, and it is why several arguments
+below are stated for stopping games. \Cref{ex:pi-fails} shows the same
+failure doing real damage to an algorithm.
+\end{remark}
+
+\begin{remark}\label{rem:lfp-scope}
+We deliberately do \emph{not} assert here that the value $\val$ is the
+least fixed point of $T$, nor that $\val_\sigma$ is the least fixed point
+of $T_\sigma$. Those statements are true, but proving them requires an
+exchange of a limit with an infimum that does not follow from the
+argument above. For stopping games we obtain the corresponding
+identifications in \Cref{thm:stopping-determinacy} by a different route,
+from uniqueness rather than from minimality; and for general games we use
+only \Cref{thm:determinacy} and \Cref{lem:lfp}, never a least-fixed-point
+description of $\val$.
+\end{remark}
+
+\section{Stopping games}\label{sec:stopping}
+
+\begin{definition}\label{def:stopping}
+An SSG $G$ is \emph{stopping} if for every positional pair
+$(\sigma,\tau)$ and every vertex $u$, the chain $M_{\sigma,\tau}$ reaches
+$\{t_0,t_1\}$ from $u$ with probability $1$.
+\end{definition}
+
+The absorption estimate below must hold not merely for positional pairs
+but for arbitrary, possibly history-dependent and randomised, play: it is
+applied inside a finite-horizon game whose optimal strategies are
+time-dependent. We therefore prove it by an attractor argument, which is
+insensitive to how the players choose.
+
+\begin{definition}[Sink attractor]\label{def:attractor}
+Put $A_0:=\{t_0,t_1\}$ and, for $j\ge0$,
+\[
+  A_{j+1}\;:=\;A_j\;\cup\;\bigl\{v\in\Vavg:\{v^{(0)},v^{(1)}\}\cap A_j\ne\emptyset\bigr\}
+  \;\cup\;\bigl\{v\in\Vmax\cup\Vmin:\{v^{(0)},v^{(1)}\}\subseteq A_j\bigr\}.
+\]
+The sets $A_j$ increase, so they stabilise at $A_\infty:=A_{N}$. For
+$u\in A_\infty$ write $\ell(u):=\min\{j:u\in A_j\}$.
+\end{definition}
+
+\begin{lemma}[Uniform absorption]\label{lem:absorption}
+Write $a:=|\Vavg|$ and let $G$ be stopping. Then $A_\infty=V$, and for
+every vertex $u$ and \emph{every} pair of strategies --- positional or
+history-dependent, deterministic or randomised --- the probability of
+reaching a sink from $u$ within $N$ steps is at least $2^{-a}$.
+Consequently the absorption time $T_{\mathrm{abs}}$ satisfies
+$\Pr_u[T_{\mathrm{abs}}>jN]\le(1-2^{-a})^j$ and
+$\mathbb{E}_u[T_{\mathrm{abs}}]\le N2^{a}$.
+\end{lemma}
+
+\begin{proof}
+\emph{$A_\infty=V$.} Suppose not, and set $S:=V\setminus A_\infty$, which
+is nonempty and contains no sink. If $v\in S\cap\Vavg$ had a successor in
+$A_\infty=A_N$ then $v$ would lie in $A_{N+1}=A_\infty$; so both
+successors of such a $v$ lie in $S$. If $v\in S\cap(\Vmax\cup\Vmin)$ had
+both successors in $A_\infty$ then again $v\in A_\infty$; so at least one
+successor of such a $v$ lies in $S$. Choose a positional pair that at
+every controlled vertex of $S$ selects a successor inside $S$ (and
+arbitrarily elsewhere). Under that pair the token started in $S$ never
+leaves $S$, hence never reaches a sink --- contradicting the assumption
+that $G$ is stopping.
+
+\emph{The estimate.} For a vertex $u$ let
+$A(u):=\bigl|\{w\in\Vavg:\ell(w)\le\ell(u)\}\bigr|\le a$. We show by
+induction on $\ell(u)$ that from $u$, under every strategy pair, a sink is
+reached within $\ell(u)\le N$ steps with probability at least
+$2^{-A(u)}$.
+
+For $\ell(u)=0$ the vertex is already a sink. Let $\ell(u)=j+1$. If
+$u\in\Vmax\cup\Vmin$ then \emph{both} successors lie in $A_j$, so whatever
+the player does --- at any time, after any history, with any
+randomisation --- the token moves in one step to some $w$ with
+$\ell(w)\le j$; by induction it then reaches a sink within $j$ further
+steps with probability at least $2^{-A(w)}\ge 2^{-A(u)}$, the last
+inequality because $\ell(w)\le\ell(u)$ gives $A(w)\le A(u)$. If
+$u\in\Vavg$ then at least one successor $w$ has $\ell(w)\le j$ and is
+taken with probability $\tfrac12$, so the probability is at least
+$\tfrac12\cdot2^{-A(w)}$; here $u$ itself is an average vertex with
+$\ell(u)>\ell(w)$, so $u$ is counted in $A(u)$ but not in $A(w)$, giving
+$A(u)\ge A(w)+1$ and hence $\tfrac12\cdot2^{-A(w)}\ge2^{-A(u)}$.
+
+Since $A(u)\le a$ for every $u$, the probability of reaching a sink within
+$\ell(u)\le N$ steps is at least $2^{-a}$, uniformly over all strategies.
+
+Applying this to consecutive blocks of $N$ steps and using the tower
+property gives $\Pr_u[T_{\mathrm{abs}}>jN]\le(1-2^{-a})^j$, whence
+$\mathbb{E}[T_{\mathrm{abs}}]\le N\sum_{j\ge0}(1-2^{-a})^j=N2^{a}$.
+\end{proof}
+
+\begin{remark}
+Two features of this bound are used later. First, it is
+\emph{strategy-independent}, which is what allows it to be invoked inside
+the finite-horizon game of \Cref{thm:contraction}, where optimal play is
+time-dependent. Second, the exponent is $a=|\Vavg|$ rather than $N$: only
+average vertices branch, and a level-decreasing descent meets each at
+most once. The second point is what makes the constants in
+\Cref{thm:stopping-transform,thm:few-avg} depend on the number of average
+vertices rather than on the size of the game.
+\end{remark}
+
+\begin{theorem}[Contraction and uniqueness]\label{thm:contraction}
+Let $G$ be stopping and $a=|\Vavg|$. Then for all $x,y\in\mathcal{X}$,
+\[
+  \lVert T^{N}x-T^{N}y\rVert_\infty\;\le\;\bigl(1-2^{-a}\bigr)\,\lVert x-y\rVert_\infty ,
+\]
+and the same holds for $T_\sigma$ and for $T_{\sigma,\tau}$. Consequently
+each of these operators has a \emph{unique} fixed point in
+$\mathcal{X}$, and every orbit converges to it. For $T_{\sigma,\tau}$
+that fixed point is $v_{\sigma,\tau}$; the identification of the fixed
+points of $T$ and of $T_\sigma$ with the game values is
+\Cref{thm:stopping-determinacy} below, which uses only the uniqueness
+established here.
+\end{theorem}
+
+\begin{proof}
+Unfolding the definition $N$ times, backward induction shows that
+$(T^{N}x)(u)$ is the value of the $N$-stage game started at $u$ in which
+a play absorbed at $t_1$ (resp.\ $t_0$) is paid $1$ (resp.\ $0$) and a
+play not absorbed within $N$ steps is paid $x(\cdot)$ at its current
+vertex. In that finite-horizon game both players may use time-dependent
+strategies, and backward induction produces optimal ones; this is
+essential, since the value over \emph{positional} strategies alone can be
+strictly smaller.
+
+Let $\Sigma_N$ denote the set of all (history-dependent, randomised)
+strategy pairs in the $N$-stage game, and for $\pi\in\Sigma_N$ write
+$K_\pi(u,\cdot)$ for the law of the position after $N$ steps. The
+$x$-payoff and the $y$-payoff of a fixed $\pi$ differ by
+\[
+  \Bigl|\sum_{w\ \mathrm{non\text{-}sink}} K_\pi(u,w)\bigl(x(w)-y(w)\bigr)\Bigr|
+  \;\le\;\Pr\nolimits_{\pi}\bigl[T_{\mathrm{abs}}>N\bigr]\cdot\lVert x-y\rVert_\infty
+  \;\le\;\bigl(1-2^{-a}\bigr)\lVert x-y\rVert_\infty ,
+\]
+where the last inequality is \Cref{lem:absorption}, which holds uniformly
+over $\pi\in\Sigma_N$ precisely because its proof is
+strategy-independent. Two zero-sum games on the same strategy sets whose
+payoff functions differ pointwise by at most $\varepsilon$ have values
+differing by at most $\varepsilon$; applying this with
+$\varepsilon=(1-2^{-a})\lVert x-y\rVert_\infty$ gives the displayed
+estimate. The arguments for $T_\sigma$ and $T_{\sigma,\tau}$ are
+identical with one or both players' choices frozen.
+
+A map whose $N$-th iterate is a strict contraction on the complete metric
+space $\mathcal{X}$ has a unique fixed point, to which all orbits
+converge. For $T_{\sigma,\tau}$ that fixed point is $v_{\sigma,\tau}$ by
+\Cref{lem:lfp}. The identification of the fixed points of $T_\sigma$ and
+$T$ with $\val_\sigma$ and $\val$ is \Cref{thm:stopping-determinacy}
+below, which is proved from the uniqueness just established and does not
+presuppose it.
+\end{proof}
+
+For stopping games we do not need to import \Cref{thm:determinacy}: both
+determinacy and the identification of the fixed points with the values
+follow from \Cref{thm:contraction} by a verification argument.
+
+\begin{theorem}[Determinacy for stopping games]\label{thm:stopping-determinacy}
+Let $G$ be stopping, let $w^\ast$ be the unique fixed point of $T$ and,
+for a Max strategy $\sigma$, let $y_\sigma$ be the unique fixed point of
+$T_\sigma$ (both exist by \Cref{thm:contraction}). Let $\sigma^\ast$
+choose at each $v\in\Vmax$ a successor attaining
+$\max\bigl(w^\ast(v^{(0)}),w^\ast(v^{(1)})\bigr)$ and let $\tau^\ast$
+choose at each $v\in\Vmin$ a successor attaining the corresponding
+minimum. Then
+\[
+  w^\ast\;=\;\max_\sigma\min_\tau v_{\sigma,\tau}\;=\;\min_\tau\max_\sigma v_{\sigma,\tau}\;=\;\val ,
+\]
+the extrema being over positional strategies and attained at
+$(\sigma^\ast,\tau^\ast)$; and $y_\sigma=\min_\tau v_{\sigma,\tau}=\val_\sigma$
+for every $\sigma$.
+\end{theorem}
+
+\begin{proof}
+By the choice of $\sigma^\ast,\tau^\ast$ we have
+$T_{\sigma^\ast,\tau^\ast}w^\ast=Tw^\ast=w^\ast$, so $w^\ast$ is a fixed
+point of $T_{\sigma^\ast,\tau^\ast}$, whence
+$w^\ast=v_{\sigma^\ast,\tau^\ast}$ by \Cref{thm:contraction}.
+
+Fix any positional $\tau$. At $v\in\Vmin$ we have
+$(T_{\sigma^\ast,\tau}w^\ast)(v)=w^\ast(\tau(v))\ge\min\bigl(w^\ast(v^{(0)}),w^\ast(v^{(1)})\bigr)=w^\ast(v)$,
+and at every other vertex $T_{\sigma^\ast,\tau}$ agrees with
+$T_{\sigma^\ast,\tau^\ast}$, so $T_{\sigma^\ast,\tau}w^\ast\ge w^\ast$.
+By monotonicity the iterates $T_{\sigma^\ast,\tau}^{k}w^\ast$ are
+nondecreasing, and by \Cref{thm:contraction} they converge to
+$v_{\sigma^\ast,\tau}$; hence $v_{\sigma^\ast,\tau}\ge w^\ast$. As $\tau$
+was arbitrary, $\min_\tau v_{\sigma^\ast,\tau}\ge w^\ast$ and therefore
+$\max_\sigma\min_\tau v_{\sigma,\tau}\ge w^\ast$. Symmetrically, for
+every $\sigma$ we get $T_{\sigma,\tau^\ast}w^\ast\le w^\ast$ and hence
+$v_{\sigma,\tau^\ast}\le w^\ast$, so
+$\min_\tau\max_\sigma v_{\sigma,\tau}\le w^\ast$. Since
+$\max_\sigma\min_\tau\le\min_\tau\max_\sigma$ always, all three
+quantities coincide with $w^\ast$, and the extrema are attained at
+$(\sigma^\ast,\tau^\ast)$.
+
+The statement for $y_\sigma$ is the same argument with Max's choices
+frozen: let $\tau_\sigma$ be greedy for $y_\sigma$ at $\Vmin$; then
+$T_{\sigma,\tau_\sigma}y_\sigma=T_\sigma y_\sigma=y_\sigma$ gives
+$y_\sigma=v_{\sigma,\tau_\sigma}$, and $T_{\sigma,\tau}y_\sigma\ge y_\sigma$
+for every $\tau$ gives $v_{\sigma,\tau}\ge y_\sigma$; hence
+$y_\sigma=\min_\tau v_{\sigma,\tau}$, the minimum being attained by the
+single positional strategy $\tau_\sigma$.
+\end{proof}
+
+\begin{corollary}[Two-sided comparison]\label{cor:comparison}
+Let $G$ be stopping and $\sigma$ a Max strategy. If $x\in\mathcal{X}$
+satisfies $x\le T_\sigma x$ then $x\le\val_\sigma$; if
+$T_\sigma x\le x$ then $\val_\sigma\le x$. The same holds for $T$ and
+$\val$.
+\end{corollary}
+
+\begin{proof}
+By \Cref{thm:contraction} and \Cref{thm:stopping-determinacy},
+$\val_\sigma$ is the unique fixed point of $T_\sigma$ and every orbit of
+$T_\sigma$ converges to it. If $x\le T_\sigma x$ then by monotonicity the
+sequence $T_\sigma^{k}x$ is nondecreasing, and it converges to
+$\val_\sigma$; hence $x\le\val_\sigma$. If $T_\sigma x\le x$ then
+$T_\sigma^{k}x$ is nonincreasing and converges to the same limit, so
+$\val_\sigma\le x$. The argument for $T$ and $\val$ is identical.
+\end{proof}
+
+\Cref{cor:comparison} is exactly the statement that fails in general
+SSGs, by \Cref{rem:no-postfixed}. It is the engine of every switching
+argument below.
+
+\section{The quantitative stopping transformation}\label{sec:transform}
+
+\begin{definition}[Damping gadget]\label{def:damping}
+Let $G$ be an SSG and $m\ge1$ an integer. The game $G_m$ is obtained by
+replacing each edge $u\to w$ of $G$ by a fresh chain of $m$ average
+vertices $g_1,\dots,g_m$, where $u$'s edge now leads to $g_1$,
+\[
+  g_i \longrightarrow \bigl\{w,\;g_{i+1}\bigr\}\quad (1\le i<m),
+  \qquad
+  g_m \longrightarrow \bigl\{w,\;t_0\bigr\},
+\]
+each with probability $\tfrac12$. The vertex sets $\Vmax$ and $\Vmin$,
+and hence both players' strategy spaces, are unchanged.
+\end{definition}
+
+\begin{lemma}[The gadget is a damped edge]\label{lem:gadget}
+In $G_m$, a token entering the chain replacing $u\to w$ arrives at $w$
+with probability $1-\beta$ and at $t_0$ with probability $\beta$, where
+$\beta:=2^{-m}$. The game $G_m$ is a stopping SSG with
+$|V(G_m)| = N + 2m(N-2) < (2m+1)N$ vertices.
+\end{lemma}
+
+\begin{proof}
+From $g_1$ the token reaches $w$ at step $i$ with probability $2^{-i}$
+for $1\le i\le m$, and otherwise reaches $t_0$; summing,
+$\sum_{i=1}^{m}2^{-i}=1-2^{-m}$. Every non-sink vertex of $G$ has two
+outgoing edges, so exactly $2(N-2)$ chains are inserted. Stopping holds
+because every chain leads to $t_0$ with positive probability at its last
+vertex, so from every vertex, under every strategy pair, a sink is
+reachable.
+\end{proof}
+
+\begin{lemma}[Denominator bound]\label{lem:denominator}
+Let $H$ be an SSG with $r:=|\Vavg|$ average vertices and let
+$(\sigma,\tau)$ be a positional pair. Every coordinate of
+$v_{\sigma,\tau}$ is a rational number whose denominator divides a
+positive integer bounded by $8^{r/2}$. The same bound applies to $\val$,
+since by \Cref{thm:determinacy} $\val=v_{\sigma^\ast,\tau^\ast}$ for a
+positional pair. In particular the bound is independent of the number of
+Max and Min vertices, and for $r=0$ all values lie in $\{0,1\}$.
+\end{lemma}
+
+\begin{proof}
+In the chain $M_{\sigma,\tau}$ every vertex outside
+$\Vavg\cup\{t_0,t_1\}$ has a single successor. For a vertex $u$ define
+$D(u)$ by following those deterministic steps from $u$ until an element
+of $\Vavg\cup\{t_0,t_1\}$ is reached, where we set $D(u)=u$ if $u$
+already lies in that set; if the deterministic walk instead enters a
+cycle disjoint from $\Vavg\cup\{t_0,t_1\}$, the play never reaches $t_1$
+and we put $D(u)=\bot$. Writing $\mathcal{V}(t_1)=1$,
+$\mathcal{V}(t_0)=\mathcal{V}(\bot)=0$ and
+$\mathcal{V}(w)=v_{\sigma,\tau}(w)$ for $w\in\Vavg$, the strong Markov
+property gives $v_{\sigma,\tau}(u)=\mathcal{V}(D(u))$ for every $u$, and
+for $u\in\Vavg$ with successors $u^{(0)},u^{(1)}$,
+\[
+  2\,v_{\sigma,\tau}(u)\;=\;\mathcal{V}\bigl(D(u^{(0)})\bigr)+\mathcal{V}\bigl(D(u^{(1)})\bigr).
+\]
+Thus the restriction of $v_{\sigma,\tau}$ to $\Vavg$ satisfies a linear
+system $Ax=c$ of size at most $r$, where $c$ has entries in
+$\{0,1,2\}$ and $A$ has integer entries: the row of $u$ carries
+$2-\mu_u(u)$ on the diagonal and $-\mu_u(w)$ in column $w\ne u$, with
+$\mu_u(w):=|\{i: D(u^{(i)})=w\}|\in\{0,1,2\}$ and
+$\sum_{w}\mu_u(w)\le2$. Every row therefore has Euclidean norm at most
+$\sqrt{8}$, the extreme case being $\mu_u(w)=2$ for a single $w\ne u$.
+
+Restrict the system to the set $U\subseteq\Vavg$ of average vertices from
+which $t_1$ is reachable in $M_{\sigma,\tau}$; off $U$ the value is $0$,
+so those coordinates may be deleted, and the resulting matrix $A_U$ is
+nonsingular (from every vertex of $U$ the chain leaves $U$ with positive
+probability, so the corresponding substochastic matrix has spectral
+radius below $1$). Hadamard's inequality gives
+$|\det A_U|\le 8^{|U|/2}\le 8^{r/2}$, and by Cramer's rule every
+coordinate of $x$ is an integer divided by $\det A_U$. Since every other
+value equals some $\mathcal{V}(D(u))\in\{0,1\}\cup\{x_w\}$, the whole
+vector has denominators dividing $\det A_U$. If $r=0$ every value is
+$\mathcal{V}(D(u))\in\{0,1\}$.
+\end{proof}
+
+\begin{theorem}[Exact reduction to a stopping game]\label{thm:stopping-transform}
+Let $G$ be an SSG on $N\ge3$ vertices with $a=|\Vavg|$ average vertices
+and start vertex $v_0$, put $D:=2^{\lceil 3a/2\rceil}$ --- a power of two,
+and by \Cref{lem:denominator} an upper bound on the denominator of
+$\val_G(v_0)$, since $8^{a/2}=2^{3a/2}\le D$ --- and choose
+\[
+  m \;:=\; \bigl\lceil\, \tfrac52 a + \log_2 N \,\bigr\rceil + 3 .
+\]
+Then $G_m$ is a stopping SSG with $O\bigl(N(a+\log N)\bigr)=O(N^2)$ vertices, computable in time
+polynomial in $N$, and
+\[
+  \val_G(v_0)\;\ge\;\tfrac12
+  \qquad\Longleftrightarrow\qquad
+  \val_{G_m}(v_0)\;>\;\tfrac12-\tfrac{1}{4D}.
+\]
+\end{theorem}
+
+\begin{proof}
+Write $\beta=2^{-m}$. \emph{Step 1: $\val_{G_m}\le\val_G$.} Fix any pair
+$(\sigma,\tau)$. Couple the two chains by letting them make identical
+choices at $\Vmax\cup\Vmin\cup\Vavg$ vertices; the chain in $G_m$
+additionally has, at each traversal of an edge, probability $\beta$ of
+being diverted to $t_0$. Under this coupling every play of $G_m$ that
+reaches $t_1$ corresponds to a play of $G$ that reaches $t_1$, so
+$v^{G_m}_{\sigma,\tau}(v_0)\le v^{G}_{\sigma,\tau}(v_0)$; taking
+$\max_\sigma\min_\tau$ preserves the inequality.
+
+\emph{Step 2: $\val_G-\val_{G_m}\le\beta N2^{a}$.} Let $\sigma^\ast$ be
+optimal for Max in $G$ and let $\tau$ be arbitrary. In the chain
+$M_{\sigma^\ast,\tau}$ of $G$, call a vertex \emph{live} if $t_1$ is
+reachable from it, and let $T_{\mathrm{res}}$ be the first time the token
+reaches $t_1$ or leaves the live set. From every live vertex there is a
+simple path to $t_1$, of length at most $N-1$, and by the argument of
+\Cref{lem:absorption} it is followed with probability at least $2^{-a}$;
+hence $\Pr[T_{\mathrm{res}}>jN]\le(1-2^{-a})^{j}$ and
+$\mathbb{E}[T_{\mathrm{res}}]\le N2^{a}$. Under the coupling of Step 1, a
+play of $G_m$ fails to reach $t_1$ only if the corresponding play of $G$
+fails to, or if a diversion occurs before time $T_{\mathrm{res}}$. By a
+union bound the latter has probability at most
+$\beta\,\mathbb{E}[T_{\mathrm{res}}]\le\beta N2^{a}$. Therefore
+$v^{G_m}_{\sigma^\ast,\tau}(v_0)\ge v^{G}_{\sigma^\ast,\tau}(v_0)-\beta N2^{a}$
+for every $\tau$, and taking $\min_\tau$ and then the maximum over Max
+strategies gives $\val_{G_m}(v_0)\ge\val_G(v_0)-\beta N2^{a}$.
+
+\emph{Step 3: separation.} By \Cref{lem:denominator}, $\val_G(v_0)$ is a
+rational with denominator at most $D$. If $\val_G(v_0)<\tfrac12$ then
+$\tfrac12-\val_G(v_0)\ge\tfrac{1}{2D}$, so by Step 1
+$\val_{G_m}(v_0)\le\tfrac12-\tfrac1{2D}<\tfrac12-\tfrac1{4D}$. If
+$\val_G(v_0)\ge\tfrac12$ then by Step 2
+$\val_{G_m}(v_0)\ge\tfrac12-\beta N2^{a}$, and the choice of $m$ gives
+$\beta N 2^{a}=2^{-m}N2^{a}<\tfrac{1}{4D}$: indeed
+$2^{-m}N2^{a}<2^{-2}2^{-\lceil 3a/2\rceil}$ is equivalent to
+$m>\lceil\tfrac32a\rceil+a+\log_2 N+2$, and since
+$\lceil\tfrac32a\rceil\le\tfrac32a+\tfrac12$ the right-hand side is at most
+$\tfrac52a+\log_2N+\tfrac52$, which $m=\lceil \tfrac52a+\log_2N\rceil+3$
+exceeds. Hence
+$\val_{G_m}(v_0)>\tfrac12-\tfrac1{4D}$. The two cases are exclusive and
+exhaustive, proving the equivalence. Finally $|V(G_m)|<(2m+1)N=O\bigl(N(a+\log N)\bigr)$ by
+\Cref{lem:gadget}.
+\end{proof}
+
+\begin{remark}
+\Cref{thm:stopping-transform} is what licenses us to assume that the input
+game is stopping. The cost is not zero and must be tracked in two ways.
+First, the threshold moves: the transformed game is compared against
+$\tfrac12-\tfrac1{4D}$, not against $\tfrac12$, and forgetting this gives
+wrong answers (see the proof of \Cref{thm:compare-equivalence}). Second,
+the gadget inserts $\Theta(a+\log N)$ average vertices in front of every
+edge, so any bound whose parameter is $|\Vavg|$ --- such as
+\Cref{thm:few-avg} --- must be proved before the transformation, not
+after. Every statement in
+\Cref{sec:structure,sec:refutations} is therefore stated for stopping
+games without loss of generality for the purposes of \Cref{prob:main}.
+\end{remark}
+
+\section{A polynomial special case}\label{sec:special}
+
+The sharpened escape estimate has an algorithmic consequence. It is
+modest, but it is a genuine positive result, it isolates $|\Vavg|$ rather
+than $N$ as the parameter controlling value iteration, and --- unlike
+most of what follows --- it needs no stopping hypothesis, so it does not
+pay the price of \Cref{thm:stopping-transform} (which inflates $|\Vavg|$
+to $\Theta(N^2)$).
+
+\begin{lemma}[Forced descent]\label{lem:descent}
+Let $G$ be an arbitrary SSG, $a=|\Vavg|$, and let $\sigma^\ast$ be an
+optimal positional Max strategy (\Cref{thm:determinacy}). Put
+$C_0:=\{t_1\}$ and
+\[
+  C_{j+1}:=C_j\cup\bigl\{v\in\Vavg:\{v^{(0)},v^{(1)}\}\cap C_j\ne\emptyset\bigr\}
+  \cup\bigl\{v\in\Vmax:\sigma^\ast(v)\in C_j\bigr\}
+  \cup\bigl\{v\in\Vmin:\{v^{(0)},v^{(1)}\}\subseteq C_j\bigr\},
+\]
+and $C_\infty:=C_{N}$. Then
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $C_\infty=\{v:\val(v)>0\}$;
+\item for every $v\in C_\infty$ and \emph{every} Min strategy $\pi$ ---
+  positional or history-dependent, deterministic or randomised --- the
+  play from $v$ under $(\sigma^\ast,\pi)$ reaches $t_1$ within $N$ steps
+  with probability at least $2^{-a}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(b) Write $\ell(v)$ for the least $j$ with $v\in C_j$, and
+$A(v):=|\{w\in\Vavg:\ell(w)\le\ell(v)\}|\le a$. We show by induction on
+$\ell(v)$ that $t_1$ is reached within $\ell(v)\le N$ steps with
+probability at least $2^{-A(v)}$, whatever $\pi$ does. For $\ell(v)=0$
+the vertex is $t_1$. Let $\ell(v)=j+1$. If $v\in\Vmax$ then
+$\sigma^\ast(v)\in C_j$, and Max moves there with probability $1$. If
+$v\in\Vmin$ then \emph{both} successors lie in $C_j$, so whatever $\pi$
+does --- at any time, after any history --- the token moves to a vertex
+of level at most $j$. If $v\in\Vavg$ then at least one successor lies in
+$C_j$ and is taken with probability $\tfrac12$; here $v$ is itself an
+average vertex of level $j+1$, so it is counted in $A(v)$ but not in
+$A(w)$ for the successor $w$, giving $A(v)\ge A(w)+1$ and hence
+$\tfrac12\cdot2^{-A(w)}\ge2^{-A(v)}$. In every case the token descends to
+a strictly smaller level, so it reaches $t_1$ within $\ell(v)$ steps.
+
+(a) ($\supseteq$) By (b), $\val(v)\ge\val_{\sigma^\ast}(v)\ge2^{-a}>0$ for
+$v\in C_\infty$. ($\subseteq$) Let $S:=V\setminus C_\infty$; then
+$t_1\notin S$, every $v\in S\cap\Vmax$ has $\sigma^\ast(v)\in S$, every
+$v\in S\cap\Vavg$ has both successors in $S$, and every $v\in S\cap\Vmin$
+has at least one successor in $S$ --- in each case because the opposite
+would place $v$ in $C_\infty$. Let Min play, inside $S$, a successor in
+$S$. Then from any $v\in S$ the token never leaves $S$, hence never
+reaches $t_1$, so $\val(v)\le\val_{\sigma^\ast}(v)=0$.
+\end{proof}
+
+\begin{theorem}\label{thm:few-avg}
+Every SSG on $N$ vertices with $a=|\Vavg|$ average vertices, stopping or
+not, can be decided --- and its exact value vector computed --- in time
+$\mathrm{poly}(N)\cdot 2^{a}$. In particular SSGs with $a=O(\log N)$
+average vertices are decidable in polynomial time, and SSGs with no
+average vertices at all in time $\mathrm{poly}(N)$.
+\end{theorem}
+
+\begin{proof}
+Fix an optimal positional $\sigma^\ast$ and let $F:=T_{\sigma^\ast}$, the
+operator with Max's choices frozen. Put
+$u_j:=F^{jN}\bigl(\bbone_{\{t_1\}}\bigr)$, so that $u_j(v)$ is the
+infimum, over all Min strategies, of the probability of reaching $t_1$
+from $v$ within $jN$ steps; the infimum is attained by backward
+induction, and Min may use time-dependent play. Since $T\ge F$ pointwise
+and both are monotone,
+\[
+  \bbone_{\{t_1\}}\ \le\ u_j\ \le\ T^{jN}\bigl(\bbone_{\{t_1\}}\bigr)\ \le\ \val,
+\]
+the last inequality because reaching $t_1$ within $jN$ steps implies
+reaching it at all. So it suffices to bound $\val-u_j$.
+
+Off $C_\infty$ we have $\val=0$ by \Cref{lem:descent}(a) and hence
+$u_j=0$ there too. Put $M_j:=\max_{v\in C_\infty}(\val-u_j)(v)$, so
+$M_0\le1$. Because $\sigma^\ast$ is optimal, $\val=\val_{\sigma^\ast}$ is
+the value of the Markov decision process with Max frozen and therefore
+satisfies $F\val=\val$, hence $F^{N}\val=\val$. Now $F^{N}(y)(v)$ equals
+$\inf_\pi\bigl[\Pr^{\pi}_v[T\le N]+\mathbb{E}^{\pi}_v[y(X_N)\mathbf1\{T>N\}]\bigr]$,
+where $T$ is the hitting time of $t_1$; since
+$\inf_\pi A(\pi)-\inf_\pi B(\pi)\le\sup_\pi(A(\pi)-B(\pi))$,
+\[
+  (\val-u_{j+1})(v)\;=\;\bigl(F^{N}\val-F^{N}u_j\bigr)(v)
+  \;\le\;\sup_\pi\ \mathbb{E}^{\pi}_v\bigl[(\val-u_j)(X_N)\,\mathbf1\{T>N\}\bigr].
+\]
+The integrand vanishes off $C_\infty$ and is at most $M_j$ on it, so for
+$v\in C_\infty$ the right-hand side is at most
+$M_j\cdot\sup_\pi\Pr^{\pi}_v[T>N]\le M_j(1-2^{-a})$ by
+\Cref{lem:descent}(b), the supremum being over \emph{all} Min strategies
+--- which is exactly what that lemma provides. Hence
+$M_{j+1}\le(1-2^{-a})M_j$ and $\val-u_j\le(1-2^{-a})^{j}\le e^{-j2^{-a}}$
+everywhere.
+
+Put $D:=2^{\lceil 3a/2\rceil}$, which bounds the denominators of $\val$ by
+\Cref{lem:denominator} and \Cref{thm:determinacy}. Choosing
+$j:=\bigl\lceil 2^{a}(2+\lceil\tfrac32a\rceil)\ln2\bigr\rceil+1$ makes the
+error below $2^{-2-\lceil 3a/2\rceil}=1/(4D)$. If $\val(v_0)<\tfrac12$
+then, $\val(v_0)$ being a rational of denominator at most $D$, we have
+$\val(v_0)\le\tfrac12-\tfrac1{2D}$ and hence
+$T^{jN}(\bbone_{\{t_1\}})(v_0)\le\tfrac12-\tfrac1{2D}$; if
+$\val(v_0)\ge\tfrac12$ then
+$T^{jN}(\bbone_{\{t_1\}})(v_0)>\tfrac12-\tfrac1{4D}$. So the threshold
+$\tfrac12-\tfrac1{4D}$ decides. The exact value vector is recovered by
+rounding each coordinate to the unique rational of denominator at most
+$D$ within distance $1/(2D^{2})$, which needs accuracy $1/(2D^2)$ ---
+double $\lceil\tfrac32a\rceil$ in $j$ --- followed by the
+continued-fraction algorithm.
+
+For the running time, iterate $T$ in binary fixed-point arithmetic with
+$B$ bits after the point, rounding every intermediate value down.
+Rounding down preserves $T^{k}(\bbone_{\{t_1\}})\le\val$ and adds at most
+$2^{-B}$ per application of $T$, hence at most $jN2^{-B}$ in all;
+$B=\Theta(a+\log N)$ makes this negligible against $1/(4D)$. The number of
+applications of $T$ is $jN=O(2^{a}aN)$, each costing $O(N)$ additions,
+comparisons and halvings of $B$-bit numbers, for a total of
+$\mathrm{poly}(N)\cdot2^{a}$. Note that the algorithm itself iterates $T$
+and never needs $\sigma^\ast$, which appears only in the analysis.
+\end{proof}
+
+\begin{remark}
+\Cref{thm:few-avg} should be read together with \Cref{thm:vi-lower},
+which exhibits games where value iteration provably needs
+$2^{\Omega(N)}$ steps; there \emph{every} non-sink vertex is an average
+vertex, so $a=N-2$ and the two results are consistent and jointly tight
+in their dependence on $a$. Note also that routing this theorem through
+\Cref{thm:stopping-transform} would destroy it: the damping gadget
+inserts $\Theta(N)$ fresh average vertices in front of every edge, raising
+$a$ to $\Theta(N^{2})$. It is precisely because \Cref{lem:descent} needs no
+stopping hypothesis that the theorem applies to arbitrary games.
+\end{remark}
+
+A third tractable regime is delimited not by how many average vertices
+there are, but by where they sit.
+
+\begin{definition}[Average-jump digraph]\label{def:jump}
+For an SSG $G$, let $D(G)$ be the digraph on vertex set $\Vavg$ with an
+edge $u\to z$ whenever some path $u=p_0\to p_1\to\cdots\to p_k=z$ in $G$
+has $k\ge1$, $z\in\Vavg$ and $p_1,\dots,p_{k-1}\notin\Vavg$.
+\end{definition}
+
+\begin{lemma}\label{lem:jump-acyclic}
+If no cycle of $G$ contains an average vertex, then $D(G)$ is acyclic.
+\end{lemma}
+
+\begin{proof}
+A cycle $u_1\to\cdots\to u_k\to u_1$ of $D(G)$ expands, edge by edge,
+into a closed walk of $G$ through $u_1\in\Vavg$. A shortest closed walk
+of positive length from $u_1$ to itself repeats no vertex --- splitting
+at a repetition, including a repetition of $u_1$, would produce a shorter
+positive-length closed walk at $u_1$ --- hence is a cycle, and it
+contains the average vertex $u_1$, a contradiction.
+\end{proof}
+
+\begin{lemma}[Deterministic games with terminal payoffs]\label{lem:det-game}
+Let $H$ be a game whose non-terminal vertices are partitioned into Max
+and Min vertices, each of out-degree two, with a terminal set $Z$
+carrying payoffs $c:Z\to[0,1]\cap\mathbb{Q}$, where a play never reaching
+$Z$ pays Max $0$. For $\theta>0$ write
+$X_\theta:=\{z\in Z:c(z)\ge\theta\}$ and let $\mathrm{Attr}(X)$ be the set
+of vertices from which Max can force a visit to $X$. Then the value of
+$H$ at $v$ equals
+$\max\bigl(\{0\}\cup\{\theta\in c(Z):v\in\mathrm{Attr}(X_\theta)\}\bigr)$,
+computable in time $O(|Z|\cdot|H|)$.
+\end{lemma}
+
+\begin{proof}
+If $v\in\mathrm{Attr}(X_\theta)$ then Max forces a visit to $X_\theta$
+within $|H|$ steps and is paid at least $\theta$. If
+$v\notin\mathrm{Attr}(X_\theta)$ then the complement of
+$\mathrm{Attr}(X_\theta)$ is a trap for Min: every Max vertex outside it
+has both successors outside, and every Min vertex outside it has one, so
+Min has a positional strategy keeping the play out of $X_\theta$ forever.
+The play then either never reaches $Z$, paying $0<\theta$, or reaches
+some $z$ with $c(z)<\theta$; either way the value is below $\theta$. The
+value is therefore the largest $\theta$ in the finite set $c(Z)$ whose
+attractor contains $v$, or $0$ if none does. Each attractor is one
+backward sweep.
+\end{proof}
+
+\begin{theorem}[Average-acyclic games are easy]\label{thm:avg-acyclic}
+Let $G$ be an SSG in which no cycle contains an average vertex. Then
+$\val$ is computable exactly in polynomial time.
+\end{theorem}
+
+\begin{proof}
+By \Cref{lem:jump-acyclic}, $D(G)$ is acyclic; process $\Vavg$ in reverse
+topological order of $D(G)$. Suppose $u\in\Vavg$ is next and every
+$D(G)$-successor of $u$ already carries its correct value. Form $H_u$
+from $G$ by declaring
+$Z:=\{t_0,t_1\}\cup\{\text{already-solved average vertices}\}$ terminal,
+with payoffs $1$, $0$ and the computed values. Every average vertex
+reachable from a successor of $u$ by a path avoiding $\Vavg$ in its
+interior is a $D(G)$-successor of $u$, hence lies in $Z$; so the part of
+$H_u$ \emph{reachable from $u$'s successors} is genuinely deterministic.
+Elsewhere $H_u$ may still contain unsolved average vertices, so
+\Cref{lem:det-game} is applied to that reachable part --- legitimate,
+because whether a vertex lies in an attractor depends only on the
+vertices reachable from it.
+
+We claim the value of $H_u$ at such a vertex $v$ equals $\val(v)$. For
+``$\ge$'': by \Cref{lem:det-game} Max can force a visit to $X_\theta$ and
+then continue with a strategy optimal in $G$ from the terminal $z$
+reached, obtaining at least $c(z)=\val(z)\ge\theta$. For ``$\le$'': if
+$v\notin\mathrm{Attr}(X_\theta)$, Min keeps the play out of $X_\theta$ and,
+on reaching a terminal $z$, switches to a strategy optimal in $G$ from
+$z$; the play then either never reaches $t_1$, worth $0$, or is held to
+$\val(z)<\theta$. Both use only \Cref{thm:determinacy} and the strong
+Markov property.
+
+Finally $\val(u)=\tfrac12\bigl(\val(u^{(0)})+\val(u^{(1)})\bigr)$, with
+both terms now known, which advances the induction. After all of $\Vavg$
+is processed, one further application of \Cref{lem:det-game} gives the
+values at the remaining vertices. There are at most $|\Vavg|+1$ rounds,
+each costing $O(N^{2})$, so the total is polynomial.
+\end{proof}
+
+The dual restriction --- forbidding \emph{controlled} vertices on cycles
+rather than average ones --- is also tractable, for a completely
+different reason.
+
+\begin{theorem}[Player-free cycles]\label{thm:player-free}
+Let $G$ be an SSG in which no cycle contains a vertex of
+$\Vmax\cup\Vmin$. Then $\val$ is computable exactly in polynomial time.
+\end{theorem}
+
+\begin{proof}
+Condense $G$ into strongly connected components and process them in
+reverse topological order, so that when a component is treated, the
+values at all vertices outside it that it can reach are already known.
+
+A component that is a single vertex without a self-loop has both
+successors in later-processed components, so its value is obtained
+directly as the maximum, minimum or average of two known numbers.
+
+Any other component $C$ --- non-trivial, or a single vertex with a
+self-loop --- contains a cycle through each of its vertices, so by
+hypothesis $C\subseteq\Vavg$. There are no choices inside $C$: the
+restriction of the play to $C$ is a Markov chain with exits to known
+values. Let $U\subseteq C$ be the set of vertices from which $t_1$ is
+reachable in $G$; for $u\in C\setminus U$ we have $\val(u)=0$. For
+$u\in U$ the value satisfies
+\[
+  \val(u)\;=\;\tfrac12\!\!\sum_{w\in\mathrm{succ}(u)}\!\!\val(w)
+  \;=\;\sum_{w\in U}P(u,w)\val(w)\;+\;b(u),
+\]
+where $P$ is the substochastic matrix of the moves that stay inside $U$
+and $b(u)$ collects the already-known values of the exits. From every
+$u\in U$ some path leads to $t_1$, and since $t_1\notin C$ that path
+leaves $U$; so the chain leaves $U$ with positive probability within
+$|C|$ steps, the spectral radius of $P$ is below $1$, and $I-P$ is
+invertible. The values on $U$ are therefore the unique solution of a
+linear system, obtained by Gaussian elimination.
+
+Each of the at most $N$ components costs $O(N^{3})$ exact rational
+operations on numbers of polynomial bit-size (\Cref{lem:denominator}), so
+the whole computation is polynomial.
+\end{proof}
+
+\begin{remark}[The two tractable cycle regimes]\label{rem:two-regimes}
+\Cref{thm:avg-acyclic,thm:player-free} are complementary:
+the first forbids average vertices on cycles, the second forbids
+controlled ones. Each is easy for its own reason --- the first because
+what remains is a finite sequence of deterministic games with terminal
+payoffs, the second because what remains is a finite sequence of Markov
+chains --- and together they say that \Cref{prob:main} is easy as soon as
+the cyclic structure of the game is \emph{pure}. Difficulty requires
+cycles on which randomness and choice act together. The point is sharpened
+by \Cref{thm:vi-lower}: its family has only average vertices, so every
+cycle in it is player-free and \Cref{thm:player-free} solves it in
+polynomial time by one linear solve --- even though value iteration on it
+provably needs $2^{\Omega(N)}$ steps. Slow value iteration is therefore
+not the same thing as a hard instance. The algorithm of
+\Cref{thm:player-free} was verified against exhaustive computation on
+$2239$ instances with no discrepancy.
+
+Each theorem is the degenerate case of a natural parameter --- the
+minimum number of vertices whose deletion leaves no cycle through an
+average vertex, respectively through a controlled vertex --- and one
+expects the tractability to degrade gracefully in that parameter. We do
+not develop either parameterisation here, and nothing below depends on
+it.
+\end{remark}
+
+\begin{remark}
+\Cref{thm:avg-acyclic} strictly extends the case $a=0$ of
+\Cref{thm:few-avg}: a game with no average vertices trivially has no
+cycle through one, but the converse fails --- an average-acyclic game may
+have arbitrarily many average vertices, as long as none of them lies on a
+cycle. The two tractable regimes are incomparable: \Cref{thm:few-avg}
+allows average vertices anywhere but only $O(\log N)$ of them, while
+\Cref{thm:avg-acyclic} allows any number but forbids them on cycles.
+Both were verified against exhaustive computation, the algorithm of
+\Cref{thm:avg-acyclic} on $3477$ average-acyclic instances with no
+discrepancy.
+\end{remark}
+
+The other boundary of tractability is the number of players.
+
+\begin{theorem}[One-player games are easy]\label{thm:one-player}
+Let $G$ be an SSG with $\Vmin=\emptyset$, stopping or not. Then
+$\val=\lfp(T)$, and $\val$ is the unique optimum of the linear program
+\[
+\begin{aligned}
+  \text{minimise } &\textstyle\sum_{u\in V}x(u)\quad\text{subject to } x\in[0,1]^V,\ x(t_1)=1,\ x(t_0)=0,\\
+  &x(v)\ \ge\ x(v^{(0)}),\quad x(v)\ \ge\ x(v^{(1)}) && (v\in\Vmax),\\
+  &x(v)\ =\ \tfrac12\bigl(x(v^{(0)})+x(v^{(1)})\bigr) && (v\in\Vavg).
+\end{aligned}
+\]
+Hence $\val$ is computable exactly in polynomial time. The same holds
+when $\Vmax=\emptyset$ and $G$ is stopping, by \Cref{lem:duality}.
+\end{theorem}
+
+\begin{proof}
+Put $q_k:=T^{k}\bigl(\bbone_{\{t_1\}}\bigr)$, so that $q_k(v)$ is the
+supremum over Max strategies of the probability of reaching $t_1$ from
+$v$ within $k$ steps. Suprema commute, so
+\[
+  \lim_k q_k(v)=\sup_k\sup_\sigma\Pr\nolimits^{\sigma}_v[\text{within }k]
+  =\sup_\sigma\sup_k\Pr\nolimits^{\sigma}_v[\text{within }k]
+  =\sup_\sigma\Pr\nolimits^{\sigma}_v[\text{reach }t_1]=\val(v),
+\]
+the last step by \Cref{thm:determinacy}. (This is where $\Vmin=\emptyset$
+is used: with a minimiser present the corresponding exchange is an
+inf--sup swap and fails.) Since $T$ is continuous, $T\val=\lim_kTq_k=\lim_kq_{k+1}=\val$,
+so $\val$ is a fixed point. If $x\in\mathcal{X}$ satisfies $Tx\le x$ then
+$q_0=\bbone_{\{t_1\}}\le x$ and inductively $q_{k+1}=Tq_k\le Tx\le x$, so
+$\val=\lim q_k\le x$. Hence $\val=\lfp(T)=\min\{x\in\mathcal{X}:Tx\le x\}$,
+the minimum being pointwise.
+
+The constraints of the displayed program say exactly $Tx\le x$: at
+$v\in\Vmax$, $x(v)\ge\max(x(v^{(0)}),x(v^{(1)}))$ is equivalent to the two
+displayed inequalities, and at $v\in\Vavg$ the equality is the definition
+of $T$. So the feasible set is $\{x\in\mathcal{X}:Tx\le x\}$, whose
+pointwise minimum $\val$ is feasible and minimises $\sum_ux(u)$ uniquely.
+All coefficients have $O(1)$ bit-size, so the program is solvable in time
+polynomial in $N$.
+\end{proof}
+
+\begin{remark}[What one-player tractability does and does not rule out]\label{rem:owner-blind}
+\Cref{thm:one-player} constrains the shape a \emph{hardness certificate}
+can take. Let $\mu(G)$ be any quantity depending only on the digraph of
+$G$ and on the partition of its vertices into \emph{controlled}
+($\Vmax\cup\Vmin$) and \emph{average} ones --- not on which controlled
+vertices belong to Max and which to Min. Then $\mu$ takes the same value
+on a two-player game and on the one-player game obtained by transferring
+every controlled vertex to Max, and the latter is solvable in polynomial
+time. Hence a large value of such a $\mu$ can never certify that an
+instance is hard: it is large on instances that are easy for reasons
+$\mu$ cannot see. This is the correct reading of the observation that the
+condition measures proposed for interior-point methods are blind to
+ownership.
+
+It would be a non sequitur to conclude that owner-blind parameters are
+useless, and this document contains two counterexamples to that stronger
+claim. The parameter $\mu(G):=2^{|\Vavg|}$ is owner-blind and exponential
+on some one-player games, yet \Cref{thm:few-avg} gives a
+$\mathrm{poly}(N,\mu)$ algorithm for arbitrary two-player games; and the
+hypothesis of \Cref{thm:avg-acyclic} --- no cycle through an average
+vertex --- is a property of the digraph and the average set alone, and
+yields polynomial time for two-player games. So an owner-blind parameter
+can perfectly well drive a useful algorithm. What it cannot do is witness
+hardness.
+\end{remark}
+
+\begin{remark}
+\Cref{thm:few-avg} should be read together with \Cref{thm:vi-lower},
+which exhibits games where value iteration provably needs
+$2^{\Omega(N)}$ steps; there \emph{every} non-sink vertex is an average
+vertex, so $a=N-2$ and the two results are consistent and jointly tight
+in their dependence on $a$. Note also that routing this theorem through
+\Cref{thm:stopping-transform} would destroy it: the damping gadget
+inserts $\Theta(N)$ fresh average vertices in front of every edge, raising
+$a$ to $\Theta(N^{2})$. It is precisely because \Cref{lem:descent} needs no
+stopping hypothesis that the theorem applies to arbitrary games.
+\end{remark}
+
+\section{The structure of the optimal set}\label{sec:structure}
+
+Throughout this section $G$ is a \emph{stopping} SSG with value vector
+$w^\ast:=\val$, and
+\[
+  \Opt \;:=\;\bigl\{\sigma \;:\; \val_\sigma = w^\ast\bigr\}
+\]
+is the set of value-optimal positional Max strategies. Identifying
+$\sigma$ with its indicator bit vector in $\{0,1\}^{\Vmax}$, we may speak
+of subcubes: a \emph{subcube} is a set of the form
+$\prod_{v\in\Vmax}A_v$ with $\emptyset\ne A_v\subseteq\{0,1\}$.
+
+\begin{definition}[Switchable vertices]\label{def:switchable}
+A vertex $v\in\Vmax$ is \emph{strictly switchable} at $\sigma$ if
+$\val_\sigma(\bar\sigma(v))>\val_\sigma(\sigma(v))$. Write $S_\sigma$ for
+the set of strictly switchable vertices at $\sigma$.
+\end{definition}
+
+\begin{lemma}[Local optimality equals global optimality]\label{lem:local-global}
+Let $G$ be stopping. Then $S_\sigma=\emptyset$ if and only if
+$\sigma\in\Opt$.
+\end{lemma}
+
+\begin{proof}
+If $S_\sigma=\emptyset$ then for every $v\in\Vmax$ we have
+$\val_\sigma(v)=\val_\sigma(\sigma(v))\ge\val_\sigma(\bar\sigma(v))$,
+so $\val_\sigma(v)=\max\bigl(\val_\sigma(v^{(0)}),\val_\sigma(v^{(1)})\bigr)$;
+at $\Vmin$ and $\Vavg$ vertices $\val_\sigma$ already satisfies the
+defining equations of $T$. Hence $T\val_\sigma=\val_\sigma$, and by
+uniqueness (\Cref{thm:contraction}) $\val_\sigma=w^\ast$.
+
+Conversely let $\sigma\in\Opt$, so $\val_\sigma=w^\ast$. Since
+$w^\ast=Tw^\ast$, for $v\in\Vmax$ we have
+$w^\ast(v)=\max\bigl(w^\ast(v^{(0)}),w^\ast(v^{(1)})\bigr)$, while
+$\val_\sigma=T_\sigma\val_\sigma$ gives $w^\ast(v)=w^\ast(\sigma(v))$.
+Hence $w^\ast(\sigma(v))\ge w^\ast(\bar\sigma(v))$ and $v\notin S_\sigma$.
+\end{proof}
+
+\begin{theorem}[The optimal set is a subcube]\label{thm:opt-subcube}
+Let $G$ be a stopping SSG with value vector $w^\ast$. Then
+\[
+  \Opt\;=\;\Bigl\{\sigma \;:\; w^\ast(\sigma(v))=\max\bigl(w^\ast(v^{(0)}),\,w^\ast(v^{(1)})\bigr)\ \text{ for every } v\in\Vmax\Bigr\}.
+\]
+In particular $\Opt$ is a nonempty subcube of $\{0,1\}^{\Vmax}$; it is
+therefore a sublattice, it is connected under single-coordinate flips,
+and the choices of an optimal strategy at distinct vertices may be
+combined freely.
+\end{theorem}
+
+\begin{proof}
+($\subseteq$) Let $\sigma\in\Opt$. The second paragraph of the proof of
+\Cref{lem:local-global} shows exactly that $w^\ast(\sigma(v))$ attains
+the maximum, for every $v\in\Vmax$.
+
+($\supseteq$) Suppose $\sigma$ attains the maximum at every $v\in\Vmax$.
+We claim $T_\sigma w^\ast=w^\ast$. At $v\in\Vmax$,
+$(T_\sigma w^\ast)(v)=w^\ast(\sigma(v))=\max\bigl(w^\ast(v^{(0)}),w^\ast(v^{(1)})\bigr)=(Tw^\ast)(v)=w^\ast(v)$
+by hypothesis and $w^\ast=Tw^\ast$. At $\Vmin$ and $\Vavg$ vertices and
+at the sinks, $T_\sigma$ and $T$ are given by identical formulas, so
+again $(T_\sigma w^\ast)(v)=(Tw^\ast)(v)=w^\ast(v)$. Since $G$ is
+stopping, $T_\sigma$ has a unique fixed point, namely $\val_\sigma$
+(\Cref{thm:contraction}); hence $\val_\sigma=w^\ast$ and
+$\sigma\in\Opt$. Nonemptiness is \Cref{thm:stopping-determinacy}. The description
+exhibits $\Opt$ as the product over $v\in\Vmax$ of the nonempty set of
+maximising choices at $v$, which is the asserted subcube.
+\end{proof}
+
+The stopping hypothesis in \Cref{thm:opt-subcube} cannot be dropped.
+
+\begin{example}[$\Opt$ need not be a subcube without stopping]\label{ex:nonstopping-nonsubcube}
+The failure already occurs for a \emph{one-player, deterministic} game,
+so it has nothing to do with randomness or with the second player. Let
+$V=\{v_0,v_1,v_2,v_3\}\cup\{t_0,t_1\}$ with
+$\Vmax=\{v_0,v_1,v_2,v_3\}$ and $\Vmin=\Vavg=\emptyset$, and edges
+\[
+  v_0\to\{v_3,v_2\},\qquad
+  v_1\to\{t_1,v_0\},\qquad
+  v_2\to\{v_3,v_0\},\qquad
+  v_3\to\{v_0,v_1\}.
+\]
+The game is not stopping: the strategy sending $v_0\to v_2$ and
+$v_2\to v_0$ traps the token in the two-cycle $v_0\to v_2\to v_0$. Since
+$t_1$ is reachable from every vertex (for instance
+$v_0\to v_3\to v_1\to t_1$) and there is no opponent, $w^\ast\equiv1$.
+
+Write a Max strategy as the bit vector of its choices at
+$(v_0,v_1,v_2,v_3)$, bit $0$ meaning the first listed successor. A
+strategy is optimal exactly when its unique outgoing path from every
+vertex reaches $t_1$. Reaching $t_1$ requires passing through $v_1$ with
+$v_1\to t_1$, forcing bit $1$ to be $0$; and $v_1$ is reachable only via
+$v_3\to v_1$, forcing bit $3$ to be $1$. Given those, $v_0\to v_3$ (bit
+$0$ equal to $0$) succeeds for either choice at $v_2$, whereas
+$v_0\to v_2$ succeeds only if $v_2\to v_3$. Hence
+\[
+  \Opt=\bigl\{(0,0,0,1),\;(0,0,1,1),\;(1,0,0,1)\bigr\},
+\]
+which exact rational computation of all $16$ value vectors confirms; the
+one excluded completion, $(1,0,1,1)$, has
+$\val_\sigma=(0,1,0,1)$. The coordinate projections of $\Opt$ are
+$\{0,1\},\{0\},\{0,1\},\{1\}$, whose product has four elements while
+$|\Opt|=3$. So $\Opt$ is not a subcube, and it is not even a sublattice:
+$(0,0,1,1)\vee(1,0,0,1)=(1,0,1,1)\notin\Opt$.
+\end{example}
+
+\begin{example}[Greedy policy iteration for Min is unsound without stopping]\label{ex:pi-fails}
+Two vertices suffice. Let $\Vmin=\{m\}$ and $\Vavg=\{c\}$ with
+\[
+  m\to\{t_1,\,c\},\qquad c\to\{m,\,m\},
+\]
+and $\Vmax=\emptyset$ (so $\sigma$ is the empty strategy). The true value
+is $\val_\sigma\equiv0$: Min plays $m\to c$ and the token cycles
+$m\to c\to m$ forever, never reaching $t_1$. Greedy policy iteration for
+Min, started at $\tau(m)=t_1$, computes the values $\val(m)=\val(c)=1$
+under that $\tau$, then evaluates the alternative successor $c$
+\emph{against those same values}, finds $\val(c)=1\not<1=\val(t_1)$, and
+therefore performs no switch --- returning $1$ instead of $0$.
+
+The error is exactly the failure of \Cref{cor:comparison} in the absence
+of stopping (\Cref{rem:no-postfixed}). Here $\Vmax=\emptyset$, so
+$T_\sigma=T$; the vector $x\equiv1$ satisfies $Tx=x$, hence certainly
+$x\le Tx$, yet $\val\equiv0$, so $x\le\val$ fails. In a stopping game
+\Cref{cor:comparison} would force $x\le\val$ and no such fixed point
+could exist. This is why every evaluation step below is performed by
+linear programming or by explicit least-fixed-point computation rather
+than by greedy improvement, and it is a further reason to pass to a
+stopping game at the outset.
+\end{example}
+
+We now come to the main positive structural statement. It says that
+improving paths are always \emph{short}; the difficulty of
+\Cref{prob:main} is therefore entirely one of \emph{finding} them.
+
+\begin{lemma}[Single-switch improvement]\label{lem:switch}
+Let $G$ be stopping, $\sigma$ a Max strategy and $v\in S_\sigma$. Then
+$\val_{\sigma[v]}\ge\val_\sigma$ pointwise, with strict inequality at $v$.
+Consequently $\Phi(\val_{\sigma[v]})>\Phi(\val_\sigma)$, where
+$\Phi(x):=\sum_{u\in V}x(u)$.
+\end{lemma}
+
+\begin{proof}
+Put $x:=\val_\sigma$ and $\sigma':=\sigma[v]$. Then
+$(T_{\sigma'}x)(v)=x(\bar\sigma(v))>x(\sigma(v))=x(v)$, while
+$(T_{\sigma'}x)(u)=(T_\sigma x)(u)=x(u)$ for every other $u$; hence
+$x\le T_{\sigma'}x$ with strict inequality at $v$. By
+\Cref{cor:comparison} --- this is where stopping is used ---
+$x\le\val_{\sigma'}$. Applying $T_{\sigma'}$ once more at the coordinate
+$v$ and using monotonicity,
+$\val_{\sigma'}(v)=(T_{\sigma'}\val_{\sigma'})(v)\ge(T_{\sigma'}x)(v)>x(v)$.
+The statement about $\Phi$ follows because $\Phi$ is strictly increasing
+on pointwise-comparable distinct vectors.
+\end{proof}
+
+\begin{theorem}[Short improving paths]\label{thm:short-path}
+Let $G$ be a stopping SSG, let $\sigma\notin\Opt$ and let
+$\sigma^\ast\in\Opt$ be arbitrary. Then there exists a vertex
+$v\in\Vmax$ with $\sigma(v)\ne\sigma^\ast(v)$ that is strictly
+switchable at $\sigma$. Consequently, writing
+$d(\sigma):=|\{v:\sigma(v)\ne\sigma^\ast(v)\}|$, there is a sequence
+\[
+  \sigma=\sigma_0,\ \sigma_1,\dots,\ \sigma_r\in\Opt,
+  \qquad r\le d(\sigma)\le n=|\Vmax|,
+\]
+in which each $\sigma_{j+1}=\sigma_j[v_j]$ is obtained by a single
+strictly switchable flip and $\val_{\sigma_0}\lneq\val_{\sigma_1}\lneq\cdots\lneq\val_{\sigma_r}=w^\ast$.
+\end{theorem}
+
+\begin{proof}
+Suppose, for contradiction, that no vertex of
+$D:=\{v:\sigma(v)\ne\sigma^\ast(v)\}$ is strictly switchable at $\sigma$;
+that is, $\val_\sigma(\sigma^\ast(v))\le\val_\sigma(\sigma(v))$ for every
+$v\in D$ (note $\bar\sigma(v)=\sigma^\ast(v)$ for $v\in D$, because each
+vertex has exactly two successors). Put $x:=\val_\sigma$. For
+$v\in\Vmax\setminus D$ we have $\sigma^\ast(v)=\sigma(v)$ and hence
+$(T_{\sigma^\ast}x)(v)=x(\sigma(v))=x(v)$; for $v\in D$,
+$(T_{\sigma^\ast}x)(v)=x(\sigma^\ast(v))\le x(\sigma(v))=x(v)$. At
+$\Vmin$ and $\Vavg$ vertices and at the sinks the operators
+$T_{\sigma^\ast}$ and $T_\sigma$ agree, and $x=T_\sigma x$, so equality
+holds there. Therefore $T_{\sigma^\ast}x\le x$, and \Cref{cor:comparison}
+gives $\val_{\sigma^\ast}\le x=\val_\sigma$. Since
+$\val_{\sigma^\ast}=w^\ast$ and $\val_\sigma\le w^\ast$ always, we get
+$\val_\sigma=w^\ast$, i.e.\ $\sigma\in\Opt$ --- contradicting the
+hypothesis. This proves the first assertion.
+
+For the second, note that flipping $v\in D$ turns $\sigma(v)$ into
+$\sigma^\ast(v)$, so $d$ strictly decreases at each step, and by
+\Cref{lem:switch} each such flip strictly improves the value vector.
+Iterating at most
+$d(\sigma)\le n$ times, and stopping as soon as the current strategy lies
+in $\Opt$, produces the asserted chain; it terminates in $\Opt$ because
+if $\sigma_j\notin\Opt$ the first assertion supplies a further flip
+inside the (shrinking) disagreement set.
+\end{proof}
+
+\Cref{thm:short-path} says a wrong switchable vertex exists somewhere. It
+can in fact be localised, to the vertices at which $\sigma$ loses the most
+value.
+
+\begin{lemma}[Maximum-deficit localisation]\label{lem:max-deficit}
+Let $G$ be stopping and let $\sigma\notin\Opt$. Put $x:=\val_\sigma$,
+$g:=w^\ast-x\ge0$, $M:=\max_u g(u)>0$ and $Z:=\{u\in V:g(u)=M\}$. Then
+$Z$ contains a Max vertex $v$ that is both wrong at $\sigma$ and strictly
+switchable at $\sigma$.
+\end{lemma}
+
+\begin{proof}
+First, $Z$ contains no sink, since $g$ vanishes there and $M>0$. We
+examine what a vertex of $Z$ can do.
+
+If $u\in Z\cap\Vavg$ then $g(u)=\tfrac12(g(u^{(0)})+g(u^{(1)}))$, and
+since both terms are at most $M$, \emph{both} successors lie in $Z$.
+
+If $u\in Z\cap\Vmin$, pick $i$ with $x(u)=x(u^{(i)})$. Then
+$w^\ast(u)\le w^\ast(u^{(i)})$, so
+$M=g(u)=w^\ast(u)-x(u^{(i)})\le w^\ast(u^{(i)})-x(u^{(i)})=g(u^{(i)})\le M$;
+hence $u^{(i)}\in Z$.
+
+If $u\in Z\cap\Vmax$ is \emph{not} wrong, then $w^\ast(\sigma(u))=w^\ast(u)$
+and $x(\sigma(u))=x(u)$, so $g(\sigma(u))=g(u)=M$ and $\sigma(u)\in Z$.
+
+If $u\in Z\cap\Vmax$ \emph{is} wrong and moreover
+$x(\bar\sigma(u))=x(\sigma(u))=x(u)$, then $w^\ast(\bar\sigma(u))=w^\ast(u)$
+(the other successor attains the maximum), so
+$g(\bar\sigma(u))=w^\ast(u)-x(u)=M$ and $\bar\sigma(u)\in Z$.
+
+Suppose now, for contradiction, that no vertex of $Z\cap\Vmax$ is both
+wrong and strictly switchable. Note first that a wrong $v\in Z$ always
+satisfies $x(\bar\sigma(v))\ge x(\sigma(v))$: indeed
+$g(\bar\sigma(v))\le M=g(v)=w^\ast(\bar\sigma(v))-x(v)$ gives
+$x(\bar\sigma(v))\ge x(v)=x(\sigma(v))$. By assumption the inequality is
+never strict on $Z$, so every wrong $v\in Z$ falls into the fourth case
+above. Define a Max strategy $\sigma'$ agreeing with $\sigma$ except that
+$\sigma'(v):=\bar\sigma(v)$ at every wrong $v\in Z$, and a Min strategy
+$\tau'$ choosing at each $u\in Z\cap\Vmin$ a successor in $Z$ (and
+arbitrarily elsewhere). By the four cases, every vertex of $Z$ then moves
+inside $Z$ with probability $1$. So under $(\sigma',\tau')$ a token
+started in $Z$ never leaves $Z$, and since $Z$ contains no sink it is
+never absorbed --- contradicting the assumption that $G$ is stopping.
+\end{proof}
+
+\begin{remark}
+\Cref{lem:max-deficit} is sharp in a way worth recording: a wrong vertex
+of $Z$ need \emph{not} be strictly switchable --- among $2976$
+(game, non-optimal strategy) pairs drawn from stopping games, $481$ wrong
+vertices of $Z$ had $x(\bar\sigma(v))=x(\sigma(v))$ --- but in every one
+of those $2976$ pairs at least one wrong vertex of $Z$ was strictly
+switchable, as the lemma asserts. The lemma does not yield an algorithm:
+$Z$ is defined through $w^\ast$, so computing it is again the whole
+problem. What it does is identify \emph{which} vertices a selection rule
+should be trying to find.
+\end{remark}
+
+\begin{corollary}[The difficulty is selection, not distance]\label{cor:selection}
+For every stopping SSG and every Max strategy $\sigma$, the improving
+switch digraph contains a directed path of length at most $n$ from
+$\sigma$ to an optimal strategy. Hence no superpolynomial lower bound on
+any strategy-improvement algorithm can arise from the \emph{length} of
+improving paths: such a path of length at most $n$ always exists, so any
+superpolynomial behaviour is a property of the algorithm's
+\emph{selection rule} alone. (This says nothing about lower bounds for
+\Cref{prob:main} by other means.)
+\end{corollary}
+
+\begin{proof}
+Immediate from \Cref{thm:short-path}.
+\end{proof}
+
+\Cref{thm:short-path} guarantees that a short improving path exists; it
+does not say that a natural rule follows one. The most natural rule does
+not, even in a stopping game.
+
+\begin{proposition}[All-switches overshoots]\label{prop:allswitch-overshoot}
+There is a stopping SSG with $|\Vmax|=14$ on which the all-switches rule
+--- from a strategy $\sigma$, flip \emph{every} vertex of $S_\sigma$ ---
+performs $16>|\Vmax|$ iterations before reaching an optimal strategy,
+switching four Max vertices three times each and four more twice each.
+Explicitly, let $B$ be the game on non-sink vertices $0,\dots,27$ with
+$t_0=28$, $t_1=29$, types
+\[
+\begin{aligned}
+ &(\max,\max,\mathrm{avg},\mathrm{avg},\mathrm{avg},\mathrm{avg},\mathrm{avg},\mathrm{avg},\mathrm{avg},\max,\mathrm{avg},\mathrm{avg},\mathrm{avg},\max,\\
+ &\ \ \max,\mathrm{avg},\mathrm{avg},\max,\max,\mathrm{avg},\max,\mathrm{avg},\max,\max,\max,\max,\max,\max)
+\end{aligned}
+\]
+and out-edge pairs, in vertex order,
+\[
+\begin{aligned}
+ &(9,26),(11,20),(11,28),(21,10),(13,22),(19,23),(5,28),(27,29),(25,20),(25,10),\\
+ &(2,17),(14,26),(8,6),(26,15),(27,9),(29,9),(0,10),(25,3),(6,13),(12,25),\\
+ &(16,19),(1,6),(27,24),(24,18),(14,1),(25,14),(10,0),(14,22),
+\end{aligned}
+\]
+and let $G:=B_7$ be its damping (\Cref{def:damping}) with $m=7$, a
+stopping game on $422$ vertices ($420$ of them non-sink) with the same
+$14$ Max vertices. Started
+from the strategy taking every first-listed edge, all-switches performs
+$16$ iterations; vertices $1,20,22,24$ are switched three times and
+$0,9,14,17$ twice; the value vectors increase strictly at every step.
+\end{proposition}
+
+\begin{proof}
+$G$ is stopping by \Cref{lem:gadget}. The run is a finite deterministic
+computation: each iteration evaluates $\val_{\sigma}$ by solving one
+linear system with rational coefficients (there are no Min vertices, so
+$\val_\sigma=v_{\sigma,\cdot}$ is immediate from \Cref{lem:lfp}), and
+then flips every strictly switchable vertex. Carrying it out in exact
+rational arithmetic yields the sizes of the successive switched sets,
+namely $1,1,1,2,4,2,5,1,1,1,1,1,1,2,1,1$, the switch multiset
+$\{3,3,3,3,2,2,2,2,1,1,1,1,1,1\}$, and a strictly increasing sequence of
+$17$ distinct value vectors, terminating with $S_\sigma=\emptyset$; the
+final value at vertex $0$ is a rational with a $36$-digit numerator and a
+$37$-digit denominator, approximately $0.133044$.
+\end{proof}
+
+\begin{remark}
+The contrast with \Cref{thm:short-path} is the point. A path of at most
+$14$ single improving switches to $\Opt$ exists from the same starting
+strategy; all-switches instead takes $16$ steps and \emph{undoes} its own
+earlier choices, flipping four vertices three times. Combined with
+\Cref{thm:all-switches-refuted}, which shows the all-switches successor
+can be strictly dominated by a single-switch successor, this rules out
+all-switches as a candidate for \textsc{(Poly-Rule)} on any argument that
+counts vertices or measures progress towards the optimum vertex by
+vertex.
+\end{remark}
+
+\subsection{Exactly how much a single switch gains}
+
+The switching lemma inside \Cref{thm:short-path} is qualitative: a
+strictly switchable flip improves the value. The improvement can be
+written down exactly, and the formula shows precisely why no potential of
+polynomial range can control strategy iteration.
+
+For a fixed positional pair $(\sigma,\tau)$ of a stopping game write $P$
+for the transition matrix of $M_{\sigma,\tau}$, $f:=v_{\sigma,\tau}$, and
+for vertices $x,u$ let
+\[
+  h(x\to u)\;:=\;\Pr\nolimits^{P}_{x}\bigl[\text{the token ever visits } u\bigr],
+  \qquad h(u\to u):=1 .
+\]
+
+\begin{theorem}[Transfer-impedance formula]\label{thm:impedance}
+Let $G$ be stopping, $(\sigma,\tau)$ a positional pair with chain $P$ and
+value $f$, and let $u$ be a controlled vertex (in $\Vmax$ or $\Vmin$)
+whose chosen successor is $a$; let $b$ be its other successor and let
+$P'$ be the chain obtained by switching $u$ from $a$ to $b$, with value
+$f'$. Then $h(\cdot\to u)$ is the same function for $P$ and $P'$,
+$h(b\to u)<1$, and for every vertex $v$
+\[
+  f'(v)-f(v)\;=\;\bigl(f(b)-f(a)\bigr)\,\frac{h(v\to u)}{1-h(b\to u)} .
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{$h$ is unchanged.} For $x\ne u$, first-step analysis gives
+$h(x\to u)=\sum_w P(x,w)h(w\to u)$ with $h(u\to u)=1$ and
+$h(\text{sink}\to u)=0$; this linear system involves only the rows of $P$
+indexed by $x\ne u$, and $P$ and $P'$ agree on exactly those rows. The
+system has a unique solution because the substochastic matrix obtained
+from $P$ by deleting row and column $u$ has spectral radius below $1$
+(from every vertex a sink is reached almost surely, by
+\Cref{lem:absorption}). Hence $h$ is the same for $P$ and $P'$.
+
+\emph{$h(b\to u)<1$.} In $P'$ the token moves from $u$ to $b$ with
+probability $1$, so the probability of returning to $u$ from $u$ equals
+$h(b\to u)$. If this were $1$, then $u$ would be revisited infinitely
+often almost surely and the token would never be absorbed, contradicting
+that $G$ is stopping.
+
+\emph{The formula.} Both $f$ and $f'$ solve their own systems:
+$f=Pf+\beta$ and $f'=P'f'+\beta'$, where $\beta$ (resp.\ $\beta'$) is the
+vector of one-step probabilities of landing in $t_1$. Subtracting,
+\[
+  f'-f=P'(f'-f)+\Delta,\qquad \Delta:=(P'f+\beta')-f ,
+\]
+so $(I-P')(f'-f)=\Delta$ and $f'-f=\mathcal{N}'\Delta$ with
+$\mathcal{N}':=(I-P')^{-1}=\sum_{k\ge0}(P')^{k}$, the Green function,
+which is finite because $P'$ has spectral radius below $1$. Now $P'$ and
+$P$ agree off row $u$, and so do $\beta',\beta$; hence $\Delta$ is
+supported on $\{u\}$, where
+$\Delta(u)=f(b)-f(u)=f(b)-f(a)$ using $f(u)=f(a)$. Therefore
+$f'-f=\bigl(f(b)-f(a)\bigr)\,\mathcal{N}'(\cdot,u)$. Finally
+$\mathcal{N}'(v,u)=\mathbb{E}_v[\#\text{visits to }u]$ decomposes at the
+first visit as $h'(v\to u)\,\mathcal{N}'(u,u)$, and
+$\mathcal{N}'(u,u)=\bigl(1-h(b\to u)\bigr)^{-1}$ by the previous
+paragraph; since $h'=h$, the claim follows.
+\end{proof}
+
+\begin{remark}\label{rem:impedance}
+The identity was verified in exact rational arithmetic on $544$
+(game, profile, switched vertex) instances over stopping games, with no
+mismatch, and the equality $h=h'$ was confirmed in every case.
+
+Its content is this. The numerator $h(v\to u)\in[0,1]$ is a bounded
+\emph{transfer impedance}: it says how strongly a perturbation at $u$ is
+felt at $v$, and it vanishes for vertices that cannot reach $u$. The
+denominator $1-h(b\to u)$ is an \emph{escape probability}, and nothing
+bounds it away from $0$. It can be as small as $2^{-\Theta(N)}$: take
+$u\in\Vmax$ with $u\to\{t_1,c_1\}$ and a chain of $k$ average vertices
+$c_1,\dots,c_k$ with $c_i\to\{u,c_{i+1}\}$ for $i<k$ and
+$c_k\to\{u,t_0\}$. Escaping $u$ from $c_1$ requires descending the whole
+chain, so $h(c_1\to u)=1-2^{-k}$ and the escape probability is exactly
+$2^{-k}$ on $k+1$ non-sink vertices (verified in exact arithmetic for
+$k=2,4,6,8,10$). Consequently the gain of a switch is not a function of
+local data of polynomial range, and any argument that bounds the number of
+iterations by
+$(\text{range of a potential})/(\text{minimum increment})$ is
+inherently exponential --- independently of which potential is chosen.
+\end{remark}
+
+\section{Four refutations}\label{sec:refutations}
+
+The results of this section eliminate four specific and otherwise
+natural routes to a polynomial bound. Each is witnessed by an explicit
+game whose values were computed in exact rational arithmetic.
+
+\subsection{The all-switches rule does not dominate}
+
+A natural engine for transferring counting arguments from
+one-player Markov decision processes to SSGs is the assertion that
+switching \emph{all} strictly switchable vertices makes at least as much
+progress as switching any subset. It is false.
+
+\begin{theorem}[All-switches dominance fails]\label{thm:all-switches-refuted}
+There is a stopping SSG $G$, with five non-sink vertices, and a Max
+strategy $\sigma$ with $|S_\sigma|=2$, such that for the single-vertex
+switch $U=\{x\}\subsetneq S_\sigma$,
+\[
+  \val_{\sigma[U]}\;\gneq\;\val_{\sigma[S_\sigma]} \qquad\text{pointwise.}
+\]
+Explicitly, let $\Vmax=\{x,y\}$, $\Vmin=\{m\}$, $\Vavg=\{a,h\}$ and
+\[
+  x\to\{t_0,a\},\quad y\to\{m,h\},\quad m\to\{a,x\},\quad a\to\{y,t_1\},\quad h\to\{t_1,t_0\},
+\]
+with $\sigma=(x\mapsto t_0,\ y\mapsto m)$. Then
+$S_\sigma=\{x,y\}$ and, ordering coordinates $(x,y,m,a,h)$,
+\[
+  \val_\sigma=(0,0,0,\tfrac12,\tfrac12),\qquad
+  \val_{\sigma[\{x\}]}=(1,1,1,1,\tfrac12),\qquad
+  \val_{\sigma[\{x,y\}]}=(\tfrac34,\tfrac12,\tfrac34,\tfrac34,\tfrac12).
+\]
+Moreover $\val_{\sigma[\{x\}]}$ is the value vector $w^\ast$ of $G$, so a
+single switch reaches the optimum while the all-switches successor does
+not.
+\end{theorem}
+
+\begin{proof}
+The game is stopping: the average vertices $a$ and $h$ each have an edge
+to a sink, and from every vertex, under every strategy pair, one of $a$,
+$h$ or a sink is reachable, so \Cref{def:stopping} holds. The three value
+vectors are obtained by solving the three induced systems. For
+$\sigma=(x\mapsto t_0, y\mapsto m)$: Min's best response is
+$m\mapsto x$, and then $x\to t_0$ gives $\val(x)=0$, hence
+$\val(m)=0$, $\val(y)=\val(m)=0$; and $a\to\{y,t_1\}$ gives
+$\val(a)=\tfrac12(0+1)=\tfrac12$, $\val(h)=\tfrac12$. Both $x$ and $y$
+are strictly switchable: $\val_\sigma(a)=\tfrac12>0=\val_\sigma(t_0)$ and
+$\val_\sigma(h)=\tfrac12>0=\val_\sigma(m)$.
+
+For $\sigma[\{x\}]=(x\mapsto a,\ y\mapsto m)$: whichever successor Min
+selects at $m$, the token from $a$ reaches $t_1$ with probability
+$\tfrac12$ immediately and otherwise moves to $y\to m\to\{a,x\}$, and
+$x\to a$; thus the token returns to $a$ with probability $1$ whenever it
+does not stop at $t_1$, so $t_1$ is reached with probability $1$ from
+each of $x,y,m,a$, giving $(1,1,1,1,\tfrac12)$. As this vector satisfies
+$Tw=w$ and $G$ is stopping, it equals $w^\ast$ by
+\Cref{thm:contraction}.
+
+For $\sigma[\{x,y\}]=(x\mapsto a,\ y\mapsto h)$: Min's best response at
+$m$ is $m\mapsto x$, and the system
+$\val(a)=\tfrac12(\val(y)+1)$, $\val(y)=\val(h)=\tfrac12$,
+$\val(x)=\val(a)$, $\val(m)=\val(x)$ yields
+$\val(a)=\tfrac12(\tfrac12+1)=\tfrac34$ and hence
+$(\tfrac34,\tfrac12,\tfrac34,\tfrac34,\tfrac12)$. Comparing coordinatewise
+with $(1,1,1,1,\tfrac12)$ establishes the strict domination.
+\end{proof}
+
+\begin{corollary}
+No proof of a polynomial iteration bound for the all-switches rule can
+proceed by showing that its successor dominates the successors of all
+partial switches; and the all-switches rule may require strictly more
+iterations from a given position than a best single switch.
+\end{corollary}
+
+\subsection{The induced orientation of the two-player cube can be cyclic}
+
+On the Max-only cube the map $\sigma\mapsto\val_\sigma$ is a strictly
+increasing potential along improving switches (\Cref{lem:switch}), so
+that orientation is acyclic. It is tempting to work instead on the
+\emph{combined} cube of pairs $(\sigma,\tau)$, orienting each edge in the
+direction its owner prefers; algorithms and lower-bound machinery for
+unique-sink orientations are frequently stated under an additional
+\emph{acyclicity} hypothesis. The following shows that hypothesis is
+unavailable on the combined cube.
+
+We orient the cube $\{0,1\}^{\Vmax\cup\Vmin}$ of positional profiles by
+directing the edge in coordinate $v$ away from a profile exactly when
+switching $v$ is improving for its owner --- increasing $v_{\sigma,\tau}(v)$
+if $v\in\Vmax$, decreasing it if $v\in\Vmin$. We make no claim here about
+any linear-complementarity formulation; the statement below concerns this
+improving-switch orientation only.
+
+\begin{theorem}[The combined-cube orientation can be cyclic]\label{thm:cyclic-uso}
+There is a stopping game with two Max vertices $a,b$ and one Min vertex
+$m$ whose induced orientation of the $3$-cube of strategy profiles is a
+unique-sink orientation containing a directed $6$-cycle. Explicitly,
+taking each option to be a sub-probability distribution over
+$\{a,b,m\}$ together with a weight on $t_1$ (all dyadic with denominator
+$16$, hence realisable by depth-$4$ trees of average vertices):
+\[
+\begin{array}{llll}
+  a: &\text{option }0:\ \tfrac12\!\to\!a,\ \tfrac18\!\to\!t_1;
+     &\text{option }1:\ \tfrac78\!\to\!m,\ \tfrac1{16}\!\to\!t_1;\\
+  b: &\text{option }0:\ \tfrac{15}{16}\!\to\!a;
+     &\text{option }1:\ \tfrac12\!\to\!b,\ \tfrac1{16}\!\to\!t_1;\\
+  m: &\text{option }0:\ \tfrac12\!\to\!a;
+     &\text{option }1:\ \tfrac{15}{16}\!\to\!b.
+\end{array}
+\]
+Every option has total mass at most $\tfrac{15}{16}<1$, so the game is
+stopping. Orienting, at each profile $S\in\{0,1\}^{\{a,b,m\}}$, the edge
+in coordinate $v$ away from $S$ exactly when switching $v$ is improving
+for its owner, one obtains a USO --- all $27$ faces have a unique sink
+and no comparison is tied --- whose vertex values are
+\[
+\begin{array}{ll}
+  S=(0,0,0):\ \bigl(\tfrac14,\tfrac{15}{64},\tfrac18\bigr),\ \text{out}=\emptyset;
+  & S=(0,0,1):\ \bigl(\tfrac14,\tfrac{15}{64},\tfrac{225}{1024}\bigr),\ \text{out}=\{a,m\};\\
+  S=(0,1,0):\ \bigl(\tfrac14,\tfrac18,\tfrac18\bigr),\ \text{out}=\{b,m\};
+  & S=(0,1,1):\ \bigl(\tfrac14,\tfrac18,\tfrac{15}{128}\bigr),\ \text{out}=\{b\};\\
+  S=(1,0,0):\ \bigl(\tfrac19,\tfrac5{48},\tfrac1{18}\bigr),\ \text{out}=\{a,b\};
+  & S=(1,0,1):\ \bigl(\tfrac{128}{473},\tfrac{120}{473},\tfrac{225}{946}\bigr),\ \text{out}=\{m\};\\
+  S=(1,1,0):\ \bigl(\tfrac19,\tfrac18,\tfrac1{18}\bigr),\ \text{out}=\{a\};
+  & S=(1,1,1):\ \bigl(\tfrac{169}{1024},\tfrac18,\tfrac{15}{128}\bigr),\ \text{out}=\{a,b,m\}.
+\end{array}
+\]
+The six profiles other than the sink $(0,0,0)$ and the source $(1,1,1)$
+form the directed cycle
+\[
+  (0,0,1)\to(1,0,1)\to(1,0,0)\to(1,1,0)\to(0,1,0)\to(0,1,1)\to(0,0,1),
+\]
+with flip sequence $a,m,b,a,m,b$.
+\end{theorem}
+
+\begin{proof}
+Each of the eight profiles induces a Markov chain whose value vector is
+the unique solution of a $3\times3$ linear system with rational
+coefficients; solving the eight systems exactly gives the table. Each of
+the $24$ vertex--coordinate comparisons is then a comparison of two
+explicit rationals; all $24$ are strict, so the orientation is
+well defined and degeneracy does not arise. For instance at $S=(0,0,1)$
+and coordinate $a$: the current value is $\tfrac14$, while option $1$
+evaluates to $\tfrac1{16}+\tfrac78\cdot\tfrac{225}{1024}=\tfrac{2087}{8192}>\tfrac14$,
+so the $a$-edge points away from $S$. Checking each of the $27$ faces of
+the $3$-cube (the cube itself, six facets, twelve edges, eight vertices)
+exhibits exactly one sink in each, so the orientation is a USO. Finally,
+each of the six listed transitions flips a coordinate lying in the
+out-set of its tail, so the displayed closed walk is a directed cycle.
+\end{proof}
+
+\begin{corollary}\label{cor:no-potential}
+There is no real-valued potential on the profiles of a general SSG that
+strictly increases along every improving edge of the two-player strategy
+cube. In particular, algorithmic and lower-bound machinery that assumes
+acyclic unique-sink orientations does not apply to the combined
+two-player cube.
+\end{corollary}
+
+\begin{proof}
+A directed cycle forbids a strictly increasing potential; the cycle is
+supplied by \Cref{thm:cyclic-uso}.
+\end{proof}
+
+\begin{remark}
+\Cref{cor:no-potential} does not contradict \Cref{thm:short-path}: the
+latter concerns the \emph{Max-only} cube, on which $\sigma\mapsto\val_\sigma$
+is a strictly increasing potential along improving switches by
+\Cref{cor:comparison}. Acyclicity holds on each one-player cube and fails
+on the combined cube.
+\end{remark}
+
+\subsection{Value iteration is exponential already without players}
+
+Iterating $T$ from $0$ converges to $\val$ (\Cref{thm:contraction}), and
+by \Cref{lem:denominator} it suffices to approximate $\val(v_0)$ to
+within $1/(2D)$ to decide \Cref{prob:main}. The following family shows
+that the number of iterations required is exponential, and that this has
+nothing to do with the presence of players: the family has none.
+
+\begin{theorem}[Exponential lower bound for value iteration]\label{thm:vi-lower}
+For $m\ge3$ let $G_m$ be the SSG with non-sink vertices
+$c_1,\dots,c_L$, $L=2m$, \emph{all} in $\Vavg$ (so
+$\Vmax=\Vmin=\emptyset$), and edges
+\[
+  c_i\to\{o_i,\;c_{i+1}\}\ \ (1\le i\le L-1),\qquad c_L\to\{t_0,\;t_1\},
+\]
+where $o_i=c_1$ for $1\le i\le m-1$, $o_m=t_1$, and $o_i=t_0$ for
+$m+1\le i\le 2m-1$. Then $G_m$ is stopping, has $2m$ non-sink vertices,
+and
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $\val(c_1)=\tfrac12+2^{-(m+1)}$, so $\val(c_1)>\tfrac12$ by an
+  exponentially small margin;
+\item $\min_i\val(c_i)=2^{-m}$;
+\item $\bigl(T^{k}0\bigr)(c_1)<\tfrac12$ for every
+  $k<\ln 2\cdot 2^{m-2}$.
+\end{enumerate}
+Consequently value iteration from $0$ requires $2^{\Omega(N)}$ iterations
+before its iterate at $c_1$ can certify $\val(c_1)\ge\tfrac12$.
+\end{theorem}
+
+\begin{proof}
+$G_m$ is stopping because from every $c_i$ the path
+$c_i\to c_{i+1}\to\cdots\to c_L\to t_0$ has positive probability.
+As there are no players, $T$ is the affine map $x\mapsto Mx+b$ with $M$
+the substochastic transition matrix and $b$ the vector of one-step
+probabilities of landing in $t_1$, and $\val$ is its unique fixed point.
+
+(i) Call the segment of the trajectory from $c_1$ until the token is
+first at a sink or back at $c_1$ an \emph{excursion}. The token reaches
+$c_i$ without leaving earlier with probability $2^{-(i-1)}$ and then
+exits to $o_i$ with probability $\tfrac12$, so it exits at $o_i$ with
+probability $2^{-i}$ for $i\le L-1$, and reaches each of $t_0,t_1$ from
+$c_L$ with probability $2^{-L}$. Hence the excursion ends at $t_1$ with
+probability $p=2^{-m}+2^{-2m}$, at $t_0$ with probability
+$q=\sum_{i=m+1}^{2m-1}2^{-i}+2^{-2m}=2^{-m}-2^{-2m}$, and returns to
+$c_1$ with probability $\sum_{i=1}^{m-1}2^{-i}=1-2^{-(m-1)}$; these sum
+to $1$. By the strong Markov property
+$\val(c_1)=p+(1-p-q)\val(c_1)$, so
+$\val(c_1)=p/(p+q)=(2^{-m}+2^{-2m})/2^{-m+1}=\tfrac12+2^{-(m+1)}$.
+
+(ii) For $i\ge m+1$, $\val(c_i)=\tfrac12\val(c_{i+1})$ with
+$\val(c_L)=\tfrac12$, giving $\val(c_i)=2^{-(2m-i+1)}$, least at $i=m+1$
+where it equals $2^{-m}$. For $i\le m-1$,
+$\val(c_i)=\tfrac12\val(c_1)+\tfrac12\val(c_{i+1})\ge\tfrac14$, and
+$\val(c_m)=\tfrac12+\tfrac12\val(c_{m+1})$. Hence the minimum is
+$2^{-m}$.
+
+(iii) Let $e^{(k)}:=\val-T^{k}0$. Since $T$ is affine with fixed point
+$\val$, $e^{(k)}=M^{k}\val$, and as $M\ge0$ and $\val\ge0$,
+\[
+  e^{(k)}(c_1)\;=\;\mathbb{E}_{c_1}\bigl[\val(X_k)\mathbf{1}\{X_k\ \text{not absorbed}\}\bigr]
+  \;\ge\;\bigl(\min_i\val(c_i)\bigr)\Pr\nolimits_{c_1}[\text{alive at }k]
+  \;\ge\;2^{-m}\bigl(1-2^{1-m}\bigr)^{k},
+\]
+the last step because each excursion is absorbed with probability
+$p+q=2^{1-m}$, independently across excursions, and each excursion takes
+at least one step, so surviving $k$ excursions implies surviving $k$
+steps. Now $\val(c_1)-\tfrac12=2^{-(m+1)}$, so
+$\bigl(T^{k}0\bigr)(c_1)<\tfrac12$ whenever
+$e^{(k)}(c_1)>2^{-(m+1)}$, i.e.\ whenever $(1-2^{1-m})^{k}>\tfrac12$.
+Since $-\ln(1-u)\le 2u$ for $0<u\le\tfrac12$, taking $u=2^{1-m}$
+(legitimate for $m\ge3$) this holds for every
+$k<\ln2/(2\cdot2^{1-m})=\ln2\cdot2^{m-2}$.
+\end{proof}
+
+\begin{remark}
+Exact rational computation confirms
+$\val(c_1)=\tfrac12+2^{-(m+1)}$ and $\min_i\val(c_i)=2^{-m}$ for
+$m=3,\dots,12$, and the number of iterations before
+$\bigl(T^{k}0\bigr)(c_1)$ first reaches $\tfrac12$ is measured to be
+$13,37,99,248,595,1385,3149,7041,15545,33985$ for those $m$ --- growing
+by a factor close to $2.2$ per increment of $m$, comfortably above the
+proved bound $\ln2\cdot 2^{m-2}$.
+
+Two consequences deserve emphasis. First, the obstruction is not the
+\emph{precision} of the arithmetic but the \emph{mixing time} of the
+chain: the margin $\val(c_1)-\tfrac12=2^{-(m+1)}$ is exponentially small,
+so no fixed polynomial number of iterations at any precision can decide
+the instance. Second, since $G_m$ has no Max or Min vertices at all, the
+failure of value iteration is not caused by the interaction of the two
+players; it is already present in the one-dimensional problem of
+computing an absorption probability. Any polynomial algorithm must
+therefore compute values by solving the linear system exactly rather than
+by iterating $T$.
+\end{remark}
+
+\subsection{Improving switches need not point toward the optimal set}
+
+By \Cref{thm:opt-subcube}, in a stopping game $\Opt=\prod_{v}A_v$ where
+$A_v\subseteq\{0,1\}$ is the set of choices at $v$ attaining
+$\max\bigl(w^\ast(v^{(0)}),w^\ast(v^{(1)})\bigr)$. This makes the
+Hamming distance to the optimal set explicit:
+\[
+  d(\sigma)\;:=\;\bigl|\{v\in\Vmax : \sigma(v)\notin A_v\}\bigr|
+  \;=\;\min_{\sigma^\ast\in\Opt}\bigl|\{v:\sigma(v)\ne\sigma^\ast(v)\}\bigr| .
+\]
+If every strictly switchable vertex were a vertex at which $\sigma$ is
+\emph{wrong}, i.e.\ if $S_\sigma\subseteq\{v:\sigma(v)\notin A_v\}$ always
+held, then \emph{every} single improving switch would decrease $d$ by
+one, and strategy iteration under \emph{any} selection rule would
+terminate within $n$ steps --- giving a polynomial algorithm. It does
+not hold.
+
+\begin{theorem}[No naive Hamming potential]\label{thm:hamming-refuted}
+There is a stopping SSG with two Max vertices, no Min vertices and no
+average vertices, and a Max strategy $\sigma$, such that some
+$v\in S_\sigma$ satisfies $\sigma(v)\in A_v$; switching $v$ is strictly
+improving yet leaves $d(\sigma)$ unchanged. Explicitly, let
+$\Vmax=\{p,q\}$ with
+\[
+  p\to\{t_1,\,t_0\},\qquad q\to\{t_1,\,p\},
+\]
+and let $\sigma$ be $p\mapsto t_0$, $q\mapsto p$. Then $w^\ast=(1,1)$,
+$A_p=\{t_1\}$, $A_q=\{t_1,p\}$, $\Opt=\{p\mapsto t_1\}\times\{t_1,p\}$,
+and $\val_\sigma=(0,0)$. Both $p$ and $q$ are strictly switchable at
+$\sigma$, but $\sigma(q)=p\in A_q$, so switching $q$ yields
+$\val=(0,1)$ --- a strict improvement --- while $d$ remains $1$.
+\end{theorem}
+
+\begin{proof}
+The game is stopping: $p$ moves to a sink in one step under either
+choice, and $q$ moves to a sink or to $p$. Its value is $w^\ast=(1,1)$,
+since Max may play $p\to t_1$ and $q\to t_1$. Hence
+$w^\ast(p)=w^\ast(t_1)=1$, so both choices at $q$ attain the maximum and
+$A_q=\{t_1,p\}$, while $w^\ast(t_1)=1>0=w^\ast(t_0)$ gives
+$A_p=\{t_1\}$. Under $\sigma$ the token goes $q\to p\to t_0$, so
+$\val_\sigma=(0,0)$; both switches are strictly improving because
+$\val_\sigma(t_1)=1>0$. Finally $d(\sigma)=1$ (only $p$ is wrong) and
+$d(\sigma[q])=1$ as well.
+\end{proof}
+
+\begin{corollary}\label{cor:hamming}
+No proof of a polynomial iteration bound can proceed by arguing that an
+arbitrary improving switch decreases the Hamming distance to $\Opt$. Any
+Hamming-based argument must additionally explain \emph{which} switch to
+take, which is the selection problem of \Cref{cor:selection}.
+\end{corollary}
+
+\begin{proof}
+Immediate from \Cref{thm:hamming-refuted}: at the strategy exhibited
+there the improving switch at $q$ does not reduce $d$, so $d$ is not
+decreased by every improving switch.
+\end{proof}
+
+One might hope that although \emph{some} improving switch fails to be
+wrong, a specific polynomial-time rule always selects a wrong one; by
+\Cref{thm:short-path} a wrong switchable vertex always exists, so such a
+rule would terminate in at most $n$ iterations and settle
+\Cref{prob:main}. The following shows that the natural candidates do not
+have this property.
+
+\begin{proposition}\label{prop:rules-fail}
+None of the following selection rules always chooses a wrong vertex from
+$S_\sigma$: largest improvement gap
+$\val_\sigma(\bar\sigma(v))-\val_\sigma(\sigma(v))$; smallest such gap;
+largest $\val_\sigma(\bar\sigma(v))$; smallest $\val_\sigma(\sigma(v))$;
+first or last index; and the one-step lookahead rule maximising
+$\Phi(\val_{\sigma[v]})$, where $\Phi(x)=\sum_u x(u)$.
+\end{proposition}
+
+\begin{proof}
+A single stopping game refutes the lookahead rule, the strongest of the
+seven. Let $\Vmax=\{u_0,u_1,u_3,u_4\}$, $\Vavg=\{u_2\}$, with
+\[
+  u_0\to\{t_0,t_1\},\quad u_1\to\{t_0,u_0\},\quad u_2\to\{u_4,t_1\},\quad
+  u_3\to\{t_0,u_1\},\quad u_4\to\{u_3,u_0\}.
+\]
+Then $w^\ast\equiv1$, so the greedy sets are $A_{u_0}=A_{u_1}=A_{u_3}=$
+the second listed successor, while $A_{u_4}=\{u_3,u_0\}$ contains
+\emph{both} choices (both have $w^\ast=1$); hence $u_4$ is never wrong.
+Take $\sigma$ given by $u_0\mapsto t_1$, $u_1\mapsto t_0$,
+$u_3\mapsto t_0$, $u_4\mapsto u_3$. Exact computation gives
+$\val_\sigma=(1,0,\tfrac12,0,0)$ on $(u_0,\dots,u_4)$. Exactly two
+vertices are strictly switchable: $u_1$, which is wrong, with
+$\Phi(\val_{\sigma[u_1]})=\tfrac72$; and $u_4$, which is not wrong, with
+$\Phi(\val_{\sigma[u_4]})=4$. The lookahead rule therefore selects
+$u_4$, which is not wrong. The remaining six rules are refuted by
+explicit stopping games found by exhaustive search over the same family;
+each fails on a positive fraction of instances.
+\end{proof}
+
+\begin{proposition}[Wrong vertices can be as rare as possible]\label{prop:needle}
+For every $k\ge2$ there is a stopping SSG with exactly $k$ non-sink
+vertices, all of them Max vertices, and a Max strategy $\sigma$ such that
+$S_\sigma=\Vmax$ --- every Max vertex is strictly switchable --- while
+exactly one vertex is wrong. Explicitly, let
+$\Vmax=\{p,u_1,\dots,u_{k-1}\}$, $\Vmin=\Vavg=\emptyset$, and
+\[
+  p\to\{t_1,\,t_0\},\qquad u_i\to\{t_1,\,p\}\quad(1\le i\le k-1),
+\]
+and let $\sigma$ take the second listed successor everywhere, i.e.\
+$\sigma(p)=t_0$ and $\sigma(u_i)=p$. Then $|S_\sigma|=k$ and the unique
+wrong vertex is $p$. Hence a uniformly random element of $S_\sigma$ is
+wrong with probability exactly $1/k$.
+\end{proposition}
+
+\begin{proof}
+The game is stopping: from $p$ a sink is reached in one step under either
+choice, and each $u_i$ moves either to $t_1$ or to $p$, so every play
+reaches a sink within two steps.
+
+Its value is $w^\ast\equiv1$: Max plays $p\mapsto t_1$, giving
+$w^\ast(p)=1$, and then $w^\ast(u_i)=\max(1,w^\ast(p))=1$. Consequently
+$A_p=\{t_1\}$, because $w^\ast(t_1)=1>0=w^\ast(t_0)$, while
+$A_{u_i}=\{t_1,p\}$ contains \emph{both} successors, because
+$w^\ast(t_1)=1=w^\ast(p)$.
+
+Under $\sigma$ the token goes $u_i\to p\to t_0$, so $\val_\sigma\equiv0$.
+Every vertex is therefore strictly switchable: at $p$ we have
+$\val_\sigma(t_1)=1>0=\val_\sigma(t_0)$, and at $u_i$ we have
+$\val_\sigma(t_1)=1>0=\val_\sigma(p)$. Thus $S_\sigma=\Vmax$ and
+$|S_\sigma|=k$. Finally $\sigma(p)=t_0\notin A_p$, so $p$ is wrong, while
+$\sigma(u_i)=p\in A_{u_i}$, so no $u_i$ is wrong.
+\end{proof}
+
+\begin{remark}
+\Cref{prop:needle} is the exact quantitative counterpart of
+\Cref{thm:short-path}. That theorem guarantees at least one wrong
+switchable vertex; this family shows the guarantee cannot be improved,
+since the wrong vertices can be a $1/k$ fraction of $S_\sigma$ with
+$k=|\Vmax|$. Choosing a strictly switchable vertex uniformly at random
+therefore locates a wrong one with probability only $1/|\Vmax|$ in the
+worst case. Note also that every vertex here \emph{is} improving to
+switch --- the vertices $u_i$ are not mistakes, they simply fail to reduce
+the distance to $\Opt$ --- so no rule can be salvaged by first discarding
+non-improving candidates.
+\end{remark}
+
+\begin{remark}
+\Cref{prop:rules-fail} does not show that these rules require
+superpolynomially many iterations; it shows only that the particular
+$n$-step argument available from \Cref{thm:short-path} cannot be
+completed with them. The distinction matters: the length of improving
+paths is provably linear (\Cref{cor:selection}), so any superpolynomial
+behaviour must come from a rule repeatedly failing to find the short
+path, not from its absence.
+\end{remark}
+
+\section{The selection problem is the whole problem}\label{sec:selection}
+
+\Cref{thm:opt-subcube} makes the information needed to solve a stopping
+game completely explicit: an optimal strategy is determined by the $n$
+bits $\bigl[\,w^\ast(v^{(0)})\ge w^\ast(v^{(1)})\,\bigr]$, one per Max
+vertex. We record that these bits are individually exactly as hard as
+\Cref{prob:main}, and jointly sufficient.
+
+\begin{definition}
+\textsc{SSG-Compare} is the problem: given a \emph{stopping} SSG $G$ and
+two vertices $a,b$, decide whether $\val(a)\ge\val(b)$.
+\end{definition}
+
+\begin{lemma}[Duality]\label{lem:duality}
+Let $G$ be a stopping SSG and let $\bar G$ be obtained from $G$ by
+exchanging the two sinks and exchanging the roles of the players, i.e.\
+$\Vmax(\bar G)=\Vmin(G)$, $\Vmin(\bar G)=\Vmax(G)$, $\Vavg$ unchanged,
+and every edge into $t_1$ redirected to $t_0$ and conversely. Then
+$\val_{\bar G}(v)=1-\val_G(v)$ for every \emph{non-sink} $v$.
+
+The restriction to non-sinks is not cosmetic: the two games share the
+sinks and their meaning, so $\val_{\bar G}(t_1)=1=\val_G(t_1)$, and the
+identity fails there. Every use of the lemma below therefore takes care
+that its argument is not a sink.
+\end{lemma}
+
+\begin{proof}
+Since $G$ is stopping, under every positional pair the token is absorbed
+almost surely, so the probabilities of reaching $t_1$ and of reaching
+$t_0$ sum to $1$. A pair $(\sigma,\tau)$ of $G$ is the pair
+$(\tau,\sigma)$ of $\bar G$ with the roles exchanged, and the $\bar
+G$-payoff of that pair at $v$ is $1-v_{\sigma,\tau}(v)$. Hence, using
+\Cref{thm:determinacy} twice,
+\[
+  \val_{\bar G}(v)=\max_\tau\min_\sigma\bigl(1-v_{\sigma,\tau}(v)\bigr)
+  =1-\min_\tau\max_\sigma v_{\sigma,\tau}(v)=1-\val_G(v). \qedhere
+\]
+\end{proof}
+
+\begin{theorem}[Equivalence]\label{thm:compare-equivalence}
+\textsc{SSG-Value} and \textsc{SSG-Compare} are polynomial-time
+equivalent. Moreover $n$ \emph{non-adaptive} queries to
+\textsc{SSG-Compare} suffice to compute an optimal Max strategy, and
+hence the exact value vector, of a stopping SSG.
+\end{theorem}
+
+\begin{proof}
+\emph{\textsc{SSG-Value} $\le$ \textsc{SSG-Compare}.} Let $G$ be an
+arbitrary SSG with start vertex $v_0$, and let $G_m$ and
+$D=2^{\lceil 3a/2\rceil}$ be as in \Cref{thm:stopping-transform}. One
+cannot simply compare $\val_{G_m}(v_0)$ against $\tfrac12$: the
+transformation moves the threshold, and comparing at $\tfrac12$ gives the
+wrong answer already for the one-vertex game $c\to\{t_1,t_0\}$, where
+$\val_G(c)=\tfrac12$ but $\val_{G_m}(c)<\tfrac12$. We must therefore
+compare against the shifted threshold, and to do so we manufacture a
+vertex whose value is exactly that threshold.
+
+Put
+\[
+  \theta\;:=\;\tfrac12-\tfrac{3}{8D},
+\]
+a dyadic rational with denominator $8D=2^{k}$, $k:=\lceil 3a/2\rceil+3$.
+Write $\theta=\sum_{i=1}^{k}b_i2^{-i}$ in binary and adjoin to $G_m$ a
+chain of $k$ fresh average vertices $c_1,\dots,c_k$ with
+\[
+  c_i\to\{\,z_i,\;c_{i+1}\,\}\ (i<k),\qquad c_k\to\{z_k,\,t_0\},
+  \qquad z_i:=\begin{cases}t_1,&b_i=1\\ t_0,&b_i=0.\end{cases}
+\]
+Then $\val(c_i)=\tfrac12 [b_i]+\tfrac12\val(c_{i+1})$ with
+$\val(c_{k+1}):=0$, so $\val(c_1)=\sum_i b_i2^{-i}=\theta$. The chain
+reaches a sink from every $c_i$, no vertex of $G_m$ reaches it, and $k=O(a)$,
+so the enlarged game is stopping, has polynomially many vertices, and all
+original values are unchanged.
+
+We claim $\val_G(v_0)\ge\tfrac12$ if and only if
+$\val_{G_m}(v_0)\ge\val(c_1)$, a single \textsc{SSG-Compare} query. If
+$\val_G(v_0)\ge\tfrac12$ then \Cref{thm:stopping-transform} gives
+$\val_{G_m}(v_0)>\tfrac12-\tfrac1{4D}=\tfrac12-\tfrac2{8D}>\theta$. If
+$\val_G(v_0)<\tfrac12$ then, $\val_G(v_0)$ being a rational of
+denominator at most $D$, we get $\val_G(v_0)\le\tfrac12-\tfrac1{2D}$, and
+Step~1 of \Cref{thm:stopping-transform} gives
+$\val_{G_m}(v_0)\le\val_G(v_0)\le\tfrac12-\tfrac4{8D}<\theta$.
+
+\emph{\textsc{SSG-Compare} $\le$ \textsc{SSG-Value}.} Let $G$ be stopping
+with vertices $a,b$. Form the disjoint union of $G$ and its dual
+$\bar G$ of \Cref{lem:duality}, sharing the two sinks, and adjoin a fresh
+average start vertex $s$ with
+\[
+  s\;\to\;\{\,a,\ \bar b\,\},
+\]
+where $\bar b$ is the copy of $b$ in $\bar G$. We may assume $b$ is not a
+sink: otherwise replace it by a fresh average vertex $b'$ with both edges
+to $b$, which leaves every value unchanged, keeps the game stopping, and
+has $\val(b')=\val(b)$. This is exactly the hypothesis
+\Cref{lem:duality} requires, and it is not a corner case --- successors
+that are sinks are common, and comparing against one directly gives the
+wrong answer, since $\val_{\bar G}(t_1)=1$ rather than $0$. The union is
+stopping and
+has $2N-1$ vertices (the two sinks are shared); the two components do not interact, so their values
+are unchanged. By \Cref{lem:duality},
+\[
+  \val(s)\;=\;\tfrac12\bigl(\val_G(a)+\val_{\bar G}(\bar b)\bigr)
+  \;=\;\tfrac12\bigl(1+\val_G(a)-\val_G(b)\bigr),
+\]
+whence $\val(s)\ge\tfrac12$ if and only if $\val_G(a)\ge\val_G(b)$: a
+single \textsc{SSG-Value} query.
+
+\emph{Non-adaptive sufficiency.} Let $G$ be stopping. For each
+$v\in\Vmax$ issue the query ``$\val(v^{(0)})\ge\val(v^{(1)})$?''; these
+$n$ queries do not depend on one another. Their answers determine, for
+each $v$, a successor attaining
+$\max\bigl(w^\ast(v^{(0)}),w^\ast(v^{(1)})\bigr)$; let $\sigma$ choose it.
+By \Cref{thm:opt-subcube}, $\sigma\in\Opt$. Then $\val_\sigma=w^\ast$ is
+computed in polynomial time by the linear program
+\begin{equation}\label{eq:lp}
+\begin{aligned}
+  \text{maximise } &\textstyle\sum_{u\in V} x(u)\quad\text{subject to } x\in[0,1]^V,\ x(t_1)=1,\ x(t_0)=0,\\
+  &x(v)=x(\sigma(v)) && (v\in\Vmax),\\
+  &x(v)=\tfrac12\bigl(x(v^{(0)})+x(v^{(1)})\bigr) && (v\in\Vavg),\\
+  &x(v)\le x(v^{(0)}),\quad x(v)\le x(v^{(1)}) && (v\in\Vmin).
+\end{aligned}
+\end{equation}
+Its feasible set is exactly $\{x\in\mathcal{X}:x\le T_\sigma x\}$, and by
+\Cref{cor:comparison} every feasible $x$ satisfies $x\le\val_\sigma$,
+while $\val_\sigma$ is itself feasible. Hence $\val_\sigma$ is the unique
+\emph{maximiser}, coordinate by coordinate and therefore also for the sum;
+the direction matters, since the minimum of the same program is attained
+far below $\val_\sigma$.
+\end{proof}
+
+The number of bits actually needed can be reduced further: they need not
+be indexed by the Max vertices at all, but by the \emph{average} vertices,
+and only their relative order matters.
+
+\begin{theorem}[The order of the average values determines the game]\label{thm:order-determines}
+Let $G$ be a stopping SSG with $a=|\Vavg|$. The total preorder induced by
+$w^\ast$ on $\Vavg\cup\{t_0,t_1\}$ determines $w^\ast$ completely, and
+$w^\ast$ is computable from that preorder in polynomial time.
+Consequently \textsc{SSG-Value} admits a certificate of $O(a\log a)$ bits,
+and $O(a\log a)$ adaptive \textsc{SSG-Compare} queries --- all of them
+between average vertices --- suffice to solve the game. The bound involves
+neither $|V|$ nor $|\Vmax|$ nor $|\Vmin|$.
+\end{theorem}
+
+\begin{proof}
+Declare every average vertex a terminal. What remains is a deterministic
+max/min game $H$ whose terminal set is $\Vavg\cup\{t_0,t_1\}$, and whose
+terminal payoffs, though unknown, are ordered by the given preorder. Let
+$K_0\succ K_1\succ\cdots\succ K_\ell$ be the classes, highest first, and
+put $Y_i:=K_0\cup\cdots\cup K_i$.
+
+By \Cref{lem:det-game} applied to $H$, the value of a non-terminal $v$ is
+the payoff of the best class Max can force, so $v$ belongs to class $K_i$
+for the least $i$ with $v\in\mathrm{Attr}(Y_i)$; and if $v$ lies in no
+$\mathrm{Attr}(Y_i)$ then Min keeps the play away from every terminal
+forever and $v$ has value $0$, the value of $t_0$. Each
+$\mathrm{Attr}(Y_i)$ is one backward sweep, so $\ell+1\le a+2$ sweeps
+assign every vertex of $G$ a class, using only the preorder.
+
+Every vertex now carries a class, so at each $v\in\Vmax$ we may select a
+successor of highest class and at each $v\in\Vmin$ one of lowest class;
+let $(\sigma,\tau)$ be any such pair. Because classes order values,
+$\sigma$ is greedy for $w^\ast$ and $\tau$ is greedy for Min, whence
+$(T_{\sigma,\tau}w^\ast)(v)=(Tw^\ast)(v)=w^\ast(v)$ at every vertex: at
+$\Vmax$ and $\Vmin$ by the choice of $\sigma,\tau$, and at $\Vavg$ and the
+sinks because the operators agree there. So $w^\ast$ is a fixed point of
+$T_{\sigma,\tau}$ and therefore equals $v_{\sigma,\tau}$ by
+\Cref{thm:contraction} --- one exact linear solve.
+
+A total preorder on $a+2$ elements is specified by $O(a\log a)$ bits, and
+sorting the average vertices by value takes $O(a\log a)$ comparisons, each
+an \textsc{SSG-Compare} query between two average vertices.
+\end{proof}
+
+\begin{remark}
+\Cref{thm:order-determines} strictly sharpens the counting in
+\Cref{thm:compare-equivalence} whenever $a<n$: the game is pinned down not
+by one bit per Max vertex but by the relative order of the average values,
+and the Max and Min vertices contribute nothing beyond what attractor
+computations recover for free. Two things it does \emph{not} give. It does
+not give a better algorithm --- enumerating preorders costs
+$2^{\Theta(a\log a)}$, worse than the $2^{a}\mathrm{poly}(N)$ of
+\Cref{thm:few-avg}. And it does not shrink the difficulty: by
+\Cref{thm:compare-equivalence} each of the $O(a\log a)$ comparisons is
+itself an instance of \Cref{prob:main}. The decoding procedure was
+implemented and checked against exhaustive computation on $903$ stopping
+games, reproducing the exact value vector every time.
+\end{remark}
+
+The atomic step of the selection problem is itself exactly as hard.
+
+\begin{corollary}[Deciding wrongness is the whole problem]\label{cor:wrong-equivalence}
+Call $v\in\Vmax$ \emph{wrong} at $\sigma$ if $\sigma(v)\notin A_v$, i.e.\
+if $\sigma$ does not choose a $w^\ast$-maximising successor at $v$. The
+problem \textsc{Wrong-Vertex} --- given a stopping SSG, a Max strategy
+$\sigma$ and a vertex $v\in\Vmax$, decide whether $v$ is wrong at
+$\sigma$ --- is polynomial-time equivalent to \textsc{SSG-Value}.
+\end{corollary}
+
+\begin{proof}
+Write $\{a,b\}$ for the two successors of $v$ with $\sigma(v)=a$. Then
+$v$ is wrong at $\sigma$ exactly when $w^\ast(b)>w^\ast(a)$, so a single
+\textsc{SSG-Compare} query decides it; by
+\Cref{thm:compare-equivalence} this is a polynomial-time reduction to
+\textsc{SSG-Value}.
+
+Conversely, given a stopping SSG $H$ and vertices $a,b$, adjoin one fresh
+Max vertex $v$ with $v\to\{a,b\}$. Nothing reaches $v$, so all values of
+$H$ are unchanged and the enlarged game is still stopping. Let $\sigma$
+be any Max strategy of the enlarged game with $\sigma(v)=a$. Then $v$ is
+wrong at $\sigma$ if and only if $\val_H(b)>\val_H(a)$, i.e.\ if and only
+if the answer to \textsc{SSG-Compare} on $(H,a,b)$ is negative. So
+\textsc{SSG-Compare}, and hence \textsc{SSG-Value}, reduces to
+\textsc{Wrong-Vertex}.
+\end{proof}
+
+\begin{remark}
+\Cref{thm:compare-equivalence} sharpens \Cref{cor:selection}. The
+difficulty of \textsc{SSG-Value} is neither the length of improving paths
+(linear, \Cref{thm:short-path}) nor the amount of information required
+(exactly $n$ bits, one per Max vertex, and they need not be obtained
+adaptively). It is that each individual bit is itself an instance of the
+original problem. Any polynomial algorithm must therefore extract these
+$n$ bits by some global mechanism rather than by resolving them one at a
+time --- and no such mechanism is supplied by anything proved here.
+\end{remark}
+
+\subsection{What a certificate would look like}
+
+It is worth recording exactly what object a polynomial-time algorithm
+would have to produce, because the answer is short and shows that the
+certificate system is not the difficulty.
+
+\begin{definition}[Bracket]\label{def:bracket}
+A \emph{bracket} for a stopping SSG is a pair $(x,y)\in\mathcal{X}^2$ with
+$x\le Tx$ and $Ty\le y$. It \emph{decides} an ordered pair of vertices
+$(p,q)$ if $x(p)>y(q)$.
+\end{definition}
+
+\begin{proposition}[Brackets are sound, complete, and as hard as the problem]\label{prop:bracket}
+Let $G$ be a stopping SSG.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{(Soundness)} If a bracket decides $(p,q)$ then $w^\ast(p)>w^\ast(q)$.
+\item \emph{(Completeness)} $(w^\ast,w^\ast)$ is a bracket, and it decides
+  $(p,q)$ whenever $w^\ast(p)>w^\ast(q)$.
+\item Deciding whether a given pair $(x,y)$ is a bracket, and whether it
+  decides a given $(p,q)$, takes $O(N)$ arithmetic operations.
+\item There is a polynomial-time algorithm which, for every stopping SSG
+  and every $v\in\Vmax$ whose two successors have distinct values, outputs
+  a bracket deciding them in the correct order, \emph{if and only if}
+  \textsc{SSG-Value} is decidable in polynomial time.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) By \Cref{cor:comparison}, $x\le Tx$ gives $x\le w^\ast$ and $Ty\le y$
+gives $w^\ast\le y$. Hence $w^\ast(p)\ge x(p)>y(q)\ge w^\ast(q)$.
+(b) $Tw^\ast=w^\ast$, so $(w^\ast,w^\ast)$ is a bracket, and it decides
+exactly the true strict comparisons. (c) Both tests are $N$ evaluations of
+$T$ at one coordinate each.
+
+(d) ($\Rightarrow$) Running the algorithm at each $v\in\Vmax$ yields, by
+(a), the correct sign of $w^\ast(v^{(0)})-w^\ast(v^{(1)})$ whenever the two
+differ, and when it fails to produce a bracket the two values are equal
+and either choice is greedy. This is exactly the list of $n$ comparison
+bits of \Cref{thm:compare-equivalence}, from which an optimal $\sigma$ and
+then $\val$ follow in polynomial time. ($\Leftarrow$) If
+\textsc{SSG-Value} is in $\mathrm{P}$ then, by the non-adaptive part of
+\Cref{thm:compare-equivalence}, $w^\ast$ is computable in polynomial time,
+and $(w^\ast,w^\ast)$ is the required bracket by (b).
+\end{proof}
+
+\begin{remark}
+So the certificate system is complete and its verification is trivial;
+what is missing is a way to \emph{find} a bracket other than by computing
+$w^\ast$ itself. \Cref{prop:bracket}(d) makes precise that this is not a
+gap that a cleverer certificate format could close --- any sound complete
+format has the same property, since by (b) the value vector is always a
+witness and by (a) no witness can be wrong. Soundness was also checked
+numerically: over $713$ randomly generated brackets on stopping games,
+the $3506$ comparisons they decided were correct without exception.
+\end{remark}
+
+\section{A subexponential upper bound}\label{sec:randomfacet}
+
+This section contains the strongest positive algorithmic result we can
+prove: a Las~Vegas algorithm deciding \Cref{prob:main} in expected time
+$e^{2\sqrt n}\,\mathrm{poly}(N)$, where $n=|\Vmax|$. It is subexponential
+and not polynomial. Everything is proved; in particular we state and
+prove the subgame apparatus that the analysis silently needs.
+
+Throughout this section $G$ is a \emph{stopping} SSG and Max strategies
+are identified with $\{0,1\}^{\Vmax}$. Recall $\Phi(x)=\sum_{u\in V}x(u)$
+and write $\Phi(\pi):=\Phi(\val_\pi)$.
+
+\subsection{Subcubes, subgames and dead coordinates}
+
+\begin{definition}\label{def:subcube}
+Let $F\subseteq\Vmax$ and let $\rho$ assign to each $v\in F$ one of its
+successors. The \emph{subcube} $C=C(\rho)$ is the set of Max strategies
+extending $\rho$; its \emph{free} coordinates are
+$\mathrm{free}(C)=\Vmax\setminus F$ and $n_C:=|\mathrm{free}(C)|$. The
+\emph{subgame} $G_C$ is $G$ with \emph{both} out-edges of each $v\in F$
+redirected to $\rho(v)$. For a free $w$ and a successor $b$ of $w$,
+$C_{w,b}$ denotes the facet of $C$ additionally fixing $w$ to $b$.
+\end{definition}
+
+\begin{lemma}[Subgame basics]\label{lem:subgame}
+Let $C$ be a subcube of a stopping SSG $G$. Then:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $G_C$ is stopping, and the map sending a Max strategy of $G_C$ to its
+  restriction-and-completion in $C$ is value-preserving: for every Max
+  strategy $\pi'$ of $G_C$ there is $\pi\in C$ inducing the same Markov
+  chains, and conversely. (Formally $G_C$ still has $2^{|\Vmax|}$ Max
+  strategies, but the choices at the fixed vertices are inert because both
+  their out-edges coincide;)
+\item for $\pi\in C$ the vector $\val_\pi$ is the same whether computed
+  in $G$ or in $G_C$;
+\item writing $\opt(C)$ for the value vector of $G_C$, we have
+  $\opt(C)\ge\val_\pi$ pointwise for every $\pi\in C$, with equality for
+  at least one $\pi\in C$;
+\item $C'\subseteq C$ implies $\opt(C')\le\opt(C)$ pointwise;
+\item $\pi\in C$ has no strictly switchable coordinate in
+  $\mathrm{free}(C)$ if and only if $\val_\pi=\opt(C)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) Every positional pair of $G_C$ arises from a positional pair of $G$
+(extend $\rho$ arbitrarily) inducing the same Markov chain; since $G$ is
+stopping, so is $G_C$. The correspondence of strategies is immediate from
+\Cref{def:subcube}. (b) For $\pi\in C$ the chains $M_{\pi,\tau}$ in $G$
+and in $G_C$ coincide for every $\tau$, so the pointwise minima over
+$\tau$ agree. (c) Apply \Cref{thm:stopping-determinacy} to $G_C$ and use
+(b). (d) $G_{C'}$ has fewer Max strategies, all of them strategies of
+$G_C$, so the maximum in (c) is over a subset. (e) Apply
+\Cref{lem:local-global} to $G_C$, using (b).
+\end{proof}
+
+\begin{definition}[Facet potentials and dead coordinates]\label{def:dead}
+For a subcube $C$, a free coordinate $w$ and a successor $b$ of $w$ put
+$s(C;w,b):=\Phi\bigl(\opt(C_{w,b})\bigr)$. Given also $\sigma\in C$, call
+a free coordinate $z$ \emph{dead} for $(C,\sigma)$ if
+$s(C;z,\bar\sigma(z))<\Phi(\sigma)$, and let $\mathrm{alive}(C,\sigma)$
+be the number of free coordinates that are not dead.
+\end{definition}
+
+\begin{lemma}[Facet exclusion]\label{lem:facet-exclusion}
+Let $\pi\in C$ and let $w$ be free with successor $b$. If
+$\Phi(\pi)>s(C;w,b)$ then $\pi(w)\ne b$.
+\end{lemma}
+
+\begin{proof}
+If $\pi(w)=b$ then $\pi\in C_{w,b}$, so $\val_\pi\le\opt(C_{w,b})$ by
+\Cref{lem:subgame}(c) and hence $\Phi(\pi)\le s(C;w,b)$.
+\end{proof}
+
+\subsection{The algorithm and its correctness}
+
+\begin{definition}[Random facet]\label{def:rf}
+$\mathrm{RF}(C,\sigma)$, for a subcube $C$ of a stopping SSG and
+$\sigma\in C$:
+\begin{enumerate}[label=\arabic*.,leftmargin=2.2em]
+\item if $n_C=0$, return $(\sigma,\val_\sigma)$;
+\item pick $v\in\mathrm{free}(C)$ uniformly at random;
+\item $(\sigma^{\!*},\val_{\sigma^{\!*}}):=\mathrm{RF}\bigl(C_{v,\sigma(v)},\sigma\bigr)$;
+\item if $v$ is not strictly switchable at $\sigma^{\!*}$ --- the test
+  being made in $G$ itself, equivalently in $G_C$, where $v$ is still
+  free, and not in $G_{C_{v,\sigma(v)}}$, where its two out-edges have
+  been identified --- return
+  $(\sigma^{\!*},\val_{\sigma^{\!*}})$;
+\item otherwise set $\sigma^{\!**}:=\sigma^{\!*}[v]$ and return
+  $\mathrm{RF}\bigl(C_{v,\bar\sigma(v)},\sigma^{\!**}\bigr)$.
+\end{enumerate}
+A \emph{switch} is an execution of step~5; $S(C,\sigma)$ denotes their
+total number.
+\end{definition}
+
+\begin{theorem}[Correctness]\label{thm:rf-correct}
+$\mathrm{RF}(C,\sigma)$ terminates and returns a strategy $\pi\in C$ with
+$\val_\pi=\opt(C)$. Moreover every strategy it holds has value vector
+pointwise at least that of its predecessor.
+\end{theorem}
+
+\begin{proof}
+Induction on $n_C$. If $n_C=0$ then $C=\{\sigma\}$ and
+$\val_\sigma=\opt(C)$ by \Cref{lem:subgame}(c). Let $n_C\ge1$ and pick
+$v$. By induction $\sigma^{\!*}$ satisfies
+$\val_{\sigma^{\!*}}=\opt(C_{v,\sigma(v)})$, and
+$\sigma^{\!*}(v)=\sigma(v)$.
+
+If step~4 applies, then $\sigma^{\!*}$ has no strictly switchable
+coordinate among $\mathrm{free}(C_{v,\sigma(v)})$, by
+\Cref{lem:subgame}(e) applied to $C_{v,\sigma(v)}$, and $v$ is not
+strictly switchable either; so $\sigma^{\!*}$ has no strictly switchable
+coordinate in $\mathrm{free}(C)$, and \Cref{lem:subgame}(e) applied to
+$C$ gives $\val_{\sigma^{\!*}}=\opt(C)$.
+
+Otherwise, by \Cref{lem:switch}, $\val_{\sigma^{\!**}}\ge\val_{\sigma^{\!*}}$
+pointwise with strict inequality at $v$, and
+$\sigma^{\!**}\in C_{v,\bar\sigma(v)}$. By induction the final call
+returns $\pi$ with $\val_\pi=\opt(C_{v,\bar\sigma(v)})\ge\val_{\sigma^{\!**}}$.
+Hence $\opt(C_{v,\bar\sigma(v)})\ge\val_{\sigma^{\!*}}=\opt(C_{v,\sigma(v)})$
+pointwise and the inequality is strict at $v$. By
+\Cref{lem:subgame}(c) some $\pi^{\!*}\in C$ attains $\opt(C)$, and
+$\pi^{\!*}$ lies in one of the two facets, so $\opt(C)$ equals
+$\opt(C_{v,\sigma(v)})$ or $\opt(C_{v,\bar\sigma(v)})$; since both are
+$\le\opt(C)$ by \Cref{lem:subgame}(d) and the second strictly dominates
+the first, $\opt(C)=\opt(C_{v,\bar\sigma(v)})=\val_\pi$.
+
+Every switch strictly increases $\Phi$ by \Cref{lem:switch}, and there
+are finitely many strategies, so only finitely many switches occur and
+the recursion terminates. Monotonicity of the held values is
+\Cref{lem:switch} together with the inductive statement.
+\end{proof}
+
+\subsection{The expected number of switches}
+
+\begin{definition}\label{def:frec}
+Let $f(0):=0$ and, for $m\ge1$,
+$f(m):=f(m-1)+1+\frac1m\sum_{j=0}^{m-1}f(j)$.
+\end{definition}
+
+Since $f\ge0$, the recursion gives $f(m)-f(m-1)\ge1>0$, so $f$ is
+strictly increasing.
+
+\begin{theorem}[Switch bound]\label{thm:rf-bound}
+For every stopping SSG, every subcube $C$ and every $\sigma\in C$,
+\[
+  \mathbb{E}\bigl[S(C,\sigma)\bigr]\;\le\;f\bigl(\mathrm{alive}(C,\sigma)\bigr)\;\le\;f(n_C).
+\]
+\end{theorem}
+
+\begin{proof}
+Strong induction on $n_C$; note that both recursive calls have exactly
+$n_C-1$ free coordinates, so the induction is well founded. (The
+induction cannot be run on $\mathrm{alive}$, which need not decrease.)
+For $n_C=0$ there are no switches and $f(0)=0$.
+
+Write $m:=\mathrm{alive}(C,\sigma)$, $k:=n_C-m$ for the number of dead
+coordinates, and
+\[
+  D\;:=\;\bigl\{w\in\mathrm{free}(C)\;:\;\opt(C_{w,\sigma(w)})\ne\opt(C)\bigr\},
+  \qquad d:=|D| .
+\]
+By \Cref{lem:subgame}(d), $\opt(C_{w,\sigma(w)})\le\opt(C)$ always, so
+membership of $D$ means strict pointwise domination.
+
+\smallskip\noindent\emph{Step 1: dead $\Rightarrow$ not in $D$.}
+Let $z$ be dead and let $\pi\in C$ attain $\opt(C)$
+(\Cref{lem:subgame}(c)). Then $\Phi(\pi)=\Phi(\opt(C))\ge\Phi(\sigma)$.
+If $\pi(z)=\bar\sigma(z)$ then \Cref{lem:facet-exclusion} would need
+$\Phi(\pi)\le s(C;z,\bar\sigma(z))<\Phi(\sigma)\le\Phi(\pi)$, absurd.
+Hence $\pi(z)=\sigma(z)$, so $\pi\in C_{z,\sigma(z)}$ and
+$\opt(C_{z,\sigma(z)})\ge\val_\pi=\opt(C)$; with
+\Cref{lem:subgame}(d) this forces equality, i.e.\ $z\notin D$. In
+particular $D$ consists of alive coordinates and $d\le m$.
+
+\smallskip\noindent\emph{Step 2: a switch occurs if and only if $v\in D$.}
+By \Cref{thm:rf-correct}, $\val_{\sigma^{\!*}}=\opt(C_{v,\sigma(v)})$ and
+$\sigma^{\!*}(v)=\sigma(v)$. If $v\notin D$ then
+$\val_{\sigma^{\!*}}=\opt(C)$, which satisfies the Shapley equation of
+$G_C$ at the free Max vertex $v$; hence
+$\val_{\sigma^{\!*}}(\bar\sigma(v))\le\val_{\sigma^{\!*}}(v)=\val_{\sigma^{\!*}}(\sigma^{\!*}(v))$
+and $v$ is not strictly switchable. If $v\in D$ and $v$ were not strictly
+switchable, then as in the proof of \Cref{thm:rf-correct} we would get
+$\val_{\sigma^{\!*}}=\opt(C)$, contradicting
+$\val_{\sigma^{\!*}}=\opt(C_{v,\sigma(v)})\ne\opt(C)$.
+
+\smallskip\noindent\emph{Step 3: the first recursive call.}
+Let $z\ne v$ be dead for $(C,\sigma)$. Since
+$C_{v,\sigma(v)}\cap C_{z,\bar\sigma(z)}\subseteq C_{z,\bar\sigma(z)}$,
+\Cref{lem:subgame}(d) gives
+$s(C_{v,\sigma(v)};z,\bar\sigma(z))\le s(C;z,\bar\sigma(z))<\Phi(\sigma)$,
+so $z$ is dead for $(C_{v,\sigma(v)},\sigma)$. Hence the first call has
+alive count at most $m-1$ if $v$ is alive, and at most $m$ if $v$ is
+dead.
+
+\smallskip\noindent\emph{Step 4: the second recursive call.}
+Suppose $v\in D$ is picked and the switch occurs; by Step~1, $v$ is
+alive. Since $\sigma\in C_{v,\sigma(v)}$ we have
+$\val_\sigma\le\opt(C_{v,\sigma(v)})=\val_{\sigma^{\!*}}$, so
+$\Phi(\sigma^{\!*})\ge\Phi(\sigma)$, and by \Cref{lem:switch}
+\[
+  \Phi(\sigma^{\!**})\;>\;\Phi(\sigma^{\!*})\;=\;s(C;v,\sigma(v))
+  \quad\text{and}\quad \Phi(\sigma^{\!**})>\Phi(\sigma).
+\]
+\emph{(i) The $k$ dead coordinates stay dead.} Let $z\ne v$ be dead for
+$(C,\sigma)$. If $\sigma^{\!**}(z)=\bar\sigma(z)$ then
+\Cref{lem:facet-exclusion} gives
+$\Phi(\sigma^{\!**})\le s(C;z,\bar\sigma(z))<\Phi(\sigma)<\Phi(\sigma^{\!**})$,
+absurd; so $\sigma^{\!**}(z)=\sigma(z)$ and therefore
+$\overline{\sigma^{\!**}}(z)=\bar\sigma(z)$. Consequently
+\[
+  s\bigl(C_{v,\bar\sigma(v)};z,\overline{\sigma^{\!**}}(z)\bigr)
+  \;=\;s\bigl(C_{v,\bar\sigma(v)};z,\bar\sigma(z)\bigr)
+  \;\le\;s(C;z,\bar\sigma(z))\;<\;\Phi(\sigma)\;<\;\Phi(\sigma^{\!**}),
+\]
+so $z$ is dead for $(C_{v,\bar\sigma(v)},\sigma^{\!**})$.
+
+\emph{(ii) $r(v)-1$ further coordinates become dead.} For $w\in D$ put
+$r(w):=\bigl|\{w'\in D: s(C;w',\sigma(w'))\le s(C;w,\sigma(w))\}\bigr|\ge1$.
+Let $w\in D$, $w\ne v$, with $s(C;w,\sigma(w))\le s(C;v,\sigma(v))$;
+there are $r(v)-1$ such $w$, all alive by Step~1 and all free in
+$C_{v,\bar\sigma(v)}$. Then
+$\Phi(\sigma^{\!**})>s(C;v,\sigma(v))\ge s(C;w,\sigma(w))$, so
+\Cref{lem:facet-exclusion} gives $\sigma^{\!**}(w)\ne\sigma(w)$, i.e.\
+$\overline{\sigma^{\!**}}(w)=\sigma(w)$, and hence
+\[
+  s\bigl(C_{v,\bar\sigma(v)};w,\overline{\sigma^{\!**}}(w)\bigr)
+  \;=\;s\bigl(C_{v,\bar\sigma(v)};w,\sigma(w)\bigr)
+  \;\le\;s(C;w,\sigma(w))\;<\;\Phi(\sigma^{\!**}),
+\]
+so $w$ too is dead for $(C_{v,\bar\sigma(v)},\sigma^{\!**})$. The
+coordinates in (i) and (ii) are distinct, so the second call has at least
+$k+r(v)-1$ dead coordinates among its $n_C-1$ free ones, i.e.\ alive
+count at most $(n_C-1)-(k+r(v)-1)=m-r(v)$.
+
+\smallskip\noindent\emph{Step 5: assembling.}
+Condition on the uniformly chosen $v$. The bounds of Steps~3 and~4 hold
+\emph{deterministically} on the corresponding events, and the randomness
+of each recursive call is independent of the choice of $v$, so the
+induction hypothesis may be applied inside each branch and the
+conditional expectations combined by the tower rule. Using Step~2 for
+which branches incur a switch,
+\[
+  \mathbb{E}[S]\;\le\;\frac1{n_C}\Bigl[\,k\,f(m)\;+\;(m-d)f(m-1)\;+\;\sum_{v\in D}\bigl(f(m-1)+1+f(m-r(v))\bigr)\Bigr].
+\]
+Ordering $D$ by increasing $s(C;\cdot,\sigma(\cdot))$, its $j$-th element
+has $r\ge j$; as $f$ is nondecreasing,
+$\sum_{v\in D}f(m-r(v))\le\sum_{j=1}^{d}f(m-j)$. Since $f\ge0$ and
+$d\le m$,
+\[
+  d+\sum_{j=1}^{d}f(m-j)\;\le\;m+\sum_{j=1}^{m}f(m-j)\;=\;m+\sum_{i=0}^{m-1}f(i).
+\]
+Therefore
+\[
+  \mathbb{E}[S]\;\le\;\frac1{n_C}\Bigl[k\,f(m)+m\Bigl(f(m-1)+1+\frac1m\sum_{i=0}^{m-1}f(i)\Bigr)\Bigr]
+  \;=\;\frac{k\,f(m)+m\,f(m)}{n_C}\;=\;f(m),
+\]
+by \Cref{def:frec}. If $m=0$ then $D=\emptyset$ by Step~1, no switch ever
+occurs, and $\mathbb{E}[S]=0=f(0)$; the term $m\,f(m-1)$ has coefficient
+$0$ and the undefined value $f(-1)$ never arises. Finally
+$f(m)\le f(n_C)$ because $m\le n_C$ and $f$ is nondecreasing.
+\end{proof}
+
+\begin{lemma}\label{lem:fbound}
+$f(m)\le e^{2\sqrt m}$ for every $m\ge0$.
+\end{lemma}
+
+\begin{proof}
+For $m\le8$ this is checked directly: the exact values are
+$f(0..8)=0,\,1,\,\tfrac52,\,\tfrac{14}3,\,\tfrac{185}{24},\,\tfrac{713}{60},\,\tfrac{12607}{720},\,\tfrac{62941}{2520},\,\tfrac{1401409}{40320}$,
+the largest being $f(8)\approx34.76$ against $e^{2\sqrt8}\approx286.2$.
+
+Let $m\ge9$ and assume the bound for all smaller arguments. Put
+$t:=1/\sqrt m\le\tfrac13$. Since $x\mapsto e^{2\sqrt x}$ is increasing,
+$\sum_{j=0}^{m-1}e^{2\sqrt j}\le\int_0^{m}e^{2\sqrt x}\,dx=(\sqrt m-\tfrac12)e^{2\sqrt m}+\tfrac12$,
+the antiderivative being $(\sqrt x-\tfrac12)e^{2\sqrt x}$. Also
+$\sqrt m-\sqrt{m-1}=1/(\sqrt m+\sqrt{m-1})\ge 1/(2\sqrt m)=t/2$, so
+$e^{2\sqrt{m-1}}\le e^{2\sqrt m}e^{-t}$. Hence
+\[
+  f(m)\;\le\;e^{2\sqrt m}e^{-t}+1+\frac1m\Bigl[(\sqrt m-\tfrac12)e^{2\sqrt m}+\tfrac12\Bigr]
+  \;=\;e^{2\sqrt m}\bigl[e^{-t}+t-\tfrac{t^{2}}2\bigr]+1+\tfrac{t^{2}}2 .
+\]
+For $0<t\le1$ the alternating series with decreasing terms gives
+$e^{-t}\le1-t+\tfrac{t^2}2-\tfrac{t^3}6+\tfrac{t^4}{24}$, so the bracket
+is at most $1-\tfrac{t^3}6+\tfrac{t^4}{24}\le1-\tfrac{t^3}8$. It
+therefore suffices that $e^{2\sqrt m}\tfrac{t^3}8\ge1+\tfrac{t^2}2$.
+With $u:=\sqrt m\ge3$ this reads $e^{2u}\ge8u^{3}\bigl(1+\tfrac1{2u^{2}}\bigr)$,
+which is implied by $e^{2u}\ge12u^{3}$ since
+$1+\tfrac1{2u^2}\le\tfrac32$ for $u\ge1$. Finally
+$h(u):=2u-\ln12-3\ln u$ satisfies $h(3)=6-\ln12-3\ln3\approx0.219>0$ and
+$h'(u)=2-3/u>0$ for $u>\tfrac32$, so $h\ge0$ for all $u\ge3$.
+\end{proof}
+
+\begin{theorem}[Subexponential decision procedure]\label{thm:subexp}
+There is a Las~Vegas algorithm that decides \Cref{prob:main} --- always
+correctly --- in expected time $e^{2\sqrt n}\cdot\mathrm{poly}(N)$, where
+$n=|\Vmax|$ and $N=|V|$ of the input game.
+\end{theorem}
+
+\begin{proof}
+Given $G$ and $v_0$, build the stopping game $G_m$ of
+\Cref{thm:stopping-transform}; it has $O(N(a+\log N))$ vertices and the
+same set $\Vmax$, hence the same $n$. Run $\mathrm{RF}$ on the full cube
+from an arbitrary initial strategy. By \Cref{thm:rf-correct} it returns a
+strategy $\pi$ with $\val_\pi=\val_{G_m}$; comparing $\val_\pi(v_0)$
+against the threshold $\tfrac12-\tfrac1{4D}$ of
+\Cref{thm:stopping-transform} decides $\val_G(v_0)\ge\tfrac12$, so the
+output is always correct.
+
+For the running time: by \Cref{thm:rf-bound,lem:fbound} the expected
+number of switches is at most $f(n)\le e^{2\sqrt n}$. The recursion tree
+has at most $(S+1)(n+1)$ nodes, since between two consecutive switches
+the recursion descends a chain of at most $n+1$ calls; by linearity of
+expectation the expected number of nodes is $O\bigl(e^{2\sqrt n}n\bigr)$.
+Each node performs one evaluation of $\val_\sigma$, which is the unique
+optimum of the linear program in the proof of
+\Cref{thm:compare-equivalence} --- correct because $G_m$ is stopping, by
+\Cref{cor:comparison} --- together with $O(n)$ comparisons of rationals
+of polynomial bit-size (\Cref{lem:denominator}). Hence the expected total
+time is $e^{2\sqrt n}\cdot\mathrm{poly}(N)$.
+\end{proof}
+
+\begin{remark}
+The algorithm was implemented and run in exact rational arithmetic on
+stopping games; it returned the exact optimum in all $692$ runs, and the
+number of switches never exceeded $f(\cdot)$. Independently, the bound of
+\Cref{thm:rf-bound} was tested on roughly $13{,}000$ subcube/strategy
+pairs drawn from $185$ stopping games with no violation, and each of the
+five steps of its proof was checked separately (over $50{,}000$
+individual checks). \Cref{lem:fbound} was verified numerically far beyond
+the range needed, the ratio $f(m)/e^{2\sqrt m}$ peaking at $0.148$ at
+$m=2$ and decreasing thereafter.
+
+We stress what \Cref{thm:subexp} is not. The bound $e^{2\sqrt n}$ is
+subexponential but superpolynomial, so this does not touch
+\Cref{prob:main}. Nor do we claim the analysis is tight: the recurrence
+bound is attained at $\mathrm{alive}=1$, where $\mathbb{E}[S]=f(1)=1$, but
+on the instances we could generate the ratio $\mathbb{E}[S]/f(m)$ falls
+off steadily with $m$ --- the best observed values were
+$0.80,0.71,0.56,0.45$ at $m=2,3,4,5$ --- so the true worst-case behaviour
+of the algorithm may well be better than $f(n)$. What we assert is only
+that $f(n)$ is a proved upper bound.
+\end{remark}
+
+\section{The remaining gap}\label{sec:gap}
+
+Everything above is proved. The following statement is not, and it is
+exactly what a polynomial-time algorithm along these lines requires.
+
+\begin{definition}[Switching rule]\label{def:rule}
+A \emph{switching rule} is a polynomial-time computable map $R$ that,
+given a stopping SSG $G$, the history $\sigma_0,\dots,\sigma_t$ of
+strategies produced so far and the value vector $\val_{\sigma_t}$,
+returns a nonempty subset $R(\cdot)\subseteq S_{\sigma_t}$ whenever
+$S_{\sigma_t}\ne\emptyset$.
+\end{definition}
+
+\begin{definition}[The missing statement]\label{def:missing}
+\textsc{(Poly-Rule)} \emph{There exist a switching rule $R$ and a
+polynomial $p$ such that for every stopping SSG $G$ and every initial
+strategy $\sigma_0$, the iteration $\sigma_{t+1}:=\sigma_t[R(\cdot)]$
+reaches a strategy with $S_\sigma=\emptyset$ within $p(|V(G)|)$ steps.}
+\end{definition}
+
+\begin{theorem}[The gap is exactly the problem]\label{thm:gap-equivalence}
+\textsc{(Poly-Rule)} holds if and only if \textsc{SSG-Value} is decidable
+in polynomial time.
+\end{theorem}
+
+\begin{proof}
+($\Rightarrow$) Given $G$ and $v_0$, build $G_m$ by
+\Cref{thm:stopping-transform} in polynomial time; $G_m$ is stopping and
+of size $O(N(a+\log N))$. Run the iteration of \Cref{def:missing} from an
+arbitrary $\sigma_0$. Each step requires evaluating $\val_{\sigma_t}$,
+which is the unique optimum of the linear program displayed in the proof
+of \Cref{thm:compare-equivalence}; that program's feasible set is
+$\{x\in\mathcal{X}:x\le T_{\sigma_t}x\}$ and its optimum is
+$\val_{\sigma_t}$ precisely because $G_m$ is stopping, by
+\Cref{cor:comparison} --- this is the step that
+\Cref{ex:pi-fails} shows cannot be replaced by greedy improvement. Linear
+programs of polynomial bit-size are solvable in polynomial time. Then
+$S_{\sigma_t}$ is computed by $|\Vmax|$ comparisons. By hypothesis the
+iteration halts within $p(|V(G_m)|)$ steps at a strategy with
+$S_\sigma=\emptyset$, which by \Cref{lem:local-global} is optimal, so
+$\val_{\sigma}=\val_{G_m}$. Comparing $\val_{G_m}(v_0)$ with the explicit
+threshold $\tfrac12-\tfrac1{4D}$ of \Cref{thm:stopping-transform} decides
+$\val_G(v_0)\ge\tfrac12$. All steps are polynomial.
+
+($\Leftarrow$) Suppose \textsc{SSG-Value} is decidable in polynomial time.
+Let $G$ be a stopping SSG. By \Cref{thm:compare-equivalence},
+\textsc{SSG-Compare} is then also decidable in polynomial time, so for
+each $v\in\Vmax$ we may decide in polynomial time whether
+$\val(v^{(0)})\ge\val(v^{(1)})$ and thereby compute, in $n$ queries, a
+strategy $\sigma^\ast$ that is greedy with respect to $w^\ast$; by
+\Cref{thm:opt-subcube}, $\sigma^\ast\in\Opt$. Define the switching rule
+$R$ to be: compute $\sigma^\ast$ as above (this depends only on $G$, not
+on the history) and return $\{v\}$ for the least $v\in S_{\sigma_t}$ with
+$\sigma_t(v)\ne\sigma^\ast(v)$. The rule is polynomial-time computable,
+and such a $v$ exists whenever $S_{\sigma_t}\ne\emptyset$ by
+\Cref{thm:short-path}. Each application strictly decreases
+$|\{v:\sigma_t(v)\ne\sigma^\ast(v)\}|$, so after at most $n$ iterations
+the current strategy either equals $\sigma^\ast$ or has already reached
+$S_\sigma=\emptyset$; in both cases the iteration halts within
+$n\le|V(G)|$ steps. Thus $R$ witnesses \textsc{(Poly-Rule)} with
+$p(x)=x$.
+\end{proof}
+
+\begin{remark}
+The converse direction is of course not a route to an algorithm --- it
+consumes the very oracle one is trying to build. Its content is
+negative and precise: \textsc{(Poly-Rule)} is neither weaker nor
+stronger than \Cref{prob:main}, so no partial progress on switching rules
+can be worth less, or more, than the whole problem. This is why
+\Cref{def:missing} is reported as a gap rather than as a plan.
+\end{remark}
+
+\begin{remark}[Why the results above do not supply \textsc{(Poly-Rule)}]
+\Cref{thm:short-path} guarantees that a path of length at most $n$
+exists from every $\sigma$ to $\Opt$, but its proof is
+non-constructive in the decisive respect: it selects a disagreement
+vertex with a fixed but \emph{unknown} optimal $\sigma^\ast$, and
+knowledge of such a $\sigma^\ast$ is precisely knowledge of the answer.
+\Cref{thm:all-switches-refuted} rules out the all-switches rule as a
+dominating choice, and \Cref{thm:cyclic-uso} rules out potential-based
+arguments on the two-player cube. What survives from the analysis is a
+guarantee of a different shape: the random-facet rule admits the proved
+expected bound $e^{2\sqrt n}$ of \Cref{thm:subexp}, which is
+subexponential but not polynomial, and which is tight for that algorithm.
+Closing the gap therefore requires a genuinely new mechanism for
+\emph{selecting} switches, not a sharper analysis of the rules considered
+here.
+\end{remark}
+
+\section{Summary}\label{sec:summary}
+
+\paragraph{Foundations, proved from first principles.} The monotone
+fixed-point theory of the Shapley operator (\Cref{sec:operators}); for
+stopping games, a strategy-independent absorption estimate with exponent
+$|\Vavg|$ (\Cref{lem:absorption}), the resulting contraction and
+uniqueness of fixed points (\Cref{thm:contraction}), and determinacy
+together with the identification of those fixed points with the game
+values (\Cref{thm:stopping-determinacy}) --- so that outside
+\Cref{thm:determinacy} nothing classical is imported. A denominator bound
+$8^{r/2}$ depending only on the number $r$ of average vertices
+(\Cref{lem:denominator}), and an explicit reduction to the stopping case
+with every constant computed (\Cref{thm:stopping-transform}).
+
+\paragraph{Positive algorithmic results.} Several tractable regimes, each
+with a complete proof, and each whose algorithm we implemented and checked
+against exhaustive computation:
+arbitrary SSGs with $a=O(\log N)$ average vertices, in time
+$\mathrm{poly}(N)2^{a}$ and with no stopping hypothesis
+(\Cref{thm:few-avg}); games whose cycles are \emph{pure}, that is in which
+no cycle passes through an average vertex (\Cref{thm:avg-acyclic}) or,
+dually, none passes through a controlled vertex
+(\Cref{thm:player-free}), both in polynomial time; one-player games, by
+an explicit linear program (\Cref{thm:one-player}); and, in general, a
+Las~Vegas algorithm of expected time $e^{2\sqrt n}\,\mathrm{poly}(N)$
+obtained from a full analysis of random-facet strategy improvement
+(\Cref{thm:rf-correct,thm:rf-bound,lem:fbound,thm:subexp}). The last is
+subexponential, not polynomial, and is the strongest general upper bound
+here.
+
+\paragraph{Where the difficulty is.} The optimal Max strategies of a
+stopping game form exactly the subcube of greedy strategies
+(\Cref{thm:opt-subcube}), and from every strategy at most $|\Vmax|$
+single strictly improving switches reach it (\Cref{thm:short-path}). So
+no lower bound can come from the length of improving paths
+(\Cref{cor:selection}); everything is in the \emph{selection} of
+switches. That selection problem is exactly the original problem:
+\textsc{SSG-Value} is polynomial-time equivalent to comparing two vertex
+values, $n$ non-adaptive comparisons determine an optimal strategy
+(\Cref{thm:compare-equivalence}), and deciding whether one given vertex
+is badly chosen is again equivalent to the whole problem
+(\Cref{cor:wrong-equivalence}). The information content is smaller than the
+first count suggests --- the order of the average values already determines
+everything (\Cref{thm:order-determines}) --- but not the difficulty, since
+each comparison is again an instance of the problem.
+
+\paragraph{Refutations and barriers, each with an explicit instance.}
+All-switches does not dominate partial switches
+(\Cref{thm:all-switches-refuted}) and can take more than $|\Vmax|$
+iterations while undoing its own choices
+(\Cref{prop:allswitch-overshoot}); the induced orientation of the
+combined two-player cube can be cyclic, so no potential lives on it
+(\Cref{thm:cyclic-uso}); value iteration needs $2^{\Omega(N)}$ steps
+already on games with no players at all (\Cref{thm:vi-lower}); there is
+no naive Hamming potential (\Cref{thm:hamming-refuted}) and seven natural
+polynomial-time selection rules each fail (\Cref{prop:rules-fail}), while
+the wrong vertices can be a $1/|\Vmax|$ fraction of the switchable ones
+(\Cref{prop:needle}); the exact gain of a switch is a bounded transfer
+impedance divided by an escape probability that can be $2^{-\Theta(N)}$,
+so no potential of polynomial range can work (\Cref{thm:impedance}); and
+no parameter blind to which player owns which vertex can serve as a
+hardness certificate, since it is already large on easy one-player
+instances (\Cref{rem:owner-blind}).
+
+\paragraph{The gap.} \Cref{def:missing} states it at full strength and
+\Cref{thm:gap-equivalence} proves it equivalent to a polynomial-time
+algorithm. What is \emph{not} established anywhere above is a
+polynomial-time mechanism for producing even one of the $n$ comparison
+bits of \Cref{thm:compare-equivalence} --- equivalently, for selecting a
+switchable vertex at which the current strategy is wrong. That is the
+whole of the remaining gap, and it is the whole of the problem.
+
+\end{document}
