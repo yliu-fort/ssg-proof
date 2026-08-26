@@ -1,0 +1,16 @@
+# LaTeX build artefacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.pdf
+
+# Lean build output (Mathlib .olean files are ~8 GB; never commit them)
+lean/.lake/
