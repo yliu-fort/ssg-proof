@@ -43,50 +43,75 @@ surrounding the decision problem \textsc{SSG-Value}: given a simple
 stochastic game and a start vertex $v_0$, decide whether
 $\val(v_0)\ge\tfrac12$. Everything asserted below is proved from first
 principles, and every negative statement is witnessed by an explicit
-instance verified in exact rational arithmetic. We establish: a
-quantitative stopping transformation reducing the problem exactly
-(\Cref{thm:stopping-transform}); the complete fixed-point theory of
-stopping games (\Cref{sec:stopping}); a structure theorem identifying the
-set of optimal Max strategies with a combinatorial subcube
-(\Cref{thm:opt-subcube}), together with an explicit witness that the
-hypothesis cannot be dropped (\Cref{ex:nonstopping-nonsubcube}); a
-polynomial special case --- \emph{arbitrary} SSGs with $O(\log N)$
-average vertices (\Cref{thm:few-avg}) --- together with the one-player
-boundary (\Cref{thm:one-player}) and a constraint it imposes on any
-proposed complexity parameter (\Cref{rem:owner-blind}); a subexponential Las~Vegas algorithm of
-expected running time $e^{2\sqrt n}\,\mathrm{poly}(N)$
-(\Cref{thm:subexp}), which is the strongest upper bound we obtain; and a
-\emph{short improving path} theorem (\Cref{thm:short-path}) showing that
-from every strategy some sequence of at most $|\Vmax|$ single strictly
-improving switches reaches an optimal strategy. Consequently the entire
-difficulty of \textsc{SSG-Value} is concentrated in the \emph{selection}
-problem: improving paths of linear length always exist, and no
-polynomial-time rule is known to find one --- the most natural rule
-provably does not, since all-switches can take more than $|\Vmax|$
-iterations and undo its own choices (\Cref{prop:allswitch-overshoot}). We then record four
-refutations that close off specific proof strategies --- the
-all-switches rule does not dominate partial switches
-(\Cref{thm:all-switches-refuted}); the unique-sink orientations induced
-by simple stochastic games on the combined two-player cube can be cyclic
-(\Cref{thm:cyclic-uso}); value
-iteration needs exponentially many steps already on games with no players
-at all (\Cref{thm:vi-lower}); and an
-improving switch need not reduce the Hamming distance to the optimal set,
-so no naive Hamming potential exists (\Cref{thm:hamming-refuted}), with
-seven natural polynomial-time selection rules refuted individually
-(\Cref{prop:rules-fail}), and a family showing that the guarantee of
-\Cref{thm:short-path} is tight --- the switchable vertices worth taking
-can be a $1/|\Vmax|$ fraction of all switchable vertices
-(\Cref{prop:needle}). We show that \textsc{SSG-Value} is
-polynomial-time equivalent to comparing the values of two vertices, and
-that $n$ such comparisons --- one per Max vertex, and not even
-adaptively chosen --- suffice to determine an optimal strategy (we prove
-sufficiency only; no matching lower bound is claimed), indeed that the mere
-order of the average-vertex values already determines the whole value
-vector (\Cref{thm:order-determines})
-(\Cref{thm:compare-equivalence}); the obstruction is therefore that each
-of those $n$ bits is itself an instance of the original problem. Finally
-we state the remaining gap at full strength (\Cref{sec:gap}).
+instance verified in exact rational arithmetic.
+
+\emph{Foundations.} The monotone fixed-point theory of the Shapley
+operator, including the identification of $\val$ and of every
+$\val_\sigma$ with a \emph{least} fixed point on arbitrary --- not
+necessarily stopping --- games (\Cref{thm:lfp-general}), a polynomial
+evaluation of $\val_\sigma$ valid without any stopping hypothesis
+(\Cref{thm:eval-stopfree}), a denominator bound $2^{a}$ in the number $a$
+of average vertices that is attained (\Cref{lem:denominator-sharp}), and
+a quantitative stopping transformation with every constant computed
+(\Cref{thm:stopping-transform}).
+
+\emph{Polynomial classes.} Arbitrary SSGs in which one colour is absent
+from every cycle (\Cref{thm:kacyclic}), a single theorem strictly
+stronger than the three separate tractable cases it contains; arbitrary
+SSGs whose \emph{escape exponent} is $O(\log N)$ (\Cref{thm:few-escape}),
+which improves the average-vertex bound $\mathrm{poly}(N)2^{a}$ of
+\Cref{thm:few-avg} by $\Theta(N)$ in the exponent on an explicit family;
+games in which no cycle carries two Max vertices, and more generally
+those whose Max-reachability components are small
+(\Cref{thm:bounded-components}); and, in general, a subexponential
+Las~Vegas algorithm of expected running time
+$e^{2\sqrt n}\,\mathrm{poly}(N)$ (\Cref{thm:subexp}), which is the
+strongest general upper bound we obtain.
+
+\emph{Where the difficulty is.} The optimal Max strategies of a stopping
+game form a combinatorial subcube (\Cref{thm:opt-subcube}) and every
+strategy is joined to it by at most $|\Vmax|$ single strictly improving
+switches (\Cref{thm:short-path}), so the whole difficulty lies in
+\emph{selecting} switches; and that selection is itself the original
+problem, since \textsc{SSG-Value} is equivalent to comparing two vertex
+values (\Cref{thm:compare-equivalence}) and a rule resolving one
+controlled vertex per round already suffices
+(\Cref{thm:decide-one-bit}). The information involved is small --- the
+mere order of the average values determines everything
+(\Cref{thm:order-determines}) --- but each bit of it is again an instance
+of the problem.
+
+\emph{Mechanisms, and where each stops.} Four sound polynomial-time
+comparison mechanisms are developed and measured against one another: an
+arithmetic-free simulation preorder (\Cref{sec:simorder}), which beats
+every bounded radius and dies on branch compensation, as does its whole
+class (\Cref{thm:matching-barrier}); a slack calculus
+(\Cref{sec:slack}), which repairs that and inherits a value-iteration
+bound on separated parts (\Cref{thm:slack-barrier}) --- for its own
+clauses only, since adding transitivity collapses the witnessing family
+from $2^{\Omega(N)}$ rounds to $4m-3$ (\Cref{prop:trans-Hm}), and on
+stopping games the calculus is in fact exact in the limit
+(\Cref{thm:trans-complete}), so what is at stake is a rate and not an
+expressive power; the bracket-seeded variant (\Cref{sec:seeded}); and a
+linear-programming certificate (\Cref{sec:transport}) that is exact on
+successor-closed average parts and therefore settles in one solve both
+instances on which the other mechanisms provably fail, while stalling in
+turn on a seven-vertex game for a complementary reason
+(\Cref{thm:transport-barrier}).
+
+\emph{Barriers.} No potential of polynomial range
+(\Cref{thm:impedance}); no progress measure of polynomial height
+(\Cref{cor:no-height}); no sound rule reading a bounded radius
+(\Cref{prop:locality}); every improving rule capped at $N2^{a}$ switches
+and no better bound obtainable from the value grid
+(\Cref{thm:switch-count}); no counter whose bit flips because it is the
+only flippable one (\Cref{prop:serialiser}); and no rule whose advantage
+comes from resolving the deterministic part of the game, since a
+value-preserving and irreducible normalisation deletes exactly that
+structure (\Cref{thm:normalform-barrier}). For the all-switches rule
+itself we prove three monotonicity laws and an unconditional bound in
+terms of the cycle structure of $\Vmax$
+(\Cref{thm:peak-law,cor:law-b,cor:antichain,thm:component-bound}).
 
 We emphasise at the outset what this document does \emph{not} contain: it
 does not contain a polynomial-time algorithm for \textsc{SSG-Value}, and
@@ -194,10 +219,16 @@ exactly. The logical skeleton is:
 \item \Cref{sec:special}: polynomial special cases --- arbitrary SSGs
   with $O(\log N)$ average vertices (\Cref{thm:few-avg}), obtained from a
   positional escape estimate that needs no stopping hypothesis and whose
-  rate is attained (\Cref{rem:few-avg-tight}); games no cycle of which
+  rate is attained (\Cref{rem:few-avg-tight}), and then the sharper
+  exponent given by counting only the average vertices at which a single
+  forced descent branches (\Cref{thm:few-escape}, separated from the
+  first by $\Theta(N)$ in \Cref{prop:fk-family}); games no cycle of which
   meets $\Vavg$ (\Cref{thm:avg-acyclic}); games no cycle of which meets
-  $\Vmax\cup\Vmin$ (\Cref{thm:player-free}); and one-player games
-  (\Cref{thm:one-player}).
+  $\Vmax\cup\Vmin$ (\Cref{thm:player-free}); one-player games
+  (\Cref{thm:one-player}); and the single theorem containing all three of
+  those and strictly stronger than them together, that it suffices for
+  any \emph{one} of the three colours to be absent from every cycle
+  (\Cref{thm:kacyclic,prop:kacyclic-strict}).
 \item \Cref{sec:structure}: the structure of the optimal set.
   \Cref{thm:opt-subcube} identifies $\Opt$ with a subcube;
   \Cref{thm:short-path} shows every strategy is joined to $\Opt$ by an
@@ -219,6 +250,13 @@ exactly. The logical skeleton is:
   proved here --- a Las~Vegas algorithm of expected running time
   $e^{2\sqrt n}\,\mathrm{poly}(N)$ (\Cref{thm:subexp}), subexponential but
   not polynomial.
+\item \Cref{sec:allsw-laws}: three monotonicity laws obeyed by every
+  all-switches run (\Cref{thm:peak-law,cor:no-return,cor:law-b,cor:antichain}),
+  an unconditional bound on its length in terms of the cycle structure of
+  $\Vmax$ (\Cref{thm:component-bound}), and the polynomial class that
+  bound defines (\Cref{thm:bounded-components}), which
+  \Cref{prop:k1-family} shows meets none of the classes of
+  \Cref{sec:special}.
 \item \Cref{sec:gap}: the exact statement of what is missing, together
   with a proof that supplying it is equivalent to resolving
   \Cref{prob:main}. The same holds for a formally weaker demand ---
