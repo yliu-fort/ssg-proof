@@ -2424,6 +2424,31 @@ such as \Cref{thm:few-avg} or \Cref{thm:switch-count}.
 
 
 
+\begin{remark}[Exact scope of the barrier]\label{rem:barrier-scope}
+\Cref{thm:normalform-barrier} quantifies over rules that read the graph
+they are given, and that restriction is not cosmetic. Every vertex
+$N(G)$ adds is a splice redex, so a rule may legitimately begin by
+applying the reductions of \Cref{lem:splice} exhaustively --- a
+polynomial-time, value-preserving preprocessing --- and thereby recover
+$G$ from $N(G)$. Such a composite rule is fast on $N(G)$, and it is not
+residue-blind: on the reduced game the controlled vertices are no longer
+an independent set, so \Cref{def:residue-blind} does not constrain it.
+
+The content of the barrier is therefore exactly this, and no more: the
+advantage the residue rule holds over all-switches lives entirely in
+splice-reducible structure, and is measured honestly only on reduced
+games. What remains open, and is the sharp question this subsection
+leaves behind, is whether the residue rule --- or any $\rho_B$ --- runs
+in polynomially many rounds on stopping games carrying no splice or merge
+redex. Nothing proved here bears on that: \Cref{thm:ladder}'s $L_n$ is
+reduced and \Cref{prop:residue-ladder} solves it in one round, and we
+know of no reduced family on which any $\rho_B$ is slow. Neither do we
+have a lower bound, and by \Cref{prop:freeze-escapes} the counting
+barriers of this section do not supply one, since $\rho_B$ is not a
+switching rule.
+\end{remark}
+
+
 Finally we delimit the barrier from above, because the delimitation is
 sharp and it exhibits sound improving rules that fall outside
 \Cref{def:rule} altogether. The residue rule freezes \emph{all} average
@@ -4519,7 +4544,9 @@ game exactly --- an acceleration that collapses the ladder's exponential
 run to a single round (\Cref{prop:residue-ladder}) --- is undone by a
 value-preserving normalisation adding $2N$ average vertices with parallel
 edges, so no rule of that kind runs in polynomially many rounds unless
-all-switches already does (\Cref{thm:normalform-barrier}).
+all-switches already does (\Cref{thm:normalform-barrier}) --- unless it
+first deletes the padding, which \Cref{rem:barrier-scope} explains is
+exactly what the barrier leaves open.
 
 \paragraph{Mechanisms, and where they stop.} Three sound polynomial-time
 comparison mechanisms are developed and measured against one yardstick.
