@@ -1,6 +1,7 @@
 \documentclass[11pt]{article}
 
 \usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{stmaryrd}
 \usepackage[margin=1.1in]{geometry}
 \usepackage{microtype}
 \usepackage{enumitem}
@@ -399,6 +400,118 @@ and therefore
 $\val=\max_\sigma\min_\tau v_{\sigma,\tau}\le\max_\sigma
 v_{\sigma,\tau_x}\le x$.
 \end{proof}
+
+The least-fixed-point description has an algorithmic consequence that the
+stopping hypothesis is usually invoked for: a Max strategy can be
+\emph{evaluated} exactly, in polynomial time, on an arbitrary SSG. The
+linear program that does this is not the obvious one, and the obvious one
+is unsound.
+
+\begin{definition}[Trapping set]\label{def:trap}
+Let $\sigma$ be a positional Max strategy. Let $Z_\sigma$ be the largest
+set $U\subseteq V\setminus\{t_1\}$ such that every $v\in U\cap\Vmin$ has
+\emph{some} successor in $U$, every $v\in U\cap\Vavg$ has \emph{both}
+successors in $U$, and every $v\in U\cap\Vmax$ has $\sigma(v)\in U$. Note
+$t_0$ is permitted in $U$; only $t_1$ is excluded. The union of two such
+sets is again one, so $Z_\sigma$ exists, and iterated deletion computes it
+in $O(N^{2})$ steps.
+\end{definition}
+
+\begin{lemma}[The trapping set is the zero set]\label{lem:trap}
+For every SSG and every positional $\sigma$,
+$Z_\sigma=\{v:\val_\sigma(v)=0\}$.
+\end{lemma}
+
+\begin{proof}
+($\subseteq$) Let Min play, at each Min vertex of $Z_\sigma$, a successor
+inside $Z_\sigma$. By the closure conditions the token started in
+$Z_\sigma$ never leaves it, whatever Max's frozen choices and the coins
+do; since $t_1\notin Z_\sigma$ it is never reached, so
+$\val_\sigma(v)=0$.
+($\supseteq$) If $\val_\sigma(v)=0$, choose a positional $\tau$ with
+$v_{\sigma,\tau}(v)=0$ and let $R$ be the set of vertices reachable from
+$v$ in the chain $M_{\sigma,\tau}$. Then $t_1\notin R$: a finite path to
+$t_1$ would have positive probability. And $R$ satisfies the three
+closure conditions, since it is closed under the chain's transitions.
+Hence $R\subseteq Z_\sigma$ and in particular $v\in Z_\sigma$.
+\end{proof}
+
+\begin{lemma}[Trapped-class comparison]\label{lem:trapped-comparison}
+Let $(\sigma,\tau)$ be a positional pair of an arbitrary SSG and let
+$x\in\mathcal{X}$ satisfy $x\le T_{\sigma,\tau}x$. If $x$ vanishes on
+every sink-free bottom class of the chain $M_{\sigma,\tau}$ --- every
+bottom strongly connected component of the chain digraph containing no
+sink --- then $x\le v_{\sigma,\tau}$ pointwise.
+\end{lemma}
+
+\begin{proof}
+On $\mathcal{X}$ the operator $T_{\sigma,\tau}$ acts as the substochastic
+matrix $P$ of the chain with the sinks absorbing, so $x\le Px$ and, $P$
+being nonnegative, $x\le P^{k}x$ for every $k$. Split
+$(P^{k}x)(u)=\sum_w P^{k}(u,w)x(w)$ by destination. The term $w=t_1$
+contributes $\Pr_u[X_k=t_1]$, which increases to $v_{\sigma,\tau}(u)$
+because $t_1$ is absorbing; the terms $w=t_0$ and $w$ in a sink-free
+bottom class contribute $0$, since $x$ vanishes there; and the remaining
+mass is $\Pr_u[X_k\notin\text{any bottom class}]$, which tends to $0$,
+because from every vertex some path of length at most $N$ reaches a
+bottom class in the condensation and every edge of the chain has
+probability at least $\tfrac12$, so that mass is at most
+$(1-2^{-N})^{\lfloor k/N\rfloor}$. Letting $k\to\infty$ gives
+$x(u)\le v_{\sigma,\tau}(u)$.
+\end{proof}
+
+\begin{theorem}[Stopping-free evaluation]\label{thm:eval-stopfree}
+Let $G$ be an arbitrary SSG and $\sigma$ a positional Max strategy. Then
+$\val_\sigma$ is the unique optimum of
+\[
+\begin{aligned}
+  \text{maximise } &\textstyle\sum_{u\in V} x(u)\quad\text{subject to }
+     x\in[0,1]^V,\ x(t_1)=1,\ x(t_0)=0,\\
+  &x(v)=x(\sigma(v)) && (v\in\Vmax),\\
+  &x(v)=\tfrac12\bigl(x(v^{(0)})+x(v^{(1)})\bigr) && (v\in\Vavg),\\
+  &x(v)\le x(v^{(0)}),\quad x(v)\le x(v^{(1)}) && (v\in\Vmin),\\
+  &x(v)=0 && (v\in Z_\sigma),
+\end{aligned}
+\]
+and is therefore computable exactly in polynomial time, as a rational
+vector with common denominator at most $2^{a}$. Dropping the last line
+recovers the program \eqref{eq:lp} used later for stopping games.
+\end{theorem}
+
+\begin{proof}
+Feasibility: $\val_\sigma$ is a fixed point of $T_\sigma$
+(\Cref{thm:lfp-general}(a)), which gives the equalities at $\Vmax$ and
+$\Vavg$ and $x(v)=\min\le x(v^{(i)})$ at $\Vmin$; it vanishes on
+$Z_\sigma$ by \Cref{lem:trap}. Domination: let $x$ be feasible and let
+$\tau$ be any positional Min strategy. The $\Vmin$ inequalities give
+$x\le T_{\sigma,\tau}x$. Every sink-free bottom class $B$ of
+$M_{\sigma,\tau}$ is closed under the chain and avoids $t_1$, so it
+satisfies the closure conditions of \Cref{def:trap} and $B\subseteq
+Z_\sigma$; hence $x$ vanishes on $B$, and \Cref{lem:trapped-comparison}
+gives $x\le v_{\sigma,\tau}$. As $\tau$ was arbitrary,
+$x\le\min_\tau v_{\sigma,\tau}=\val_\sigma$. So $\val_\sigma$ is feasible
+and dominates every feasible point, hence is the unique maximiser of the
+sum. The denominator bound is \Cref{lem:denominator-sharp}, since
+$\val_\sigma=v_{\sigma,\tau}$ for some positional $\tau$.
+\end{proof}
+
+\begin{remark}\label{rem:lp-needs-zeros}
+The added constraints are not a technicality. Without them the program is
+\emph{unsound} on non-stopping games: for the one-vertex game
+$m\to\{m,t_1\}$ with $m\in\Vmin$ one has $\val_\sigma(m)=0$, since Min
+loops for ever, while $x(m)=1$ satisfies both inequalities
+$x(m)\le x(m)$ and $x(m)\le x(t_1)$ and is returned by the
+maximum-sum program. This is exactly why the program without the zero rows is
+invoked in this document only for stopping games (\eqref{eq:lp} below),
+where \Cref{cor:comparison} supplies the domination directly and
+$Z_\sigma=\emptyset$. The asymmetry is real:
+on the Min-frozen side, deleting the zero set does \emph{not} restore
+uniqueness --- for $x\in\Vmax$ with $x\to\{x,c\}$ and $c\to\{t_0,t_1\}$
+every value in $[\tfrac12,1]$ is a fixed point of $T^\tau$ and the zero
+set is empty --- and the correct instrument there is the
+\emph{minimum}-sum program of \Cref{thm:one-player}.
+\end{remark}
+
 
 \begin{remark}\label{rem:lfp-scope}
 \Cref{thm:lfp-general} is proved by a first-passage decomposition rather
@@ -3294,10 +3407,24 @@ $N^{2}$ pairs.
 
 \begin{proposition}[The mechanism beats locality, and still stalls]\label{prop:simorder-stalls}
 The preorder $\preceq$ decides pairs that no bounded-radius rule can
-decide, and in particular it separates the successors of six of the seven
-controlled vertices of the game $G^{\ast}$ on which the primal--dual
-bracket of \Cref{def:bracket} together with every sound order-theoretic
-derivation separates none. Nevertheless the decision rule ``return a
+decide. In particular, let $G^{\ast}$ be the stopping SSG on non-sink
+vertices $0,\dots,16$ with $t_0=17$, $t_1=18$,
+$\Vmax=\{0,1,2\}$, $\Vmin=\{3,4,5,6\}$, the rest average, and out-edge
+pairs, in vertex order,
+\[
+\begin{aligned}
+&(4,12),(16,15),(13,14),(4,13),(2,16),(8,0),(10,15),(18,0),(0,14),\\
+&(17,6),(16,11),(7,13),(7,11),(9,4),(15,7),(5,10),(13,15).
+\end{aligned}
+\]
+All seven controlled vertices of $G^{\ast}$ distinguish the optimal
+values of their successors, yet the primal--dual bracket of
+\Cref{def:bracket} generated from the all-first-successor strategy ---
+under every best-response tie-breaking --- separates none of them; the
+preorder $\preceq$ separates six of the seven, including the vertex $0$
+that no bracket built on that strategy's lower bound can ever decide
+(all quantities exact rationals, ground truth by enumeration of the
+$2^{3}\cdot2^{4}$ positional pairs). Nevertheless the decision rule ``return a
 controlled vertex whose successors are $\preceq$-comparable, else
 abstain'' is not non-stalling in the sense of
 \Cref{def:decision-rule}. Let $G_8$ be the stopping SSG on
@@ -3495,6 +3622,263 @@ premises leave the separated region and which is therefore not covered by
 the theorem. Whether transitivity suffices is open.
 \end{remark}
 
+\subsection{The branch-compensation barrier}\label{sec:matching-barrier}
+
+The failures of \Cref{sec:simorder} can now be made into a theorem about
+a whole class of mechanisms at once. The class abstracts what
+\Cref{def:simorder} and every rule like it have in common: facts of the
+form $w^\ast(x)\le w^\ast(y)$ are derived from such facts about the
+\emph{successors} of $x$ and $y$, with no arithmetic on values.
+
+\begin{definition}[Local matching calculus]\label{def:lmc}
+The \emph{frame} of an ordered pair $(p,q)$ of vertices consists of the
+six formal symbols $x,x^{(0)},x^{(1)},y,y^{(0)},y^{(1)}$, interpreted at
+$p$, $p$'s successors, $q$ and $q$'s successors, together with their six
+types (among $\max,\min,\mathrm{avg},t_0,t_1$) and the equality pattern
+of their interpretations. An \emph{atom} is a pair $(l,r)$ of a left and
+a right symbol other than $(x,y)$; a \emph{clause} is a set of atoms. A
+\emph{local matching calculus} assigns to each frame a set of clauses,
+and derives $(p,q)$ when some clause assigned to its frame has all its
+atoms true --- an atom $(l,r)$ being true when the pair of
+interpretations $(\llbracket l\rrbracket,\llbracket r\rrbracket)$ has
+itself been derived --- on top of an unconditional base containing
+$(Z_0\times V)\cup(V\times Z_1)$ and at most the diagonal in addition.
+The derived relation may be read inductively (least fixed point) or
+coinductively (greatest); the calculus is \emph{sound} if in every
+stopping SSG every derived pair $(p,q)$ satisfies
+$w^\ast(p)\le w^\ast(q)$. \Cref{def:simorder} is such a calculus.
+\end{definition}
+
+\begin{lemma}[Fooling partner]\label{lem:fooling-partner}
+Let $G_{\#}$ be the stopping SSG whose non-sink vertices
+$a_0,a_1,a_2,b_0,b_1,d,e$ are all average, with
+\[
+  a_0\to(b_0,a_1),\quad a_1\to(b_1,a_2),\quad a_2\to(t_0,t_0),\quad
+  b_i\to(b_i,t_1),\quad d\to(e,t_0),\quad e\to(e,t_1).
+\]
+Then $w^\ast=(\tfrac34,\tfrac12,0,1,1,\tfrac12,1)$ in the listed order,
+$Z_0=\{a_2,t_0\}$ and $Z_1=\{b_0,b_1,e,t_1\}$. Writing
+$\Pi:=\{(x,y^{(0)}),(x^{(0)},y^{(0)}),(x^{(1)},y),(x^{(1)},y^{(0)})\}$:
+the pair $(4,1)$ of $G_8$ (\Cref{prop:simorder-stalls}) and the pair
+$(a_0,d)$ of $G_{\#}$ have the same frame, and in both games the set of
+\emph{true} atoms --- those whose interpretations satisfy the value
+inequality --- is exactly $\Pi$; yet
+$w^\ast(4)=\tfrac25<\tfrac12=w^\ast(1)$ while
+$w^\ast(a_0)=\tfrac34>\tfrac12=w^\ast(d)$.
+\end{lemma}
+
+\begin{proof}
+$G_{\#}$ is player-free and every vertex is absorbed almost surely, so
+its values are the unique solution of the linear system:
+$w^\ast(b_i)=\tfrac12(w^\ast(b_i)+1)=1$, likewise $w^\ast(e)=1$;
+$w^\ast(a_2)=0$; $w^\ast(a_1)=\tfrac12(1+0)=\tfrac12$;
+$w^\ast(a_0)=\tfrac12(1+\tfrac12)=\tfrac34$;
+$w^\ast(d)=\tfrac12(1+0)=\tfrac12$. In $G_8$, $4\to(3,2)$ and
+$1\to(0,t_0)$ give the interpretation types
+$(\mathrm{avg},\mathrm{avg},\mathrm{avg}\mid\mathrm{avg},\mathrm{avg},t_0)$,
+all six interpretations distinct; in $G_{\#}$, $a_0\to(b_0,a_1)$ and
+$d\to(e,t_0)$ give the same. The value tuples are
+$(\tfrac25,\tfrac35,\tfrac15;\tfrac12,1,0)$ and
+$(\tfrac34,1,\tfrac12;\tfrac12,1,0)$, and checking the eight atoms in
+each game leaves exactly $\Pi$ true both times.
+\end{proof}
+
+\begin{theorem}[Branch-compensation barrier]\label{thm:matching-barrier}
+No sound local matching calculus derives $(4,1)$ in $G_8$, in either
+reading. Since $(1,4)$ is excluded by soundness outright and $5$ is the
+unique controlled vertex of $G_8$, with successors of distinct optimal
+values, \emph{every} sound local matching calculus stalls on $G_8$; by
+\Cref{thm:decide-one-bit}, no such calculus yields a polynomial
+algorithm. The conclusion survives replacing the derived relation by its
+transitive closure.
+\end{theorem}
+
+\begin{proof}
+Suppose a sound calculus derives $(4,1)$. The pair is not in the base
+($4\notin Z_0$, $1\notin Z_1$, $4\ne1$), so some clause $A$ assigned to
+its frame has all atoms derived, and soundness makes every derived pair
+value-true; by \Cref{lem:fooling-partner} the value-true atoms at $(4,1)$
+are exactly $\Pi$, so $A\subseteq\Pi$. Now run the same calculus on
+$G_{\#}$. The pairs $(a_1,d)$ and $(a_0,d)$ both carry the frame of
+$(4,1)$, so $A$ is assigned to both. At $(a_1,d)$ the atoms of $\Pi$
+interpret as $(a_1,e),(b_1,e),(a_2,d),(a_2,e)$, each in the base (right
+member in $Z_1$ or left member in $Z_0$); at $(a_0,d)$ they interpret as
+$(a_0,e),(b_0,e),(a_1,d),(a_1,e)$, each in the base except $(a_1,d)$,
+which has just been derived. The derivation is well-founded, so both
+readings derive $(a_0,d)$ --- but
+$w^\ast(a_0)=\tfrac34>\tfrac12=w^\ast(d)$, contradicting soundness.
+
+For the transitive closure: a chain $4\preceq v\preceq1$ forces
+$\tfrac25\le w^\ast(v)\le\tfrac12$ by soundness, so $v\in\{1,4,5\}$ by
+inspection of the value multiset of $G_8$; $v\in\{1,4\}$ reuses the pair
+$(4,1)$ itself, so let $v=5$, and consider the link $(5,1)$. Its
+value-true atoms are $\Pi\cup\{(x^{(0)},y)\}$, and $(x^{(0)},y)$
+interprets as $(4,1)$, underivable by the above; so a clause deriving
+$(5,1)$ is contained in $\Pi$. Let $K_{\#}$ be the stopping SSG with
+average vertices $g\to(g,t_1)$, $h\to(h,t_1)$, $k\to(h,t_0)$ and Max
+vertex $m\to(g,k)$, so $w^\ast=(1,1,\tfrac12,1)$. The pair $(m,k)$
+carries the frame of $(5,1)$, equality pattern
+$\llbracket x^{(1)}\rrbracket=\llbracket y\rrbracket$ included; the atoms
+of $\Pi$ interpret at $(m,k)$ as $(m,h),(g,h),(k,k),(k,h)$, each in the
+base or on the diagonal, so the clause derives $(m,k)$ --- claiming
+$1\le\tfrac12$. Hence no sound clause derives $(5,1)$ either, and the
+chain through $5$ is broken. All the numbers above were re-verified in
+exact rational arithmetic, ground truth by enumeration of positional
+pairs.
+\end{proof}
+
+\begin{remark}\label{rem:magnitude}
+The mechanism of the fooling pair names the obstruction more precisely
+than the remark after \Cref{prop:simorder-stalls} did. In both games the
+right-hand vertex splits into a branch worth $1$ and a branch worth $0$,
+and the one-to-one matching succeeds against the first and fails against
+the second; what distinguishes the games is only \emph{how much} surplus
+the good branch carries against \emph{how much} deficit the bad branch
+costs --- $\tfrac25$ against $\tfrac15$ in $G_8$, $0$ against $\tfrac12$
+in $G_{\#}$. A sound mechanism must therefore compare the
+\emph{magnitudes} of a surplus and a deficit, which no order-only
+premise over the radius-one frame can express. This does not say the
+comparison requires numbers --- only that it requires more than the
+order data the frame exposes; and \Cref{sec:slack} shows that the most
+natural numerical repair, sound and cheap though it is, then fails for
+the independent reason of \Cref{thm:slack-barrier}. The two barriers
+frame the mechanism-design question exactly: enough expressiveness to
+weigh surplus against deficit, without collapsing into value iteration
+on non-interacting parts.
+\end{remark}
+
+\subsection{Seeding from policy evaluation}\label{sec:seeded}
+
+The slack calculus was run above from the trivial start $\Delta_0\equiv1$.
+It is sound from any correct start, and a correct start is cheap: a
+\emph{bracket} $L\le w^\ast\le U$ obtained by evaluating a few strategies,
+each evaluation one linear program (\Cref{thm:one-player,thm:eval-stopfree}).
+
+\begin{definition}[Seeded slack calculus]\label{def:seeded}
+Given $L,U\in\mathcal{X}$ with $L\le w^\ast\le U$, put
+$\Delta^{L,U}_0(x,y):=\mathrm{clamp}_{[-1,1]}\bigl(U(x)-L(y)\bigr)$ and
+iterate the clauses of \Cref{def:slack}, keeping the running minimum. The
+associated decision rule reports the pair $(x,y)$ when
+$\Delta^{L,U}_k(x,y)<0$. Write $M(p,k)$ for the rule that first performs
+$p$ rounds of switch-all improvement to build $L$ (and the matching
+greedy $\tau$ for $U$), then runs $k$ slack rounds.
+\end{definition}
+
+\begin{theorem}[Soundness, domination, cost]\label{thm:seeded-sound}
+For every SSG and every bracket $(L,U)$: $\Delta^{L,U}_k\ge
+w^\ast(x)-w^\ast(y)$ for all $k$; the sequence is nonincreasing; it is
+monotone in the seed, so $\Delta^{L,U}_k\le\Delta^{0,1}_k$ pointwise and
+the seeded calculus dominates \Cref{def:slack} round by round; it decides
+at $k=0$ every pair that the bracket $(L,U)$ decides in the sense of
+\Cref{def:bracket}; and if $L,U$ have common denominator $d$ then every
+entry of $\Delta_k$ lies in $(2^kd)^{-1}\mathbb{Z}$, so $k$ rounds cost
+$O(kN^{2})$ rational operations on $O(k+a)$-bit numbers. No stopping
+hypothesis is used.
+\end{theorem}
+
+\begin{proof}
+$\Delta_0\ge D$ because $U\ge w^\ast\ge L$. Every clause is monotone and
+maps $D$ to $D$ (\Cref{thm:slack-sound}, which uses only $Tw^\ast=w^\ast$
+and hence \Cref{thm:lfp-general}), so the running minimum of quantities
+$\ge D$ stays $\ge D$; clamping preserves this since $D\in[-1,1]$.
+Monotonicity in the seed is monotonicity of the clauses and of $\min$.
+The $k=0$ claim is the definition of a bracket deciding a pair. The
+denominator statement is as in \Cref{thm:slack-sound}, and
+\Cref{lem:denominator-sharp} bounds $d$ by $2^{a}$ for each evaluated
+strategy.
+\end{proof}
+
+Seeding does \emph{not} evade \Cref{thm:slack-barrier}, and it is worth
+being explicit that the barrier is a statement about the geometry of the
+game rather than about the initialisation.
+
+\begin{theorem}[The barrier lifts to every seed]\label{thm:seeded-barrier}
+Let $G$ be stopping and $(L,U)$ a bracket with $L\le TL$ and $TU\le U$.
+Put $u_k:=T^{k}U$ and $l_k:=T^{k}L$. Under the hypotheses of
+\Cref{thm:slack-barrier}, $\Delta^{L,U}_k(x,y)\ge u_k(x)-l_k(y)$ for all
+$k$ and all $(x,y)$ in the separated region.
+\end{theorem}
+
+\begin{proof}
+Verbatim the proof of \Cref{thm:slack-barrier} with
+$E_k(x,y):=u_k(x)-l_k(y)$. The base case is now an equality, since
+$L,U\in\mathcal{X}$ makes the clamp inactive; and $TU\le U$, $L\le TL$
+with monotonicity of $T$ give $u_{k+1}\le u_k$ and $l_{k+1}\ge l_k$,
+which is exactly what the (down) and (up) steps use.
+\end{proof}
+
+What seeding does buy is that the separated geometry can no longer
+produce a stall at all, because on separated parts the bracket is already
+exact.
+
+\begin{theorem}[Exactness dichotomy]\label{thm:seed-dichotomy}
+Let $G$ be stopping. If $\sigma$ has no strictly switchable vertex and
+$\tau$ is greedy for $\val_\sigma$ at every Min vertex, then
+$\val_\sigma=\val^\tau=w^\ast$, so $\Delta_0=D$ and every controlled
+vertex with distinct successor values is decided at slack round $0$.
+Consequently, if switch-all improvement started from $\sigma_0$ reaches
+$\Opt$ within $p$ rounds, or if one of $\Vmax,\Vmin$ is empty, then
+$M(p,0)$ decides every such vertex. Contrapositively, every instance on
+which $M(p,k)$ stalls has both players present and is an instance on
+which switch-all improvement has \emph{not} converged after $p$ rounds.
+\end{theorem}
+
+\begin{proof}
+$\val_\sigma=w^\ast$ is \Cref{lem:local-global}. For $v\in\Vmin$,
+$w^\ast(\tau(v))=\min_j w^\ast(v^{(j)})=(Tw^\ast)(v)=w^\ast(v)$, and
+$T_\tau$ agrees with $T$ elsewhere, so $T_\tau w^\ast=w^\ast$; freezing
+$\tau$ leaves a stopping game with no Min vertices whose Shapley operator
+is $T_\tau$, and \Cref{thm:contraction} gives uniqueness of its fixed
+point, so $\val^\tau=w^\ast$. With $L=U=w^\ast$ we get $\Delta_0=D$, one
+of whose two orders is negative at every distinguishing vertex. The
+one-player cases are \Cref{thm:one-player} together with the $O(N)$
+fixed-point test $TU=U$, which identifies $U$ with $w^\ast$ by
+\Cref{thm:contraction}.
+\end{proof}
+
+\begin{proposition}[Behaviour on the stalling instances of this paper]\label{prop:seeded-decides}
+The rule $M(p,k)$ decides, in exact rational arithmetic: the game $G_8$
+of \Cref{prop:simorder-stalls} already at $M(0,0)$, since $\Vmin=\emptyset$
+there; every controlled vertex of the game $G^{\ast}$ of
+\Cref{prop:simorder-stalls}; the family $H_m$ of
+\Cref{cor:slack-stalls}, at $M(0,0)$, since $|\Vmax|=1$ makes the
+evaluated bracket exact; and, on the $31$-vertex game of
+\Cref{prop:pdc-separation} with the strategy $\sigma$ used there, the
+Max vertex $0$, at $k=3$ with $\Delta_3(2,1)=-\tfrac18$ --- although
+\Cref{prop:pdc-separation}(a) shows that \emph{no} sound upper bound
+decides that vertex from the same lower bound $L$.
+\end{proposition}
+
+\begin{proof}
+Finite exact computations; $w^\ast$ in each case by enumeration of the
+positional pairs. The last item is the informative one: the bracket test
+$L(1)>U(2)$ fails, since $L(1)=\tfrac5{16}<\tfrac38=U(2)$, and by
+\Cref{prop:bracket}(a) no sound $U$ repairs it; but the slack clauses do
+not compare $L$ against $U$ coordinatewise, they propagate a difference,
+and $\Delta_3(2,1)=-\tfrac18$ certifies $w^\ast(2)<w^\ast(1)$.
+\end{proof}
+
+\begin{remark}\label{rem:frontier-moved}
+Three mechanisms have now been measured against the same yardstick, and
+the frontier has moved to a precise place. A purely order-theoretic
+global calculus beats every bounded radius and dies on branch
+compensation, unconditionally for its whole class
+(\Cref{thm:matching-barrier}). Adding slacks repairs that and inherits
+the value-iteration bound on non-interacting parts
+(\Cref{thm:slack-barrier}), a limitation that seeding cannot remove
+(\Cref{thm:seeded-barrier}) but that the exactness of an evaluated
+bracket makes vacuous exactly there (\Cref{thm:seed-dichotomy}).
+The residue is sharp: by \Cref{thm:seed-dichotomy} a stalling instance of
+$M(p,k)$ for polynomial $p$ is in particular a stopping SSG on which
+switch-all improvement runs for more than $p$ rounds, so exhibiting one
+would settle a question \Cref{thm:ladder} leaves open --- there the
+exponential run belongs to the least-index rule, and switch-all finishes
+in $n$ steps. No superpolynomial lower bound for switch-all is proved in
+this document, and none is claimed.
+\end{remark}
+
+
+
 
 
 
@@ -3604,6 +3988,22 @@ instances (\Cref{rem:owner-blind}); and no sound rule deciding a single
 vertex can read only a bounded-radius neighbourhood of it
 (\Cref{prop:locality}).
 
+\paragraph{Mechanisms, and where they stop.} Three sound polynomial-time
+comparison mechanisms are developed and measured against one yardstick.
+The value-simulation preorder (\Cref{sec:simorder}) is arithmetic-free,
+returns all $N^{2}$ verdicts from one greatest fixed point, and beats
+every bounded radius; it fails on branch compensation, and
+\Cref{thm:matching-barrier} shows every calculus of its class fails, by a
+fooling pair. The slack calculus (\Cref{sec:slack}) repairs exactly that
+and is cheap in precision, but on non-interacting parts it is two-sided
+value iteration (\Cref{thm:slack-barrier}), hence exponential on an
+explicit family. Seeding it from an evaluated bracket
+(\Cref{sec:seeded}) strictly dominates both, and decides every stalling
+instance in this document --- including a vertex that
+\Cref{prop:bracket}(a) forbids any bracket from deciding --- while
+\Cref{thm:seeded-barrier} shows the geometry, not the initialisation, was
+always the obstruction.
+
 \paragraph{The gap.} \Cref{def:missing} states it at full strength and
 \Cref{thm:gap-equivalence} proves it equivalent to a polynomial-time
 algorithm. The same is true of a formally weaker-looking demand: a rule
@@ -3616,6 +4016,9 @@ switchable vertex at which the current strategy is wrong. And that bit is
 irreducibly global: two instances agreeing on the radius-$k$
 neighbourhood of a vertex, for any fixed $k$, can reverse the answer
 there (\Cref{prop:locality}). That is the whole of the remaining gap, and
-it is the whole of the problem.
+it is the whole of the problem. \Cref{thm:seed-dichotomy} locates it once
+more: any instance defeating the seeded rule with polynomially many
+improvement rounds is a stopping SSG on which switch-all improvement
+itself runs superpolynomially long, which no construction here achieves.
 
 \end{document}
