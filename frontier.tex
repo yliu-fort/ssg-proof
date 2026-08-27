@@ -2240,61 +2240,76 @@ optimum by \Cref{rem:ladder}; the next round changes nothing.
 
 That separation, however, is an artefact of how the game is drawn. The
 following normalisation is value-preserving, cheap, and destroys it
-completely.
+completely --- and, unlike the obvious construction with parallel edges,
+it survives every reduction available in \Cref{lem:splice} below.
 
 \begin{lemma}[Bipartite normal form]\label{lem:normalform}
-For an SSG $G$ let $N(G)$ be obtained by replacing each edge $(v,u)$ with
-$v$ controlled by the two edges $v\to c_{v,u}$ and
-$c_{v,u}\to u$, $c_{v,u}\to u$, where $c_{v,u}$ is a fresh average
-vertex with both successors equal to $u$. Then
+For an SSG $G$ let $N'(G)$ be obtained by replacing each edge $(v,u)$
+whose two endpoints are both controlled by
+\[
+  v\to c_{v,u},\qquad c_{v,u}\to(u,\ d_{v,u}),\qquad d_{v,u}\to(u,\ c_{v,u}),
+\]
+where $c_{v,u}$ and $d_{v,u}$ are fresh average vertices. Then
 \begin{enumerate}[label=(\roman*),leftmargin=2.2em]
-\item $|V(N(G))|=|V(G)|+2|\Vmax\cup\Vmin|\le 3N$, and in $N(G)$ no
+\item $|V(N'(G))|\le N+4|\Vmax\cup\Vmin|\le5N$, and in $N'(G)$ no
       controlled vertex has a controlled successor;
-\item $N(G)$ is stopping if and only if $G$ is;
-\item $\Vmax(N(G))=\Vmax(G)$, and under the bijection
-      $\sigma\mapsto\tilde\sigma$, $\tilde\sigma(v):=c_{v,\sigma(v)}$, one
-      has $\val^{N(G)}_{\tilde\sigma}=\val^{G}_\sigma$ on $V(G)$ and
-      $\val^{N(G)}_{\tilde\sigma}(c_{v,u})=\val^{G}_\sigma(u)$; likewise
-      $\val^{N(G)}=\val^{G}$ on $V(G)$;
-\item $S_{\tilde\sigma}=S_\sigma$ for every $\sigma$; hence the
-      all-switches runs from $\sigma_0$ in $G$ and from $\tilde\sigma_0$
-      in $N(G)$ have the same length and pass through corresponding
-      strategies.
+\item $N'(G)$ is stopping if and only if $G$ is;
+\item $\Vmax(N'(G))=\Vmax(G)$, and under the bijection
+      $\sigma\mapsto\tilde\sigma$ sending a controlled successor $u$ to
+      $c_{v,u}$ one has $\val^{N'(G)}_{\tilde\sigma}=\val^{G}_\sigma$ on
+      $V(G)$ and
+      $\val^{N'(G)}_{\tilde\sigma}(c_{v,u})=\val^{N'(G)}_{\tilde\sigma}(d_{v,u})
+      =\val^{G}_\sigma(u)$; likewise $\val^{N'(G)}=\val^{G}$ on $V(G)$;
+\item $S_{\tilde\sigma}=S_\sigma$ for every $\sigma$, so the all-switches
+      runs from $\sigma_0$ in $G$ and from $\tilde\sigma_0$ in $N'(G)$
+      have the same length and pass through corresponding strategies;
+\item none of the new vertices is a redex of either reduction of
+      \Cref{lem:splice}; in particular $N'(G)$ carries no redex at all if
+      $G$ carries none.
 \end{enumerate}
 \end{lemma}
 
 \begin{proof}
-(i) is immediate: every successor of a controlled vertex of $N(G)$ is one
-of the new average vertices.
+(i) is immediate; at most $2|\Vmax\cup\Vmin|$ edges are replaced and each
+costs two vertices.
 
-(ii) Traps correspond. If $U$ is a trap of $N(G)$ then $c_{v,u}\in U$
-forces $u\in U$, both successors of $c_{v,u}$ being $u$; and $v\in U$
-controlled forces some $c_{v,u}\in U$, hence some successor $u$ of $v$ in
-$G$ to lie in $U$. So $U\cap V(G)$ is a trap of $G$, and it is nonempty
-whenever $U$ is, since a trap of $N(G)$ containing $c_{v,u}$ contains
-$u$. Conversely a trap $U$ of $G$ extends to the trap
-$U\cup\{c_{v,u}:u\in U\}$ of $N(G)$. Now apply \Cref{lem:trapchar}.
+(iii) For $y\in[0,1]^{V(G)}$ let $\hat y$ extend $y$ by
+$\hat y(c_{v,u}):=\hat y(d_{v,u}):=y(u)$. Then $T^{N'(G)}\hat y$ is the
+extension of $T^{G}y$: at $c_{v,u}$ the average of $y(u)$ and
+$\hat y(d_{v,u})=y(u)$ is $y(u)$, and symmetrically at $d_{v,u}$; at a
+controlled $v$ the maximum or minimum is taken over the same two numbers
+as before; elsewhere nothing changed. Conversely, if $z$ is a fixed point
+of $T^{N'(G)}$ then subtracting the equations at $c_{v,u}$ and
+$d_{v,u}$ gives $z(c_{v,u})-z(d_{v,u})=\frac12(z(d_{v,u})-z(c_{v,u}))$,
+so $z(c_{v,u})=z(d_{v,u})=z(u)$ and $z$ is of the form $\hat y$. The
+fixed points therefore correspond bijectively, and the same computation
+applies to $T_\sigma$ and $T_{\tilde\sigma}$. For stopping games these
+fixed points are unique (\Cref{thm:contraction}); in general the
+bijection preserves pre-fixed points in both directions, hence least
+fixed points, and one applies \Cref{thm:lfp-general}.
 
-(iii) For $y\in[0,1]^{V(G)}$ let $\hat y$ be its extension with
-$\hat y(c_{v,u}):=y(u)$. Then
-$T^{N(G)}\hat y=\widehat{T^{G}y}$: at $c_{v,u}$ the average of two copies
-of $y(u)$ is $y(u)$; at a controlled $v$ the maximum or minimum over
-$\{\hat y(c_{v,v^{(0)}}),\hat y(c_{v,v^{(1)}})\}$ equals that over
-$\{y(v^{(0)}),y(v^{(1)})\}$; at an average vertex of $G$ nothing changed.
-So $y\mapsto\hat y$ is a bijection between the fixed points of $T^G$ and
-those of $T^{N(G)}$, and the same computation applies to $T_\sigma$ and
-$T_{\tilde\sigma}$. For stopping $G$ these fixed points are unique
-(\Cref{thm:contraction}), which gives the claim; in general one uses
-instead that the bijection preserves the pre-fixed points in both
-directions and hence the least fixed points, and applies
-\Cref{thm:lfp-general}.
+(ii) Let $U$ be a nonempty trap of $N'(G)$. If $c_{v,u}\in U$ then both
+its successors lie in $U$, so $u\in U$; the same holds for $d_{v,u}$. A
+controlled $v\in U$ has some successor in $U$, necessarily some
+$c_{v,u}$, hence some successor $u$ of $v$ in $G$ lies in $U$; an old
+average vertex of $U$ has both its (unchanged) successors in $U$. So
+$U\cap V(G)$ is a trap of $G$, and it is nonempty because every new
+vertex of $U$ forces the old vertex $u$ into $U$, and $u$ is not a sink.
+Conversely a trap $U$ of $G$ lifts to
+$U\cup\{c_{v,u},d_{v,u}:u\in U\}$. Apply \Cref{lem:trapchar}.
 
 (iv) By (iii), $\val_{\tilde\sigma}(c_{v,u})=\val_\sigma(u)$, so the test
-$\val_{\tilde\sigma}(\overline{\tilde\sigma}(v))>\val_{\tilde\sigma}(\tilde\sigma(v))$
-defining $S_{\tilde\sigma}$ reads
-$\val_\sigma(\bar\sigma(v))>\val_\sigma(\sigma(v))$, which defines
-$S_\sigma$. Since all-switches replaces $\sigma$ by $\sigma[S_\sigma]$
-and the correspondence commutes with that, the two runs are in step.
+defining $S_{\tilde\sigma}$ at $v$ compares the same two numbers as the
+test defining $S_\sigma$. All-switches replaces $\sigma$ by
+$\sigma[S_\sigma]$, and the correspondence commutes with that.
+
+(v) A splice redex is an average vertex with two equal successors;
+$c_{v,u}$ has successors $u$ and $d_{v,u}$, which are distinct because
+$d_{v,u}$ is new, and symmetrically for $d_{v,u}$. A merge redex is a
+pair of average vertices with equal successor multisets; the multiset of
+$c_{v,u}$ contains $d_{v,u}$, which is a successor of no other vertex
+than $c_{v,u}$, and symmetrically. Old average vertices keep their old
+successors, so no old pair becomes a redex either.
 \end{proof}
 
 \begin{definition}[Residue-blind rule]\label{def:residue-blind}
@@ -2307,7 +2322,7 @@ controlled successor.
 \begin{theorem}[Normalisation barrier]\label{thm:normalform-barrier}
 The residue rule is residue-blind. If $R$ is residue-blind and halts
 within $p(|V(G)|)$ rounds on every stopping SSG $G$ and every starting
-strategy, then the all-switches rule halts within $p(3N)$ rounds on every
+strategy, then the all-switches rule halts within $p(5N)$ rounds on every
 stopping SSG with $N$ vertices. In particular no residue-blind rule runs
 in polynomially many rounds unless the all-switches rule already does,
 and any superpolynomial lower bound for all-switches transfers verbatim
@@ -2316,7 +2331,7 @@ to every residue-blind rule.
 
 \begin{proof}
 If no controlled vertex of $G$ has a controlled successor then
-$C=\Vmax\cup\Vmin$ carries no edges, so \Cref{def:residue} gives
+$\Vmax\cup\Vmin$ carries no edges, so \Cref{def:residue} gives
 $D_x(v)=\max\bigl(x(v^{(0)}),x(v^{(1)})\bigr)$ for $v\in\Vmax$ with
 $x=\val_\sigma$; hence $\rho(\sigma)(v)\ne\sigma(v)$ exactly when
 $\val_\sigma(\bar\sigma(v))>\val_\sigma(\sigma(v))$, that is exactly when
@@ -2324,11 +2339,11 @@ $v\in S_\sigma$. So $\rho(\sigma)=\sigma[S_\sigma]$ and the residue rule
 is residue-blind.
 
 Now let $G$ be stopping with $N$ vertices and let $\sigma_0$ be any
-starting strategy. By \Cref{lem:normalform}(i),(ii) the game $N(G)$ is
-stopping with at most $3N$ vertices and no controlled vertex has a
-controlled successor, so the run of $R$ on $(N(G),\tilde\sigma_0)$ is
+starting strategy. By \Cref{lem:normalform}(i),(ii) the game $N'(G)$ is
+stopping with at most $5N$ vertices and no controlled vertex has a
+controlled successor, so the run of $R$ on $(N'(G),\tilde\sigma_0)$ is
 \emph{by definition} the all-switches run there; by hypothesis it halts
-within $p(3N)$ rounds. By \Cref{lem:normalform}(iv) the all-switches run
+within $p(5N)$ rounds. By \Cref{lem:normalform}(iv) the all-switches run
 on $(G,\sigma_0)$ has the same length.
 \end{proof}
 
@@ -2339,25 +2354,28 @@ $L_n$ the residue rule needs one round where the least-index rule needs
 $2^{n}-1$, and it obtains it by using the structure of the graph
 \emph{between} controlled vertices, which no switching rule in
 \Cref{def:rule} inspects. \Cref{thm:normalform-barrier} says that all of
-that structure can be deleted at a cost of $2N$ extra average vertices,
-each of them a vertex with two parallel edges, without changing a single
-value. What the residue rule exploits is therefore not a property of the
-game but a property of the presentation, and the same applies to any rule
-that resolves the deterministic part optimally --- by attractor sweeps,
-by condensation into strongly connected components, or by any other
-means. This is why the barrier is stated for the whole class
-\Cref{def:residue-blind} rather than for one algorithm. It also isolates
-what a successful rule must do: it must remain fast on games in which
-$\Vmax\cup\Vmin$ is an independent set, so that the only structure left
-to exploit is the interaction of the average vertices --- which is
-precisely where \Cref{thm:switch-count} places the difficulty, and
-precisely what \Cref{thm:matching-barrier} and \Cref{thm:slack-barrier}
-show to be hard for comparison mechanisms as well.
+that structure can be deleted at a cost of at most $4N$ extra average
+vertices, without changing a single value, and without leaving anything a
+preprocessing step could recognise and undo --- that is the point of
+\Cref{lem:normalform}(v), and it is why the gadget is a two-cycle rather
+than the obvious pair of parallel edges. What the residue rule exploits
+is therefore not a property of the game but a property of the
+presentation, and the same applies to any rule that resolves the
+deterministic part optimally --- by attractor sweeps, by condensation into
+strongly connected components, or by any other means. This is why the
+barrier is stated for the whole class \Cref{def:residue-blind} rather
+than for one algorithm. It also isolates what a successful rule must do:
+it must remain fast on games in which $\Vmax\cup\Vmin$ is an independent
+set, so that the only structure left to exploit is the interaction of the
+average vertices --- which is precisely where \Cref{thm:switch-count}
+places the difficulty, and precisely what \Cref{thm:matching-barrier} and
+\Cref{thm:slack-barrier} show to be hard for comparison mechanisms as
+well.
 \end{remark}
 
 The normalisation raises $a$, and one may ask whether the parameter is
-therefore worthless. It is not: the vertices the normalisation adds are
-exactly of the kind that a value-preserving reduction removes again.
+therefore worthless as a measure of difficulty. It is, and the reductions
+that would repair it do not go far enough.
 
 \begin{lemma}[Two reductions of the average set]\label{lem:splice}
 Let $G$ be a stopping SSG.
@@ -2396,58 +2414,59 @@ coincides with the one at $c$ because the two vertices have the same
 successor multiset.
 \end{proof}
 
-\begin{remark}\label{rem:splice-invariance}
-The normalisation of \Cref{lem:normalform} adds $2|\Vmax\cup\Vmin|$
-average vertices, and \emph{every one of them is a splice redex}: by
-construction $c_{v,u}$ has both successors equal to $u$. Splicing all of
-them returns $G$ itself. Moreover the normalisation does not touch the
-out-edges of any average vertex of $G$, so it creates no new redex among
-the old vertices and destroys none. A bound stated in terms of the number
-of average vertices that survive exhaustive reduction --- for instance
-\Cref{thm:few-avg}, which may be run on the reduced game and its values
-transported back by \Cref{lem:splice} --- is therefore unaffected by the
-normalisation, whereas a bound stated in terms of $a$ itself is not.
-This is the precise sense in which $a$ is a parameter of the
-presentation and its reduced value is a parameter of the game.
+\begin{proposition}[$a$ is a parameter of the presentation]\label{prop:a-presentation}
+Let $G$ be a stopping SSG with at least one edge between two average
+vertices. Applying the gadget of \Cref{lem:normalform} to such an edge
+--- replacing $c_0\to u$ by $c_0\to c$, $c\to(u,d)$, $d\to(u,c)$ ---
+yields a stopping SSG with the same values on $V(G)$, with two more
+average vertices, and with no redex of \Cref{lem:splice} among the new
+vertices. Iterating produces, for every $M$, a stopping SSG carrying no
+redex at all, with the same value at every vertex of $G$, and with
+$a>M$.
+\end{proposition}
+
+\begin{proof}
+Values, stopping and irreducibility are proved exactly as in
+\Cref{lem:normalform}(ii),(iii),(v); the computation there never used
+that $c_0$ was controlled. Each application adds two average vertices and
+creates a new average-to-average edge $c\to u$ if $u$ is average, and
+$c_0\to c$ in any case, so the construction may be repeated
+indefinitely.
+\end{proof}
+
+\begin{remark}\label{rem:parameter-presentation}
+\Cref{lem:splice} lowers $a$ where it can, but \Cref{prop:a-presentation}
+shows it cannot canonicalise it: no exhaustively reduced representative
+is unique, and $a$ may be inflated without bound while every value is
+preserved. So $\mathrm{poly}(N)2^{a}$ in \Cref{thm:few-avg}, and $N2^{a}$
+in \Cref{thm:switch-count}, are statements about the input as presented,
+and $a$ cannot certify hardness --- for the same reason as
+\Cref{rem:owner-blind}, and by an even cruder mechanism. The observation
+also settles a natural hope: one cannot reduce $a$ to $O(\log N)$ by
+massaging the presentation, because the presentation carries no
+$a$-minimising normal form to massage it into. We verified the
+construction in exact arithmetic on the five-vertex game of
+\Cref{prop:freeze-escapes}, where three rounds of it raise $a$ from $3$
+to $9$, $39$ and $189$ with every value unchanged and no redex at any
+stage.
 \end{remark}
-
-
-\begin{remark}\label{rem:normalform-scope}
-\Cref{lem:normalform} is also a normalisation of independent interest: at
-the cost of a factor $3$ in the number of vertices one may always assume
-that $\Vmax\cup\Vmin$ is an independent set of the digraph. All of
-\Cref{prob:main} is therefore already present in that subclass. Note
-that the normalisation raises $a=|\Vavg|$ from $a$ to $a+2|\Vmax\cup\Vmin|$,
-so it must not be applied before invoking a bound that depends on $a$,
-such as \Cref{thm:few-avg} or \Cref{thm:switch-count}.
-\end{remark}
-
-
 
 \begin{remark}[Exact scope of the barrier]\label{rem:barrier-scope}
-\Cref{thm:normalform-barrier} quantifies over rules that read the graph
-they are given, and that restriction is not cosmetic. Every vertex
-$N(G)$ adds is a splice redex, so a rule may legitimately begin by
-applying the reductions of \Cref{lem:splice} exhaustively --- a
-polynomial-time, value-preserving preprocessing --- and thereby recover
-$G$ from $N(G)$. Such a composite rule is fast on $N(G)$, and it is not
-residue-blind: on the reduced game the controlled vertices are no longer
-an independent set, so \Cref{def:residue-blind} does not constrain it.
+The obvious objection to \Cref{thm:normalform-barrier} is that a rule
+might begin by simplifying the game it is handed. That objection is
+exactly what \Cref{lem:normalform}(v) answers: if $G$ carries no redex
+then neither does $N'(G)$, so neither reduction of \Cref{lem:splice}
+fires, and the padding cannot be recognised and removed by them. This is
+the reason for the two-cycle gadget; the shorter construction that
+replaces $v\to u$ by $v\to c$, $c\to(u,u)$ has all the other properties
+and is undone by a single splice.
 
-The content of the barrier is therefore exactly this, and no more: the
-advantage the residue rule holds over all-switches lives entirely in
-splice-reducible structure, and is measured honestly only on reduced
-games. What remains open, and is the sharp question this subsection
-leaves behind, is whether the residue rule --- or any $\rho_B$ --- runs
-in polynomially many rounds on stopping games carrying no splice or merge
-redex. Nothing proved here bears on that: \Cref{thm:ladder}'s $L_n$ is
-reduced and \Cref{prop:residue-ladder} solves it in one round, and we
-know of no reduced family on which any $\rho_B$ is slow. Neither do we
-have a lower bound, and by \Cref{prop:freeze-escapes} the counting
-barriers of this section do not supply one, since $\rho_B$ is not a
-switching rule.
+What is not claimed is a lower bound. \Cref{thm:normalform-barrier}
+transfers a superpolynomial bound for all-switches to every
+residue-blind rule, and no such bound is proved in this document; in the
+other direction it says only that the residue rule cannot be the missing
+mechanism unless all-switches already is.
 \end{remark}
-
 
 Finally we delimit the barrier from above, because the delimitation is
 sharp and it exhibits sound improving rules that fall outside
@@ -2517,49 +2536,55 @@ unique solution, found by solving one affine equation on each piece.
 
 \begin{proposition}[One freed average vertex escapes the
 barrier]\label{prop:freeze-escapes}
-Let $G^{\dagger}$ be the stopping SSG on vertices $0,\dots,7$ with
-$t_0=8$, $t_1=9$, $\Vmax=\{0,1\}$, $\Vmin=\emptyset$,
-$\Vavg=\{2,\dots,7\}$ and
+Let $G^{\dagger}$ be the SSG on vertices $0,\dots,4$ with $t_0=5$,
+$t_1=6$, $\Vmax=\{2,3\}$, $\Vmin=\emptyset$, $\Vavg=\{0,1,4\}$ and
 \[
-  0\to(4,5),\quad 1\to(6,7),\quad 2\to(3,t_1),\quad 3\to(t_1,t_0),
+  0\to(0,3),\quad 1\to(2,0),\quad 2\to(4,1),\quad 3\to(t_0,t_1),\quad
+  4\to(1,3).
 \]
-\[
-  4\to(3,3),\quad 5\to(1,1),\quad 6\to(t_0,t_0),\quad 7\to(2,2).
-\]
-No controlled vertex of $G^{\dagger}$ has a controlled successor. At
-$\sigma=(0\mapsto4,\ 1\mapsto6)$ one has
-$\val_\sigma=(\tfrac12,0,\tfrac34,\tfrac12,\tfrac12,0,0,\tfrac34)$ and
-$S_\sigma=\{1\}$, whereas $\rho_{\{5\}}(\sigma)$ switches both $0$ and
-$1$. Vertex $0$ is not strictly switchable at $\sigma$ and yet
-$w^\ast=(\tfrac34,\tfrac34,\tfrac34,\tfrac12,\tfrac12,\tfrac34,0,\tfrac34)$
-prescribes $0\mapsto5$. Consequently $\rho_{\{5\}}$ is neither
-residue-blind nor a switching rule in the sense of \Cref{def:rule}, and
+Then $G^{\dagger}$ is stopping, carries no redex of \Cref{lem:splice},
+and no controlled vertex of it has a controlled successor. At
+$\sigma=(2\mapsto1,\ 3\mapsto t_0)$ one has $\val_\sigma\equiv0$ and
+$S_\sigma=\{3\}$, whereas $\rho_{\{4\}}(\sigma)$ switches both $2$ and
+$3$. Consequently $\rho_{\{4\}}$ is neither residue-blind nor a switching
+rule in the sense of \Cref{def:rule}, and
 \Cref{thm:normalform-barrier} does not apply to it.
 \end{proposition}
 
 \begin{proof}
-All the numbers are immediate. Under $\sigma$, vertex $6$ pays $0$, so
-$\val_\sigma(1)=0$ and $\val_\sigma(5)=0$; vertex $3$ pays
-$\frac12(1+0)=\frac12$, so $\val_\sigma(4)=\frac12$ and
-$\val_\sigma(0)=\frac12$; vertex $2$ pays $\frac12(\frac12+1)=\frac34$,
-so $\val_\sigma(7)=\frac34$. At vertex $0$ the alternative successor $5$
-has $\val_\sigma(5)=0<\frac12$, so $0\notin S_\sigma$; at vertex $1$ the
-alternative $7$ has $\frac34>0$, so $S_\sigma=\{1\}$. Freeing $5$ and
-freezing the rest, the residual reads
-$\val(1)=\max(x(6),x(7))=\frac34$, $\val(5)=\val(1)=\frac34$ and
-$\val(0)=\max(x(4),\val(5))=\max(\frac12,\frac34)=\frac34$, so the
-optimal residual strategy sends $0$ to $5$ and $1$ to $7$. Optimality of
-$0\mapsto5$ in $G^{\dagger}$ follows from $w^\ast$, which is checked
-against $T$ directly.
+No average vertex has two equal successors and no two have the same
+successor multiset, so there is no redex; vertex $2$ points to the
+average vertices $4$ and $1$ and vertex $3$ to the two sinks, so the
+controlled vertices are independent; and a trap would have to contain
+$3$, which is impossible since both successors of $3$ are sinks, hence
+also cannot contain $0$, $4$ or $2$, hence not $1$, so $G^{\dagger}$ is
+stopping by \Cref{lem:trapchar}.
+
+Under $\sigma$, vertex $3$ pays $0$; then $\val_\sigma(0)=
+\frac12(\val_\sigma(0)+0)$ forces $\val_\sigma(0)=0$, and
+$\val_\sigma(1)=\frac12(\val_\sigma(2)+0)=\frac12\val_\sigma(1)$ forces
+$\val_\sigma(1)=0$, so $\val_\sigma\equiv0$. At vertex $2$ the
+alternative successor $4$ also has value $0$, so $2\notin S_\sigma$,
+while at $3$ the alternative is $t_1$; thus $S_\sigma=\{3\}$.
+
+Freeing $4$ and freezing $0$ and $1$ at $0$, the residual reads
+$\val(3)=\max(0,1)=1$, $\val(4)=\frac12(x(1)+\val(3))=\frac12$ and
+$\val(2)=\max(\val(4),x(1))=\frac12$, attained at the successor $4$. So
+the optimal residual strategy sends $2$ to $4$ and $3$ to $t_1$, and
+$\rho_{\{4\}}(\sigma)$ switches both. Finally $w^\ast\equiv1$: with
+$3\mapsto t_1$ one gets $w^\ast(3)=1$, then $w^\ast(0)=\frac12(w^\ast(0)+1)=1$,
+$w^\ast(4)=\frac12(w^\ast(1)+1)$, $w^\ast(2)=\max(w^\ast(4),w^\ast(1))$ and
+$w^\ast(1)=\frac12(w^\ast(2)+1)$, whose unique solution is $1$ throughout.
 \end{proof}
 
 \begin{remark}\label{rem:freeze}
 Three consequences, and one caution.
 First, \Cref{thm:normalform-barrier} is exactly a statement about the
 bottom level $B=\emptyset$ of \Cref{def:freeze}: already
-$|B|=1$ escapes it, and does so measurably --- on the normalised ladders
-$N(L_n)$, $n=2,\dots,6$, the rule that tries every single $c$ and keeps
-the best takes $1,2,2,2,3$ rounds where all-switches takes $n$.
+$|B|=1$ escapes it, on a game that is reduced and normal, and it escapes
+measurably --- on the normalised ladders $N'(L_n)$, $n=2,\dots,6$, the
+rule that tries every single $c$ and keeps the best takes $1,2,2,2,3$
+rounds where all-switches and the residue rule both take $n$.
 Second, \Cref{prop:freeze-escapes} shows that the sound improving rules
 form a strictly larger class than \Cref{def:rule}: a rule may switch a
 vertex that is not strictly switchable and still never decrease a value.
@@ -4542,11 +4567,12 @@ vertex can read only a bounded-radius neighbourhood of it
 (\Cref{prop:locality}). Finally, solving the deterministic part of the
 game exactly --- an acceleration that collapses the ladder's exponential
 run to a single round (\Cref{prop:residue-ladder}) --- is undone by a
-value-preserving normalisation adding $2N$ average vertices with parallel
-edges, so no rule of that kind runs in polynomially many rounds unless
-all-switches already does (\Cref{thm:normalform-barrier}) --- unless it
-first deletes the padding, which \Cref{rem:barrier-scope} explains is
-exactly what the barrier leaves open.
+value-preserving normalisation adding at most $4N$ average vertices,
+which leaves no redex for a preprocessing step to recognise, so no rule
+of that kind runs in polynomially many rounds unless all-switches already
+does (\Cref{thm:normalform-barrier}); the level above it, which frees one
+average vertex, escapes and is a sound improving rule that is not a
+switching rule at all (\Cref{prop:freeze-escapes}).
 
 \paragraph{Mechanisms, and where they stop.} Three sound polynomial-time
 comparison mechanisms are developed and measured against one yardstick.
