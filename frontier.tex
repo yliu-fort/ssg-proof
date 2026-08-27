@@ -3816,6 +3816,60 @@ games, reproducing the exact value vector every time.
 
 The atomic step of the selection problem is itself exactly as hard.
 
+
+\Cref{thm:order-determines} makes the certificate small, and it invites a
+divide-and-conquer: if one could reduce an instance with $a$ average
+vertices to polynomially many with at most $a/2$, then
+\Cref{thm:few-avg} and recursion would give a quasi-polynomial
+$N^{O(\log a)}$ algorithm. Both mechanisms available for such a reduction
+are unavailable, and for reasons already proved.
+
+\begin{proposition}[Neither substitution nor order-splitting halves
+$a$]\label{prop:no-halving}
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item If a sub-game with $k$ average vertices has value $p$ at some
+      vertex, then $p$ has denominator dividing an integer at most $2^{k}$.
+      Hence realising a constant whose denominator is $2^{a}$ requires at
+      least $a$ fresh average vertices, and denominators $2^{a}$ occur:
+      on the ladder $L_n$ of \Cref{def:ladder} the vertex $w_1$ has
+      denominator exactly $2^{n}$. So replacing an average vertex by a
+      gadget realising its now-known value takes $a$ to at least
+      $2a-1$.
+\item Deciding $w^\ast(x)\ge w^\ast(y)$ for two \emph{average} vertices
+      $x,y$ of a stopping SSG is polynomial-time equivalent to
+      \Cref{prob:main}.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) is \Cref{lem:denominator-sharp} applied to the sub-game, together
+with the computation of $\val_{L_n}$ in \Cref{thm:ladder}; the sub-game
+must be disjoint from the $a-1$ average vertices that remain, whence the
+count.
+
+(b) One direction is \Cref{thm:compare-equivalence}. For the other,
+given a stopping $G$ and arbitrary vertices $p,q$, adjoin two fresh
+average vertices $p'\to(p,p)$ and $q'\to(q,q)$. Then
+$w^\ast(p')=w^\ast(p)$ and $w^\ast(q')=w^\ast(q)$ by
+\Cref{lem:splice}(a) read backwards, and the enlarged game is stopping,
+since a trap containing $p'$ must contain $p$ and conversely. So the
+comparison of $p$ and $q$ is a comparison of two average vertices.
+\end{proof}
+
+\begin{remark}\label{rem:no-halving}
+The two clauses close the two doors. A reduction that \emph{learns} the
+value of an average vertex and substitutes it pays for the substitution
+in the very currency it is trying to save, by (a); and a reduction that
+splits the average vertices by their \emph{order}, which
+\Cref{thm:order-determines} says is all the information there is, must
+perform a comparison of two average values, which by (b) is the whole
+problem. This does not refute every conceivable halving --- a reduction
+might produce sub-instances by some route that is neither --- but it does
+say that the two mechanisms the certificate itself suggests are both
+dead, and it explains why no quasi-polynomial bound appears anywhere in
+this document.
+\end{remark}
+
 \begin{corollary}[Deciding wrongness is the whole problem]\label{cor:wrong-equivalence}
 Call $v\in\Vmax$ \emph{wrong} at $\sigma$ if $\sigma(v)\notin A_v$, i.e.\
 if $\sigma$ does not choose a $w^\ast$-maximising successor at $v$. The
