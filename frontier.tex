@@ -2424,6 +2424,135 @@ such as \Cref{thm:few-avg} or \Cref{thm:switch-count}.
 
 
 
+Finally we delimit the barrier from above, because the delimitation is
+sharp and it exhibits sound improving rules that fall outside
+\Cref{def:rule} altogether. The residue rule freezes \emph{all} average
+vertices; one may instead free some of them.
+
+\begin{definition}[Freezing rule]\label{def:freeze}
+Let $B\subseteq\Vavg$. Given $\sigma$, put $x:=\val_\sigma$ and let
+$\widehat G_B(x)$ be the game played on $B\cup\Vmax\cup\Vmin$ obtained
+from $G$ by declaring every average vertex outside $B$ a terminal with
+payoff $x$. Let $\rho_B(\sigma)$ be an optimal Max strategy in
+$\widehat G_B(x)$, chosen to agree with $\sigma$ wherever $\sigma$
+already attains the optimum. The rule $\rho_\emptyset$ is the residue
+rule of \Cref{def:residue-rule}, and $\rho_{\Vavg}$ solves $G$ outright.
+\end{definition}
+
+\begin{proposition}[Freezing rules are sound]\label{prop:freeze-sound}
+Let $G$ be stopping and $B\subseteq\Vavg$. Then $\widehat G_B(x)$ is a
+stopping game with terminal payoffs, and with $D$ its value extended by
+$x$ off $B\cup\Vmax\cup\Vmin$,
+\[
+  \val_{\rho_B(\sigma)}\ \ge\ D\ \ge\ \val_\sigma,
+\]
+with $\val_{\rho_B(\sigma)}=\val_\sigma$ if and only if $\sigma\in\Opt$.
+The iteration therefore halts at an optimal strategy after at most
+$N4^{a}$ rounds. For $|B|=1$ one round costs one evaluation of
+$\val_\sigma$ and $O(N^{2})$ further arithmetic operations.
+\end{proposition}
+
+\begin{proof}
+A trap of $\widehat G_B(x)$ avoids all terminals, in particular all
+average vertices outside $B$, so it is a trap of $G$; by
+\Cref{lem:trapchar} it is empty, and $\widehat G_B(x)$ is stopping.
+
+The three displayed relations are proved exactly as in
+\Cref{thm:residue-correct}. For $D\ge\val_\sigma$: $T_\sigma x=x$ says
+that $x$, restricted to $B\cup\Vmax\cup\Vmin$, satisfies the defining
+equations of $\widehat G_B(x)$ with Max playing $\sigma$, and those have
+a unique solution because the game is stopping; so $x$ is its value under
+$\sigma$, which the optimal value $D$ dominates. For
+$T_{\rho_B(\sigma)}D\ge D$: at controlled vertices and at vertices of $B$
+one has equality, and at an average $c\notin B$,
+$(T_{\rho_B(\sigma)}D)(c)=\frac12(D(c^{(0)})+D(c^{(1)}))\ge
+\frac12(x(c^{(0)})+x(c^{(1)}))=x(c)=D(c)$; now apply
+\Cref{cor:comparison}. If $\val_{\rho_B(\sigma)}=\val_\sigma$ then
+$D=x$, whence $Tx=x$ as in \Cref{thm:residue-correct}(c) and
+$\sigma\in\Opt$ by \Cref{lem:local-global}.
+
+For the round bound, the value vectors strictly increase, and by
+\Cref{lem:denominator-sharp} consecutive ones have denominators at most
+$2^{a}$, so $\Phi(x):=\sum_{u}x(u)\in[0,N]$ rises by at least $4^{-a}$
+each round.
+
+For $B=\{c\}$: for $y\in[0,1]$ let $D_y$ be the value of the game with
+$c$ frozen at $y$ as well. By \Cref{lem:trapchar} the controlled
+subgraph is acyclic, so $D_y$ is computed by backward induction, and an
+induction along that order shows each $D_y(v)$ is nondecreasing,
+continuous and piecewise affine in $y$ with slopes in $\{0,1\}$ and
+breakpoints inside the set $S$ of frozen values together with $\{0,1\}$;
+a maximum or minimum of two such functions is again one, and two of them
+cross only where a constant meets $y$. Hence
+$F(y):=\frac12\bigl(D_y(c^{(0)})+D_y(c^{(1)})\bigr)$ is piecewise affine
+with at most $N+1$ pieces, and $(D_y,y)$ is a fixed point of the residual
+operator exactly when $F(y)=y$. Uniqueness of that fixed point gives a
+unique solution, found by solving one affine equation on each piece.
+\end{proof}
+
+\begin{proposition}[One freed average vertex escapes the
+barrier]\label{prop:freeze-escapes}
+Let $G^{\dagger}$ be the stopping SSG on vertices $0,\dots,7$ with
+$t_0=8$, $t_1=9$, $\Vmax=\{0,1\}$, $\Vmin=\emptyset$,
+$\Vavg=\{2,\dots,7\}$ and
+\[
+  0\to(4,5),\quad 1\to(6,7),\quad 2\to(3,t_1),\quad 3\to(t_1,t_0),
+\]
+\[
+  4\to(3,3),\quad 5\to(1,1),\quad 6\to(t_0,t_0),\quad 7\to(2,2).
+\]
+No controlled vertex of $G^{\dagger}$ has a controlled successor. At
+$\sigma=(0\mapsto4,\ 1\mapsto6)$ one has
+$\val_\sigma=(\tfrac12,0,\tfrac34,\tfrac12,\tfrac12,0,0,\tfrac34)$ and
+$S_\sigma=\{1\}$, whereas $\rho_{\{5\}}(\sigma)$ switches both $0$ and
+$1$. Vertex $0$ is not strictly switchable at $\sigma$ and yet
+$w^\ast=(\tfrac34,\tfrac34,\tfrac34,\tfrac12,\tfrac12,\tfrac34,0,\tfrac34)$
+prescribes $0\mapsto5$. Consequently $\rho_{\{5\}}$ is neither
+residue-blind nor a switching rule in the sense of \Cref{def:rule}, and
+\Cref{thm:normalform-barrier} does not apply to it.
+\end{proposition}
+
+\begin{proof}
+All the numbers are immediate. Under $\sigma$, vertex $6$ pays $0$, so
+$\val_\sigma(1)=0$ and $\val_\sigma(5)=0$; vertex $3$ pays
+$\frac12(1+0)=\frac12$, so $\val_\sigma(4)=\frac12$ and
+$\val_\sigma(0)=\frac12$; vertex $2$ pays $\frac12(\frac12+1)=\frac34$,
+so $\val_\sigma(7)=\frac34$. At vertex $0$ the alternative successor $5$
+has $\val_\sigma(5)=0<\frac12$, so $0\notin S_\sigma$; at vertex $1$ the
+alternative $7$ has $\frac34>0$, so $S_\sigma=\{1\}$. Freeing $5$ and
+freezing the rest, the residual reads
+$\val(1)=\max(x(6),x(7))=\frac34$, $\val(5)=\val(1)=\frac34$ and
+$\val(0)=\max(x(4),\val(5))=\max(\frac12,\frac34)=\frac34$, so the
+optimal residual strategy sends $0$ to $5$ and $1$ to $7$. Optimality of
+$0\mapsto5$ in $G^{\dagger}$ follows from $w^\ast$, which is checked
+against $T$ directly.
+\end{proof}
+
+\begin{remark}\label{rem:freeze}
+Three consequences, and one caution.
+First, \Cref{thm:normalform-barrier} is exactly a statement about the
+bottom level $B=\emptyset$ of \Cref{def:freeze}: already
+$|B|=1$ escapes it, and does so measurably --- on the normalised ladders
+$N(L_n)$, $n=2,\dots,6$, the rule that tries every single $c$ and keeps
+the best takes $1,2,2,2,3$ rounds where all-switches takes $n$.
+Second, \Cref{prop:freeze-escapes} shows that the sound improving rules
+form a strictly larger class than \Cref{def:rule}: a rule may switch a
+vertex that is not strictly switchable and still never decrease a value.
+So \Cref{thm:switch-count}, \Cref{cor:no-height} and
+\Cref{prop:serialiser}, all of which quantify over runs of strictly
+improving flips, do not constrain $\rho_B$ --- though the counting
+argument itself survives, since the proof of \Cref{thm:switch-count}'s
+multi-switch bound uses only that the value vectors increase strictly,
+and that holds for every $\rho_B$ by \Cref{prop:freeze-sound}.
+Third, this locates precisely what the normalisation removes: it deletes
+all structure among the controlled vertices and none among the average
+ones, and it is the latter that $\rho_B$ exploits.
+The caution is that nothing here is progress on \Cref{prob:main}. No
+bound better than $N4^{a}$ is proved for any $\rho_B$ with $B\ne\Vavg$,
+and $\rho_{\Vavg}$, which finishes in one round, is not polynomial time.
+\end{remark}
+
+
 \subsection{The induced orientation of the two-player cube can be cyclic}
 
 On the Max-only cube the map $\sigma\mapsto\val_\sigma$ is a strictly
