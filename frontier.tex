@@ -2025,6 +2025,54 @@ exponentially tall. What is not excluded, and is exactly what
 
 
 
+A construction aiming at a long run for a \emph{particular} rule must
+therefore arrange for the rule to be given a choice; if it is never given
+one, the run is short, whatever the rule.
+
+\begin{proposition}[No serialisation]\label{prop:serialiser}
+Let $G$ be stopping and let $\sigma_0,\sigma_1,\dots,\sigma_L$ be an
+improving run in which $|S_{\sigma_j}|=1$ for every $j<L$ --- so that at
+each of those steps every improving rule, single-switch or multi-switch,
+performs the same forced flip. Then $L\le d(\sigma_0)\le|\Vmax|$, where
+$d$ denotes Hamming distance to a fixed optimal strategy. Consequently,
+in an arbitrary improving run, every maximal block of consecutive steps
+at which exactly one vertex is strictly switchable has length at most
+$|\Vmax|$.
+\end{proposition}
+
+\begin{proof}
+Fix $\sigma^\ast\in\Opt$ and let $P:\sigma_0=P_0,P_1,\dots,P_r$ be the
+improving path to $\Opt$ supplied by \Cref{thm:short-path}, so that
+$r\le d(\sigma_0)\le|\Vmax|$. We claim $P_k=\sigma_k$ for every
+$k\le\min(r,L)$. This holds for $k=0$; and if it holds for some
+$k<\min(r,L)$ then $|S_{\sigma_k}|=1$, so there is exactly one strictly
+improving single flip available at $\sigma_k$, and both $P_{k+1}$ and
+$\sigma_{k+1}$ are obtained by it.
+
+Suppose $r<L$. Then $\sigma_r=P_r\in\Opt$, so $S_{\sigma_r}=\emptyset$ by
+\Cref{lem:local-global}; but $r<L$ gives $|S_{\sigma_r}|=1$, a
+contradiction. Hence $L\le r\le d(\sigma_0)\le|\Vmax|$. For the final
+sentence apply this to the strategy that begins the block.
+\end{proof}
+
+\begin{remark}\label{rem:serialiser}
+This constrains every attempt at a superpolynomial lower bound, and it
+does so for all improving rules simultaneously. A counter in the
+classical shape --- a family whose run visits exponentially many
+strategies while each step flips exactly one bit \emph{because that bit
+is the only one that may be flipped} --- cannot exist on stopping SSGs.
+Any superpolynomially long improving run must offer at least two strictly
+switchable vertices at least once in every $|\Vmax|$ consecutive steps,
+and the length must come from the \emph{choice} among them rather than
+from the forced part of the trajectory. \Cref{thm:ladder} is the extreme
+illustration: at $b=0\dots0$ all $n$ vertices of $L_n$ are strictly
+switchable, a single well-chosen flip reaches $\Opt$, and the $2^{n}-1$
+steps of the least-index run are produced entirely by repeatedly choosing
+badly among the available switches. This is \Cref{cor:selection} again,
+now visible in the shape a hard instance is forced to have.
+\end{remark}
+
+
 \subsection{Solving the deterministic residue exactly, and why it does not
 help}\label{sec:residue}
 
