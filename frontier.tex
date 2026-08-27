@@ -5556,7 +5556,9 @@ with a complete proof, and each whose algorithm we implemented and checked
 against exhaustive computation:
 arbitrary SSGs with $a=O(\log N)$ average vertices, in time
 $\mathrm{poly}(N)2^{a}$ and with no stopping hypothesis
-(\Cref{thm:few-avg}); games whose cycles are \emph{pure}, that is in which
+(\Cref{thm:few-avg}), the exponent being improvable to the escape
+exponent $d(G)\le a$, which \Cref{prop:fk-family} separates from $a$ by
+$\Theta(N)$ (\Cref{thm:few-escape}); games whose cycles are \emph{pure}, that is in which
 no cycle passes through an average vertex (\Cref{thm:avg-acyclic}) or,
 dually, none passes through a controlled vertex
 (\Cref{thm:player-free}), both in polynomial time; one-player games, by
