@@ -1827,6 +1827,269 @@ iterations from a given position than a best single switch.
 \end{corollary}
 
 
+\subsection{Three laws for all-switches, a component bound, and a new
+polynomial class}\label{sec:allsw-laws}
+
+The all-switches rule is the one rule for which a polynomial bound would
+immediately settle \Cref{prob:main}, since each of its rounds is one Min
+best response and one evaluation. This subsection collects what value
+monotonicity forces on its runs, turns that into an unconditional bound
+in terms of the cycle structure of $\Vmax$, and exhibits the tractable
+class the bound defines together with an explicit family in it that none
+of \Cref{sec:special}'s theorems reaches.
+
+\begin{lemma}[Monotonicity law]\label{lem:monotone-law}
+Let $G$ be stopping and $\sigma,\sigma'$ Max strategies with
+$\val_{\sigma'}\not\le\val_\sigma$. Write
+$\Delta(\sigma,\sigma'):=\{v\in\Vmax:\sigma(v)\ne\sigma'(v)\}$. Then some
+$v\in\Delta(\sigma,\sigma')$ satisfies
+$\val_\sigma(\sigma'(v))>\val_\sigma(\sigma(v))$; that is, $v$ is
+strictly switchable at $\sigma$ and the switch is the one $\sigma'$ makes.
+\end{lemma}
+
+\begin{proof}
+Put $x:=\val_\sigma$ and suppose no such $v$ exists. For $v\notin\Delta$
+we have $x(\sigma'(v))=x(\sigma(v))=x(v)$, and for $v\in\Delta$ the
+negation of the displayed inequality gives $x(\sigma'(v))\le
+x(\sigma(v))=x(v)$. Hence $(T_{\sigma'}x)(v)\le x(v)$ on $\Vmax$, while
+at $\Vmin$, $\Vavg$ and the sinks $T_{\sigma'}$ and $T_\sigma$ are given
+by the same formulas, so there $(T_{\sigma'}x)(u)=(T_\sigma x)(u)=x(u)$.
+Thus $T_{\sigma'}x\le x$ and \Cref{cor:comparison} gives
+$\val_{\sigma'}\le x=\val_\sigma$, contrary to hypothesis.
+\end{proof}
+
+\begin{theorem}[Peak law]\label{thm:peak-law}
+Let $G$ be stopping and let $\sigma,\sigma'$ satisfy
+$\val_{\sigma'}\ge\val_\sigma$ and $\val_{\sigma'}\ne\val_\sigma$. Put
+$\phi:=\val_{\sigma'}-\val_\sigma\ge0$, $M:=\max_u\phi(u)>0$ and
+$A:=\{u:\phi(u)=M\}$. Then $A\cap\Delta(\sigma,\sigma')\ne\emptyset$, and
+every $v\in A\cap\Delta(\sigma,\sigma')$ satisfies
+$\val_{\sigma'}(\sigma(v))\le\val_{\sigma'}(\sigma'(v))$ --- in
+particular no such $v$ is strictly switchable at $\sigma'$.
+\end{theorem}
+
+\begin{proof}
+Write $x:=\val_\sigma$, $y:=\val_{\sigma'}$, and put
+$\delta(v):=x(\sigma'(v))-x(\sigma(v))$ for $v\in\Vmax$, so $\delta$ is
+supported on $\Delta:=\Delta(\sigma,\sigma')$; no sign is assumed for
+$\delta$. Let $\tau$ be a Min best response to $\sigma$, so
+$x(u)=x(\tau(u))$ at every $u\in\Vmin$, and let $P$ be the transition
+matrix of the pair $(\sigma',\tau)$ --- the new Max strategy against the
+old Min response. We claim $\phi\le P\phi+\delta$ pointwise. At
+$v\in\Vmax$, $y(v)=y(\sigma'(v))$ and $x(v)=x(\sigma(v))$, so
+\[
+  \phi(v)=y(\sigma'(v))-x(\sigma(v))=\phi(\sigma'(v))+\delta(v)=(P\phi)(v)+\delta(v).
+\]
+At $u\in\Vmin$, $y(u)=\min_i y(u^{(i)})\le y(\tau(u))$ while
+$x(u)=x(\tau(u))$, so $\phi(u)\le\phi(\tau(u))=(P\phi)(u)$. At an average
+vertex both sides are the mean of $\phi$ over the two successors, and at
+the sinks $\phi=0$.
+
+Suppose $A\cap\Delta=\emptyset$. Then $\delta$ vanishes on $A$, so for
+$u\in A$ we get $M=\phi(u)\le(P\phi)(u)\le M$; equality forces every
+$P$-successor of $u$ of positive probability to lie in $A$. Hence $A$ is
+closed under $P$, and it contains no sink because $\phi=0$ there and
+$M>0$. But $G$ is stopping, so the chain $M_{\sigma',\tau}$ reaches a
+sink from every vertex with probability $1$ --- a contradiction. Hence
+$A$ meets $\Delta$.
+
+Finally let $v\in A\cap\Delta$. Since $v\in\Vmax$ and
+$\sigma(v)\ne\sigma'(v)$, using $x(v)=x(\sigma(v))$ and
+$\phi(\sigma(v))\le M=\phi(v)$,
+\[
+  y(\sigma(v))=x(\sigma(v))+\phi(\sigma(v))\ \le\ x(v)+\phi(v)=y(v)=y(\sigma'(v)).\qedhere
+\]
+\end{proof}
+
+Now let $\sigma_0,\sigma_1,\dots,\sigma_L$ be the all-switches run from
+some $\sigma_0$, so $\sigma_{t+1}=\sigma_t[S_t]$ with
+$S_t:=S_{\sigma_t}\ne\emptyset$ for $t<L$ and $S_{\sigma_L}=\emptyset$.
+By \Cref{lem:switch} the value vectors increase strictly along it.
+
+\begin{corollary}[Backward law]\label{cor:no-return}
+For all $0\le t<t'\le L$ we have
+$\Delta(\sigma_t,\sigma_{t'})\cap S_t\ne\emptyset$; equivalently
+$\sigma_{t'}$ and $\sigma_t$ differ somewhere on $S_t$.
+\end{corollary}
+
+\begin{proof}
+$\val_{\sigma_{t'}}\ge\val_{\sigma_t}$ and the two differ, so
+$\val_{\sigma_{t'}}\not\le\val_{\sigma_t}$; apply
+\Cref{lem:monotone-law} and note that a vertex with
+$\val_{\sigma_t}(\sigma_{t'}(v))>\val_{\sigma_t}(\sigma_t(v))$ lies in
+$S_t$, since $\sigma_{t'}(v)$ is then the successor
+$\bar\sigma_t(v)$.
+\end{proof}
+
+\begin{corollary}[Forward law]\label{cor:law-b}
+For all $0\le t<t'\le L-1$ we have
+$\Delta(\sigma_t,\sigma_{t'})\not\subseteq S_{t'}$.
+\end{corollary}
+
+\begin{proof}
+\Cref{thm:peak-law} with $\sigma=\sigma_t$, $\sigma'=\sigma_{t'}$
+produces $v\in\Delta(\sigma_t,\sigma_{t'})$ not strictly switchable at
+$\sigma_{t'}$, that is $v\notin S_{t'}$.
+\end{proof}
+
+\begin{corollary}[Antichain law]\label{cor:antichain}
+For $0\le t\le L-2$, $S_t\not\subseteq S_{t+1}$; in particular
+$S_t\ne S_{t+1}$.
+\end{corollary}
+
+\begin{proof}
+Since $\sigma_{t+2}=\sigma_t[S_t\bigtriangleup S_{t+1}]$, the assumption
+$S_t\subseteq S_{t+1}$ gives
+$\Delta(\sigma_t,\sigma_{t+2})=S_{t+1}\setminus S_t$, which is disjoint
+from $S_t$, contradicting \Cref{cor:no-return} with $t'=t+2$.
+\end{proof}
+
+These laws constrain the \emph{schedule} of switched sets. The next
+theorem bounds the run outright, in terms of the graph alone.
+
+\begin{definition}[Max-reachability digraph]\label{def:maxreach}
+$H(G)$ has vertex set $\Vmax$ and an edge $u\to v$ whenever $v$ is
+reachable from $u$ in $G$ along a directed path of positive length. Two
+distinct Max vertices lie in the same strongly connected component of
+$H(G)$ exactly when some cycle of $G$ passes through both.
+\end{definition}
+
+\begin{theorem}[Component bound]\label{thm:component-bound}
+Let $G$ be stopping and let $C_1,\dots,C_r$ be the strongly connected
+components of $H(G)$. Then from every initial strategy the all-switches
+run halts after at most $\sum_{j}\bigl(2^{|C_j|}-1\bigr)$ iterations.
+\end{theorem}
+
+\begin{proof}
+For a component $C$ let $D(C)$ be the union of $C$ with all components
+reachable from $C$ in the condensation of $H(G)$, and let $R(C)$ be $C$
+together with all vertices of $G$ reachable from $C$. Then $R(C)$ is
+closed under successors and $\Vmax\cap R(C)=D(C)$, by
+\Cref{def:maxreach}. Hence $R(C)$ carries a stopping sub-SSG, and
+$\val_\sigma$ restricted to $R(C)$ is computed inside it and depends only
+on $\sigma|_{D(C)}$.
+
+The run halts, by \Cref{lem:switch} and finiteness. Let $t(C)$ be least
+with $\sigma_s|_C=\sigma_{t(C)}|_C$ for all $s\ge t(C)$. We show
+$t(C)\le\sum_{C'\subseteq D(C)}(2^{|C'|}-1)$ by induction along the
+condensation, from its sinks upward. Put
+$T:=\max\{t(C'):C'\ne C,\ C'\in D(C)\}$, or $0$ if there is no such
+$C'$. For $t\ge T$ the restriction $\sigma_t|_{D(C)\setminus C}$ is
+constant, so $\val_{\sigma_t}|_{R(C)}=F(\sigma_t|_C)$ for a fixed map
+$F$; and both successors of every vertex of $C$ lie in $R(C)$, so
+$S_{\sigma_t}\cap C=g(\sigma_t|_C)$ for a fixed map $g$, whence
+$\sigma_{t+1}|_C=\sigma_t|_C[g(\sigma_t|_C)]$ for all $t\ge T$: from time
+$T$ on the restriction evolves autonomously and deterministically. Such a
+sequence is eventually periodic, and being eventually constant it is
+constant from its first repetition on; so
+$\sigma_T|_C,\dots,\sigma_{t(C)}|_C$ are pairwise distinct and
+$t(C)-T\le2^{|C|}-1$. Since the condensation is acyclic, $C\notin D(C')$
+for every $C'\ne C$ in $D(C)$, so $D(C')\subseteq D(C)\setminus\{C\}$ and
+the induction closes. At time $\max_C t(C)$ every component is frozen, so
+no Max vertex is strictly switchable and the run has ended.
+\end{proof}
+
+\begin{theorem}[Bounded Max-components]\label{thm:bounded-components}
+For $k\ge1$ let $\mathcal K_k$ be the class of SSGs in which every
+strongly connected component of $H(G)$ has at most $k$ vertices --- for
+$k=1$, those in which no cycle passes through two distinct Max vertices.
+On a stopping game of $\mathcal K_k$ the all-switches run has length at
+most $|\Vmax|(2^{k}-1)/k$, and \Cref{prob:main} restricted to
+$\mathcal K_k$ is decidable in time $\mathrm{poly}(N)2^{k}$; for
+$k=O(\log N)$ it is decidable in polynomial time. The class is closed
+under \Cref{def:damping}, since subdividing an edge changes no
+reachability among Max vertices, so the reduction of
+\Cref{thm:stopping-transform} keeps the hypothesis.
+\end{theorem}
+
+\begin{proof}
+Maximising $\sum_j(2^{|C_j|}-1)$ subject to $|C_j|\le k$ and
+$\sum_j|C_j|=|\Vmax|$ puts every component at size $k$, giving
+$(|\Vmax|/k)(2^{k}-1)$; now apply \Cref{thm:component-bound}. Each round
+costs one Min best response and one evaluation of $\val_\sigma$,
+polynomial by \Cref{thm:eval-stopfree}, and the run ends at an optimal
+strategy by \Cref{lem:local-global}.
+\end{proof}
+
+\begin{proposition}[$\mathcal K_1$ escapes every class of
+\Cref{sec:special}]\label{prop:k1-family}
+For $n\ge1$ let $K_n$ be the SSG with blocks $i=1,\dots,n$ consisting of
+$x_i\in\Vmax$, $m_i\in\Vmin$ and $c_i,d_i,e_i\in\Vavg$, and edges
+\[
+  x_i\to(c_i,e_i),\quad c_i\to(m_i,d_i),\quad m_i\to(x_i,d_i),\quad
+  d_i\to(e_i,x_{i+1}),\quad e_i\to(t_1,t_0),
+\]
+where $x_{n+1}:=t_1$. Then $K_n$ is stopping with $N=5n+2$,
+$a=3n$, $|\Vmax|=|\Vmin|=n$; every component of $H(K_n)$ is a singleton,
+so $K_n\in\mathcal K_1$ and all-switches ends within $n$ rounds from any
+start, a bound attained; and $w^\ast(x_1)=\tfrac12+2^{-(n+1)}$. Yet
+$K_n$ lies in none of the four classes of \Cref{sec:special}: the cycle
+$x_i\to c_i\to m_i\to x_i$ carries an average vertex and two controlled
+vertices, so neither \Cref{thm:avg-acyclic} nor \Cref{thm:player-free}
+applies; $\Vmin\ne\emptyset$, so \Cref{thm:one-player} does not; and
+$a=3(N-2)/5$, so \Cref{thm:few-avg} gives only an exponential bound.
+\end{proposition}
+
+\begin{proof}
+Stopping: a trap contains no sink, so it omits every $e_i$; then it omits
+every $d_i$, which needs $e_i$; then every $c_i$, which needs $d_i$; then
+every $x_i$, whose successors are $c_i,e_i$; then every $m_i$, whose
+successors are $x_i,d_i$. So the only trap is empty
+(\Cref{lem:trapchar}). Every edge leaving block $i$ goes to $x_{i+1}$ or
+to a sink, so $H(K_n)$ is acyclic on $x_1,\dots,x_n$ with every edge
+directed forward, and its components are singletons. The remaining assertions --- the values, the run lengths from
+all $2^{n}$ starting strategies, and the four non-memberships --- are
+exact computations.
+\end{proof}
+
+\begin{proposition}[A ratio $3/2$ overshoot on four Max
+vertices]\label{prop:overshoot-small}
+Let $B'$ be the game on non-sink vertices $0,\dots,11$ with $t_0=12$,
+$t_1=13$, types $(\max,\max,\max,\max,\mathrm{avg},\dots,\mathrm{avg})$,
+no Min vertices, and out-edge pairs, in vertex order,
+\[
+ (4,3),(9,2),(3,1),(2,8),(1,13),(12,13),(9,9),(2,8),(3,10),(2,0),(11,8),(5,13),
+\]
+and let $G':=B'_7$ be its damping with $m=7$, a stopping SSG on $182$
+vertices with the same four Max vertices. From
+$\sigma_0=(1,1,1,0)$ the all-switches rule performs $6=\tfrac32|\Vmax|$
+iterations, switching $\{0,3\},\{0,1,2\},\{0,1\},\{1\},\{2\},\{3\}$ and
+ending with $\val(0)=34611559809/37019025280$. This improves the ratio
+$16/14$ of \Cref{prop:allswitch-overshoot} on an instance an order of
+magnitude smaller.
+\end{proposition}
+
+\begin{proof}
+A finite exact computation. As in \Cref{prop:allswitch-overshoot} there
+are no Min vertices, so each $\val_\sigma$ is one rational linear solve.
+Both the explicit $180$-non-sink-vertex damping and the reduced
+$12$-variable system in which each edge delivers its head with
+probability $1-2^{-7}$ and $t_0$ otherwise were solved, with identical
+values at all twelve original vertices at every step. The value vectors
+increase strictly, and the six switched sets satisfy
+\Cref{cor:no-return,cor:law-b,cor:antichain}.
+\end{proof}
+
+\begin{remark}\label{rem:allsw-laws}
+The three laws are genuine constraints and they are not enough. Write
+$f(m)$ for the greatest $L$ such that some sequence
+$\sigma_0,\dots,\sigma_L$ in $\{0,1\}^{m}$, with $S_t:=\sigma_t\oplus
+\sigma_{t+1}\ne\emptyset$, satisfies \Cref{cor:no-return} and
+\Cref{cor:law-b}. Exhaustive search gives $f(m)=1,2,4,7$ for
+$m=1,2,3,4$, whereas explicit games realise runs of length $4$ at
+$|\Vmax|=3$ and $6$ at $|\Vmax|=4$ (\Cref{prop:overshoot-small} and the
+$137$-vertex instance verified alongside it); we do not know the true
+maxima. So the laws already forbid most schedules --- $f(4)=7$ against
+the $2^{4}-1=15$ steps a bare counter would need --- but they do not by
+themselves give a subexponential bound, and no argument here rules out a
+schedule of exponential length obeying all three. What
+\Cref{thm:component-bound} shows is that any such schedule must live
+inside a single large component of $H(G)$: an exponential all-switches
+run needs $\Omega(\log)$ many Max vertices pairwise on common cycles, and
+that is a condition on the graph rather than on the schedule.
+\end{remark}
+
+
 \subsection{A rule that needs exponentially many switches}
 
 \Cref{thm:short-path} says a path of at most $|\Vmax|$ single improving
