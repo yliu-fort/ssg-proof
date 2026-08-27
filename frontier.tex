@@ -2355,6 +2355,63 @@ precisely what \Cref{thm:matching-barrier} and \Cref{thm:slack-barrier}
 show to be hard for comparison mechanisms as well.
 \end{remark}
 
+The normalisation raises $a$, and one may ask whether the parameter is
+therefore worthless. It is not: the vertices the normalisation adds are
+exactly of the kind that a value-preserving reduction removes again.
+
+\begin{lemma}[Two reductions of the average set]\label{lem:splice}
+Let $G$ be a stopping SSG.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \textup{(Splice)} If $c\in\Vavg$ has $c^{(0)}=c^{(1)}=u$, let $G/c$
+      be obtained by deleting $c$ and redirecting every edge into $c$ to
+      $u$. Then $u\ne c$, $G/c$ is stopping, and
+      $\val_{G/c}=\val_G$ on $V\setminus\{c\}$ while
+      $\val_G(c)=\val_G(u)$. The same holds for $\val_\sigma$, for every
+      $\sigma$.
+\item \textup{(Merge)} If $c,d\in\Vavg$ are distinct and
+      $\{c^{(0)},c^{(1)}\}=\{d^{(0)},d^{(1)}\}$ as multisets, the game
+      obtained by deleting $d$ and redirecting every edge into $d$ to $c$
+      is stopping and has the same values, with $\val(d)=\val(c)$.
+\end{enumerate}
+Each reduction lowers $|\Vavg|$ by one, so at most $a$ of them apply in
+succession.
+\end{lemma}
+
+\begin{proof}
+(a) If $u=c$ then $\{c\}$ is a trap and $G$ is not stopping by
+\Cref{lem:trapchar}. For $y\in[0,1]^{V\setminus\{c\}}$ let $\hat y$ be its
+extension by $\hat y(c):=y(u)$. Then $\hat y$ is a fixed point of $T_G$
+if and only if $y$ is a fixed point of $T_{G/c}$: at $c$ the equation
+$\hat y(c)=\frac12(\hat y(u)+\hat y(u))$ holds automatically, at every
+other vertex the two operators read the same because an occurrence of
+$c$ contributes $\hat y(c)=y(u)$ on one side and the redirected
+occurrence of $u$ contributes $y(u)$ on the other. Traps correspond in
+the same way ($c$ belongs to a trap iff $u$ does), so $G/c$ is stopping
+by \Cref{lem:trapchar}, and the fixed points are unique by
+\Cref{thm:contraction}. The argument is unchanged with $T$ replaced by
+$T_\sigma$.
+
+(b) Identical, with $\hat y(d):=y(c)$: the defining equation at $d$
+coincides with the one at $c$ because the two vertices have the same
+successor multiset.
+\end{proof}
+
+\begin{remark}\label{rem:splice-invariance}
+The normalisation of \Cref{lem:normalform} adds $2|\Vmax\cup\Vmin|$
+average vertices, and \emph{every one of them is a splice redex}: by
+construction $c_{v,u}$ has both successors equal to $u$. Splicing all of
+them returns $G$ itself. Moreover the normalisation does not touch the
+out-edges of any average vertex of $G$, so it creates no new redex among
+the old vertices and destroys none. A bound stated in terms of the number
+of average vertices that survive exhaustive reduction --- for instance
+\Cref{thm:few-avg}, which may be run on the reduced game and its values
+transported back by \Cref{lem:splice} --- is therefore unaffected by the
+normalisation, whereas a bound stated in terms of $a$ itself is not.
+This is the precise sense in which $a$ is a parameter of the
+presentation and its reduced value is a parameter of the game.
+\end{remark}
+
+
 \begin{remark}\label{rem:normalform-scope}
 \Cref{lem:normalform} is also a normalisation of independent interest: at
 the cost of a factor $3$ in the number of vertices one may always assume
