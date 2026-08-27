@@ -4190,6 +4190,220 @@ using $u_k\ge w^\ast$. Neither sign decides, so no controlled vertex is
 separated. Verified in exact rational arithmetic for $m=3,4,5$.
 \end{proof}
 
+
+\medskip
+The barrier just proved is a statement about the clauses of
+\Cref{def:slack}, and it is sharp for them. It does not survive the
+addition of a single further clause, and the corollary above does not
+either. Recall that the premises of transitivity leave any separated
+region, so \Cref{thm:slack-barrier} says nothing about it.
+
+\begin{definition}[Transitive slack calculus]\label{def:trans-slack}
+Write $L(W)$ for one application of the clauses of \Cref{def:slack} to a
+matrix $W$, and let
+\[
+  C(W)(x,y):=\min\Bigl\{\textstyle\sum_{i<r}W(z_i,z_{i+1})\ :\
+    z_0=x,\ z_r=y\Bigr\}
+\]
+be the min-plus (all-pairs shortest path) closure, which is exactly the
+closure of $W$ under the clause
+\emph{(trans)} $\Delta(x,y)\le\Delta(x,z)+\Delta(z,y)$. Put
+$\Delta^{T}_0\equiv1$ and
+$\Delta^{T}_{k+1}:=\operatorname{clamp}_{[-1,1]}C\bigl(L(\Delta^{T}_k)\bigr)$.
+The reading is unchanged: $\Delta^{T}_k(x,y)$ certifies
+$w^\ast(x)\le w^\ast(y)+\Delta^{T}_k(x,y)$.
+\end{definition}
+
+\begin{theorem}[Soundness and cost]\label{thm:trans-sound}
+For every SSG, every $k$ and all $x,y$:
+$\Delta^{T}_k(x,y)\ge w^\ast(x)-w^\ast(y)$, and
+$\Delta^{T}_{k+1}\le\Delta^{T}_k\le\Delta_k$. Every entry lies in
+$2^{-k}\mathbb{Z}\cap[-1,1]$, so $k$ rounds cost $O(k)$ bits per entry
+and $O(kN^{3})$ rational operations. No stopping hypothesis is needed.
+\end{theorem}
+
+\begin{proof}
+Write $D(x,y):=w^\ast(x)-w^\ast(y)$. By the proof of
+\Cref{thm:slack-sound} every clause of $L$ is exact at $D$, and
+$D(x,z)+D(z,y)=D(x,y)$ identically, so every path sum in $C$ telescopes
+to $D(x,y)$ and $C$ is exact at $D$ too. All operations are monotone and
+$\Delta^{T}_0\equiv1\ge D$, so induction gives $\Delta^{T}_k\ge D$;
+$\Delta^{T}_1\le\Delta^{T}_0$ then propagates. Taking the single-arc path
+gives $C(W)\le W$, whence $\Delta^{T}_k\le\Delta_k$. The set
+$2^{-k}\mathbb Z$ is closed under addition, $\max$ and $\min$, and a mean
+of two of its elements lies in $2^{-(k+1)}\mathbb Z$; the closure adds at
+most $N-1$ such numbers. Floyd--Warshall costs $O(N^{3})$ per round.
+\end{proof}
+
+\begin{proposition}[\Cref{cor:slack-stalls} fails for
+$\Delta^{T}$]\label{prop:trans-Hm}
+On the family $H_m$ of \Cref{cor:slack-stalls} the first round at which
+$\Delta^{T}_k$ decides the pair $\{h,c_1\}$ is
+\[
+  k=9,\,13,\,17,\,21,\,25,\,29,\,33\quad(m=3,\dots,9),\qquad k=38\quad(m=10),
+\]
+that is $k=4m-3$ up to $m=9$, and linear in $N=2m+4$; whereas the
+calculus of \Cref{def:slack} first decides it at
+$k=14,38,100,249,596$ for $m=3,\dots,7$ --- in each case exactly one more
+than the number of value-iteration steps recorded in
+\Cref{thm:vi-lower}(iii), as \Cref{thm:slack-barrier} predicts. The exponential stall of \Cref{cor:slack-stalls} is therefore
+destroyed by the transitivity clause.
+\end{proposition}
+
+\begin{proof}
+Exact rational computation of $\Delta_k$ and $\Delta^{T}_k$ from
+\Cref{def:slack} and \Cref{def:trans-slack}; soundness was checked at
+every round against $D$ on all $N^{2}$ pairs, with no violation. For
+$m=3$ the sequence $\Delta^{T}_k(h,c_1)$, $k=1,\dots,9$, is
+\[
+  1,\ \tfrac12,\ \tfrac12,\ \tfrac38,\ \tfrac14,\ \tfrac18,\ \tfrac3{64},\ 0,\ -\tfrac7{256}.
+\]
+The mechanism is visible in the residual $\Delta_k-D$: for the plain
+calculus the row of $h$ obeys the two-sided value iteration of
+\Cref{thm:slack-barrier} and decays at the mixing rate of $G_m$, while
+(trans) routes the comparison through the pairs $(c_i,c_j)$, which couple
+at once because $c_i$ and $c_j$ share the successor $c_1$ for
+$i,j\le m-1$, so the composite clause pairs the shared branches and
+halves their residual every round.
+\end{proof}
+
+The transitivity clause is not merely faster here. The calculus is in
+fact complete on the stopping class, so every stall --- with or without
+transitivity --- is a statement about the number of rounds and never
+about what the mechanism can express.
+
+\begin{theorem}[Exact limit on stopping games]\label{thm:trans-complete}
+Let $G$ be stopping and let $M:=\lim_k\Delta_k$, respectively
+$\lim_k\Delta^{T}_k$; the limits exist because the sequences are
+nonincreasing and bounded below by $D$, and they are fixed points of the
+respective clause systems, all clauses being continuous. Then
+$M(x,y)=w^\ast(x)-w^\ast(y)$ for all $x,y$. Only \emph{(up)},
+\emph{(down)} and the bases are used, so this holds equally for
+\Cref{def:slack}, \Cref{def:trans-slack} and \Cref{def:seeded}.
+\end{theorem}
+
+\begin{proof}
+$M\ge D$ by \Cref{thm:slack-sound}. The diagonal clause gives
+$M(t_0,t_0)=M(t_1,t_1)=0$; the base gives $M(t_0,t_1)\le-1$, and
+$M\ge D$ gives $M(t_0,t_1)=-1$ and $M(t_1,t_0)=1$.
+
+\emph{Step 1.} Fix $y$ and put $h(v):=M(v,y)$. Since $M$ is a fixed point
+of the clause system, the \emph{(up)} clause gives
+$h(v)\le\mathrm{ag}^{+}_{v}\bigl(h(v^{(i)})\bigr)$ at every non-sink $v$,
+that is $h\le\widetilde Th$, where $\widetilde T$ is the Shapley operator
+of $G$ with the two sinks paying $h(t_0)$ and $h(t_1)$. Now $t_0\in Z_0$
+gives $h(t_0)=M(t_0,y)\le0$, while $h(t_1)=M(t_1,y)\ge D(t_1,y)=1-w^\ast(y)\ge0$;
+so $\beta:=h(t_1)-h(t_0)\ge0$ and the affine map
+$t\mapsto h(t_0)+\beta t$ is nondecreasing, hence commutes with $\max$,
+$\min$ and the mean. Therefore $g:=h(t_0)+\beta w^\ast$ satisfies
+$\widetilde Tg=g$, because $Tw^\ast=w^\ast$ (\Cref{thm:lfp-general}) and
+the sinks receive exactly $h(t_0)$ and $h(t_0)+\beta$. As $G$ is stopping,
+$\widetilde T$ has a unique fixed point and every orbit converges to it:
+\Cref{lem:absorption} and \Cref{thm:contraction} use only that the sinks
+are absorbing and pay constants, not that those constants are $0$ and
+$1$. From $h\le\widetilde Th$ and monotonicity, $h\le\widetilde T^{k}h\to g$,
+so
+\[
+  M(v,y)\ \le\ M(t_0,y)\bigl(1-w^\ast(v)\bigr)+M(t_1,y)\,w^\ast(v).
+\]
+Taking $y=t_0$ gives $M(v,t_0)\le w^\ast(v)$, and $y=t_1$ gives
+$M(v,t_1)\le w^\ast(v)-1$.
+
+\emph{Step 2.} Fix $x$ and put $f(v):=-M(x,v)$. The \emph{(down)} clause
+gives $M(x,v)\le\mathrm{ag}^{-}_{v}\bigl(M(x,v^{(j)})\bigr)$, that is
+$f(v)\ge\mathrm{ag}^{+}_{v}\bigl(f(v^{(j)})\bigr)$, so $f\ge\widehat Tf$
+with the sinks paying $f(t_0)=-M(x,t_0)$ and $f(t_1)=-M(x,t_1)$. By
+soundness $M(x,t_0)\ge D(x,t_0)=w^\ast(x)$ and by Step~1
+$M(x,t_1)\le w^\ast(x)-1$, so $f(t_1)\ge f(t_0)$ and the same affine
+argument applies; $f\ge\widehat T^{k}f$ converges to the fixed point, giving
+\[
+  M(x,v)\ \le\ M(x,t_0)\bigl(1-w^\ast(v)\bigr)+M(x,t_1)\,w^\ast(v)
+  \ \le\ w^\ast(x)\bigl(1-w^\ast(v)\bigr)+\bigl(w^\ast(x)-1\bigr)w^\ast(v)
+  \ =\ w^\ast(x)-w^\ast(v),
+\]
+the middle inequality by Step~1 and $1-w^\ast(v),w^\ast(v)\ge0$. So
+$M\le D$, and with $M\ge D$, $M=D$.
+\end{proof}
+
+Off the stopping class the picture is the opposite, and it has an exact
+description: the calculus cannot see past \emph{any} fixed point of $T$,
+not merely the least one.
+
+\begin{lemma}[Fixed points certify stalls]\label{lem:phi-certificate}
+Let $G$ be an arbitrary SSG and let $\varphi\in[0,1]^{V}$ satisfy
+$T\varphi=\varphi$, $\varphi=0$ on $Z_0$ and $\varphi=1$ on $Z_1$. Then
+$\Delta^{T}_k(x,y)\ge\varphi(x)-\varphi(y)$ for every $k$ and all $x,y$;
+a fortiori the same holds for $\Delta_k$.
+\end{lemma}
+
+\begin{proof}
+Put $M(x,y):=\varphi(x)-\varphi(y)\in[-1,1]$ and check that $M$ is at
+most every clause value at $M$; the claim then follows by induction, all
+clauses being monotone and $\Delta^{T}_0\equiv1\ge M$. The constant $1$
+dominates $M$ since $\varphi\in[0,1]$. If $x\in Z_0$ the clause value is
+$0\ge-\varphi(y)=M(x,y)$; if $y\in Z_1$ it is $0\ge\varphi(x)-1=M(x,y)$;
+if both, it is $-1=M(x,y)$; the diagonal clause gives $0=M(x,x)$. For
+\emph{(down)},
+$\mathrm{ag}^{-}_{y}(\varphi(x)-\varphi(y^{(j)}))=\varphi(x)-(T\varphi)(y)=M(x,y)$,
+and for \emph{(up)},
+$\mathrm{ag}^{+}_{x}(\varphi(x^{(i)})-\varphi(y))=(T\varphi)(x)-\varphi(y)=M(x,y)$;
+the composite is the two in succession, and either bijection at two
+average vertices gives $M(x,y)$ as well. Finally
+$M(x,z)+M(z,y)=M(x,y)$, so \emph{(trans)} and every path sum of $C$ are
+exact at $M$.
+\end{proof}
+
+\begin{proposition}[A permanent stall, and it is not
+stopping]\label{prop:trans-stall}
+Let $A_0$ be the SSG on non-sink vertices $a,p,q,u$ with
+$a\to(t_0,t_1)$ and $q\to(a,t_1)$ average, $p\to(a,p)$ and $u\to(p,q)$
+in $\Vmax$. Then $w^\ast=(\tfrac12,\tfrac12,\tfrac34,\tfrac34)$, so $u$
+is value-distinguishing and Max must move to $q$; but
+$\Delta^{T}_k(p,q)=\Delta^{T}_k(q,p)=\tfrac14$ for all $k\ge5$, so no
+$k$ decides $u$. The obstruction is exactly
+\Cref{lem:phi-certificate}: $\varphi=(\tfrac12,1,\tfrac34,1)$ satisfies
+$T\varphi=\varphi$ and gives $\Delta^{T}_k(p,q)\ge\tfrac14$, while
+$D(p,q)=-\tfrac14$. Damping removes the stall: on $(A_0)_m$ of
+\Cref{def:damping} the pair is decided at $k=7,8,10$ for $m=2,3,4$.
+\end{proposition}
+
+\begin{proof}
+$A_0$ is not stopping, since $\{p\}$ is a trap (\Cref{lem:trapchar}).
+The values are immediate: $w^\ast(a)=\tfrac12$, $w^\ast(q)=\tfrac34$,
+$w^\ast(p)=\lfp$ of $t\mapsto\max(\tfrac12,t)$, which is $\tfrac12$, and
+$w^\ast(u)=\max(\tfrac12,\tfrac34)=\tfrac34$. That $\varphi$ is a fixed
+point is a one-line check: $\max(\tfrac12,1)=1$ at $p$ and at $u$,
+$\tfrac12(0+1)=\tfrac12$ at $a$, $\tfrac12(\tfrac12+1)=\tfrac34$ at $q$.
+\Cref{lem:phi-certificate} then gives $\Delta^{T}_k(p,q)\ge\tfrac14>0$,
+and soundness gives $\Delta^{T}_k(q,p)\ge D(q,p)=\tfrac14>0$. The
+displayed equalities and the damped counts are exact computations.
+\end{proof}
+
+\begin{remark}\label{rem:trans}
+Three corrections to the reading of \Cref{sec:slack} follow.
+First, \Cref{thm:slack-barrier} and \Cref{cor:slack-stalls} are sharp for
+the clauses they quantify over and for no others:
+\Cref{prop:trans-Hm} turns the same family from $2^{\Omega(N)}$ rounds
+into $4m-3$. The barrier's proof cannot be repaired, because any
+invariant a min-plus closure propagates must satisfy the triangle
+inequality, and the two-sided bound $u_k(x)-l_k(y)$ does not --- its
+diagonal $u_k(z)-l_k(z)$ is strictly positive.
+Second, by \Cref{thm:trans-complete} no stall on a stopping game is ever
+permanent: the mechanism of \Cref{sec:slack} expresses $w^\ast$ exactly in
+the limit, and the entire question is how many rounds it needs. This is
+the sense in which the frontier is a \emph{rate} question and not an
+expressiveness question, and it is why \Cref{rem:magnitude}'s moral is
+about magnitudes rather than about what can be said.
+Third, \Cref{prop:trans-stall} locates permanent blindness precisely:
+it exists, but only where $T$ has more than one fixed point in
+$[0,1]^{V}$, which by \Cref{thm:contraction} cannot happen on a stopping
+game --- and \Cref{thm:stopping-transform} sends every instance into the
+stopping class. What is still not proved, and is what a polynomial
+algorithm would need, is a polynomial bound on the number of rounds of
+$\Delta^{T}$ on stopping games; by \Cref{thm:decide-one-bit} that is
+again the whole problem.
+\end{remark}
+
 \begin{remark}
 The moral is worth stating carefully, because it is not the one the
 construction suggests. Precision is \emph{not} the obstacle: by
@@ -4455,6 +4669,12 @@ the value-iteration bound on non-interacting parts
 (\Cref{thm:slack-barrier}), a limitation that seeding cannot remove
 (\Cref{thm:seeded-barrier}) but that the exactness of an evaluated
 bracket makes vacuous exactly there (\Cref{thm:seed-dichotomy}).
+\Cref{prop:trans-Hm} then shows that the geometric limitation is not
+even sharp for the mechanism, only for its clause set: one extra clause,
+whose premises leave the separated region, collapses the family the
+barrier was built on. And by \Cref{thm:trans-complete} the whole family
+of calculi is complete in the limit on stopping games, so what is at
+stake is a rate and never an expressive power.
 The residue is sharp: by \Cref{thm:seed-dichotomy} a stalling instance of
 $M(p,k)$ for polynomial $p$ is in particular a stopping SSG on which
 switch-all improvement runs for more than $p$ rounds, so exhibiting one
@@ -4592,7 +4812,13 @@ every bounded radius; it fails on branch compensation, and
 fooling pair. The slack calculus (\Cref{sec:slack}) repairs exactly that
 and is cheap in precision, but on non-interacting parts it is two-sided
 value iteration (\Cref{thm:slack-barrier}), hence exponential on an
-explicit family. Seeding it from an evaluated bracket
+explicit family --- for its own clauses only: adding transitivity, whose
+premises leave the separated region, turns that family from
+$2^{\Omega(N)}$ rounds into $4m-3$ (\Cref{prop:trans-Hm}), and no
+stall on a stopping game is permanent at all, since the calculus computes
+$w^\ast$ exactly in the limit (\Cref{thm:trans-complete}). Permanent
+blindness exists only where $T$ has a second fixed point, hence never on
+a stopping game (\Cref{lem:phi-certificate,prop:trans-stall}). Seeding it from an evaluated bracket
 (\Cref{sec:seeded}) strictly dominates both, and decides every stalling
 instance in this document --- including a vertex that
 \Cref{prop:bracket}(a) forbids any bracket from deciding --- while
