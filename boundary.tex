@@ -1,0 +1,587 @@
+%%% ===================================================================
+%%%  Boundary-value calculus for simple stochastic games.
+%%%  Written to be pasted into frontier.tex after \Cref{sec:seeded}.
+%%%  All labels carry the prefix "bv" and collide with nothing existing.
+%%% ===================================================================
+
+\section{The boundary-value calculus}\label{sec:bv}
+
+Every mechanism examined in \Cref{sec:gap} compares two vertices of one
+fixed game. This section changes the variable instead of the pair: it
+freezes a single vertex at a prescribed payoff and studies the value of
+the resulting game as a function of that payoff. The dependence turns out
+to be exactly affine for each strategy pair, so the whole game collapses,
+at that vertex, to a \emph{one-dimensional} monotone fixed-point equation
+whose least solution is the value --- with no stopping hypothesis
+(\Cref{thm:bv-lfp}), and with uniqueness and a two-sided sign test when
+the game is stopping (\Cref{thm:bv-contract,cor:bv-threshold}). The
+resulting reduction is \emph{oracle-free}: unlike \Cref{thm:decide-one-bit}
+it never needs to be told which successor is better. What it costs is a
+branching factor of two, and \Cref{rem:bv-verdict} explains why that cost
+cannot be removed --- the obstruction sits at the average vertices, and it
+is quantitative: \Cref{thm:bv-slow} exhibits games on which the
+one-dimensional equation is contracting only at rate $1-2^{-\Theta(N)}$
+while its solution lies within $2^{-\Theta(N)}$ of $\tfrac12$.
+
+A special case of the one-dimensional equation already appears inside the
+proof of \Cref{prop:freeze-sound}, for $B=\{c\}$: there every \emph{other}
+average vertex has been frozen at $\val_\sigma$, the residual controlled
+subgraph is acyclic, and the resulting response function has slopes in
+$\{0,1\}$ and at most $N+1$ pieces. Nothing of that survives here. In the
+unfrozen game the slopes are arbitrary hitting probabilities
+(\Cref{thm:bv-affine}), the piece count is not $N+1$ by any argument we
+know, and the family of \Cref{thm:bv-pieces} already exceeds $|\Vmax|$.
+
+\subsection{Boundary substitution and affinity}
+
+\begin{definition}[Boundary substitution]\label{def:bv-freeze}
+Let $G$ be an SSG, let $u$ be a non-sink vertex and let
+$\theta\in[0,1]$. Write $G[u{:=}\theta]$ for the game obtained from $G$
+by deleting the two outgoing edges of $u$ and declaring $u$ a sink of
+payoff $\theta$. Its Shapley operator $T^{u,\theta}$ agrees with $T$ at
+every vertex other than $u$ and returns the constant $\theta$ at $u$; its
+values are, as in \Cref{thm:lfp-general}, the least fixed point of
+$T^{u,\theta}$.
+
+Two remarks make this legitimate inside \Cref{def:ssg}. First, every
+proof of \Cref{sec:operators,sec:stopping} uses only that sinks are
+absorbing and carry \emph{fixed} payoffs, never that those payoffs are
+$0$ and $1$; this is the same observation already used in
+\Cref{prop:freeze-sound}. Second, for dyadic $\theta$ the construction is
+literal: replace $u$ by an average vertex both of whose edges enter a
+chain of average vertices realising the constant $\theta$ from
+$t_0,t_1$. For $\theta=\tfrac12$ this is simply
+\[
+   G_u\;:=\;G[u{:=}\tfrac12],\qquad u \text{ retyped as an average vertex with } u\to(t_0,t_1).
+\]
+Since all functions below are continuous in $\theta$, identities proved
+for dyadic $\theta$ extend to all of $[0,1]$.
+
+For a positional pair $(\sigma,\tau)$ and vertices $v,u$ we write, as in
+\Cref{thm:impedance}, $h_{\sigma,\tau}(v\to u)$ for the probability that
+the chain $M_{\sigma,\tau}$ started at $v$ ever visits $u$.
+\end{definition}
+
+\begin{theorem}[Boundary affinity]\label{thm:bv-affine}
+Let $G$ be an SSG, $u$ a non-sink vertex, $(\sigma,\tau)$ a positional
+pair. Put
+\[
+  \alpha_{\sigma,\tau}(v)\;:=\;\Pr\nolimits^{M_{\sigma,\tau}}_{v}
+     \bigl[\text{the token reaches } t_1 \text{ without visiting } u\bigr].
+\]
+Then for every $v\in V$ and every $\theta\in[0,1]$,
+\[
+  v^{\,u,\theta}_{\sigma,\tau}(v)\;=\;\alpha_{\sigma,\tau}(v)
+      \;+\;h_{\sigma,\tau}(v\to u)\,\theta ,
+\]
+where $v^{\,u,\theta}_{\sigma,\tau}$ is the value of the pair
+$(\sigma,\tau)$ in $G[u{:=}\theta]$. Neither $\alpha$ nor $h$ depends on
+$\theta$. Consequently
+\[
+  V_v(\theta)\;:=\;\val_{G[u:=\theta]}(v)\;=\;
+  \max_{\sigma}\min_{\tau}\bigl(\alpha_{\sigma,\tau}(v)+h_{\sigma,\tau}(v\to u)\,\theta\bigr)
+\]
+is nondecreasing, continuous, piecewise affine and $1$-Lipschitz on
+$[0,1]$, every one of its slopes lies in $[0,1]$ and belongs to the finite
+set $\{h_{\sigma,\tau}(v\to u)\}$, it is convex when $\Vmin=\emptyset$
+and concave when $\Vmax=\emptyset$, and in general neither
+(\Cref{prop:bv-neither}).
+\end{theorem}
+
+\begin{proof}
+In $G[u{:=}\theta]$ the vertex $u$ is absorbing, so a trajectory from $v$
+either reaches $t_1$ without ever visiting $u$, or visits $u$ and stops
+there, or does neither; the three events are disjoint and the first two
+are the only ones contributing to the payoff. The first contributes
+$\alpha_{\sigma,\tau}(v)$ and the second contributes
+$h_{\sigma,\tau}(v\to u)\,\theta$, since on that event the payoff is
+exactly $\theta$. The transition probabilities of $M_{\sigma,\tau}$
+outside $u$ do not involve $\theta$, so neither $\alpha$ nor $h$ does.
+This is the first-passage decomposition of \Cref{lem:excursion} applied
+at the first visit to $u$.
+
+By \Cref{thm:determinacy} applied to $G[u{:=}\theta]$ --- a game with
+terminal payoffs, to which \Cref{thm:determinacy} applies verbatim ---
+$V_v(\theta)=\max_\sigma\min_\tau v^{u,\theta}_{\sigma,\tau}(v)$, a
+$\max$--$\min$ of finitely many affine functions of $\theta$ with slopes
+in $[0,1]$: hence continuous, piecewise affine, $1$-Lipschitz and
+nondecreasing. If $\Vmin=\emptyset$ it is a maximum of affine functions,
+hence convex; if $\Vmax=\emptyset$ a minimum, hence concave.
+\end{proof}
+
+\begin{remark}\label{rem:bv-impedance}
+\Cref{thm:bv-affine} is the global companion of \Cref{thm:impedance}. There
+one edge at a controlled vertex $u$ is switched and the effect on $f$ is
+$(f(b)-f(a))h(v\to u)/(1-h(b\to u))$; here the \emph{payoff} at $u$ is
+moved and the effect is $h(v\to u)$ per unit, with no denominator. The
+same transfer impedance $h(v\to u)$ is the sensitivity in both cases; the
+denominator $1-h(b\to u)$ of \Cref{thm:impedance} reappears below as the
+defect $1-\rho_u$ of \Cref{thm:bv-contract}, which is exactly what makes
+the fixed-point equation solvable.
+\end{remark}
+
+\subsection{The response map and its least fixed point}
+
+\begin{definition}[Response map]\label{def:bv-response}
+Let $u$ be a non-sink vertex with successors $u^{(0)},u^{(1)}$. The
+\emph{response map} of $u$ is $R_u\colon[0,1]\to[0,1]$,
+\[
+  R_u(\theta)\;:=\;
+  \begin{cases}
+    \max\bigl(V_{u^{(0)}}(\theta),\,V_{u^{(1)}}(\theta)\bigr), & u\in\Vmax,\\[2pt]
+    \min\bigl(V_{u^{(0)}}(\theta),\,V_{u^{(1)}}(\theta)\bigr), & u\in\Vmin,\\[2pt]
+    \tfrac12\bigl(V_{u^{(0)}}(\theta)+V_{u^{(1)}}(\theta)\bigr), & u\in\Vavg,
+  \end{cases}
+\]
+where $V_w(\theta)=\val_{G[u:=\theta]}(w)$ as in \Cref{thm:bv-affine}.
+In words: freeze $u$ at $\theta$, solve, and read off what $u$'s own rule
+then says $u$ ought to be worth. By \Cref{thm:bv-affine} $R_u$ is
+nondecreasing, continuous and piecewise affine.
+\end{definition}
+
+\begin{theorem}[The value is the least fixed point of $R_u$]\label{thm:bv-lfp}
+For \emph{every} SSG $G$ --- no stopping hypothesis --- and every non-sink
+vertex $u$,
+\[
+  \val_G(u)\;=\;\min\{\theta\in[0,1]\,:\,R_u(\theta)=\theta\}
+             \;=\;\lfp R_u .
+\]
+\end{theorem}
+
+\begin{proof}
+Write $w:=\val_G$, so $Tw=w$ and $w=\lfp T$ by \Cref{thm:lfp-general}.
+
+\emph{Every fixed point of $R_u$ is at least $w(u)$.} Let
+$R_u(\theta)=\theta$ and let $x$ be the vector equal to
+$\val_{G[u:=\theta]}$ off $u$ and to $\theta$ at $u$. Off $u$, $x$ is a
+fixed point of $T^{u,\theta}$ by \Cref{thm:lfp-general} applied to
+$G[u{:=}\theta]$, and $T^{u,\theta}$ agrees with $T$ there, so
+$(Tx)(v)=x(v)$ for $v\neq u$. At $u$, $(Tx)(u)$ is precisely $u$'s rule
+applied to $x(u^{(0)}),x(u^{(1)})$, that is $R_u(\theta)=\theta=x(u)$.
+Hence $Tx=x$, so $x\ge\lfp T=w$, and in particular $\theta=x(u)\ge w(u)$.
+
+\emph{$w(u)$ is a post-fixed point: $R_u(w(u))\le w(u)$.} The vector $w$
+itself satisfies $T^{u,w(u)}w=w$: off $u$ because $Tw=w$, and at $u$
+because $T^{u,w(u)}$ returns the constant $w(u)=w(u)$. So $w$ is a fixed
+point of $T^{u,w(u)}$, whence $\val_{G[u:=w(u)]}\le w$ pointwise, the
+value being the \emph{least} fixed point. Applying $u$'s rule, which is
+monotone, to $\val_{G[u:=w(u)]}(u^{(i)})\le w(u^{(i)})$ gives
+$R_u(w(u))\le (Tw)(u)=w(u)$.
+
+\emph{Conclusion.} $R_u$ is monotone on the complete lattice $[0,1]$, so
+by Knaster--Tarski it has a least fixed point $\theta_\ast$, and
+$R_u(w(u))\le w(u)$ gives $\theta_\ast\le w(u)$. The first paragraph
+gives $\theta_\ast\ge w(u)$. Hence $\theta_\ast=w(u)$.
+\end{proof}
+
+\begin{lemma}[Substitution]\label{lem:bv-subst}
+Let $G$ be stopping and $u$ a non-sink vertex. Then $G[u{:=}\theta]$ is
+stopping for every $\theta$, and
+\[
+  \val_{G[u:=\val_G(u)]}(v)\;=\;\val_G(v)\qquad\text{for every }v\in V .
+\]
+\end{lemma}
+
+\begin{proof}
+Making $u$ absorbing only adds a sink, so from every vertex a sink is
+still reached almost surely under every pair; $G[u{:=}\theta]$ is
+stopping. The vector $\val_G$ is a fixed point of $T^{u,\val_G(u)}$, as
+shown in the proof of \Cref{thm:bv-lfp}, and by \Cref{thm:contraction}
+that operator has exactly one fixed point, namely the value of
+$G[u{:=}\val_G(u)]$.
+\end{proof}
+
+\begin{theorem}[Contraction, uniqueness, and the sign test]\label{thm:bv-contract}
+Let $G$ be stopping, $a=|\Vavg|$, and let $u$ be a non-sink vertex. Put
+\[
+  \rho_u\;:=\;\max_{\sigma,\tau}\ \Pr\nolimits^{M_{\sigma,\tau}}_{u}
+       \bigl[\text{the token returns to } u\bigr] ,
+\]
+the maximum over positional pairs of $G$. Then:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item every slope of $R_u$ equals $\Pr^{M_{\sigma,\tau}}_{u}[\text{return to }u]$
+      for some positional pair, so all slopes lie in $[0,\rho_u]$;
+\item $\rho_u\le(1-2^{-a})^{1/N}\le 1-2^{-a}/N<1$;
+\item $\theta\mapsto R_u(\theta)-\theta$ is strictly decreasing, so $R_u$
+      has exactly one fixed point, which by \Cref{thm:bv-lfp} is $\val_G(u)$;
+\item for every $c\in[0,1]$,
+      \[
+        \val_G(u)\ \ge\ c \iff R_u(c)\ \ge\ c,
+        \qquad
+        \val_G(u)\ \le\ c \iff R_u(c)\ \le\ c .
+      \]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) On any open interval where the optimal pair of $G[u{:=}\theta]$ is
+constant, $V_{u^{(i)}}(\theta)=\alpha_{\sigma,\tau}(u^{(i)})+
+h_{\sigma,\tau}(u^{(i)}\to u)\theta$ by \Cref{thm:bv-affine}. If
+$u\in\Vmax\cup\Vmin$ then on that interval $R_u$ selects one index $i$
+and its slope is $h_{\sigma,\tau}(u^{(i)}\to u)$, which is the
+probability of returning to $u$ under the pair that moves $u$ to
+$u^{(i)}$ --- exactly the quantity called $h(b\to u)$ in
+\Cref{thm:impedance}. If $u\in\Vavg$ the slope is
+$\tfrac12\bigl(h_{\sigma,\tau}(u^{(0)}\to u)+h_{\sigma,\tau}(u^{(1)}\to u)\bigr)$,
+which is the probability of returning to $u$ under $(\sigma,\tau)$ in $G$
+by first-step analysis at $u$.
+
+(b) Fix a pair with return probability $\rho$ and let $T_{\mathrm{abs}}$
+be the absorption time of $M_{\sigma,\tau}$ started at $u$. By the strong
+Markov property the number of returns to $u$ is geometric, so
+$\Pr[\text{at least }k\text{ returns}]=\rho^{k}$. At least $k$ returns
+forces $T_{\mathrm{abs}}\ge k$, and \Cref{lem:absorption} gives
+$\Pr[T_{\mathrm{abs}}>jN]\le(1-2^{-a})^{j}$; taking
+$j=\lceil k/N\rceil-1$ yields
+$\rho^{k}\le(1-2^{-a})^{\lceil k/N\rceil-1}$. Taking $k$-th roots and
+letting $k\to\infty$ gives $\rho\le(1-2^{-a})^{1/N}$. Finally
+$(1-x)^{1/N}\le 1-x/N$ for $x\in[0,1]$ by Bernoulli's inequality
+$(1-x/N)^{N}\ge1-x$.
+
+(c) By (a) and (b) all slopes of $R_u$ are at most $\rho_u<1$, so
+$R_u(\theta)-\theta$ is strictly decreasing and has at most one zero; by
+\Cref{thm:bv-lfp} it has one, at $\val_G(u)$.
+
+(d) Immediate from (c): $R_u(\theta)-\theta$ is strictly decreasing with
+its unique zero at $\val_G(u)$, so it is $\ge0$ exactly on
+$[0,\val_G(u)]$.
+\end{proof}
+
+\begin{corollary}[Threshold freezing]\label{cor:bv-threshold}
+Let $G$ be stopping and let $u$ be a non-sink vertex with successors
+$u^{(0)},u^{(1)}$. Let $G_u$ be $G$ with $u$ retyped as an average vertex
+with $u\to(t_0,t_1)$, and write $y:=\val_{G_u}$. Then
+\[
+  \val_G(u)\ge\tfrac12
+  \iff
+  \begin{cases}
+    y(u^{(0)})\ge\tfrac12 \ \ \textbf{or}\ \ y(u^{(1)})\ge\tfrac12, & u\in\Vmax,\\[2pt]
+    y(u^{(0)})\ge\tfrac12 \ \ \textbf{and}\ \ y(u^{(1)})\ge\tfrac12, & u\in\Vmin,\\[2pt]
+    y(u^{(0)})+y(u^{(1)})\ \ge\ 1, & u\in\Vavg .
+  \end{cases}
+\]
+$G_u$ is an SSG on the same vertex set, still stopping, with
+$|\Vmax|+|\Vmin|$ smaller by one when $u$ is controlled. Freezing
+operations at distinct vertices commute, so for $S\subseteq V$ the game
+$G_S$ obtained by freezing all of $S$ is well defined, and the recursion
+obtained by iterating the displayed equivalence is indexed by pairs
+$(S,v)$ with $S$ the set of vertices frozen so far.
+\end{corollary}
+
+\begin{proof}
+$G_u=G[u{:=}\tfrac12]$, so $y=V$ in the notation of
+\Cref{thm:bv-affine} and $R_u(\tfrac12)$ is $u$'s rule applied to
+$y(u^{(0)}),y(u^{(1)})$. Apply \Cref{thm:bv-contract}(d) with
+$c=\tfrac12$ and rewrite $\max\ge\tfrac12$ as a disjunction,
+$\min\ge\tfrac12$ as a conjunction and
+$\tfrac12(y_0+y_1)\ge\tfrac12$ as $y_0+y_1\ge1$. Freezing replaces a
+vertex by a fixed gadget and therefore commutes; $G_S$ is stopping
+because $G$ is and freezing only adds routes to sinks.
+\end{proof}
+
+\begin{remark}\label{rem:bv-oracle-free}
+The contrast with \Cref{thm:decide-one-bit} is the point of the
+construction. There a vertex is retyped as an average vertex with
+\emph{both edges to the successor named by the oracle}, and the retyping
+is only sound because the oracle was right; the recursion is linear but
+conditional. Here the retyping sends both edges to $t_0$ and $t_1$ and is
+unconditionally sound; nothing has to be decided first. The price is that
+one query becomes two.
+\end{remark}
+
+\begin{example}[The sign test needs the stopping hypothesis]\label{ex:bv-nonstopping}
+Let $G$ have $\Vmax=\{0\}$, $\Vmin=\Vavg=\emptyset$ and $0\to(0,t_0)$. Then
+$\val_G(0)=0$: the least fixed point of $x\mapsto\max(x,0)$ is $0$. But
+$G_0$ gives $y(0)=\tfrac12$ and $y(t_0)=0$, so
+$R_0(\tfrac12)=\max(\tfrac12,0)=\tfrac12\ge\tfrac12$, and the criterion of
+\Cref{thm:bv-contract}(d) would assert $\val_G(0)\ge\tfrac12$. Here
+$R_0(\theta)=\theta$ identically: every point of $[0,1]$ is a fixed point,
+$\rho_0=1$, and only the \emph{least} one --- namely $0$, as
+\Cref{thm:bv-lfp} guarantees --- is the value.
+\end{example}
+
+\subsection{What the calculus does not decide}
+
+The recursion of \Cref{cor:bv-threshold} decides the threshold question at
+$u$ without knowing which successor of $u$ is better. It is tempting to
+believe that the frozen game answers the comparison too. It does not.
+
+\begin{proposition}[The frozen comparison is unsound]\label{prop:bv-rule}
+Let $D$ be the SSG on $\{0,\dots,8\}$ with $t_0=7$, $t_1=8$,
+$\Vmax=\{0\}$, $\Vmin=\emptyset$, $\Vavg=\{1,\dots,6\}$ and
+\[
+ 0\to(1,5),\quad 1\to(0,2),\quad 2\to(0,3),\quad 3\to(8,4),\quad
+ 4\to(7,8),\quad 5\to(4,6),\quad 6\to(4,8).
+\]
+Then $D$ is stopping, and
+\[
+ \val_D=\bigl(\tfrac34,\tfrac34,\tfrac34,\tfrac34,\tfrac12,\tfrac58,\tfrac34,0,1\bigr),
+ \qquad
+ \val_{D_0}=\bigl(\tfrac12,\tfrac9{16},\tfrac58,\tfrac34,\tfrac12,\tfrac58,\tfrac34,0,1\bigr).
+\]
+So at the Max vertex $0$ the true comparison is
+$\val_D(1)=\tfrac34>\tfrac58=\val_D(5)$, while in the frozen game
+$\val_{D_0}(1)=\tfrac9{16}<\tfrac58=\val_{D_0}(5)$. The polynomial-time
+rule ``at a controlled vertex $u$, choose the successor with the larger
+value in $G_u$'' therefore names the wrong successor, and is not a sound
+decision rule in the sense of \Cref{def:decision-rule}.
+\end{proposition}
+
+\begin{proof}
+Vertices $4$ and $6$ have values $\tfrac12$ and
+$\tfrac12(\tfrac12+1)=\tfrac34$, so $5$ has value
+$\tfrac12(\tfrac12+\tfrac34)=\tfrac58$; and $3$ has value
+$\tfrac12(1+\tfrac12)=\tfrac34$. Writing $x$ for the common value of
+$0,1,2$ under the choice $0\mapsto1$, back-substitution gives
+$x_2=\tfrac12(x+\tfrac34)$, $x_1=\tfrac12(x+x_2)$ and $x=x_1$, whence
+$x=\tfrac34>\tfrac58$; so that choice is optimal and $\val_D$ is as
+displayed. Every vertex reaches a sink under either choice at $0$ (from
+$1$ through $2$ and $3$), so $D$ is stopping. In $D_0$ the value at $0$ is
+$\tfrac12$ by construction, so $x_2=\tfrac12(\tfrac12+\tfrac34)=\tfrac58$
+and $x_1=\tfrac12(\tfrac12+\tfrac58)=\tfrac9{16}<\tfrac58$.
+
+The instance is exactly \Cref{thm:impedance} used backwards: the two
+successors of $0$ are compared at the wrong boundary value, and the
+successor $1$ --- which returns to $0$ with probability $\tfrac34$ ---
+loses $\tfrac34\cdot(\tfrac34-\tfrac12)=\tfrac3{16}$ by the substitution,
+whereas $5$, which never returns to $0$, loses nothing.
+\end{proof}
+
+\begin{theorem}[The response map can contract at rate $1-2^{-\Theta(N)}$]\label{thm:bv-slow}
+For $n\ge2$ let $S_n$ be the SSG with $\Vmax=\Vmin=\emptyset$, vertices
+$u,c_1,\dots,c_n$ and a chain of $n$ further average vertices realising
+the constant $E:=\tfrac12+2^{-n}$ from $t_0,t_1$, wired by
+\[
+  u\to(c_1,c_1),\qquad
+  c_i\to(u,c_{i+1})\ (1\le i<n),\qquad
+  c_n\to(e,e),
+\]
+where $e$ is the root of the constant chain. Then $S_n$ is a stopping SSG
+with $N=2n+1$ non-sink vertices, all of them average, and
+\[
+  R_u(\theta)\;=\;\bigl(1-2^{-(n-1)}\bigr)\theta\;+\;2^{-(n-1)}E,
+  \qquad
+  \val_{S_n}(u)\;=\;E\;=\;\tfrac12+2^{-n}.
+\]
+Hence $\rho_u=1-2^{-(n-1)}=1-2^{-(N-3)/2}$ and
+$\val(u)-\tfrac12=2^{-(N-1)/2}$. Consequently: fixed-point iteration
+$\theta_{k+1}=R_u(\theta_k)$ from $\theta_0=0$ needs
+$\Omega(n2^{\,n})=2^{\Omega(N)}$ steps to come within $2^{-n}$ of the
+answer, and no evaluation of $R_u$ to additive accuracy coarser than
+$2^{-(N-1)/2}$ can decide $\val(u)\ge\tfrac12$.
+\end{theorem}
+
+\begin{proof}
+From $c_1$ the token reaches $u$ with probability
+$\sum_{i=1}^{n-1}2^{-i}=1-2^{-(n-1)}$ and reaches $e$ with the remaining
+probability $2^{-(n-1)}$; $e$ has value $E$ and no path from $e$ returns
+to $u$. Since $u\to(c_1,c_1)$, $R_u(\theta)=V_{c_1}(\theta)$, which by
+\Cref{thm:bv-affine} equals $\alpha(c_1)+h(c_1\to u)\theta$ with
+$h(c_1\to u)=1-2^{-(n-1)}$ and $\alpha(c_1)=2^{-(n-1)}E$. Solving
+$R_u(\theta)=\theta$ gives $\theta=E$, which is $\val(u)$ by
+\Cref{thm:bv-contract}(c). Every vertex reaches $t_0$ or $t_1$ (through
+$c_n$ and $e$), so $S_n$ is stopping. Writing $\lambda:=1-2^{-(n-1)}$,
+the iterates satisfy $E-\theta_k=\lambda^{k}E$, so
+$E-\theta_k\le2^{-n}$ forces
+$k\ge\ln(2^{n}E)/\ln(1/\lambda)\ge 2^{\,n-2}(n-1)\ln 2$, using
+$\ln(1/\lambda)\le 2^{-(n-1)}/\lambda\le2^{-(n-2)}$ for $n\ge2$ and
+$2^{n}E\ge2^{\,n-1}$.
+\end{proof}
+
+\begin{theorem}[The number of affine pieces]\label{thm:bv-pieces}
+Let $u$ be a non-sink vertex of an SSG $G$ with $a=|\Vavg|$.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \textup{(Upper bounds.)} Every slope of $V_v$ is a hitting
+  probability $h_{\sigma,\tau}(v\to u)$, hence by
+  \Cref{lem:denominator-sharp} a rational in $[0,1]$ whose denominator is
+  at most $2^{a}$; the set of such rationals is the Farey set
+  $F_{2^{a}}$, of size less than $4^{a}$. If $\Vmin=\emptyset$ then $V_v$
+  is convex, its slopes strictly increase along $[0,1]$, and each piece is
+  carried by a distinct $\sigma$, so $V_v$ has at most
+  $\min\bigl(2^{|\Vmax|},\,|F_{2^{a}}|\bigr)$ affine pieces; dually if
+  $\Vmax=\emptyset$. For general $G$ the breakpoints lie among the
+  pairwise crossings of the $2^{|\Vmax|+|\Vmin|}$ lines, so $V_v$ has at
+  most $1+\binom{2^{|\Vmax|+|\Vmin|}}{2}$ pieces.
+\item \textup{(Lower bound.)} For every $k\ge1$ there is an acyclic ---
+  hence stopping --- one-player SSG $B_k$ with $|\Vmax|=k+1$,
+  $N=O(k\log k)$ vertices and a distinguished vertex $u$ such that
+  $\theta\mapsto\val_{B_k[u:=\theta]}(v_0)$ has exactly $2k$ breakpoints.
+  In particular the number of affine pieces of the response function
+  strictly exceeds $|\Vmax|$, so the natural guess that each Max vertex
+  switches at most once along the boundary sweep is false; and the piece
+  count is $\Omega(N/\log N)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) The slopes are the numbers $h_{\sigma,\tau}(v\to u)$ by
+\Cref{thm:bv-affine}. Fix $(\sigma,\tau)$: $h_{\sigma,\tau}(\cdot\to u)$
+is the value vector of the chain $M_{\sigma,\tau}$ in which $u$ carries
+terminal payoff $1$ and $t_0,t_1$ carry $0$. The reduction in the proof of
+\Cref{lem:denominator} applies verbatim to that chain: contract the
+deterministic steps, let $D(\cdot)$ be the first vertex of
+$\Vavg\cup\{u,t_0,t_1\}$ reached, and read off a system $Ax=c$ on
+$\Vavg\setminus\{u\}$ with $A=2I-M$, $M$ nonnegative integral of row sums
+at most $2$, and $c$ integral with entries in $\{0,1,2\}$ --- nothing in
+that argument uses which sinks carry which payoff, only that the payoffs
+are $0$ and $1$. Hence \Cref{lem:denominator-sharp} gives
+$\det A\le2^{a}$ and the denominator bound. When
+$\Vmin=\emptyset$, $V_v$ is a maximum of affine functions, so convex, so
+its slopes strictly increase across breakpoints and there are at most as
+many pieces as distinct slopes. The general bound is immediate: on each
+piece $V_v$ coincides with one of the $2^{|\Vmax|+|\Vmin|}$ lines
+$\alpha_{\sigma,\tau}(v)+h_{\sigma,\tau}(v\to u)\theta$, and consecutive
+pieces meet at a crossing of two of them.
+
+(b) Fix $s$ with $2^{s}>k$ and set $c_i:=\tfrac12+i2^{-(s+1)}$ for
+$1\le i\le k$; each $c_i$ is dyadic and lies in $(\tfrac12,1)$. Build
+$B_k$ as follows, with $u$ the frozen vertex:
+\begin{itemize}[leftmargin=1.6em]
+\item an average vertex $h\to(t_0,t_1)$, of value $\tfrac12$;
+\item a Max vertex $m_0\to(u,h)$, of value $\max(\theta,\tfrac12)$;
+\item for each $i$, a chain of at most $s+1$ average vertices realising the
+  constant $c_i$ from $t_0,t_1$ (binary expansion, least significant bit
+  innermost), an average vertex $A_i\to(u,c_i)$, of value
+  $\tfrac12\theta+\tfrac12c_i$, and a Max vertex $F_i\to(m_0,A_i)$;
+\item a path of $k-1$ average vertices averaging
+  $F_1,\dots,F_k$ together, with root $v_0$.
+\end{itemize}
+Then $V_{F_i}(\theta)=\max\bigl(\theta,\tfrac12,\tfrac12\theta+\tfrac12c_i\bigr)$.
+Since $\tfrac12<c_i<1$, the third line lies strictly above the other two
+exactly on the open interval $(1-c_i,\;c_i)$, which is nonempty; so
+$V_{F_i}$ has slopes $0,\tfrac12,1$ and exactly the two breakpoints
+$1-c_i$ and $c_i$. These $2k$ numbers are pairwise distinct. A positive
+convex combination of convex piecewise-affine functions has as breakpoint
+set exactly the union of their breakpoint sets, because all the slope
+jumps are positive and no cancellation is possible; hence $V_{v_0}$ has
+exactly the $2k$ breakpoints $\{1-c_i\}\cup\{c_i\}$. Counting vertices:
+at most $2+k(s+3)+(k-1)=O(k\log k)$, with $|\Vmax|=k+1$; the realised
+counts are $N=7,13,19,27,40,59,88,131$ for $k=1,2,3,4,6,8,12,16$.
+Since $2k>k+1$ for $k\ge2$, the piece count exceeds $|\Vmax|$.
+\end{proof}
+
+\begin{proposition}[Neither convex nor concave]\label{prop:bv-neither}
+Let $G$ be the SSG on $\{0,\dots,8\}$ with $t_0=7$, $t_1=8$,
+$\Vmax=\{3\}$, $\Vmin=\{4\}$, $\Vavg=\{0,1,2,5,6\}$ and
+\[
+ 0\to(7,8),\ 1\to(0,8),\ 2\to(7,0),\ 3\to(6,1),\ 4\to(6,2),\ 5\to(3,4),\ 6\to(7,8),
+\]
+with $u:=6$ the frozen vertex. Then $G$ is stopping, vertex $1$ has value
+$\tfrac34$, vertex $2$ has value $\tfrac14$, and
+\[
+  V_5(\theta)=\tfrac12\max(\theta,\tfrac34)+\tfrac12\min(\theta,\tfrac14)
+\]
+has slopes $\tfrac12,0,\tfrac12$ on $[0,\tfrac14]$, $[\tfrac14,\tfrac34]$,
+$[\tfrac34,1]$: neither convex nor concave.
+\end{proposition}
+
+\begin{proof}
+Vertex $0$ has value $\tfrac12$, so vertex $1$ has value
+$\tfrac12(\tfrac12+1)=\tfrac34$ and vertex $2$ has value
+$\tfrac12(0+\tfrac12)=\tfrac14$; none of $0,1,2$ reaches $6$, so these are
+unchanged in $G[6{:=}\theta]$. Hence $V_3=\max(\theta,\tfrac34)$,
+$V_4=\min(\theta,\tfrac14)$ and $V_5=\tfrac12(V_3+V_4)$. The game is
+acyclic, hence stopping.
+\end{proof}
+
+\subsection{Verdict}
+
+\begin{remark}[What this route gives, and where it stops]\label{rem:bv-verdict}
+The calculus above is exact, unconditional and oracle-free, and it is a
+genuinely different reformulation: \Cref{prob:main} at a vertex $u$ is
+\emph{equivalent} to a sign test on a one-dimensional monotone
+piecewise-affine map (\Cref{thm:bv-contract}(d)), whose least fixed point
+is the value even with no stopping hypothesis (\Cref{thm:bv-lfp}). It
+does not yield a polynomial algorithm, and the reason is precise.
+
+\emph{(i) The recursion branches.} \Cref{cor:bv-threshold} replaces one
+threshold query at $u$ by two threshold queries in $G_u$, a game with one
+fewer controlled vertex. After $j$ rounds one has $2^{j}$ queries on
+games with $|\Vmax|+|\Vmin|-j$ controlled vertices; solving those by
+enumeration costs $2^{|\Vmax|+|\Vmin|-j}$ each, for a total of
+$2^{|\Vmax|+|\Vmin|}$ --- exactly the trivial bound, at every $j$. The
+state of the recursion is the pair (set frozen so far, current vertex),
+and there are exponentially many such states.
+
+\emph{(ii) The block is at the average vertices.} At a controlled $u$ the
+equivalence is a Boolean connective, and the two sub-queries are again
+threshold-$\tfrac12$ queries. At an average $u$ it is the linear
+condition $y(u^{(0)})+y(u^{(1)})\ge1$, which is not a Boolean combination
+of threshold-$\tfrac12$ queries; splitting it needs a dyadic offset
+$\delta$ with $y(u^{(0)})\ge\tfrac12+\delta$ and
+$y(u^{(1)})\ge\tfrac12-\delta$, and $\delta$ ranges over the grid of mesh
+$2^{-a}$ of \Cref{thm:switch-count}, so guessing it costs $2^{a}$ per
+average vertex. Producing the correct $\delta$ in polynomial time would
+by \Cref{thm:gap-equivalence} already resolve \Cref{prob:main}, so that
+sub-problem is of the same strength as the whole problem and this route
+is blocked there, not nearly finished.
+
+\emph{(iii) Approximating the fixed point does not help.} One could try
+to solve $R_u(\theta)=\theta$ numerically instead of recursively. By
+\Cref{thm:bv-slow} the contraction modulus is $1-2^{-\Theta(N)}$ and the
+answer sits $2^{-\Theta(N)}$ from the threshold on the same family, so
+both iteration and any fixed-precision evaluation are exponential; and a
+bisection on $\theta$ over the grid of mesh $2^{-a}$ costs $a$ exact
+evaluations of $R_u$, each of which is itself an instance of
+\Cref{prob:main} on a game with one fewer controlled vertex, giving
+$a^{\,|\Vmax|+|\Vmin|}$.
+
+\emph{(iv) The frozen game does not decide the comparison.}
+\Cref{prop:bv-rule} rules out the one polynomial-time decision rule the
+calculus suggests, and by \Cref{cor:wrong-equivalence} producing the
+comparison at a single controlled vertex is again the whole problem.
+
+What remains genuinely open in this direction, and is not of the same
+strength as \Cref{prob:main} on its face, is the quantitative question
+left by \Cref{thm:bv-pieces}: \emph{is the number of affine pieces of
+$\theta\mapsto\val_{G[u:=\theta]}(v)$ bounded by a polynomial in $N$?}
+The proved bounds are $\Omega(N/\log N)$ from below and, from above,
+$\min(2^{|\Vmax|},4^{a})$ in the one-player case and only a crude
+exponential in general. A polynomial bound would
+not by itself give an algorithm --- one still has to \emph{find} the
+pieces, and (iii) says each evaluation is expensive --- but it would say
+that the arrangement of the $2^{|\Vmax|}$ rational functions of
+\Cref{thm:bv-affine} is simple, which is a prerequisite for any
+parametric or continuation method and is at present unknown.
+\end{remark}
+
+\begin{remark}[Verification]\label{rem:bv-verify}
+All statements above were checked in exact rational arithmetic
+(\texttt{fractions.Fraction}; no floating point anywhere), with
+$\val_\sigma$ always computed as the componentwise minimum over
+\emph{all} positional $\tau$ and $\val$ as the componentwise maximum over
+all positional $\sigma$, so that the failure mode of \Cref{ex:pi-fails} is
+excluded by construction. The implementation was first validated by
+reproducing the value vectors of $G_8$ of \Cref{prop:simorder-stalls},
+of the ten-vertex simulation stall, and of the nineteen-vertex game
+$G^{\ast}$ of \Cref{prop:pdc-separation}, exactly.
+
+On randomly generated SSGs: \Cref{thm:bv-affine} was confirmed at
+$397{,}124$ (game, vertex, pair, $\theta$) instances;
+\Cref{lem:bv-subst}, \Cref{thm:bv-contract}(c),(d) and
+\Cref{cor:bv-threshold} were each confirmed at $10{,}928$
+(stopping game, vertex) pairs drawn from $16{,}058$ random SSGs (the sign
+test at the four thresholds $\tfrac12,\tfrac13,\tfrac23,\tfrac15$, so
+$43{,}712$ instances);
+\Cref{thm:bv-lfp} was confirmed --- both that $\val(u)$ is a post-fixed
+point of $R_u$ and that no fixed point of $R_u$ on a grid of mesh
+$2^{-(a+2)}$ lies below $\val(u)$ --- at $4{,}153$ (game, vertex) pairs
+over $900$ random SSGs of which $695$ were \emph{not} stopping. The full
+recursion of \Cref{cor:bv-threshold}, run to depths $1,2,3,N$ with the
+average case evaluated directly, reproduced the exact answer at every
+vertex of $250$ random stopping games. The families $B_k$ and $S_n$ were
+verified for $k\le16$ and $n\le12$: for $B_k$ the $2k$ predicted
+breakpoints were confirmed by exact one-sided difference quotients and
+the absence of further breakpoints by testing affinity at three interior
+points of each of the $2k+1$ intervals, and for $k\le3$ the result was
+cross-checked against a full enumeration of all $2^{k+1}$ Max strategies.
+
+Two negative results record what random search cannot do, consistent with
+the methodological warning of \Cref{sec:refutations}: a scan of $200{,}000$ randomly
+generated instances produced no counterexample to the rule of
+\Cref{prop:bv-rule}, which had to be engineered from the impedance
+identity instead; and a beam search over $\{\max,\mathrm{avg}\}$ straight-line
+programs never exceeded roughly $N/2$ affine pieces, which is evidence
+about the search and not about the truth of the question left open in
+\Cref{rem:bv-verdict}.
+\end{remark}

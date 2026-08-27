@@ -14,3 +14,18 @@
 
 # Lean build output (Mathlib .olean files are ~8 GB; never commit them)
 lean/.lake/
+
+# Python bytecode and editor/backup files
+__pycache__/
+*.pyc
+*.bak
+
+# Compiled search binaries (rebuild from the .c sources next to them)
+scripts/ceiling/f
+scripts/ceiling/fc
+
+# Transient run logs from search jobs
+out_*.txt
+scripts/ceiling/*.out
+scripts/ceiling/*.err
+ladder_hk.py
