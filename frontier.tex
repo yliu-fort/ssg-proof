@@ -1306,6 +1306,212 @@ All coefficients have $O(1)$ bit-size, so the program is solvable in time
 polynomial in $N$.
 \end{proof}
 
+\Cref{thm:avg-acyclic}, \Cref{thm:player-free} and \Cref{thm:one-player}
+are three instances of one theorem, and the common statement is strictly
+stronger than all three together. The right setting is slightly more
+general than an SSG.
+
+\begin{definition}[Payoff game]\label{def:payoff}
+A \emph{payoff game} $H$ is a finite digraph whose vertices are of one of
+four kinds: $\max$, $\min$, $\mathrm{avg}$, each of out-degree two, and
+\emph{terminal}, of out-degree zero and carrying a payoff
+$c(z)\in[0,1]\cap\mathbb Q$. Its operator $T_H$ acts on
+$\mathcal X_H:=[0,1]^{V(H)}$ by the maximum, the minimum, the mean and the
+constant $c(z)$ according to the kind, and $\val_H:=\lfp(T_H)$, which
+exists by monotonicity and Knaster--Tarski. An SSG is the payoff game with
+terminals $t_0,t_1$ of payoffs $0,1$, and there $\val_H$ is the game value
+by \Cref{thm:lfp-general}. Call $H$ \emph{$k$-acyclic}, for $k$ one of
+$\max,\min,\mathrm{avg}$, if no directed cycle of $H$ contains a vertex of
+kind $k$.
+\end{definition}
+
+\begin{lemma}[Successor-closed parts]\label{lem:successor-closed}
+If $A\subseteq V(H)$ contains all successors of each of its members, then
+$\val_H|_A=\val_{H[A]}$, the value of the induced sub-payoff-game.
+\end{lemma}
+
+\begin{proof}
+$T_H$ restricts to $A$, so $\val_H|_A$ is a fixed point of $T_{H[A]}$ and
+$\val_{H[A]}\le\val_H|_A$. Conversely let $y$ be $\val_{H[A]}$ on $A$ and
+$1$ off $A$. At $v\in A$ the successors lie in $A$, so
+$(T_Hy)(v)=(T_{H[A]}\val_{H[A]})(v)=y(v)$; at $v\notin A$,
+$(T_Hy)(v)\le1=y(v)$. So $T_Hy\le y$ and $\val_H\le y$.
+\end{proof}
+
+\begin{lemma}[Cut lemma]\label{lem:cut}
+Let $H$ be a payoff game and $S$ a set of non-terminal vertices. For
+$x\in[0,1]^{S}$ let $H[x]$ be $H$ with every $s\in S$ retyped as a
+terminal of payoff $x_s$, and put
+$F_S(x)_s:=\mathrm{op}_s\bigl(\val_{H[x]}(s^{(0)}),\val_{H[x]}(s^{(1)})\bigr)$,
+where $\mathrm{op}_s$ is $\max$, $\min$ or the mean according to the kind
+of $s$ in $H$. Then $F_S$ is monotone, $\val_H|_S=\lfp(F_S)$, and off $S$
+one has $\val_H=\val_{H[\val_H|_S]}$.
+\end{lemma}
+
+\begin{proof}
+If $x\le x'$ then $T_{H[x]}\le T_{H[x']}$ pointwise, so
+$\val_{H[x]}\le\val_{H[x']}$ and $F_S$ is monotone. For $x\in[0,1]^{S}$
+write $\hat x$ for the vector equal to $x$ on $S$ and to $\val_{H[x]}$ off
+$S$. Then
+\begin{equation}\label{eq:assembly}
+  (T_H\hat x)(v)=\hat x(v)\ \ (v\notin S),\qquad
+  (T_H\hat x)(s)=F_S(x)_s\ \ (s\in S),
+\end{equation}
+because at every vertex the two operators read the same numbers at the
+successors --- a successor in $S$ contributes $x_s$, which is its payoff
+in $H[x]$ --- and $\val_{H[x]}$ is a fixed point of $T_{H[x]}$.
+
+\emph{Upper bound.} Put $z:=\val_H|_S$. The vector $\val_H$ is a fixed
+point of $T_{H[z]}$ (on $S$ it equals the payoff $z$, off $S$ the two
+operators agree), so $\val_{H[z]}\le\val_H$ and hence $\hat z\le\val_H$.
+Therefore
+$F_S(z)_s=\mathrm{op}_s(\hat z(s^{(i)}))\le\mathrm{op}_s(\val_H(s^{(i)}))
+=(T_H\val_H)(s)=z_s$, so $z$ is a prefixed point of $F_S$ and
+$\lfp(F_S)\le z$.
+
+\emph{Lower bound.} If $F_S(x)\le x$ then \eqref{eq:assembly} gives
+$T_H\hat x\le\hat x$, so $\val_H\le\hat x$ and $z\le x$. Applying this to
+$x=\lfp(F_S)$ gives $z\le\lfp(F_S)$, whence equality.
+
+\emph{Off $S$.} With $x=z=\lfp(F_S)$, \eqref{eq:assembly} makes $\hat z$ a
+fixed point of $T_H$, so $\val_H\le\hat z$, that is
+$\val_H|_{V\setminus S}\le\val_{H[z]}$; the reverse inequality was proved
+above.
+\end{proof}
+
+Two residual solvers are needed, one for each way of deleting a colour.
+
+\begin{lemma}[Residual games in two colours]\label{lem:residual}
+Let $H$ be a payoff game.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item If $H$ has no Min vertex, $\val_H$ is the unique optimum of
+      $\min\sum_u x(u)$ subject to $x\in[0,1]^{V}$, $x(z)=c(z)$ at
+      terminals, $x(v)\ge x(v^{(i)})$ for $v\in\Vmax$ and $i=0,1$, and
+      $x(v)\ge\tfrac12(x(v^{(0)})+x(v^{(1)}))$ for $v\in\Vavg$.
+\item If $H$ has no Max vertex, let $Z_H$ be the largest set of vertices
+      containing no terminal of positive payoff such that every Min vertex
+      of $Z_H$ has a successor in $Z_H$ and every average vertex of $Z_H$
+      has both. Then $\val_H$ is the unique optimum of
+      $\max\sum_u x(u)$ subject to $x\in[0,1]^{V}$, $x(z)=c(z)$ at
+      terminals, $x(v)\le x(v^{(i)})$ for $v\in\Vmin$ and $i=0,1$,
+      $x(v)=\tfrac12(x(v^{(0)})+x(v^{(1)}))$ for $v\in\Vavg$, and
+      $x(v)=0$ on $Z_H$.
+\item If $H$ has no average vertex, $\val_H$ is computed by attractor
+      sweeps as in \Cref{lem:det-game}.
+\end{enumerate}
+Each is polynomial, and the values are rationals of polynomial bit-size in
+the input.
+\end{lemma}
+
+\begin{proof}
+(a) The listed inequalities say exactly $T_Hx\le x$, so the feasible set is
+the set of prefixed points of $T_H$, whose least element is $\lfp(T_H)$ by
+Knaster--Tarski; being pointwise least it uniquely minimises the sum.
+
+(b) \emph{Feasibility.} $T_H\val_H=\val_H$ gives every row but the last.
+For the last, let $y$ be $0$ on $Z_H$ and $1$ elsewhere except that
+terminals keep their payoffs. At a Min $v\in Z_H$ some successor is in
+$Z_H$, so $(T_Hy)(v)=\min\le0=y(v)$; at an average $v\in Z_H$ both are, so
+$(T_Hy)(v)=0=y(v)$; elsewhere $(T_Hy)(v)\le1=y(v)$, and at a terminal
+$z\notin Z_H$, $c(z)\le1=y(z)$ while a terminal in $Z_H$ has $c(z)=0$. So
+$T_Hy\le y$, hence $\val_H\le y$ and $\val_H=0$ on $Z_H$.
+
+\emph{Optimality.} Let $x$ be feasible and let $\tau$ be any Min strategy.
+From $x(v)\le x(v^{(i)})$ for both $i$ we get $x\le T_\tau x$. Let $R$ be a
+bottom strongly connected class of the chain $M_\tau$ containing no
+terminal of positive payoff. Every average vertex of $R$ has both
+successors in $R$ and every Min vertex of $R$ has its $\tau$-successor in
+$R$, so $R\subseteq Z_H$ and $x$ vanishes on $R$. The argument of
+\Cref{lem:trapped-comparison}, with the sinks replaced by the terminals
+and $P$ the substochastic matrix of $M_\tau$ on the non-terminals, then
+gives $x\le v_\tau:=\lfp(T_\tau)$. This holds for every $\tau$, and
+choosing $\tau$ greedy for $\val_H$ makes $\val_H$ a fixed point of
+$T_\tau$, so $v_\tau\le\val_H$ and therefore $x\le\val_H$. As $\val_H$ is
+feasible and dominates every feasible point, it is the unique maximiser.
+
+(c) is \Cref{lem:det-game}, whose statement is already for terminal
+payoffs.
+\end{proof}
+
+\begin{theorem}[One colour off the cycles suffices]\label{thm:kacyclic}
+Let $k$ be one of $\max,\min,\mathrm{avg}$. The value vector of every
+$k$-acyclic payoff game is computable exactly in polynomial time. No
+stopping hypothesis is used.
+\end{theorem}
+
+\begin{proof}
+Let $C$ be the set of kind-$k$ vertices and let $D_k$ be the digraph on
+$C$ with an edge $u\to z$ whenever $z$ is reachable from a successor of
+$u$ along a path whose interior avoids $C$. If $D_k$ had a cycle, its
+expansion would be a closed walk of positive length through a kind-$k$
+vertex, and a shortest such walk is a cycle of $H$ through a kind-$k$
+vertex; so $D_k$ is acyclic.
+
+Apply \Cref{lem:cut} with $S=C$. In $H[x]$ every vertex of $C$ is a
+terminal, so the set of vertices reachable from a successor $w$ of
+$u\in C$ meets $C$ only in $D_k$-successors of $u$; that set is closed
+under successors, so by \Cref{lem:successor-closed} the value
+$\val_{H[x]}(w)$ depends only on the coordinates of $x$ at
+$D_k$-successors of $u$. Hence $F_C$ is triangular for a topological order
+of $D_k$ and has a unique fixed point, computed by back-substitution in
+reverse topological order; by \Cref{lem:cut} that fixed point is
+$\val_H|_C$, and $\val_H$ off $C$ is then $\val_{H[\val_H|_C]}$.
+
+Each of the $|C|+1$ evaluations is a payoff game in which every vertex of
+$C$ is a terminal, hence one using only the two colours other than $k$,
+and is solved by the corresponding case of \Cref{lem:residual}: (a) for
+$k=\min$, (b) for $k=\max$, (c) for $k=\mathrm{avg}$.
+\end{proof}
+
+\begin{proposition}[The three theorems are strictly
+contained]\label{prop:kacyclic-strict}
+\Cref{thm:kacyclic} contains \Cref{thm:avg-acyclic} ($k=\mathrm{avg}$),
+\Cref{thm:player-free} (which assumes both $\max$- and $\min$-acyclicity,
+while either alone suffices) and \Cref{thm:one-player} ($\Vmin=\emptyset$
+is $\min$-acyclic, and the stopping hypothesis is not needed). The
+containment is strict: the stopping SSG on $0,\dots,3$ with $t_0=4$,
+$t_1=5$,
+\[
+  0\in\Vmax\to(1,t_0),\quad 1\in\Vmin\to(2,3),\quad
+  2\in\Vavg\to(1,t_1),\quad 3\in\Vavg\to(t_0,t_1)
+\]
+has $w^\ast=(\tfrac12,\tfrac12,\tfrac34,\tfrac12)$ and is $\max$-acyclic,
+so \Cref{thm:kacyclic} applies; but the cycle $1\to2\to1$ carries a Min
+and an average vertex, so it is neither $\min$-acyclic nor
+$\mathrm{avg}$-acyclic and neither \Cref{thm:avg-acyclic} nor
+\Cref{thm:player-free} applies, and $\Vmin\ne\emptyset$ excludes
+\Cref{thm:one-player}.
+\end{proposition}
+
+\begin{proof}
+The subsumptions are immediate from the definitions. For the witness, the
+only cycle is $1\to2\to1$ and it avoids $\Vmax$; the values follow from
+$w^\ast(3)=\tfrac12$, $w^\ast(2)=\tfrac12(w^\ast(1)+1)$,
+$w^\ast(1)=\min(w^\ast(2),\tfrac12)$ and
+$w^\ast(0)=\max(w^\ast(1),0)$, whose unique solution is the vector stated;
+the $\max$-acyclic algorithm returns it.
+\end{proof}
+
+\begin{remark}\label{rem:kacyclic}
+The three colours are on the same footing, which the separate proofs of
+\Cref{thm:avg-acyclic,thm:player-free,thm:one-player} obscured, and the
+punchline of \Cref{rem:two-regimes} survives in a sharper form: what makes
+an instance hard is that all three colours occur on one cycle. Removing
+any single colour from every cycle suffices, and the parameter that
+matters is therefore $\min_k\mu_k(G)$, where $\mu_k$ is the least number
+of vertices whose deletion makes the game $k$-acyclic. The algorithm was
+implemented and checked against exhaustive computation on $3707$ random
+$k$-acyclic instances --- $1020$ with $k=\mathrm{avg}$, $1539$ with
+$k=\min$, $1148$ with $k=\max$ --- drawn from $3681$ games of which $2856$
+were not stopping: no discrepancy. What the theorem does not give is a
+bound in terms of $\mu_k$ when $\mu_k>0$; that question is taken up
+nowhere in this document, and the natural route to it through a
+contraction estimate is closed by \Cref{thm:vi-lower}, whose family is
+$\mathrm{avg}$-acyclic after deleting one vertex and yet needs
+$2^{\Omega(N)}$ steps of value iteration.
+\end{remark}
+
+
 \begin{remark}[What one-player tractability does and does not rule out]\label{rem:owner-blind}
 \Cref{thm:one-player} constrains the shape a \emph{hardness certificate}
 can take. Let $\mu(G)$ be any quantity depending only on the digraph of
@@ -5192,7 +5398,14 @@ $\mathrm{poly}(N)2^{a}$ and with no stopping hypothesis
 no cycle passes through an average vertex (\Cref{thm:avg-acyclic}) or,
 dually, none passes through a controlled vertex
 (\Cref{thm:player-free}), both in polynomial time; one-player games, by
-an explicit linear program (\Cref{thm:one-player}); and, in general, a
+an explicit linear program (\Cref{thm:one-player}); all three being
+instances of one theorem that is strictly stronger than the three
+together, namely that it suffices for \emph{some single colour} to be
+absent from every cycle (\Cref{thm:kacyclic,prop:kacyclic-strict});
+games in which no cycle carries two Max vertices, and more generally in
+which the components of the Max-reachability digraph have size
+$O(\log N)$ (\Cref{thm:bounded-components}), a class that
+\Cref{prop:k1-family} shows meets none of the others; and, in general, a
 Las~Vegas algorithm of expected time $e^{2\sqrt n}\,\mathrm{poly}(N)$
 obtained from a full analysis of random-facet strategy improvement
 (\Cref{thm:rf-correct,thm:rf-bound,lem:fbound,thm:subexp}). The last is
