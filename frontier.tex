@@ -4980,6 +4980,190 @@ Closing the gap therefore requires a genuinely new mechanism for
 here.
 \end{remark}
 
+\subsection{A linear-programming certificate, and a complementary
+barrier}\label{sec:transport}
+
+The three mechanisms above propagate a relation or a slack from vertex to
+vertex, one clause at a time. The fourth does not propagate at all: it
+writes down the monotonicity that $Tw^\ast=w^\ast$ imposes as a system of
+linear inequalities and optimises over it. It is polynomial, it decides
+both instances on which the previous mechanisms were shown to fail, and
+it fails elsewhere, for a reason exactly complementary to
+\Cref{thm:slack-barrier}.
+
+\begin{definition}[Transport polytope and separator]\label{def:transport}
+For an SSG $G$ and vectors $L\le U$ in $\mathcal X$ let
+\[
+  Q(G;L,U):=\Bigl\{x\in\mathcal X:\ L\le x\le U,\
+  \begin{aligned}
+   &x(v)\ge x(v^{(i)})\ (v\in\Vmax,\ i=0,1),\\
+   &x(v)\le x(v^{(i)})\ (v\in\Vmin,\ i=0,1),\\
+   &x(v)=\tfrac12\bigl(x(v^{(0)})+x(v^{(1)})\bigr)\ (v\in\Vavg)
+  \end{aligned}\Bigr\},
+\]
+with $x(t_0)=0$, $x(t_1)=1$. Write $Q(G):=Q(G;0,1)$ and
+\[
+  \operatorname{Sep}(p,q):=\max\{x(q)-x(p):x\in Q(G;L,U)\}.
+\]
+This is a linear program with $N$ variables and $O(N)$ rows, every row
+read directly off the game.
+\end{definition}
+
+\begin{theorem}[Soundness]\label{thm:transport-sound}
+For every SSG and all $L\le w^\ast\le U$ we have $w^\ast\in Q(G;L,U)$;
+consequently $\operatorname{Sep}(p,q)\le0$ certifies
+$w^\ast(q)\le w^\ast(p)$, and $\operatorname{Sep}(p,q)\ge w^\ast(q)-w^\ast(p)$.
+No stopping hypothesis is needed, and the certificate is computable in
+polynomial time.
+\end{theorem}
+
+\begin{proof}
+$Tw^\ast=w^\ast$ (\Cref{thm:lfp-general}) says $w^\ast(v)$ is the
+maximum, the minimum or the mean of $w^\ast$ over the two successors,
+according to the type of $v$; the first gives
+$w^\ast(v)\ge w^\ast(v^{(i)})$ for both $i$, the second the reverse, the
+third the equality. So $w^\ast\in Q(G)$, and it lies in $Q(G;L,U)$
+whenever $L\le w^\ast\le U$. Everything else is immediate.
+\end{proof}
+
+The strength of the certificate comes from a single observation: the
+average rows are \emph{equalities}, so wherever they close up they pin
+$x$ exactly.
+
+\begin{lemma}[Elimination]\label{lem:transport-exact}
+Let $G$ be stopping and let $A\subseteq\Vavg$ be closed under successors
+in the sense that every successor of a vertex of $A$ lies in
+$A\cup\{t_0,t_1\}$. Then every $x\in Q(G)$ satisfies $x=w^\ast$ on $A$,
+so $\operatorname{Sep}(p,q)=w^\ast(q)-w^\ast(p)$ for $p,q\in A$.
+\end{lemma}
+
+\begin{proof}
+On $A$ the constraints read $x_A=Px_A+r$, where $P$ is the substochastic
+matrix of the induced chain and $r$ the vector of one-step probabilities
+of landing in $t_1$. Since $G$ is stopping, that chain reaches a sink
+from every vertex of $A$ with probability $1$, so $I-P$ is invertible and
+$x_A=(I-P)^{-1}r$ is the unique solution; $w^\ast|_A$ is a solution by
+\Cref{thm:transport-sound}.
+\end{proof}
+
+\begin{proposition}[It decides both published stalls]\label{prop:transport-decides}
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item On $G_8$ of \Cref{prop:simorder-stalls} the five average vertices
+      are closed under successors, so
+      $\operatorname{Sep}(1,4)=w^\ast(4)-w^\ast(1)=-\tfrac1{10}$ and the
+      unique controlled vertex is decided --- a comparison that
+      \Cref{thm:matching-barrier} shows no sound local matching calculus
+      can make.
+\item On $H_m$ of \Cref{cor:slack-stalls}, for every $m$,
+      $\operatorname{Sep}(c_1,h)=w^\ast(h)-w^\ast(c_1)=-2^{-(m+1)}<0$,
+      so the certificate decides at once the pair on which
+      \Cref{def:slack} stalls for $2^{\Omega(N)}$ rounds.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+In $G_8$ the vertices $0,\dots,4$ are average with successors among
+themselves and the sinks; in $H_m$ the set
+$\{c_1,\dots,c_{2m},h\}$ is average and closed. Apply
+\Cref{lem:transport-exact} and the values recorded in
+\Cref{prop:simorder-stalls} and \Cref{thm:vi-lower}. Both separators were
+also computed directly from \Cref{def:transport} in exact rational
+arithmetic.
+\end{proof}
+
+The certificate is nevertheless incomplete, and the obstruction is
+exactly the failure of the hypothesis of \Cref{lem:transport-exact}.
+
+\begin{proposition}[A seven-vertex stall]\label{prop:transport-stalls}
+Let $S$ be the SSG on $\{v,a,b,b_1,b_2\}$ with $t_0,t_1$, where
+$v\in\Vmax$ and $a,b,b_1,b_2\in\Vavg$, and
+\[
+  v\to(a,b),\quad a\to(t_1,t_0),\quad b\to(v,b_1),\quad
+  b_1\to(b_2,t_0),\quad b_2\to(t_1,t_0).
+\]
+Then $S$ is stopping, $w^\ast=(\tfrac12,\tfrac12,\tfrac38,\tfrac14,\tfrac12)$,
+so the two successors of the only controlled vertex have different
+values, and yet
+$\operatorname{Sep}(a,b)=\operatorname{Sep}(b,a)=+\tfrac18$. The decision
+rule built from \Cref{def:transport} therefore stalls.
+\end{proposition}
+
+\begin{proof}
+A trap avoids the sinks, hence omits $a$ and $b_2$, hence $b_1$, hence
+$b$, hence $v$; so $S$ is stopping by \Cref{lem:trapchar}. The values are
+immediate. For the separator, every $x\in Q(S)$ is determined by
+$t:=x(v)$: the average equalities give $x(a)=\tfrac12$,
+$x(b_2)=\tfrac12$, $x(b_1)=\tfrac14$ and
+$x(b)=\tfrac12(t+\tfrac14)=\tfrac t2+\tfrac18$, while the two Max rows
+give $t\ge\tfrac12$ and $t\ge\tfrac14$; with $x\le1$ the feasible set is
+$t\in[\tfrac12,1]$. Then $x(b)-x(a)=\tfrac t2-\tfrac38$ runs from
+$-\tfrac18$ at $t=\tfrac12$ to $+\tfrac18$ at $t=1$, so both maxima are
+$+\tfrac18$.
+\end{proof}
+
+\begin{theorem}[The stall survives every polynomial seed]\label{thm:transport-barrier}
+For $r\ge2$ let $S_r$ be the stopping SSG on
+$\{v,a,b_0,\dots,b_{r+1}\}$, $N=r+6$, with $v\in\Vmax$ and every other
+non-sink vertex average, and
+\[
+  v\to(a,b_0),\quad a\to(t_1,t_0),\quad b_i\to(v,b_{i+1})\ (0\le i\le r-1),
+  \quad b_r\to(b_{r+1},t_0),\quad b_{r+1}\to(t_1,t_0).
+\]
+Then $w^\ast(v)=w^\ast(a)=\tfrac12$ and
+$w^\ast(b_i)=\tfrac12-2^{-(r-i)-2}$, so $v$ distinguishes values by
+$2^{-r-2}=2^{-(N-4)}$. Writing $x^{(t)}$ for the unique point of $Q(S_r)$
+with $x(v)=t$, and $\bar t:=\max\{t:x^{(t)}\in Q(S_r;L,U)\}$, the
+certificate decides the pair $(a,b_0)$ if and only if
+$\bar t\le t_{\mathrm{rev}}:=\tfrac12+\tfrac1{4(2^{r}-1)}$, the reverse
+direction $\operatorname{Sep}(b_0,a)=2^{-r-2}>0$ never deciding. In particular the
+unseeded certificate does not decide it, and neither does the certificate
+seeded by $k$ rounds of value iteration for any $k<2^{\,r-2}=2^{\,N-8}$.
+\end{theorem}
+
+\begin{proof}
+The average equalities determine every coordinate from $t=x(v)$: one
+computes $x^{(t)}(a)=\tfrac12$, $x^{(t)}(b_{r+1})=\tfrac12$,
+$x^{(t)}(b_r)=\tfrac14$ and, downwards,
+$x^{(t)}(b_i)=t\bigl(1-2^{-(r-i)}\bigr)+2^{-(r-i)-2}$; taking $i=0$,
+$x^{(t)}(b_0)=t(1-2^{-r})+2^{-r-2}$, which equals $x^{(t)}(a)=\tfrac12$
+exactly at $t=t_{\mathrm{rev}}$ and exceeds it above. Since $Q$ is a
+segment in $t$, the maximum of $x(b_0)-x(a)$ is attained at $\bar t$ and
+is at most $0$ exactly when $\bar t\le t_{\mathrm{rev}}$; in the other
+direction $\max\{x(a)-x(b_0)\}$ is attained at $t=\tfrac12$ and equals
+$2^{-r-2}>0$. Feasibility forces
+$t\ge x^{(t)}(a)=\tfrac12$ and $t\ge x^{(t)}(b_0)$, i.e.\ $t\ge\tfrac12$;
+the upper end is cut only by $U$. For the value-iteration seed one has
+$u_k(v)\ge(1-2^{-r})^{\lceil k/2\rceil}$, which exceeds
+$t_{\mathrm{rev}}$ for every $k<2^{\,r-2}$ when $r\ge3$. The values, the
+separators for $r=2,3,4,5$ --- namely $\operatorname{Sep}(a,b_0)=\tfrac5{16},\tfrac{13}{32},\tfrac{29}{64},\tfrac{61}{128}$
+and $\operatorname{Sep}(b_0,a)=\tfrac1{16},\tfrac1{32},\tfrac1{64},\tfrac1{128}$ ---
+and the thresholds $t_{\mathrm{rev}}=\tfrac7{12},\tfrac{15}{28},\tfrac{31}{60},\tfrac{63}{124}$
+were computed exactly.
+\end{proof}
+
+\begin{remark}\label{rem:transport}
+The two barriers are complementary, and together they say something
+sharper than either alone. \Cref{thm:slack-barrier} defeats the slack
+calculus on parts that are \emph{separated}: two disjoint successor-closed
+regions between which nothing can be transmitted except by value
+iteration. \Cref{lem:transport-exact} shows that on exactly such parts the
+transport certificate is not merely fast but \emph{exact}, which is why
+it disposes of $H_m$ and of $G_8$ in one linear program. What defeats it
+instead is the opposite configuration: in $S$ and in $S_r$ the controlled
+vertex $v$ lies \emph{on a cycle through the branch it must be compared
+against}, so no average part containing $b_0$ is successor-closed, the
+polytope is a genuine interval rather than a point, and the comparison
+turns on where in that interval $w^\ast(v)$ sits --- which is the question
+one started from. \Cref{thm:transport-barrier} makes the quantitative
+form of this precise: the certificate needs its seed to localise
+$w^\ast(v)$ to within $2^{-\Theta(N)}$, and value iteration, the only
+seed available in polynomial time, takes $2^{\Omega(N)}$ rounds to get
+there. As with $H_m$, the instance itself is easy --- $S_r$ is one-player
+and \Cref{thm:one-player} solves it by an explicit linear program --- so
+what is refuted is the mechanism, not the tractability of the family.
+\end{remark}
+
+
 \section{Summary}\label{sec:summary}
 
 \paragraph{Foundations, proved from first principles.} The monotone
@@ -5086,7 +5270,16 @@ a stopping game (\Cref{lem:phi-certificate,prop:trans-stall}). Seeding it from a
 instance in this document --- including a vertex that
 \Cref{prop:bracket}(a) forbids any bracket from deciding --- while
 \Cref{thm:seeded-barrier} shows the geometry, not the initialisation, was
-always the obstruction.
+always the obstruction. A fourth mechanism does not propagate at all: the
+linear program of \Cref{sec:transport} optimises over the monotonicity
+$Tw^\ast=w^\ast$ imposes, is exact on successor-closed average parts
+(\Cref{lem:transport-exact}), and therefore settles in one solve both
+$G_8$ and the family $H_m$ on which the slack calculus stalls
+exponentially. It stalls in turn on a seven-vertex game, and
+\Cref{thm:transport-barrier} shows why the failure is complementary: what
+defeats it is a controlled vertex lying on a cycle through the branch it
+must be compared against, and there it needs its seed to localise the
+value to within $2^{-\Theta(N)}$.
 
 \paragraph{The gap.} \Cref{def:missing} states it at full strength and
 \Cref{thm:gap-equivalence} proves it equivalent to a polynomial-time
