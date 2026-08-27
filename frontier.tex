@@ -2581,10 +2581,13 @@ $w^\ast(1)=\frac12(w^\ast(2)+1)$, whose unique solution is $1$ throughout.
 Three consequences, and one caution.
 First, \Cref{thm:normalform-barrier} is exactly a statement about the
 bottom level $B=\emptyset$ of \Cref{def:freeze}: already
-$|B|=1$ escapes it, on a game that is reduced and normal, and it escapes
-measurably --- on the normalised ladders $N'(L_n)$, $n=2,\dots,6$, the
-rule that tries every single $c$ and keeps the best takes $1,2,2,2,3$
-rounds where all-switches and the residue rule both take $n$.
+$|B|=1$ escapes it, on a game that is reduced and normal. The escape is
+measurable but small on the instances we can compute: on the normalised
+ladders $N'(L_n)$, $n=2,\dots,6$, the rule that tries every single $c$ and
+keeps the best takes $n-1$ rounds where all-switches and the residue rule
+both take $n$. On the ladder itself the residue rule takes one round
+(\Cref{prop:residue-ladder}); it is the normalisation that costs it, and
+freeing one average vertex buys back exactly one round of what was lost.
 Second, \Cref{prop:freeze-escapes} shows that the sound improving rules
 form a strictly larger class than \Cref{def:rule}: a rule may switch a
 vertex that is not strictly switchable and still never decrease a value.
