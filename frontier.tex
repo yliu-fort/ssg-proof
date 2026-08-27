@@ -2499,7 +2499,13 @@ $\val_\sigma$ and $O(N^{2})$ further arithmetic operations.
 \begin{proof}
 A trap of $\widehat G_B(x)$ avoids all terminals, in particular all
 average vertices outside $B$, so it is a trap of $G$; by
-\Cref{lem:trapchar} it is empty, and $\widehat G_B(x)$ is stopping.
+\Cref{lem:trapchar} it is empty, and $\widehat G_B(x)$ is stopping. Note
+that \Cref{lem:absorption} and \Cref{thm:contraction} apply to a game
+with terminal payoffs verbatim: their proofs use only that the terminals
+are absorbing and never that they carry the payoffs $0$ and $1$. So the
+operator of $\widehat G_B(x)$, and the operator obtained from it by
+fixing either player's strategy, each have exactly one fixed point, and
+every orbit converges to it; this is used twice below.
 
 The three displayed relations are proved exactly as in
 \Cref{thm:residue-correct}. For $D\ge\val_\sigma$: $T_\sigma x=x$ says
