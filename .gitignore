@@ -29,3 +29,4 @@ out_*.txt
 scripts/ceiling/*.out
 scripts/ceiling/*.err
 ladder_hk.py
+scripts/ceiling/laws

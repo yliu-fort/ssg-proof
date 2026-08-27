@@ -100,7 +100,11 @@ def solve_lp(nvar, rows, obj, maximise=True):
         basis[i] = ak
         art_index[i] = ak
         ak += 1
-    # phase 1
+    # phase 1: maximise -(sum of artificials).  The objective row is
+    #   e_art - sum_{art rows} T[i]   -- the e_art term is essential, without it
+    #   the artificial columns get reduced cost -1 and re-enter the basis.
+    for j in range(nvar + nslack, ncols):
+        T[m][j] += F(1)
     for i in art_rows:
         for j in range(ncols + 1):
             T[m][j] -= T[i][j]
@@ -137,6 +141,12 @@ def solve_lp(nvar, rows, obj, maximise=True):
         if basis2[i] < nvar:
             z[basis2[i]] = T2[i][-1]
     val = T2[m2][-1] * sign
+    # rule 6-ii, mechanised: never return a point without checking it
+    for a, s_, b in rows:
+        lhs = sum(F(co) * z[k] for k, co in a.items())
+        ok = (lhs <= b) if s_ == '<=' else (lhs >= b) if s_ == '>=' else (lhs == b)
+        assert ok, "solve_lp returned an infeasible point: %s %s %s (lhs=%s)" % (a, s_, b, lhs)
+    assert sum(F(co) * z[k] for k, co in obj.items()) == val, "objective mismatch"
     return val, z
 
 
