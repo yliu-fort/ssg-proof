@@ -204,8 +204,8 @@ exactly. The logical skeleton is:
   improving path of length at most $n$. Explicit instances
   (\Cref{ex:nonstopping-nonsubcube,ex:pi-fails}) show that the stopping
   hypothesis is not removable.
-\item \Cref{sec:refutations}: five refutations, each with an explicit
-  instance verified in exact arithmetic, that eliminate specific
+\item \Cref{sec:refutations}: refutations and barriers, each with an
+  explicit instance verified in exact arithmetic, that eliminate specific
   strategies of proof --- among them an acyclic one-player ladder on
   which the least-index and smallest-gap rules take $2^{(N-2)/2}-1$
   improving switches (\Cref{thm:ladder}), although the game is solved by
@@ -1753,9 +1753,9 @@ $(\text{range of a potential})/(\text{minimum increment})$ is
 inherently exponential --- independently of which potential is chosen.
 \end{remark}
 
-\section{Five refutations}\label{sec:refutations}
+\section{Refutations and barriers}\label{sec:refutations}
 
-The results of this section eliminate four specific and otherwise
+The results of this section eliminate several specific and otherwise
 natural routes to a polynomial bound. Each is witnessed by an explicit
 game whose values were computed in exact rational arithmetic.
 
@@ -2021,6 +2021,300 @@ improving switch climbs, because on the ladder every such order is
 exponentially tall. What is not excluded, and is exactly what
 \Cref{def:missing} asks for, is a measure attached to one particular
 \emph{rule}, decreasing only along the switches that rule performs.
+\end{remark}
+
+
+
+\subsection{Solving the deterministic residue exactly, and why it does not
+help}\label{sec:residue}
+
+Every rule considered so far switches Max vertices one at a time or all at
+once, and in either case consults the value vector only at the two
+successors of the vertex it switches. An obvious way to do better is to
+stop switching locally: freeze the average vertices at their current
+values, solve the resulting purely deterministic game \emph{exactly}, and
+adopt the strategy it prescribes. On the ladder this replaces an
+exponential run by a single round. We prove that the acceleration is
+sound, that the separation is genuine, and that it is nevertheless
+worthless in the worst case, because a value-preserving change of
+representation destroys it. The barrier obtained is of a different kind
+from the three above: \Cref{thm:impedance}, \Cref{thm:switch-count} and
+\Cref{cor:no-height} all limit what a \emph{measure} can achieve, whereas
+what is limited here is what extra \emph{graph structure} can achieve.
+
+We first record the fact that makes the deterministic part finite.
+
+\begin{lemma}[Traps characterise stopping]\label{lem:trapchar}
+Call $U\subseteq V\setminus\{t_0,t_1\}$ a \emph{trap} if every average
+$v\in U$ has both successors in $U$ and every controlled $v\in U$ has at
+least one successor in $U$. Then $G$ is stopping if and only if the empty
+set is its only trap. Consequently the subgraph of a stopping game
+induced on $\Vmax\cup\Vmin$ is acyclic.
+\end{lemma}
+
+\begin{proof}
+Let $U\ne\emptyset$ be a trap. Choose $(\sigma,\tau)$ selecting, at each
+controlled $v\in U$, a successor lying in $U$, and arbitrarily elsewhere.
+Then $U$ is closed under $M_{\sigma,\tau}$, so from $u\in U$ the token
+never leaves $U$ and in particular never reaches a sink; $G$ is not
+stopping.
+
+Conversely let $G$ not be stopping, witnessed by $(\sigma,\tau)$ and $u$
+with $\Pr_u[\,\text{absorbed}\,]<1$. In the finite chain
+$M_{\sigma,\tau}$ absorption into $\{t_0,t_1\}$ fails from $u$ only if
+some recurrent class $R$ reachable from $u$ contains no sink. A recurrent
+class is closed: every $v\in R$ has \emph{all} its $M_{\sigma,\tau}$-suc\-ces\-sors
+in $R$. For average $v\in R$ those are both successors of $v$; for
+controlled $v\in R$ it is the successor chosen by $(\sigma,\tau)$, so at
+least one successor of $v$ lies in $R$. Hence $R$ is a nonempty trap.
+
+For the last sentence, a directed cycle $v_0\to v_1\to\dots\to v_{k-1}\to
+v_0$ inside $\Vmax\cup\Vmin$ is a trap: it contains no average vertex,
+and each of its vertices has a successor on the cycle.
+\end{proof}
+
+\begin{definition}[Deterministic residue]\label{def:residue}
+Let $G$ be stopping, write $C:=\Vmax\cup\Vmin$, and let
+$x\in[0,1]^{\Vavg}$. Extend $x$ to $\Vavg\cup\{t_0,t_1\}$ by $x(t_1):=1$,
+$x(t_0):=0$. The \emph{residue} $\widehat G(x)$ is the two-person game
+played on $C$ in which the owner of the current vertex moves along one of
+its two edges and the play stops as soon as it leaves $C$, with payoff
+$x(z)$ at the vertex $z\notin C$ where it stops. By \Cref{lem:trapchar}
+the subgraph induced on $C$ is acyclic, so every play stops after at most
+$|C|$ moves; the value $D_x$ of $\widehat G(x)$ is therefore given by
+backward induction along a reverse topological order of $C$,
+\[
+  D_x(v)\;=\;
+  \begin{cases}
+    \max\bigl(D_x(v^{(0)}),D_x(v^{(1)})\bigr), & v\in\Vmax,\\[2pt]
+    \min\bigl(D_x(v^{(0)}),D_x(v^{(1)})\bigr), & v\in\Vmin,
+  \end{cases}
+  \qquad D_x:=x \text{ on } \Vavg\cup\{t_0,t_1\}.
+\]
+Computing $D_x$, and with it a Max strategy attaining the maximum at
+every $v\in\Vmax$, costs $O(N)$ comparisons.
+\end{definition}
+
+\begin{definition}[Residue improvement]\label{def:residue-rule}
+For a Max strategy $\sigma$ put $x:=\val_\sigma|_{\Vavg}$ and define
+$\rho(\sigma)$ by
+\[
+  \rho(\sigma)(v):=
+  \begin{cases}
+    \sigma(v) & \text{if } D_x(\sigma(v))=\max\bigl(D_x(v^{(0)}),D_x(v^{(1)})\bigr),\\
+    \text{a successor attaining that maximum} & \text{otherwise.}
+  \end{cases}
+\]
+The \emph{residue rule} iterates $\sigma_{k+1}:=\rho(\sigma_k)$ and halts
+when $\val_{\sigma_{k+1}}=\val_{\sigma_k}$.
+\end{definition}
+
+\begin{theorem}[The residue rule is correct]\label{thm:residue-correct}
+Let $G$ be stopping and $\sigma$ a Max strategy, $x:=\val_\sigma$. Then
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $D_x\ge x$ pointwise, with equality on $\Vavg\cup\{t_0,t_1\}$;
+\item $\val_{\rho(\sigma)}\ \ge\ D_x\ \ge\ \val_\sigma$;
+\item $\val_{\rho(\sigma)}=\val_\sigma$ if and only if $\sigma\in\Opt$;
+\item consequently the residue rule halts at an optimal strategy after at
+      most $N4^{a}$ rounds, each round costing one evaluation of
+      $\val_\sigma$ and $O(N)$ further operations.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) Equality on $\Vavg\cup\{t_0,t_1\}$ holds by definition. On $C$,
+consider the residue $\widehat G(x)$ with Max restricted to $\sigma$. By
+\Cref{lem:trapchar} its backward induction has a unique solution, and
+$x|_C$ solves it: indeed $T_\sigma x=x$ by
+\Cref{thm:stopping-determinacy}, and at $v\in\Vmax$ this reads
+$x(v)=x(\sigma(v))$ while at $v\in\Vmin$ it reads
+$x(v)=\min(x(v^{(0)}),x(v^{(1)}))$, which are exactly the induction
+equations of $\widehat G(x)$ with Max playing $\sigma$. So $x|_C$ is the
+value of that restricted game, and $D_x$, being the value when Max plays
+optimally, dominates it.
+
+(b) Write $\sigma':=\rho(\sigma)$. We check $T_{\sigma'}D_x\ge D_x$. At
+$v\in\Vmax$, $\sigma'(v)$ attains the maximum, so
+$(T_{\sigma'}D_x)(v)=D_x(\sigma'(v))=\max(D_x(v^{(0)}),D_x(v^{(1)}))=D_x(v)$.
+At $v\in\Vmin$ both sides are $\min(D_x(v^{(0)}),D_x(v^{(1)}))$. At
+$c\in\Vavg$, using (a) and then $T_\sigma x=x$,
+\[
+  (T_{\sigma'}D_x)(c)=\tfrac12\bigl(D_x(c^{(0)})+D_x(c^{(1)})\bigr)
+  \;\ge\;\tfrac12\bigl(x(c^{(0)})+x(c^{(1)})\bigr)=x(c)=D_x(c).
+\]
+Since $G$ is stopping, \Cref{cor:comparison} applied to $T_{\sigma'}$
+gives $D_x\le\val_{\sigma'}$, and (a) gives $D_x\ge x=\val_\sigma$.
+
+(c) If $\val_{\sigma'}=\val_\sigma=x$ then (b) squeezes $D_x=x$. Hence at
+$v\in\Vmax$, $x(v)=D_x(v)=\max(x(v^{(0)}),x(v^{(1)}))=(Tx)(v)$; at
+$v\in\Vmin$ the same holds; and at $c\in\Vavg$ we have
+$(Tx)(c)=(T_\sigma x)(c)=x(c)$. So $Tx=x$, and by
+\Cref{thm:contraction,thm:stopping-determinacy} $x=w^\ast$, whence
+$\sigma\in\Opt$ by \Cref{lem:local-global}. The converse is immediate
+from $\val_\sigma=w^\ast\ge\val_{\sigma'}$ together with (b).
+
+(d) By (b) and (c) the vectors $x_k:=\val_{\sigma_k}$ are nondecreasing
+and, until the rule halts, differ. By \Cref{lem:denominator-sharp} all
+coordinates of $x_k$ share a denominator $d_k\le2^{a}$, so
+$\Phi(x_{k+1})-\Phi(x_k)$, where $\Phi(x):=\sum_{u\in V}x(u)\in[0,N]$, is
+a positive element of $\frac1{d_kd_{k+1}}\mathbb Z$ and hence at least
+$4^{-a}$. Thus there are at most $N4^{a}$ rounds. The per-round cost is
+one evaluation of $\val_\sigma$, polynomial by \Cref{thm:eval-stopfree},
+plus the $O(N)$ backward induction of \Cref{def:residue}.
+\end{proof}
+
+The separation promised above is immediate, and it is as large as
+\Cref{thm:ladder} permits.
+
+\begin{proposition}[The residue rule solves the ladder in one
+round]\label{prop:residue-ladder}
+On $L_n$, started at the strategy $\sigma_0$ taking every first-listed
+edge, the residue rule performs exactly one improving round and halts at
+the optimum. The least-index and smallest-gap rules take $2^{n}-1$ rounds
+from the same start and the all-switches rule takes $n$
+(\Cref{thm:ladder}).
+\end{proposition}
+
+\begin{proof}
+Under $\sigma_0$ every $v_i$ moves to $v_{i+1}$, so
+$\val_{\sigma_0}(v_i)=0$ for all $i$ because $v_{n+1}=t_0$; consequently
+$\val_{\sigma_0}(w_i)=\tfrac12\bigl(\val_{\sigma_0}(v_{i+1})+\val_{\sigma_0}(w_{i+1})\bigr)
+=2^{\,i-n-1}$, downwards from $w_{n+1}=t_1$. The residue has
+$C=\{v_1,\dots,v_n\}$ with the single chain of edges
+$v_i\to v_{i+1}$, so backward induction gives
+$D(v_n)=\max\bigl(D(t_0),D(t_1)\bigr)=1$ and then
+$D(v_i)=\max\bigl(D(v_{i+1}),x(w_{i+1})\bigr)=\max(1,2^{\,i-n})=1$ for
+$i<n$. Hence $\sigma_0(v_i)=v_{i+1}$ already attains the maximum for
+$i<n$ and is kept, while $\sigma_0(v_n)=t_0$ has $D=0<1$ and is switched
+to $w_{n+1}=t_1$. The resulting strategy is $0\dots01$, which is the
+optimum by \Cref{rem:ladder}; the next round changes nothing.
+\end{proof}
+
+That separation, however, is an artefact of how the game is drawn. The
+following normalisation is value-preserving, cheap, and destroys it
+completely.
+
+\begin{lemma}[Bipartite normal form]\label{lem:normalform}
+For an SSG $G$ let $N(G)$ be obtained by replacing each edge $(v,u)$ with
+$v$ controlled by the two edges $v\to c_{v,u}$ and
+$c_{v,u}\to u$, $c_{v,u}\to u$, where $c_{v,u}$ is a fresh average
+vertex with both successors equal to $u$. Then
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $|V(N(G))|=|V(G)|+2|\Vmax\cup\Vmin|\le 3N$, and in $N(G)$ no
+      controlled vertex has a controlled successor;
+\item $N(G)$ is stopping if and only if $G$ is;
+\item $\Vmax(N(G))=\Vmax(G)$, and under the bijection
+      $\sigma\mapsto\tilde\sigma$, $\tilde\sigma(v):=c_{v,\sigma(v)}$, one
+      has $\val^{N(G)}_{\tilde\sigma}=\val^{G}_\sigma$ on $V(G)$ and
+      $\val^{N(G)}_{\tilde\sigma}(c_{v,u})=\val^{G}_\sigma(u)$; likewise
+      $\val^{N(G)}=\val^{G}$ on $V(G)$;
+\item $S_{\tilde\sigma}=S_\sigma$ for every $\sigma$; hence the
+      all-switches runs from $\sigma_0$ in $G$ and from $\tilde\sigma_0$
+      in $N(G)$ have the same length and pass through corresponding
+      strategies.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) is immediate: every successor of a controlled vertex of $N(G)$ is one
+of the new average vertices.
+
+(ii) Traps correspond. If $U$ is a trap of $N(G)$ then $c_{v,u}\in U$
+forces $u\in U$, both successors of $c_{v,u}$ being $u$; and $v\in U$
+controlled forces some $c_{v,u}\in U$, hence some successor $u$ of $v$ in
+$G$ to lie in $U$. So $U\cap V(G)$ is a trap of $G$, and it is nonempty
+whenever $U$ is, since a trap of $N(G)$ containing $c_{v,u}$ contains
+$u$. Conversely a trap $U$ of $G$ extends to the trap
+$U\cup\{c_{v,u}:u\in U\}$ of $N(G)$. Now apply \Cref{lem:trapchar}.
+
+(iii) For $y\in[0,1]^{V(G)}$ let $\hat y$ be its extension with
+$\hat y(c_{v,u}):=y(u)$. Then
+$T^{N(G)}\hat y=\widehat{T^{G}y}$: at $c_{v,u}$ the average of two copies
+of $y(u)$ is $y(u)$; at a controlled $v$ the maximum or minimum over
+$\{\hat y(c_{v,v^{(0)}}),\hat y(c_{v,v^{(1)}})\}$ equals that over
+$\{y(v^{(0)}),y(v^{(1)})\}$; at an average vertex of $G$ nothing changed.
+So $y\mapsto\hat y$ is a bijection between the fixed points of $T^G$ and
+those of $T^{N(G)}$, and the same computation applies to $T_\sigma$ and
+$T_{\tilde\sigma}$. For stopping $G$ these fixed points are unique
+(\Cref{thm:contraction}), which gives the claim; in general one uses
+instead that the bijection preserves the pre-fixed points in both
+directions and hence the least fixed points, and applies
+\Cref{thm:lfp-general}.
+
+(iv) By (iii), $\val_{\tilde\sigma}(c_{v,u})=\val_\sigma(u)$, so the test
+$\val_{\tilde\sigma}(\overline{\tilde\sigma}(v))>\val_{\tilde\sigma}(\tilde\sigma(v))$
+defining $S_{\tilde\sigma}$ reads
+$\val_\sigma(\bar\sigma(v))>\val_\sigma(\sigma(v))$, which defines
+$S_\sigma$. Since all-switches replaces $\sigma$ by $\sigma[S_\sigma]$
+and the correspondence commutes with that, the two runs are in step.
+\end{proof}
+
+\begin{definition}[Residue-blind rule]\label{def:residue-blind}
+A rule $R$ assigning to every stopping SSG $G$ and Max strategy $\sigma$
+a strategy $R(G,\sigma)$ is \emph{residue-blind} if
+$R(G,\sigma)=\sigma[S_\sigma]$ whenever no controlled vertex of $G$ has a
+controlled successor.
+\end{definition}
+
+\begin{theorem}[Normalisation barrier]\label{thm:normalform-barrier}
+The residue rule is residue-blind. If $R$ is residue-blind and halts
+within $p(|V(G)|)$ rounds on every stopping SSG $G$ and every starting
+strategy, then the all-switches rule halts within $p(3N)$ rounds on every
+stopping SSG with $N$ vertices. In particular no residue-blind rule runs
+in polynomially many rounds unless the all-switches rule already does,
+and any superpolynomial lower bound for all-switches transfers verbatim
+to every residue-blind rule.
+\end{theorem}
+
+\begin{proof}
+If no controlled vertex of $G$ has a controlled successor then
+$C=\Vmax\cup\Vmin$ carries no edges, so \Cref{def:residue} gives
+$D_x(v)=\max\bigl(x(v^{(0)}),x(v^{(1)})\bigr)$ for $v\in\Vmax$ with
+$x=\val_\sigma$; hence $\rho(\sigma)(v)\ne\sigma(v)$ exactly when
+$\val_\sigma(\bar\sigma(v))>\val_\sigma(\sigma(v))$, that is exactly when
+$v\in S_\sigma$. So $\rho(\sigma)=\sigma[S_\sigma]$ and the residue rule
+is residue-blind.
+
+Now let $G$ be stopping with $N$ vertices and let $\sigma_0$ be any
+starting strategy. By \Cref{lem:normalform}(i),(ii) the game $N(G)$ is
+stopping with at most $3N$ vertices and no controlled vertex has a
+controlled successor, so the run of $R$ on $(N(G),\tilde\sigma_0)$ is
+\emph{by definition} the all-switches run there; by hypothesis it halts
+within $p(3N)$ rounds. By \Cref{lem:normalform}(iv) the all-switches run
+on $(G,\sigma_0)$ has the same length.
+\end{proof}
+
+\begin{remark}\label{rem:normalform}
+The two statements should be read together.
+\Cref{prop:residue-ladder} is a genuine exponential separation: on
+$L_n$ the residue rule needs one round where the least-index rule needs
+$2^{n}-1$, and it obtains it by using the structure of the graph
+\emph{between} controlled vertices, which no switching rule in
+\Cref{def:rule} inspects. \Cref{thm:normalform-barrier} says that all of
+that structure can be deleted at a cost of $2N$ extra average vertices,
+each of them a vertex with two parallel edges, without changing a single
+value. What the residue rule exploits is therefore not a property of the
+game but a property of the presentation, and the same applies to any rule
+that resolves the deterministic part optimally --- by attractor sweeps,
+by condensation into strongly connected components, or by any other
+means. This is why the barrier is stated for the whole class
+\Cref{def:residue-blind} rather than for one algorithm. It also isolates
+what a successful rule must do: it must remain fast on games in which
+$\Vmax\cup\Vmin$ is an independent set, so that the only structure left
+to exploit is the interaction of the average vertices --- which is
+precisely where \Cref{thm:switch-count} places the difficulty, and
+precisely what \Cref{thm:matching-barrier} and \Cref{thm:slack-barrier}
+show to be hard for comparison mechanisms as well.
+\end{remark}
+
+\begin{remark}\label{rem:normalform-scope}
+\Cref{lem:normalform} is also a normalisation of independent interest: at
+the cost of a factor $3$ in the number of vertices one may always assume
+that $\Vmax\cup\Vmin$ is an independent set of the digraph. All of
+\Cref{prob:main} is therefore already present in that subclass. Note
+that the normalisation raises $a=|\Vavg|$ from $a$ to $a+2|\Vmax\cup\Vmin|$,
+so it must not be applied before invoking a bound that depends on $a$,
+such as \Cref{thm:few-avg} or \Cref{thm:switch-count}.
 \end{remark}
 
 
@@ -3986,7 +4280,12 @@ no parameter blind to which player owns which vertex can serve as a
 hardness certificate, since it is already large on easy one-player
 instances (\Cref{rem:owner-blind}); and no sound rule deciding a single
 vertex can read only a bounded-radius neighbourhood of it
-(\Cref{prop:locality}).
+(\Cref{prop:locality}). Finally, solving the deterministic part of the
+game exactly --- an acceleration that collapses the ladder's exponential
+run to a single round (\Cref{prop:residue-ladder}) --- is undone by a
+value-preserving normalisation adding $2N$ average vertices with parallel
+edges, so no rule of that kind runs in polynomially many rounds unless
+all-switches already does (\Cref{thm:normalform-barrier}).
 
 \paragraph{Mechanisms, and where they stop.} Three sound polynomial-time
 comparison mechanisms are developed and measured against one yardstick.
