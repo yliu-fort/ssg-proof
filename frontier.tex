@@ -1102,6 +1102,168 @@ stopping hypothesis that the theorem applies to arbitrary games.
 A third tractable regime is delimited not by how many average vertices
 there are, but by where they sit.
 
+The exponent $a$ in \Cref{thm:few-avg} counts \emph{all} average vertices,
+while the proof of \Cref{lem:descent} loses a factor $\tfrac12$ only at
+those average vertices where the descent actually branches, and only along
+one path. Counting exactly that gives a strictly smaller exponent, and one
+that can be bounded while $a$ is linear in $N$.
+
+\begin{definition}[Escape exponent]\label{def:escape}
+Let $\sigma$ be a Max strategy and let $C_j$, $C_\infty$ and
+$\ell(v):=\min\{j:v\in C_j\}$ be as in \Cref{lem:descent} with
+$\sigma^\ast$ replaced by $\sigma$. Call $v=p_0,p_1,\dots,p_r=t_1$ a
+\emph{descent path} if $\ell$ strictly decreases along it and
+$p_{i+1}=\sigma(p_i)$ whenever $p_i\in\Vmax$. Put $\omega(v):=1$ if
+$v\in\Vavg$ has \emph{exactly one} successor of strictly smaller level,
+and $\omega(v):=0$ otherwise; let
+$A_\sigma(v):=\max\bigl\{\sum_{i}\omega(p_i)\bigr\}$ over descent paths
+from $v$, and $d(\sigma):=\max_{v\in C_\infty}A_\sigma(v)$. Finally
+$d(G):=\min\{d(\sigma^\ast):\sigma^\ast\text{ optimal}\}$. Then
+$d(G)\le a$, since a descent path has strictly decreasing levels and so
+meets each average vertex at most once.
+\end{definition}
+
+\begin{lemma}[Refined forced descent]\label{lem:descent-refined}
+In the situation of \Cref{lem:descent}, for every $v\in C_\infty$ and
+every Min strategy the play from $v$ under $\sigma^\ast$ reaches $t_1$
+within $\ell(v)\le N$ steps with probability at least
+$2^{-A_{\sigma^\ast}(v)}$.
+\end{lemma}
+
+\begin{proof}
+Induction on $\ell(v)$; the case $\ell(v)=0$ is $v=t_1$. Let
+$\ell(v)=j+1$. If $v\in\Vmax$ the token moves to $w:=\sigma^\ast(v)\in C_j$
+with probability $1$, and $\omega(v)=0$ while prefixing $v$ to a
+maximising descent path from $w$ is again one, so
+$A_{\sigma^\ast}(v)\ge A_{\sigma^\ast}(w)$. If $v\in\Vmin$ then both
+successors lie in $C_j$, so whatever the adversary does the token moves to
+some $w$ with $\ell(w)\le j$, and again $\omega(v)=0$ and
+$A_{\sigma^\ast}(v)\ge A_{\sigma^\ast}(w)$. If $v\in\Vavg$ has both
+successors of smaller level then $\omega(v)=0$, the token descends with
+probability $1$, and $A_{\sigma^\ast}(v)$ dominates both. If exactly one
+successor $w$ has smaller level then $\omega(v)=1$,
+$A_{\sigma^\ast}(v)\ge A_{\sigma^\ast}(w)+1$, and the token moves to $w$
+with probability $\tfrac12$, giving at least
+$\tfrac12\cdot2^{-A_{\sigma^\ast}(w)}\ge2^{-A_{\sigma^\ast}(v)}$. In every
+case $\ell$ strictly decreases, so $t_1$ is reached within $\ell(v)$ steps.
+\end{proof}
+
+\begin{lemma}[A sound and complete polynomial certificate]\label{lem:certificate}
+Let $G$ be an arbitrary SSG and $x\in\mathcal X$. Call a successor of
+$v\in\Vmax$ \emph{greedy} for $x$ if it attains
+$\max(x(v^{(0)}),x(v^{(1)}))$; let $D_0:=\{t_1\}$ and
+\[
+  D_{j+1}:=D_j\cup\{v\in\Vavg:\text{some successor in }D_j\}
+  \cup\{v\in\Vmax:\text{some greedy successor in }D_j\}
+  \cup\{v\in\Vmin:\text{both successors in }D_j\},
+\]
+and let $\sigma_x$ choose at every $v\in\Vmax\cap D_\infty$ a greedy
+successor of strictly smaller $D$-level, and any greedy successor
+elsewhere. Then $x=\val$ if and only if $Tx=x$ and $\val_{\sigma_x}=x$,
+and both tests are polynomial.
+\end{lemma}
+
+\begin{proof}
+($\Leftarrow$) $Tx=x$ gives $\val\le x$ because $\val=\lfp(T)$
+(\Cref{thm:lfp-general}), and $\val\ge\val_{\sigma_x}=x$ always.
+($\Rightarrow$) $T\val=\val$ is \Cref{thm:lfp-general}. Every optimal
+$\sigma^\ast$ is greedy for $\val$, so $C_j^{\sigma^\ast}\subseteq D_j$
+and $D_\infty\supseteq\{\val>0\}$ by \Cref{lem:descent}(a); moreover
+$\sigma_x$ being greedy gives $T_{\sigma_x}\val=T\val=\val$, so $\val$
+satisfies every equality and inequality of the program of
+\Cref{thm:eval-stopfree}. It remains that $\val$ vanishes on
+$Z_{\sigma_x}$, which by \Cref{lem:trap} is $\{\val_{\sigma_x}=0\}$; and
+the sets $D_j$ satisfy exactly the three closure conditions used in
+\Cref{lem:descent-refined} --- both successors at $\Vmin$, at least one at
+$\Vavg$, the chosen $\sigma_x(v)$ at $\Vmax$ --- so that proof applies
+verbatim and gives $\val_{\sigma_x}(v)\ge2^{-a}>0$ whenever $\val(v)>0$.
+Hence $\val$ is feasible for that program, whose unique optimum dominates
+every feasible point, so $\val\le\val_{\sigma_x}\le\val$.
+Polynomiality: $Tx=x$ costs $O(N)$ operations and $\val_{\sigma_x}$ is the
+linear program of \Cref{thm:eval-stopfree}.
+\end{proof}
+
+\begin{theorem}[Value iteration is governed by the escape
+exponent]\label{thm:few-escape}
+There is a deterministic algorithm that outputs the exact value vector of
+an arbitrary SSG, stopping or not, in time
+$\mathrm{poly}(N)\,a\,2^{d(G)}\le\mathrm{poly}(N)\,a\,2^{a}$, and that
+needs no advance knowledge of $d(G)$. In particular \Cref{prob:main} is
+decidable in polynomial time on every family with $d(G)=O(\log N)$. This
+contains \Cref{thm:few-avg}.
+\end{theorem}
+
+\begin{proof}
+Run the fixed-point iteration $u_j:=T^{jN}(1_{t_1})$ in binary fixed point
+with $\Theta(a+\log N)$ bits, rounding down, exactly as in
+\Cref{thm:few-avg}; after each block round the iterate to the nearest
+rational vector of denominator at most $2^{a}$ by continued fractions and
+apply \Cref{lem:certificate}, stopping on acceptance. Soundness is the
+easy direction of \Cref{lem:certificate}. For the running time, repeat the
+estimate of \Cref{thm:few-avg} with an optimal $\sigma^\ast$ attaining
+$d(G)$: writing $M_j:=\max_{C_\infty}(\val-u_j)$,
+\Cref{lem:descent-refined} bounds the probability of \emph{not} reaching
+$t_1$ within a block by $1-2^{-d(G)}$ against every Min strategy, so
+$M_{j+1}\le(1-2^{-d(G)})M_j$ and $\val-u_j\le(1-2^{-d(G)})^{j}$. Two
+distinct coordinates of $\val$ differ by at least $4^{-a}$
+(\Cref{lem:denominator-sharp}), so after $O(a2^{d(G)})$ blocks the
+rounding returns $\val$ exactly and the certificate accepts.
+\end{proof}
+
+\begin{proposition}[The escape exponent can be $2$ while $a$ is
+linear]\label{prop:fk-family}
+For $k\ge2$ let $F_k$ have $\Vavg=\{u_1,\dots,u_k,s,e\}$,
+$\Vmin=\{y,v_0\}$, $\Vmax=\{x_0,x_1,x_2\}$ and
+\[
+\begin{gathered}
+  u_i\to(t_1,u_{i+1})\ (i<k),\quad u_k\to(t_1,t_0),\quad s\to(u_1,t_0),\quad
+  e\to(t_1,y),\quad y\to(s,e),\\
+  v_0\to(e,x_0),\quad x_0\to(y,x_1),\quad x_1\to(t_0,x_2),\quad x_2\to(t_0,x_0).
+\end{gathered}
+\]
+Then $N=k+9$, $a=k+2=N-7$, $F_k$ is \emph{not} stopping,
+$\val(v_0)=\tfrac12-2^{-(k+1)}$, and $d(F_k)=2$. So
+\Cref{thm:few-escape} decides $F_k$ in polynomial time although
+\Cref{thm:few-avg} gives only $2^{\Theta(N)}$; and none of
+\Cref{thm:avg-acyclic}, \Cref{thm:player-free}, \Cref{thm:one-player} or
+\Cref{thm:kacyclic} applies, since the cycle $e\to y\to e$ carries an
+average vertex, the cycle $x_0\to x_1\to x_2\to x_0$ carries Max
+vertices, $y$ lies on a cycle, and both player sets are non-empty.
+\end{proposition}
+
+\begin{proof}
+Back-substitution gives $\val(u_k)=\tfrac12$ and
+$\val(u_i)=\tfrac12(1+\val(u_{i+1}))$, so $\val(u_1)=1-2^{-k}$ and
+$\val(s)=\tfrac12\val(u_1)=\tfrac12-2^{-(k+1)}$. Since $\val(e)\ge\tfrac12>\val(s)$,
+Min plays $y\to s$, so $\val(y)=\val(s)$ and
+$\val(e)=\tfrac12(1+\val(s))$; the least fixed point on the Max cycle gives
+$\val(x_i)=\val(y)$, and $\val(v_0)=\min(\val(e),\val(x_0))=\val(s)$.
+$F_k$ is not stopping because under $x_j\to x_{j+1}$ the token can
+circulate for ever, so the sink attractor of \Cref{def:attractor} omits
+$x_0,x_1,x_2$ and \Cref{lem:absorption} fails. For $d$: with the optimal
+$\sigma^\ast$ above one computes $\ell(u_i)=1$ and $\omega(u_i)=1$, so
+$A(u_i)=1$; $\ell(e)=1$, $\omega(e)=1$, $A(e)=1$; $\ell(s)=2$ with the
+unique low successor $u_1$, so $\omega(s)=1$ and $A(s)=2$; then
+$A(y)=\max(A(s),A(e))=2$ and $A(x_i)=A(v_0)=2$. All values and all the
+non-membership tests were computed exactly for
+$k=2,3,4,6,8$.
+\end{proof}
+
+\begin{remark}\label{rem:escape}
+The two exponents measure different things. $a$ counts the coin flips the
+game contains; $d(G)$ counts the coin flips a \emph{single} forced descent
+must survive, and \Cref{prop:fk-family} separates them by
+$\Theta(N)$. What \Cref{rem:few-avg-tight} shows is still true and is
+about the rate, not the exponent: on the one-vertex game
+$c\to\{t_1,c\}$ one has $d=a=1$ and the contraction factor
+$1-2^{-1}$ is attained. The refined bound was checked against exhaustive
+computation on $1130$ random SSGs for $j=1,2,3$ blocks with no violation,
+as was the consequence that every positive value is at least $2^{-d}$,
+and the certificate of \Cref{lem:certificate} accepted the true value
+vector on $2862$ instances of which $2179$ were not stopping.
+\end{remark}
+
+
 \begin{definition}[Average-jump digraph]\label{def:jump}
 For an SSG $G$, let $D(G)$ be the digraph on vertex set $\Vavg$ with an
 edge $u\to z$ whenever some path $u=p_0\to p_1\to\cdots\to p_k=z$ in $G$
