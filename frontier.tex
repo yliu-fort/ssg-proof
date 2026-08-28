@@ -5624,6 +5624,93 @@ arithmetic.
 The certificate is nevertheless incomplete, and the obstruction is
 exactly the failure of the hypothesis of \Cref{lem:transport-exact}.
 
+The transport polytope is small, and it already has $w^\ast$ as a corner. That
+changes what one should expect from it.
+
+\begin{lemma}[Reduction to the controlled coordinates]\label{lem:transport-dim}
+Let $G$ be stopping and $C:=\Vmax\cup\Vmin$. Making $C$ and the two sinks
+absorbing leaves an average chain that is absorbing, so for every
+$u\in\mathbb R^{C}$ there is a unique $\Psi(u)\in\mathbb R^{V}$ agreeing with
+$u$ on $C$, vanishing at $t_0$, equal to $1$ at $t_1$, and satisfying the
+average equalities; $\Psi$ is affine. Every $x\in Q(G)$ equals
+$\Psi(x|_{C})$, so $Q(G)$ is affinely isomorphic to a polytope in
+$\mathbb R^{C}$ and $\dim Q(G)\le|C|$.
+\end{lemma}
+
+\begin{proof}
+If some non-sink average vertex were not absorbed, the set of vertices from
+which neither a sink nor $C$ is reached would be a nonempty set every average
+member of which has both successors inside and containing no controlled vertex
+--- a trap in the sense of \Cref{lem:trapchar}, contradicting stopping. So the
+average system $x_A=Px_A+r$ has $I-P$ invertible and $\Psi$ is the affine map
+$u\mapsto(I-P)^{-1}(\,\cdot\,)$ extended by the identity on $C$. The average
+rows of $Q(G)$ say exactly that $x$ solves that system.
+\end{proof}
+
+\begin{theorem}[The objective, not the polytope]\label{thm:transport-objective}
+Let $G$ be stopping and let $\sigma:C\to\{0,1\}$ be any profile. Over $Q(G)$
+put
+\[
+  \mathrm{obj}_\sigma(x)\;:=\;
+  \sum_{v\in\Vmax}\bigl(x(v)-x(v^{(\sigma(v))})\bigr)
+  +\sum_{v\in\Vmin}\bigl(x(v^{(\sigma(v))})-x(v)\bigr).
+\]
+Then
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $\mathrm{obj}_\sigma\ge0$ on $Q(G)$, for every $\sigma$;
+\item if $\sigma$ is optimal, that is $w^\ast(v)=w^\ast(v^{(\sigma(v))})$ for
+      every $v\in C$, then $\min_{Q(G)}\mathrm{obj}_\sigma=0$ and $w^\ast$ is
+      its \emph{unique} minimiser;
+\item if $\sigma$ is not optimal then $\min_{Q(G)}\mathrm{obj}_\sigma>0$.
+\end{enumerate}
+In particular $w^\ast$ is a \emph{vertex} of $Q(G)$, and it is cut out by a
+linear programme with $N$ variables and $O(N)$ rows --- once the right one of
+the $2^{|C|}$ objectives is known.
+\end{theorem}
+
+\begin{proof}
+(a) is the Max and Min rows of $Q(G)$ read termwise. Everything else follows
+from one computation. Suppose $x\in Q(G)$ has $\mathrm{obj}_\sigma(x)=0$. Every
+term is nonnegative, so $x(v)=x(v^{(\sigma(v))})$ for every $v\in C$. At
+$v\in\Vmax$ the rows of $Q(G)$ give $x(v)\ge x(v^{(i)})$ for both $i$, so
+$x(v)=\max_ix(v^{(i)})$; at $v\in\Vmin$, dually, $x(v)=\min_ix(v^{(i)})$; and
+the average equalities hold by definition of $Q(G)$. Hence $Tx=x$, so
+$x=w^\ast$ by \Cref{thm:contraction}, and then
+$w^\ast(v)=w^\ast(v^{(\sigma(v))})$ for every $v$, i.e.\ $\sigma$ is optimal.
+
+This gives (c) at once, in contrapositive form. For (b), if $\sigma$ is optimal
+then every term vanishes at $w^\ast$, so the minimum is $0$ and is attained
+there; and the computation just made shows any other minimiser equals
+$w^\ast$. Finally a point that is the unique minimiser of a linear functional
+over a polytope is a vertex of it.
+\end{proof}
+
+\begin{remark}\label{rem:transport-objective}
+This is a reformulation and not progress, and it is worth being exact about
+which. Choosing the objective in \Cref{thm:transport-objective} means naming an
+optimal profile, which is \textsc{SSG-Value} itself by
+\Cref{thm:compare-equivalence}; so (b) and (c) together say ``the problem is in
+$\mathsf P$ if and only if it is''. What they do add is structural, and it
+redirects the search. The relaxation $Q(G)$ is not a coarse outer
+approximation that additional valid inequalities would whittle down to a point:
+it is at most $|C|$-dimensional (\Cref{lem:transport-dim}) and already has
+$w^\ast$ among its vertices, so the vertex one wants is present and the whole
+question is which linear functional selects it.
+
+We do \emph{not} conclude from this that cutting planes cannot help, and the
+temptation to do so should be resisted: a cut that removes other vertices of
+$Q(G)$ while keeping $w^\ast$ is perfectly consistent with everything above,
+and \Cref{sec:hybrid} is exactly such a procedure. What the theorem rules out
+is only the diagnosis that $Q(G)$ is too coarse \emph{at $w^\ast$}: it is not,
+$w^\ast$ being a vertex. The difficulty has moved entirely into choosing among
+the $2^{|C|}$ objectives.
+Verified on $100$ stopping games with $|C|\le5$, all $2^{|C|}$ profiles of each:
+no violation of (a), (b) or (c), with uniqueness in (b) tested in the strongest
+form, by maximising and minimising every coordinate subject to
+$\mathrm{obj}_\sigma=0$.
+\end{remark}
+
+
 \begin{proposition}[A seven-vertex stall]\label{prop:transport-stalls}
 Let $S$ be the SSG on $\{v,a,b,b_1,b_2\}$ with $t_0,t_1$, where
 $v\in\Vmax$ and $a,b,b_1,b_2\in\Vavg$, and
