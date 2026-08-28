@@ -81,7 +81,7 @@ mere order of the average values determines everything
 (\Cref{thm:order-determines}) --- but each bit of it is again an instance
 of the problem.
 
-\emph{Mechanisms, and where each stops.} Four sound polynomial-time
+\emph{Mechanisms, and where each stops.} Five sound polynomial-time
 comparison mechanisms are developed and measured against one another: an
 arithmetic-free simulation preorder (\Cref{sec:simorder}), which beats
 every bounded radius and dies on branch compensation, as does its whole
@@ -97,7 +97,18 @@ linear-programming certificate (\Cref{sec:transport}) that is exact on
 successor-closed average parts and therefore settles in one solve both
 instances on which the other mechanisms provably fail, while stalling in
 turn on a seven-vertex game for a complementary reason
-(\Cref{thm:transport-barrier}).
+(\Cref{thm:transport-barrier}). Because those two failures are
+complementary, we couple the last two into a feedback loop
+(\Cref{sec:hybrid}): the non-convex halves of the controlled rows, which
+a linear programme must drop, are exactly what the slack clauses supply,
+and the average equalities, which the slack calculus can only reach by
+iterating, are what the programme solves at a stroke. On a stopping game
+its every closed matrix pins the polytope to the value vector itself
+(\Cref{thm:hybrid-complete}), an argument that consults the programme
+only at the $4N$ pairs containing a sink (\Cref{cor:hybrid-sink}); it
+disposes of every stall recorded here in one round or two; and
+\Cref{prop:hybrid-rate} reduces what remains to a single contraction
+ratio, a bound on which would resolve the problem.
 
 \emph{Barriers.} No potential of polynomial range
 (\Cref{thm:impedance}); no progress measure of polynomial height
@@ -6122,6 +6133,27 @@ exponentially. It stalls in turn on a seven-vertex game, and
 defeats it is a controlled vertex lying on a cycle through the branch it
 must be compared against, and there it needs its seed to localise the
 value to within $2^{-\Theta(N)}$.
+
+Since the two failures are complementary, the two mechanisms are coupled
+in \Cref{sec:hybrid}, and the coupling is a feedback loop rather than a
+disjunction: the halves of the controlled rows that a linear programme
+must drop, being non-convex, are exactly the ones whose consequences for
+differences the slack clauses supply, while the average equalities the
+slack calculus can only reach by iterating are what the programme solves
+in one step. The result is the sharpest mechanism here.
+\Cref{thm:hybrid-complete} shows that on a stopping game every closed
+matrix has $K(\Delta)=\{w^\ast\}$ --- the polytope collapses to the value
+vector, not merely to a decided pair --- and that the argument touches the
+programme only at the $4N$ pairs containing a sink
+(\Cref{cor:hybrid-sink}), so the hybrid is a box-propagation loop whose
+only fixed point is the exact one. It disposes of every stall recorded in
+this document, in one round or two (\Cref{prop:hybrid-decides}). What is
+left is a rate, and \Cref{prop:hybrid-rate} reduces even that to a single
+scalar: the box contracts by some factor $\rho(G)$ per round, a bound
+$\rho\le1-1/\mathrm{poly}(N)$ would put the problem in $\mathsf P$, and
+$\rho\to1$ is the only way the mechanism can fail. We can neither prove
+the bound nor exhibit a family approaching $1$; the slowest instance we
+found has $\rho=\tfrac34$ (\Cref{rem:hybrid-rate}).
 
 \paragraph{The gap.} \Cref{def:missing} states it at full strength and
 \Cref{thm:gap-equivalence} proves it equivalent to a polynomial-time
