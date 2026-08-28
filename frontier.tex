@@ -5944,10 +5944,13 @@ for the box of the polytope over which round $k+1$ optimises. Then
 \item if $\omega_k<2^{-(a+1)}$ then $\Delta_{k+1}(x,y)<0$ for every pair with
       $\val(x)<\val(y)$; in particular every value-distinguishing controlled
       vertex is decided at round $k+1$;
-\item consequently, if $\omega_{k+1}\le\rho\,\omega_k$ for every $k$ and some
-      $\rho=\rho(G)<1$, then every value-distinguishing pair is decided within
-      $\lceil (a+1)/\log_2(1/\rho)\rceil+1$ rounds.
+\item consequently, if $\omega_k\le C\rho^{k}$ for all $k$ and some constants
+      $C\ge1$ and $\rho=\rho(G)<1$, then every value-distinguishing pair is
+      decided within $\lceil (a+1+\log_2C)/\log_2(1/\rho)\rceil+1$ rounds.
 \end{enumerate}
+The hypothesis of (c) is stated for the sequence and not round by round, and
+that is necessary: \Cref{rem:hybrid-rate} exhibits a stopping game on which one
+round leaves $\omega_k$ exactly unchanged.
 \end{proposition}
 
 \begin{proof}
@@ -5971,7 +5974,8 @@ dividing one integer $D\le2^{a}$. Hence two distinct coordinates differ by at
 least $2^{-a}$, and $\val(x)<\val(y)$ forces
 $\val(x)-\val(y)\le-2^{-a}<-2\omega_k$.
 
-(c) Immediate from (b), since $\omega_0\le1$.
+(c) By (b) it suffices that $C\rho^{k}<2^{-(a+1)}$, i.e.\ that
+$k\log_2(1/\rho)>a+1+\log_2C$.
 \end{proof}
 
 \begin{remark}\label{rem:hybrid-rate}
@@ -5985,9 +5989,28 @@ value iteration, with one difference that is the point of the hybrid: there the
 box is $T^{k}0\le\cdot\le T^{k}1$, which contracts at rate $1-2^{-a}$ and no
 faster (\Cref{thm:contraction} is attained, \Cref{rem:few-avg-tight}); here it
 is the box of a polytope whose average rows are \emph{equalities}, so the
-contraction is not tied to the mixing of the chain. On every instance we have
-measured, $\rho$ is bounded well away from $1$. The slowest we could reach by
-hill climbing is the nine-vertex stopping game $W$ on
+contraction is not tied to the mixing of the chain.
+
+The per-round reading of (c) is genuinely too strong, and one hill-climbed
+instance settles that. On the ten-vertex stopping game with $t_0=8$, $t_1=9$,
+$\Vmax=\{1,5,7\}$, $\Vavg=\{0,2,3,4,6\}$ and
+\[
+  0\to(t_0,3),\ 1\to(3,2),\ 2\to(5,0),\ 3\to(4,6),\ 4\to(5,1),\
+  5\to(4,0),\ 6\to(t_1,t_0),\ 7\to(5,4),
+\]
+one has $\val=(\tfrac14,\tfrac12,\tfrac38,\tfrac12,\tfrac12,\tfrac12,
+\tfrac12,\tfrac12)$ and the widths run
+$\tfrac12,\tfrac12,\tfrac1{16},0$: the second round leaves $\omega$ exactly
+unchanged before the third collapses it. So no per-round contraction factor
+below $1$ exists in general, and only the behaviour of the sequence is
+meaningful. Two further hill-climbed instances show the round count is not
+bounded by $N$ either: on ten vertices we found games whose box collapses only
+at round $17$ and at round $25$, the latter having every non-sink value equal
+to $\tfrac12$, so that the difficulty is entirely in the ties.
+
+Even so, on every instance we have measured the collapse is fast in the sense
+that matters. The slowest \emph{decision} we could reach by
+hill climbing is on the nine-vertex stopping game $W$ on
 $\{0,\dots,6\}$ with $t_0=7$, $t_1=8$, where $1\in\Vmin$, $5\in\Vmax$ and
 $0,2,3,4,6\in\Vavg$, and
 \[
@@ -5997,14 +6020,28 @@ $0,2,3,4,6\in\Vavg$, and
 There $\val=(\tfrac14,\tfrac12,\tfrac12,\tfrac12,\tfrac12,\tfrac12,\tfrac12)$,
 the only value-distinguishing controlled vertex is $5$, the widths $\omega_k$
 run $\tfrac{10}{11},\tfrac{43}{66},\tfrac{365}{792},\tfrac7{44},
-\tfrac{21}{176},\tfrac7{88},0$, so $\rho(W)=\tfrac34$, and the box collapses
-only at round $7$ --- more rounds than the game has vertices --- although the
-vertex is decided at round $4$. Two features of $W$ are what the analysis
-predicts: the Min vertex is what stops the box being pinned from below, as it
-is on $S_r$ where $\val(v)\ge\val(a)=\tfrac12$ pins $L$ at once, and the
-controlled vertices lie on a cycle carrying average vertices, which is what
-\Cref{lem:transport-exact} cannot resolve. A family on which
-$\rho\to1$, and a proof that none exists, are both open, and we claim neither.
+\tfrac{21}{176},\tfrac7{88},0$, the box collapses only at round $7$ --- again
+more rounds than the game has vertices --- and the vertex is decided at round
+$4$. Two features of $W$ are what the analysis predicts: the Min vertex is what
+stops the box being pinned from below, as it is on $S_r$, where
+$\val(v)\ge\val(a)=\tfrac12$ pins $L$ at once and is the whole reason that
+family collapses in two rounds; and the controlled vertices lie on a cycle
+carrying average vertices, which is what \Cref{lem:transport-exact} cannot
+resolve.
+
+We record two failed attempts to turn this into a family, since both were
+predicted to work by the analysis above and neither does. Lengthening the
+cycle joining a Max vertex to a Min vertex, with each chain leaking back into
+the cycle and a single sink escape, so that the return probability is
+$1-2^{-\Theta(k)}$ --- the shape of \Cref{thm:impedance} --- gives a family
+whose values are $\tfrac13$ and $\tfrac23$ for every $k$ and whose box
+collapses at round $2$ for every $k$; the linear programme solves the whole
+cycle at a stroke, because it is linear once the two choices are read as
+inequalities. Having the Max vertex compare two such cycles instead of a cycle
+against an anchor slows the collapse to $k+1$ rounds but leaves the first
+decision at round $2$. A family on which the round count grows
+superpolynomially, and a proof that none exists, are both open, and we claim
+neither.
 \end{remark}
 
 
@@ -6148,12 +6185,15 @@ programme only at the $4N$ pairs containing a sink
 (\Cref{cor:hybrid-sink}), so the hybrid is a box-propagation loop whose
 only fixed point is the exact one. It disposes of every stall recorded in
 this document, in one round or two (\Cref{prop:hybrid-decides}). What is
-left is a rate, and \Cref{prop:hybrid-rate} reduces even that to a single
-scalar: the box contracts by some factor $\rho(G)$ per round, a bound
-$\rho\le1-1/\mathrm{poly}(N)$ would put the problem in $\mathsf P$, and
-$\rho\to1$ is the only way the mechanism can fail. We can neither prove
-the bound nor exhibit a family approaching $1$; the slowest instance we
-found has $\rho=\tfrac34$ (\Cref{rem:hybrid-rate}).
+left is a rate, and \Cref{prop:hybrid-rate} reduces even that to the decay
+of one scalar sequence: the box has width $\omega_k$, a bound
+$\omega_k\le C\rho^{k}$ with $\rho\le1-1/\mathrm{poly}(N)$ would put the
+problem in $\mathsf P$, and $\rho\to1$ is the only way the mechanism can
+fail. That decay is not round by round --- an explicit ten-vertex game
+leaves $\omega$ unchanged for a round --- and the collapse can take more
+rounds than the game has vertices. We can neither prove a bound nor
+exhibit a family approaching $1$, and \Cref{rem:hybrid-rate} records two
+constructions that the analysis predicted would be slow and that are not.
 
 \paragraph{The gap.} \Cref{def:missing} states it at full strength and
 \Cref{thm:gap-equivalence} proves it equivalent to a polynomial-time
