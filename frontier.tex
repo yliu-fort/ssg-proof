@@ -3946,6 +3946,117 @@ behaviour must come from a rule repeatedly failing to find the short
 path, not from its absence.
 \end{remark}
 
+\subsection{The objective of the strategy-space formulation is
+unstructured}\label{sec:submodular}
+
+By \Cref{thm:determinacy} the value is $\min_{\tau}\val^{\tau}(v_0)$ over
+positional Min strategies, where $\val^{\tau}$ --- the value when Min is frozen
+to $\tau$ and Max plays optimally --- is computable in polynomial time by
+\Cref{thm:one-player}, applied to the game in which each Min vertex is retyped
+as an average vertex with both edges to $\tau(v)$. So \Cref{prob:main} is the
+minimisation of a polynomial-time computable function over the cube
+$\{0,1\}^{\Vmin}$, and there is one general hammer for such a problem:
+a submodular function on $\{0,1\}^{k}$ is minimised in polynomial time.
+Submodularity is not invariant under flipping a coordinate, so the honest
+question is whether \emph{some} orientation makes
+$\tau\mapsto\val^{\tau}(v_0)$ submodular. None does, and the reason is that the
+objective already ranges over every read-once formula on deterministic games.
+
+\begin{lemma}[Read-once realisation]\label{lem:readonce}
+Let $F$ be built from the constants $0,1$ by the operations
+$\mathrm{OR}(A,B)$ and $\mathrm{MUX}_i(A,B)$, each index $i\in\{1,\dots,k\}$
+used at most once, and let $|F|$ be its number of operations. There is a
+stopping SSG $G_F$ with $\Vavg=\emptyset$, exactly $k$ Min vertices
+$m_1,\dots,m_k$, at most $|F|$ Max vertices, $|V(G_F)|=|F|+2$, and a vertex $r$
+with
+\[
+  \val^{\tau}(r)\;=\;F(\tau)\qquad\text{for every positional Min strategy }\tau,
+\]
+where $\tau_i=0$ means that $m_i$ takes its first successor and
+$\mathrm{MUX}_i(A,B)$ evaluates to $A$ if $\tau_i=0$ and to $B$ otherwise.
+\end{lemma}
+
+\begin{proof}
+Realise the parse tree: a constant by the corresponding sink, an
+$\mathrm{OR}$ node by a Max vertex whose two successors are its two arguments,
+and a $\mathrm{MUX}_i$ node by the Min vertex $m_i$ with the same two
+successors. The digraph is a tree oriented towards the sinks, hence acyclic, so
+no nonempty set can meet the condition of \Cref{lem:trapchar} and $G_F$ is
+stopping. Fixing $\tau$ deletes one out-edge at each Min vertex; in the
+resulting one-player game every value is $0$ or $1$, and the value at $u$ is $1$
+exactly when Max can reach $t_1$ from $u$. That reachability predicate satisfies
+$\mathrm{reach}(u)=\mathrm{reach}(a)\vee\mathrm{reach}(b)$ at a Max vertex
+$u\to(a,b)$ and $\mathrm{reach}(m_i)=\mathrm{reach}$ of the $\tau_i$-successor
+at a Min vertex, which is exactly the evaluation of $F$.
+\end{proof}
+
+\begin{proposition}[No orientation makes the objective
+submodular]\label{prop:no-submodular}
+Let $G$ be the stopping SSG on five vertices with
+$\Vmin=\{m_1,m_2,m_3\}$, $\Vmax=\Vavg=\emptyset$ and
+\[
+  m_1\to(m_2,t_0),\qquad m_2\to(m_3,t_0),\qquad m_3\to(t_1,t_0).
+\]
+Then $\val^{\tau}(m_1)=1$ if $\tau=(0,0,0)$ and $0$ otherwise, and for no
+$c\in\{0,1\}^{3}$ is $x\mapsto\val^{x\oplus c}(m_1)$ submodular. Dually, in the
+stopping game with $\Vmax=\{v_1,v_2,v_3\}$, $\Vmin=\Vavg=\emptyset$ and
+$v_1\to(v_2,t_1)$, $v_2\to(v_3,t_1)$, $v_3\to(t_0,t_1)$, one has
+$\val_{\sigma}(v_1)=1-[\sigma=(0,0,0)]$, and for no $c$ is
+$x\mapsto\val_{x\oplus c}(v_1)$ supermodular.
+\end{proposition}
+
+\begin{proof}
+For the first game, $\val^{\tau}(m_3)=[\tau_3=0]$,
+$\val^{\tau}(m_2)=[\tau_2=0]\,\val^{\tau}(m_3)$ and
+$\val^{\tau}(m_1)=[\tau_1=0]\,\val^{\tau}(m_2)$, which is
+\Cref{lem:readonce} for
+$F=\mathrm{MUX}_1(\mathrm{MUX}_2(\mathrm{MUX}_3(1,0),0),0)$.
+
+Now let $f$ be the indicator of a single point $p\in\{0,1\}^{3}$. Submodularity
+demands $f(x{+}e_i)+f(x{+}e_j)\ge f(x)+f(x{+}e_i{+}e_j)$ whenever
+$x_i=x_j=0$ and $i\ne j$. If $p$ has at least two coordinates equal to $1$, say
+$p_i=p_j=1$, take $x:=p-e_i-e_j$; then the left side is $0$ and the right side
+is $f(p)=1$. If $p$ has at most one coordinate equal to $1$, take $x:=p$ and
+$i,j$ any two coordinates outside the support of $p$, which exist because
+$3-|p|\ge2$; then again the left side is $0$ and the right side is $1$. So no
+indicator of a point of $\{0,1\}^{3}$ is submodular. Replacing $f$ by
+$x\mapsto f(x\oplus c)$ replaces $p$ by $p\oplus c$, so this covers every
+orientation.
+
+For the second game $\val_{\sigma}(v_3)=[\sigma_3=1]$,
+$\val_{\sigma}(v_2)=\max([\sigma_2=1],\val_\sigma(v_3))$ and
+$\val_{\sigma}(v_1)=\max([\sigma_1=1],\val_\sigma(v_2))$, so
+$\val_{\sigma}(v_1)=1-[\sigma=(0,0,0)]$; and $1-f$ is supermodular exactly when
+$f$ is submodular.
+\end{proof}
+
+\begin{remark}\label{rem:no-submodular}
+Three points.
+
+The failure is not a matter of degree, and codimension three is where it starts.
+The indicator of a codimension-$2$ subcube \emph{is} submodular, after flipping
+exactly one of its two relevant coordinates; we checked all four orientations in
+that case and all eight in the case above. Since \Cref{lem:readonce} realises
+every read-once formula, any property of the objective that some read-once
+formula lacks is unavailable, and submodularity-in-a-suitable-orientation is
+such a property.
+
+The witnesses are not hard instances: they have no average vertices and are
+solved by one reachability sweep. That is not a weakness of the refutation but
+its sharpest form. The hypothesis being refuted is a statement about
+\emph{every} input, so any input refutes it, and an input that no promise can
+exclude refutes it most economically. What survives is the requirement that a
+discrete-convexity argument read the game itself and not merely the values of
+the objective.
+
+The Max side is the dual and is closed with it. Maximising $\val_\sigma$ over
+$\{0,1\}^{\Vmax}$ is polynomial when $\val_\sigma$ is supermodular, and
+\Cref{prop:no-submodular} refutes that in every orientation too. These two
+formulations are the natural way to beat the $2^{|\Vmin|}$ and $2^{|\Vmax|}$
+enumerations that stand behind Hoffman--Karp iteration, and after
+\Cref{prop:no-submodular} neither is available.
+\end{remark}
+
 \section{The selection problem is the whole problem}\label{sec:selection}
 
 \Cref{thm:opt-subcube} makes the information needed to solve a stopping
