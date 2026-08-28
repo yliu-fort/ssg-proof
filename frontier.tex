@@ -2581,8 +2581,11 @@ That is, every bottom-antipodal trace of every AUSO satisfies
 \begin{proof}
 Acyclicity gives a linear extension $\varphi$ of the reachability order, strictly
 increasing along every oriented edge. On any face the $\varphi$-maximum has all
-the face's edges incoming, so it is that face's sink; dually the
-$\varphi$-minimum is its source. Let $F_t$ be the face through $\sigma_t$
+the face's edges incoming, so it is a sink of that face; dually the
+$\varphi$-minimum is a source. Both are unique: replacing $s$ by its
+coordinatewise complement reverses every edge and leaves
+$(s(u)\oplus s(v))\cap(u\oplus v)$ unchanged, so the reversed orientation is
+again a unique sink orientation, and its sinks are the original's sources. Let $F_t$ be the face through $\sigma_t$
 spanned by $S_t$ and $H_t$ the face spanned by the complementary directions. All
 edges at $\sigma_t$ inside $F_t$ point out, so $\sigma_t$ is the source of $F_t$;
 all edges at $\sigma_t$ inside $H_t$ point in, so $\sigma_t$ is the sink of
@@ -2615,8 +2618,9 @@ Degeneracy is common and was skipped, $1236$ instances of it.
 
 What \Cref{cor:f-auso} settles is the question \Cref{rem:allsw-laws} leaves
 open. It is known that $h^{\ast}(m)$ grows exponentially: Schurr and Szab\'o
-construct AUSOs $A_m$ with $h(A_m)\ge2^{\lfloor m/2\rfloor+1}-2$, by a blow-up
-raising the dimension by two and at least doubling the height. We have not
+construct a blow-up that raises the dimension by two and at least doubles the
+bottom-antipodal height, so iterating it from a two-dimensional seed of height
+$2$ gives $h^{\ast}(m)\ge2^{\lfloor m/2\rfloor}$. We have not
 reproved that here. It is the second and last external input in this document,
 after the classical determinacy statement of \Cref{thm:determinacy}, and unlike
 that one it is used only to close a programme of ours, never to support a
