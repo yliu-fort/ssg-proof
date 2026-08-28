@@ -106,9 +106,16 @@ iterating, are what the programme solves at a stroke. On a stopping game
 its every closed matrix pins the polytope to the value vector itself
 (\Cref{thm:hybrid-complete}), an argument that consults the programme
 only at the $4N$ pairs containing a sink (\Cref{cor:hybrid-sink}); it
-disposes of every stall recorded here in one round or two; and
-\Cref{prop:hybrid-rate} reduces what remains to a single contraction
-ratio, a bound on which would resolve the problem.
+disposes of every stall recorded here in one round or two. That last fact
+turns out to mean nothing: all those instances have a single controlled
+vertex, a class \Cref{prop:hybrid-onectrl} shows is decided at round two
+unconditionally, and \Cref{thm:hybrid-lower} exhibits a one-player family
+on $6L+m+5$ vertices, with two Max vertices wired crosswise so that each
+keeps the other's box open, on which the hybrid needs $2^{\Omega(N)}$
+rounds. The certificate is a shrinking chain of convex sets
+(\Cref{thm:hybrid-convex-barrier}), the correct generalisation of the box
+certificate of \Cref{thm:slack-barrier} --- which, as
+\Cref{rem:hybrid-barrier-lift} shows, does not itself lift.
 
 \emph{Barriers.} No potential of polynomial range
 (\Cref{thm:impedance}); no progress measure of polynomial height
@@ -5885,9 +5892,55 @@ Let $\Delta_k$ be as in \Cref{def:hybrid} and let a pair be
       \Cref{def:trans-slack}.
 \end{enumerate}
 All of these were computed in exact rational arithmetic, with soundness
-re-verified against the true values at every round, and the same counts
-were obtained by the sink-only variant of \Cref{cor:hybrid-sink}.
+re-verified against the true values at every round; on these particular
+instances the sink-only variant of \Cref{cor:hybrid-sink} returns the same
+counts, which \Cref{rem:hybrid-sink-slower} shows is not a general phenomenon.
+
+\Cref{prop:hybrid-onectrl} says how little this proposition means: every
+instance in it has exactly one controlled vertex.
 \end{proposition}
+
+\begin{proposition}[One controlled vertex is always exact at round two]\label{prop:hybrid-onectrl}
+Let $G$ be stopping with $|\Vmax|+|\Vmin|=1$. Then $K(\Delta_2)=\{\val\}$ and
+$\Delta_2(x,y)=\val(x)-\val(y)$ for all $x,y$.
+\end{proposition}
+
+\begin{proof}
+Take $\Vmax=\{v\}$, $\Vmin=\emptyset$; the other case reverses every
+inequality. Making $v$ and the sinks absorbing leaves an average chain, which
+is absorbing because $G$ is stopping, so every $z\in Q(G)$ has
+$z(x)=\theta_x t+\rho_x$ with $t:=z(v)$, $\theta_x$ the probability of reaching
+$v$ before a sink and $\rho_x$ that of reaching $t_1$ first. Both successors of
+$v$ have $\theta<1$: if $\theta_{v^{(i)}}=1$ then the positional strategy
+$\sigma(v)=v^{(i)}$ returns to $v$ almost surely without ever reaching a sink,
+contradicting stopping. The only rows of $Q(G)$ constraining $t$ from below are
+the two Max rows $t\ge\theta_{i}t+\rho_{i}$, so $Q(G)$ is the segment
+$[t_-,t_+]$ with $t_-=\max_i\rho_i/(1-\theta_i)$, and $t_-=\val(v)$ because
+that is the least fixed point of $t\mapsto\max_i(\theta_it+\rho_i)$
+(\Cref{thm:lfp-general}). Relabel so that $A$ attains the maximum, and put
+$\gamma:=\val(A)-\val(B)\ge0$. Since $\val\in K(\Delta_1)\subseteq Q(G)$, any
+linear function of $t$ with nonpositive slope attains its maximum over
+$K(\Delta_1)$ at $t=t_-$, that is at $\val$. If $\theta_A\le\theta_B$ then
+$\Delta_1(A,B)=\gamma$ exactly, so the $(\mathrm{up})$ clause at $v$ with
+$y=B$ gives $\Delta_2(v,B)\le\max(\gamma,0)=\gamma$, and the constraint
+$z(v)-z(B)\le\gamma$ reads $(1-\theta_B)t-\rho_B\le(1-\theta_B)t_--\rho_B$,
+i.e.\ $t\le t_-$. If $\theta_A>\theta_B$ then $\Delta_1(B,A)=-\gamma\le0$ and
+the $(\mathrm{up})$ clause at $v$ with $y=A$ gives
+$\Delta_2(v,A)\le\max(0,-\gamma)=0$, and $z(v)-z(A)\le0$ reads
+$(1-\theta_A)t\le\rho_A$, i.e.\ again $t\le t_-$. Either way
+$K(\Delta_2)=\{\val\}$, and \Cref{thm:hybrid-complete}'s last step applies.
+\end{proof}
+
+\begin{remark}\label{rem:hybrid-sink-slower}
+\Cref{cor:hybrid-sink} says the sink-only variant is \emph{complete}; it does
+not say it is as fast, and it is not. On $CC(1,2)$ of
+\Cref{thm:hybrid-lower} the full hybrid decides at round $3$ and the sink-only
+variant at round $5$; on the nine-vertex game $W$ of \Cref{rem:hybrid-rate} the
+full hybrid collapses the box at round $3$ and the sink-only variant at round
+$7$. The instances of \Cref{prop:hybrid-decides} do not separate them because,
+by \Cref{prop:hybrid-onectrl}, they are all decided at round two by anything
+that consults the programme at the sinks at all.
+\end{remark}
 
 \begin{proof}
 By computation from \Cref{def:hybrid}; the values of the instances are
@@ -5978,70 +6031,226 @@ $\val(x)-\val(y)\le-2^{-a}<-2\omega_k$.
 $k\log_2(1/\rho)>a+1+\log_2C$.
 \end{proof}
 
-\begin{remark}\label{rem:hybrid-rate}
-\Cref{prop:hybrid-rate} isolates the whole remaining question in a single
-scalar. A bound $\rho(G)\le1-1/\mathrm{poly}(N)$ holding uniformly over
-stopping SSGs would give a polynomial round count, hence by
-\Cref{thm:decide-one-bit} would put \textsc{SSG-Value} in $\mathsf P$; and the
-only way the mechanism can fail is $\rho\to1$. This is the same shape as the
-lower bound the calculus of \Cref{def:trans-slack} inherits from two-sided
-value iteration, with one difference that is the point of the hybrid: there the
-box is $T^{k}0\le\cdot\le T^{k}1$, which contracts at rate $1-2^{-a}$ and no
-faster (\Cref{thm:contraction} is attained, \Cref{rem:few-avg-tight}); here it
-is the box of a polytope whose average rows are \emph{equalities}, so the
-contraction is not tied to the mixing of the chain.
 
-The per-round reading of (c) is genuinely too strong, and one hill-climbed
-instance settles that. On the ten-vertex stopping game with $t_0=8$, $t_1=9$,
-$\Vmax=\{1,5,7\}$, $\Vavg=\{0,2,3,4,6\}$ and
+
+
+\begin{lemma}[The hybrid is a cutting-plane iteration]\label{lem:hybrid-cutting}
+For a nonempty compact $P\subseteq\mathcal X$ put
+$\Lambda(P)(x,y):=\max_{z\in P}(z(x)-z(y))$. Then $\Lambda(P)$ satisfies the
+triangle inequality, and $\Lambda(K(M))\le M$ pointwise for every sound $M$.
+Consequently, in \Cref{def:hybrid} both the outer minimum with $\Delta'_k$ and
+the outer min-plus closure are redundant, and writing $Q^H_k:=K(\Delta'_k)$ one
+has $\Delta_k=\Lambda(Q^H_k)$ for every $k\ge1$, with
 \[
-  0\to(t_0,3),\ 1\to(3,2),\ 2\to(5,0),\ 3\to(4,6),\ 4\to(5,1),\
-  5\to(4,0),\ 6\to(t_1,t_0),\ 7\to(5,4),
+  Q^H_{k+1}\;=\;K\bigl(\min\bigl(\Lambda(Q^H_k),\,
+  \mathcal L\Lambda(Q^H_k)\bigr)\bigr).
 \]
-one has $\val=(\tfrac14,\tfrac12,\tfrac38,\tfrac12,\tfrac12,\tfrac12,
-\tfrac12,\tfrac12)$ and the widths run
-$\tfrac12,\tfrac12,\tfrac1{16},0$: the second round leaves $\omega$ exactly
-unchanged before the third collapses it. So no per-round contraction factor
-below $1$ exists in general, and only the behaviour of the sequence is
-meaningful. Two further hill-climbed instances show the round count is not
-bounded by $N$ either: on ten vertices we found games whose box collapses only
-at round $17$ and at round $25$, the latter having every non-sink value equal
-to $\tfrac12$, so that the difficulty is entirely in the ties.
+\end{lemma}
 
-Even so, on every instance we have measured the collapse is fast in the sense
-that matters. The slowest \emph{decision} we could reach by
-hill climbing is on the nine-vertex stopping game $W$ on
-$\{0,\dots,6\}$ with $t_0=7$, $t_1=8$, where $1\in\Vmin$, $5\in\Vmax$ and
-$0,2,3,4,6\in\Vavg$, and
+\begin{proof}
+For $z\in P$ attaining $\Lambda(P)(x,w)$ one has
+$z(x)-z(w)=(z(x)-z(y))+(z(y)-z(w))\le\Lambda(P)(x,y)+\Lambda(P)(y,w)$, which is
+the triangle inequality. Every $z\in K(M)$ obeys $z(x)-z(y)\le M(x,y)$ by
+definition, so $\Lambda(K(M))\le M$. The two redundancies follow: the transport
+step already returns something $\le\Delta'_k$, and its output is a $\Lambda$,
+hence already min-plus closed.
+\end{proof}
+
+\begin{theorem}[Convex certificates bound the hybrid from below]\label{thm:hybrid-convex-barrier}
+Let $G$ be an SSG and let $P_0\supseteq P_1\supseteq\cdots$ be nonempty compact
+convex subsets of $Q(G)$ such that for every $k$ each clause of
+\Cref{def:slack}, evaluated at the matrix $\Lambda(P_k)$, is at least
+$\Lambda(P_{k+1})$ entrywise. Then $\Delta_k\ge\Lambda(P_k)$ for every $k$. In
+particular the hybrid decides no pair $(x,y)$ with $\Lambda(P_k)(x,y)\ge0$ at
+any round $\le k$.
+\end{theorem}
+
+\begin{proof}
+Induction. For $k=0$, $P_0\subseteq\mathcal X$ gives $\Lambda(P_0)\le1=\Delta_0$.
+Suppose $\Delta_k\ge\Lambda(P_k)$. The clauses of \Cref{def:slack} are monotone
+in the matrix, so $\mathcal L\Delta_k\ge\mathcal L\Lambda(P_k)\ge\Lambda(P_{k+1})$
+by hypothesis, and $\Delta_k\ge\Lambda(P_k)\ge\Lambda(P_{k+1})$ by nesting;
+hence $\min(\Delta_k,\mathcal L\Delta_k)\ge\Lambda(P_{k+1})$. Since
+$\Lambda(P_{k+1})$ satisfies the triangle inequality
+(\Cref{lem:hybrid-cutting}), the min-plus closure cannot fall below it, so
+$\Delta'_k\ge\Lambda(P_{k+1})$. Finally every $z\in P_{k+1}$ lies in $Q(G)$ and
+satisfies $z(x)-z(y)\le\Lambda(P_{k+1})(x,y)\le\Delta'_k(x,y)$, so
+$P_{k+1}\subseteq K(\Delta'_k)$ and therefore
+$\mathcal P(\Delta'_k)=\Lambda(K(\Delta'_k))\ge\Lambda(P_{k+1})$. Taking the
+minimum and closing again preserves the bound.
+\end{proof}
+
+\begin{remark}\label{rem:hybrid-barrier-lift}
+\Cref{thm:slack-barrier} and \Cref{thm:seeded-barrier} do \emph{not} lift to the
+hybrid, and $H_m$ shows it: there $A=\{h\}$ and $B=\{c_1,\dots,c_{2m}\}$ satisfy
+every hypothesis of \Cref{thm:slack-barrier}, yet
+$\Delta_1(h,c_1)=-2^{-(m+1)}<0$ by \Cref{prop:hybrid-decides}(b), while
+$u_k(h)-l_k(c_1)>0$ for every $k<\ln2\cdot2^{m-2}$. The reason is
+\Cref{lem:transport-exact}: an all-average part closed under non-sink successors
+is pinned by the programme at once, so the box certificate
+$\{l_k\le z\le u_k\}$ is far too weak to bound the hybrid.
+\Cref{thm:hybrid-convex-barrier} is the correct generalisation --- the box is
+replaced by an arbitrary shrinking chain of convex certificates --- and it is
+what the next theorem uses.
+\end{remark}
+
+\begin{theorem}[The hybrid needs exponentially many rounds]\label{thm:hybrid-lower}
+For $L\ge1$ and $m\ge2$ let $CC(L,m)$ be the SSG with
+$\Vmax=\{v_1,v_2\}$, $\Vmin=\emptyset$ and average vertices: one vertex
+$e\to(t_1,t_0)$; a chain $d_1,\dots,d_m$ with $d_1\to(t_0,d_2)$,
+$d_j\to(t_1,d_{j+1})$ for $2\le j\le m-1$ and $d_m\to(t_1,t_0)$; and four chains
+$\mathrm{ch}(l,b,z)$ consisting of $p_1,\dots,p_l$ with $p_j\to(b,p_{j+1})$ for
+$j<l$ and $p_l\to(b,z)$, namely
+\[
+  A_1=\mathrm{ch}(L,v_2,e),\quad B_1=\mathrm{ch}(2L,v_1,d_1),\quad
+  A_2=\mathrm{ch}(L,v_1,e),\quad B_2=\mathrm{ch}(2L,v_2,d_1),
+\]
+with $v_1\to(A_1,B_1)$ and $v_2\to(A_2,B_2)$, where a chain name used as a
+successor means its first vertex. Then $CC(L,m)$ is a stopping one-player SSG
+with $N=6L+m+5$,
+\[
+  \val(v_i)=\val(A_i)=\tfrac12,\qquad
+  \val(B_i)=\tfrac12-\gamma\ \ (\gamma:=2^{-2L-m}),\qquad
+  \val(d_1)=\tfrac12-2^{-m},
+\]
+so both Max vertices are value-distinguishing and both must move to the
+\emph{cross} chain. Put $u:=2^{-L}$, $\lambda:=1-u$, $M_0:=\tfrac12$ and
+$M_{k+1}:=\lambda M_k-\gamma/u$, and let $P_k$ be the image of
+\[
+  \Xi_k:=\{\xi\in[0,M_k]^2:\ \xi_1\ge\lambda\xi_2,\ \xi_2\ge\lambda\xi_1\}
+\]
+under $\xi\mapsto\val+\bigl(x\mapsto\langle\theta_x,\xi\rangle\bigr)$, where
+$z(x)=\langle\theta_x,(z(v_1),z(v_2))\rangle+\rho_x$ is the affine form of
+$Q(CC(L,m))$. Then $(P_k)$ satisfies the hypotheses of
+\Cref{thm:hybrid-convex-barrier}, and
+$\Lambda(P_k)(B_i,A_i)=-\gamma+2u(1-u)M_k$. Consequently the hybrid decides
+neither controlled vertex at any round $k$ with
+$M_k>\gamma/\bigl(2u(1-u)\bigr)$, and since
+$M_k=\lambda^{k}(\tfrac12+2^{-m})-2^{-m}$ this holds for all
+\[
+  k\;<\;\frac{(m-\log_23)\ln2}{\ln(1/\lambda)},
+  \qquad \ln(1/\lambda)\le\frac1{2^{L}-1},
+\]
+so for fixed $m$ the number of rounds is $2^{\Omega(N)}$.
+\end{theorem}
+
+\begin{proof}
+Stopping and one-player are immediate: every out-edge leaves a chain towards a
+sink or towards $v_1,v_2$, and each chain ends in a sink or in $d_1$, whose own
+chain ends in the sinks; so no set closed as in \Cref{lem:trapchar} avoids the
+sinks. For the values, put $X:=\val(v_1)$, $Y:=\val(v_2)$. Along
+$\mathrm{ch}(l,b,z)$ the token leaves to $b$ at each of the $l$ steps with
+probability $\tfrac12$, so the first vertex has value
+$(1-2^{-l})\val(b)+2^{-l}\val(z)$. With $\val(e)=\tfrac12$ and
+$\val(d_1)=\tfrac12-2^{-m}$ --- the latter because $\val(d_j)=1-2^{-(m-j+1)}$
+for $j\ge2$ by backward induction and $\val(d_1)=\tfrac12\val(d_2)$ --- this
+gives $\val(A_1)=(1-2^{-L})Y+2^{-L}\tfrac12$ and
+$\val(B_1)=(1-2^{-2L})X+2^{-2L}(\tfrac12-2^{-m})$, and symmetrically. Setting
+$X=Y=\tfrac12$ satisfies $X=\max(\val(A_1),\val(B_1))$ since then
+$\val(A_1)=\tfrac12$ and $\val(B_1)=\tfrac12-\gamma$; uniqueness is
+\Cref{thm:contraction}.
+
+The affine form is the one used in \Cref{prop:hybrid-onectrl}, now with two
+parameters: making $v_1,v_2$ and the sinks absorbing leaves an absorbing average
+system, so $z(x)=\langle\theta_x,s\rangle+\rho_x$ with $s=(z(v_1),z(v_2))$,
+$\theta_{A_1}=(0,\lambda)$, $\theta_{B_1}=(\beta,0)$, $\theta_{A_2}=(\lambda,0)$,
+$\theta_{B_2}=(0,\beta)$ for $\beta:=1-2^{-2L}$, and every $\theta_x$ of the form
+$(0,0)$, $(a,0)$ or $(0,a)$ with $a\in\{1-2^{-i}:1\le i\le2L\}\cup\{1\}$. The
+support function of $\Xi_k$ is
+$h_k(c)=M_k\max\{0,c_1+\lambda c_2,c_1+c_2,\lambda c_1+c_2\}$, so
+$\Lambda(P_k)(x,y)=\val(x)-\val(y)+h_k(\theta_x-\theta_y)$.
+
+That $P_k\subseteq Q(CC(L,m))$ is a finite check on the four vertices of $\Xi_k$:
+the Max rows read $\xi_1\ge\lambda\xi_2$, which defines the cone, and
+$(1-\beta)\xi_1\ge-\gamma$, which is vacuous; the box rows hold because a vertex
+with $\theta_x=0$ has $z(x)=\val(x)$, and one with $\theta_x\ne0$ has
+$\val(x)\le\tfrac12$ and $0\le\langle\theta_x,\xi\rangle\le M_k\le\tfrac12$. For
+the clause condition, the base clauses hold because $P_k\subseteq\mathcal X$;
+at an average vertex $\theta_x$ and $\val(x)$ are both the mean over the two
+successors, so sublinearity of $h_k$ makes the $(\mathrm{up})$, $(\mathrm{down})$
+and average composites automatic; and at $v_1$ the $(\mathrm{up})$ clause
+requires $\max\bigl(h_k(\theta_{A_1}-\theta_y),\,h_k(\theta_{B_1}-\theta_y)-\gamma\bigr)
+\ge h_{k+1}(e_1-\theta_y)$ for every $y$, whose binding case is $y=v_2$ and reads
+exactly $M_{k+1}\le\lambda M_k-\gamma/u$. The $(\mathrm{down})$ clause and the
+four same-kind pairs among $v_1,v_2$ are checked the same way; at $(v_1,v_2)$
+both composites are at least $u(1-u)M_k-\gamma$, which is $uM_{k+1}$, and
+$\Lambda(P_{k+1})(v_1,v_2)=uM_{k+1}$ exactly.
+
+Finally $\theta_{B_1}-\theta_{A_1}=(\beta,-\lambda)$ gives
+$h_k(\beta,-\lambda)=(\beta-\lambda^2)M_k=2u(1-u)M_k$, so
+$\Lambda(P_k)(B_1,A_1)=-\gamma+2u(1-u)M_k$, which is nonnegative exactly while
+$M_k\ge\gamma/(2u(1-u))=2^{-L-m-1}/\lambda$. Solving
+$\lambda^{k}(\tfrac12+2^{-m})-2^{-m}>2^{-L-m-1}/\lambda$ and using
+$\lambda\ge\tfrac12$ gives the displayed range, and
+$\ln(1/\lambda)=-\ln(1-2^{-L})\le1/(2^{L}-1)$.
+\end{proof}
+
+\begin{remark}\label{rem:hybrid-lower-verified}
+We verified the certificate itself, clause by clause and in exact rational
+arithmetic: for each $k$, that every vertex of $P_k$ lies in $Q(CC(L,m))$, that
+$P_{k+1}\subseteq P_k$, and that the minimum over all clauses of
+\Cref{def:slack} evaluated at $\Lambda(P_k)$ dominates $\Lambda(P_{k+1})$ at all
+$N^{2}$ pairs. There was no failure, and the guaranteed-undecided round counts
+are
+\[
+  \begin{array}{l|ccccc}
+    L & 1 & 2 & 3 & 4 & 5\\\hline
+    m=2\ (N=13,19,25,31,37) & 1 & 3 & 8 & 17 & 34\\
+    m=4\ (N=15,21,27,33,39) & 3 & 7 & 16 & 34 & 69
+  \end{array}
+\]
+--- doubling with every unit increase of $L$, that is with every six extra
+vertices. Running the hybrid itself on $CC(1,2)$ decides at round $3$, against
+the certificate's guarantee of $1$.
+\end{remark}
+
+\begin{remark}\label{rem:hybrid-rate}
+\Cref{prop:hybrid-rate} isolates the remaining question in the decay of one
+scalar sequence, and \Cref{thm:hybrid-lower} answers it: on $CC(L,m)$ the box
+contracts by the factor $\lambda=1-2^{-L}$ per round, so $\rho\to1$ and the
+hybrid is not polynomial. The mechanism is therefore refuted, in the only way a
+mechanism of this shape can be: not by a permanent stall, which
+\Cref{thm:hybrid-complete} forbids on a stopping game, but by a rate.
+
+Two things are worth separating out. First, why the earlier evidence pointed the
+other way. Every instance on which this document could measure the hybrid before
+$CC$ --- $G_8$, $H_m$, $S$ and the whole family $S_r$ --- has exactly one
+controlled vertex, and \Cref{prop:hybrid-onectrl} shows that class is decided at
+round two unconditionally. The nine-vertex game $W$ on $\{0,\dots,6\}$ with
+$t_0=7$, $t_1=8$, $1\in\Vmin$, $5\in\Vmax$, the rest average and
 \[
   0\to(t_0,2),\quad 1\to(3,2),\quad 2\to(5,3),\quad 3\to(4,6),\quad
-  4\to(5,1),\quad 5\to(4,0),\quad 6\to(t_1,t_0).
+  4\to(5,1),\quad 5\to(4,0),\quad 6\to(t_1,t_0)
 \]
-There $\val=(\tfrac14,\tfrac12,\tfrac12,\tfrac12,\tfrac12,\tfrac12,\tfrac12)$,
-the only value-distinguishing controlled vertex is $5$, the widths $\omega_k$
-run $\tfrac{10}{11},\tfrac{43}{66},\tfrac{365}{792},\tfrac7{44},
-\tfrac{21}{176},\tfrac7{88},0$, the box collapses only at round $7$ --- again
-more rounds than the game has vertices --- and the vertex is decided at round
-$4$. Two features of $W$ are what the analysis predicts: the Min vertex is what
-stops the box being pinned from below, as it is on $S_r$, where
-$\val(v)\ge\val(a)=\tfrac12$ pins $L$ at once and is the whole reason that
-family collapses in two rounds; and the controlled vertices lie on a cycle
-carrying average vertices, which is what \Cref{lem:transport-exact} cannot
-resolve.
+was the slowest instance a hill climb over small games produced; it has
+$\val=(\tfrac14,\tfrac12,\tfrac12,\tfrac12,\tfrac12,\tfrac12,\tfrac12)$ and its
+box collapses at round $3$, with widths $\tfrac{10}{11},\tfrac15,0$. Random and
+hill-climbed search over games this size never exceeded three rounds. As
+everywhere else in this document, the hard instance had to be engineered.
 
-We record two failed attempts to turn this into a family, since both were
-predicted to work by the analysis above and neither does. Lengthening the
-cycle joining a Max vertex to a Min vertex, with each chain leaking back into
-the cycle and a single sink escape, so that the return probability is
-$1-2^{-\Theta(k)}$ --- the shape of \Cref{thm:impedance} --- gives a family
+Second, what $CC$ needs that $W$ and $S_r$ do not have. On $S_r$ the single Max
+vertex has a successor of \emph{pinned} value, $\val(v)\ge\val(a)=\tfrac12$,
+which fixes the lower end of the box at round one; that is the whole reason the
+family collapses in two rounds. $CC$ removes every such pin by making each Max
+vertex compare two chains that both return to the controlled pair, and it uses
+\emph{two} Max vertices wired crosswise, so that the uncertainty at $v_1$ is
+resupplied by $v_2$ and conversely. The cone $\xi_1\ge\lambda\xi_2$,
+$\xi_2\ge\lambda\xi_1$ of \Cref{thm:hybrid-lower} is exactly that mutual
+resupply, and $\lambda=1-2^{-L}$ is the probability of returning to the other
+Max vertex rather than escaping down a chain. One Max vertex cannot do this:
+by \Cref{prop:hybrid-onectrl} there is nothing to resupply it.
+
+The same reading explains two constructions we tried first and which fail.
+Lengthening a single cycle joining a Max vertex to a Min vertex, with each chain
+leaking back into the cycle and one sink escape, so that the return probability
+is $1-2^{-\Theta(k)}$ --- the shape of \Cref{thm:impedance} --- gives a family
 whose values are $\tfrac13$ and $\tfrac23$ for every $k$ and whose box
-collapses at round $2$ for every $k$; the linear programme solves the whole
-cycle at a stroke, because it is linear once the two choices are read as
-inequalities. Having the Max vertex compare two such cycles instead of a cycle
-against an anchor slows the collapse to $k+1$ rounds but leaves the first
-decision at round $2$. A family on which the round count grows
-superpolynomially, and a proof that none exists, are both open, and we claim
-neither.
+collapses at round $2$ for every $k$: the programme solves the whole cycle at a
+stroke, because it is linear once the two choices are read as inequalities.
+Having a Max vertex compare two such cycles slows the collapse to $k+1$ rounds
+but leaves the first decision at round $2$. What is needed is not a long cycle
+but a \emph{pair} of controlled vertices each of which keeps the other's box
+open, and that is what $CC$ supplies.
 \end{remark}
 
 
@@ -6189,11 +6398,18 @@ left is a rate, and \Cref{prop:hybrid-rate} reduces even that to the decay
 of one scalar sequence: the box has width $\omega_k$, a bound
 $\omega_k\le C\rho^{k}$ with $\rho\le1-1/\mathrm{poly}(N)$ would put the
 problem in $\mathsf P$, and $\rho\to1$ is the only way the mechanism can
-fail. That decay is not round by round --- an explicit ten-vertex game
-leaves $\omega$ unchanged for a round --- and the collapse can take more
-rounds than the game has vertices. We can neither prove a bound nor
-exhibit a family approaching $1$, and \Cref{rem:hybrid-rate} records two
-constructions that the analysis predicted would be slow and that are not.
+fail. It does fail that way. The evidence that it did not was an artefact
+of the sample: every instance in this document on which the hybrid could
+be measured has one controlled vertex, and
+\Cref{prop:hybrid-onectrl} shows that class is decided at round two for
+free. \Cref{thm:hybrid-lower} gives a one-player family with two Max
+vertices wired crosswise, each keeping the other's box open, on which
+$\rho=1-2^{-L}$ and the hybrid needs $2^{\Omega(N)}$ rounds; the lower
+bound comes from \Cref{thm:hybrid-convex-barrier}, which replaces the box
+certificate of \Cref{thm:slack-barrier} --- itself provably too weak here
+(\Cref{rem:hybrid-barrier-lift}) --- by a shrinking chain of convex sets.
+So the strongest mechanism in this document is exponential too, and it
+fails for a reason no earlier barrier covers.
 
 \paragraph{The gap.} \Cref{def:missing} states it at full strength and
 \Cref{thm:gap-equivalence} proves it equivalent to a polynomial-time
