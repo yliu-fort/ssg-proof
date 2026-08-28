@@ -6852,6 +6852,135 @@ engineered.
 \end{remark}
 
 
+\subsection{The own-successor rule, and a wedge that defeats it}\label{sec:wedge}
+
+\Cref{rem:own-successor} says a decision rule should compare a controlled vertex
+with its own successor, and \Cref{rem:hybrid-lower-not-a-refutation} says a
+refutation of the hybrid must drive \emph{those} entries to $0$ rather than the
+entries between the two successors. This subsection carries that out. First the
+entries in question are identified exactly, which turns the demand into a
+geometric one; then a family is exhibited that meets it.
+
+\begin{lemma}[The own-successor entries are support values]\label{lem:wedge-face}
+Let $G$ be stopping, let $R_k:=K(\Delta'_{k-1})$ be the polytope round $k$
+optimises over, and for $v\in C$ and $i\in\{0,1\}$ let
+\[
+  g_{v,i}(z):=\begin{cases} z(v)-z(v^{(i)}) & v\in\Vmax,\\
+                            z(v^{(i)})-z(v) & v\in\Vmin,\end{cases}
+\]
+the controlled rows of \Cref{def:transport} read as nonnegative functionals.
+Then for $k\ge1$
+\[
+  \Delta_k\bigl(v,v^{(i)}\bigr)=\max_{R_k}g_{v,i}\ \ge 0,
+  \qquad
+  \Delta_k\bigl(v^{(i)},v\bigr)=-\min_{R_k}g_{v,i}\ \le 0
+\]
+at $v\in\Vmax$, with the two exchanged at $v\in\Vmin$. Hence the own-successor
+test fires at $v$ at round $k$ if and only if, for some $i$, either
+$g_{v,i}\equiv0$ on $R_k$ or $\min_{R_k}g_{v,i}>0$.
+\end{lemma}
+
+\begin{proof}
+$\Delta_k=\Lambda(R_k)$ by \Cref{lem:hybrid-cutting}, and
+$\Lambda(R_k)(x,y)=\max_{R_k}(z(x)-z(y))$ by definition; the two displays are
+that identity at $(v,v^{(i)})$ and at $(v^{(i)},v)$. The signs are the
+controlled rows of $Q(G)$, which every $z\in R_k\subseteq Q(G)$ satisfies.
+Clause (i) of \Cref{rem:own-successor} asks $\Delta_k(v,v^{(i)})\le0$, i.e.\
+$\max_{R_k}g_{v,i}\le0$, which with $g_{v,i}\ge0$ means $g_{v,i}\equiv0$;
+clause (ii) asks $\Delta_k(v^{(i)},v)<0$, i.e.\ $\min_{R_k}g_{v,i}>0$.
+\end{proof}
+
+\begin{corollary}[What a certificate must do]\label{cor:wedge-cert}
+Let $(P_k)$ be a chain as in \Cref{thm:hybrid-convex-barrier}. If for every
+$k\le K$, every $v\in C$ and both $i$,
+\[
+  \min_{P_k}g_{v,i}=0\qquad\text{and}\qquad\max_{P_k}g_{v,i}>0,
+\]
+then the own-successor rule fires at no controlled vertex at any round $\le K$.
+Equivalently, each of the $2|C|$ hyperplanes $\{g_{v,i}=0\}$ must \emph{support}
+$P_k$ and \emph{touch} it without containing it.
+\end{corollary}
+
+\begin{proof}
+\Cref{thm:hybrid-convex-barrier} gives $\Delta_k\ge\Lambda(P_k)$, so
+$\Delta_k(v,v^{(i)})\ge\max_{P_k}g_{v,i}>0$ and
+$\Delta_k(v^{(i)},v)\ge-\min_{P_k}g_{v,i}=0$; neither clause of
+\Cref{rem:own-successor} fires.
+\end{proof}
+
+This is a strictly stronger demand than the one \Cref{thm:hybrid-lower} meets.
+There the certificate controls one functional per Max vertex, and only its sign;
+here it must control $2|C|$ \emph{prescribed} directions, two-sidedly, with
+equality on the min side. The family below meets it by placing the entanglement
+on the \emph{non-optimal} branch, which is exactly what $CC$ does not do.
+
+\begin{definition}[The wedge family]\label{def:wedge}
+For $e\ge1$, $j\ge2$, $m\ge j+1$ put $\varepsilon=2^{-e}$, $\delta=2^{-j}$,
+$\gamma=2^{-m}$. Let $WD(e,j,m)$ have $\Vmax=\{v_1,v_2\}$, $\Vmin=\emptyset$,
+every other non-sink average, and
+\[
+ \begin{aligned}
+  &H\to(t_1,t_0);\qquad
+   w_1\to(t_0,w_2),\quad w_q\to(t_1,w_{q+1})\ (2\le q<L),\quad w_L\to(t_1,t_0),
+   \ \ L=m-j;\\
+  &a_{i,q}\to(v_i,a_{i,q+1})\ (q<e),\qquad a_{i,e}\to(v_i,H);\\
+  &b_i\to(v_i,c_{i,1}),\qquad
+   c_{i,q}\to(v_{3-i},c_{i,q+1})\ (q<j-1),\qquad c_{i,j-1}\to(v_{3-i},w_1);\\
+  &v_i\to(a_{i,1},b_i).
+ \end{aligned}
+\]
+Then $N=2e+j+m+5$, the game is stopping and one-player,
+$\val(w_1)=\tfrac12-2^{j-m}$, $\val(v_i)=\val(a_{i,1})=\tfrac12$ and
+$\val(b_i)=\tfrac12-\gamma$, so both Max vertices are value-distinguishing with
+gap $\gamma$ and $a_{i,1}$ is the optimal successor.
+\end{definition}
+
+\begin{proposition}[The wedge defeats the own-successor rule]\label{prop:wedge}
+On $WD(2j,j,j+4)$, which has $N=6j+9$, the own-successor test of
+\Cref{rem:own-successor} --- seeded with the free $Z_0,Z_1$ bounds, read in
+\emph{both} directions, at \emph{every} controlled vertex --- first fires at
+round
+\[
+  4,\ 8,\ 17,\ 35,\ 70,\ 140 \qquad\text{for } j=2,\dots,7,\quad
+  N=21,\ 27,\ 33,\ 39,\ 45,\ 51,
+\]
+so the first firing round doubles with every six additional vertices. The weaker
+pair test does not fire earlier: on $WD(4,2,6)$ it also first fires at round
+$4$, with $\Delta_k(b_1,a_{1,1})=\tfrac7{512},\tfrac5{1024},\tfrac1{2048},
+-\tfrac7{512}$.
+\end{proposition}
+
+\begin{remark}\label{rem:wedge}
+The mechanism is the wedge. In the coordinates $\xi=z|_C-\val|_C$ the polytope
+$Q(WD)-\val$ is
+$\{\xi\in[0,\tfrac12]^2:\lambda\xi_1-2\gamma\le\xi_2\le(\xi_1+2\gamma)/\lambda\}$
+with $\lambda=1-2^{1-j}$, a thin wedge with apex at the origin; the two
+hyperplanes $\{g_{v_i,\bar i}=0\}$ support it at the apex and touch it there
+without containing it, which is exactly \Cref{cor:wedge-cert}, and each round
+shrinks the wedge by the factor $\lambda$ only. The chain $P_k$ obtained by
+intersecting with $[0,M_k]^2$, $M_0=\tfrac12$ and
+$M_{k+1}=\lambda M_k-2\gamma$, satisfies the clause condition of
+\Cref{thm:hybrid-convex-barrier} at every parameter we tested --- all
+$(e,j,m)\in\{(4,2,6),(6,2,6),(7,3,7),(7,3,10),(8,4,8),(8,4,12),(9,5,9)\}$
+together with $(2j,j,j+4)$ for $2\le j\le8$, checked at all $N^2$ pairs and
+every round --- and certifies $K-1$ silent rounds with
+$K-1\ge(m-j-1)\ln2\,(2^{j-1}-1)-2$, two rounds short of the measured value
+throughout. We have \emph{not} proved the clause condition for all parameters,
+so we state \Cref{prop:wedge} as a measurement, verified in exact rational
+arithmetic, and not the asymptotic bound it points to.
+
+The scope is narrower than it first appears, and this is the important
+qualification. $WD$ is one-player, so by \Cref{thm:seed-dichotomy} the seeded
+calculus \Cref{def:seeded} decides both Max vertices at slack round zero: the
+family defeats \Cref{def:simorder}, \Cref{def:slack}, \Cref{def:trans-slack},
+\Cref{def:transport} and the hybrid of \Cref{sec:hybrid}, but not
+\Cref{sec:seeded}. What would be needed to defeat that as well is a two-player
+wedge, and \Cref{thm:seed-dichotomy} says any such instance is a stopping game
+on which switch-all improvement has not converged --- the same pivot that
+\Cref{cor:f-auso} and \Cref{prop:auso-size} leave open.
+\end{remark}
+
+
 \section{Summary}\label{sec:summary}
 
 \paragraph{Foundations, proved from first principles.} The monotone
