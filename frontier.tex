@@ -131,10 +131,18 @@ and no better bound obtainable from the value grid
 only flippable one (\Cref{prop:serialiser}); and no rule whose advantage
 comes from resolving the deterministic part of the game, since a
 value-preserving and irreducible normalisation deletes exactly that
-structure (\Cref{thm:normalform-barrier}). For the all-switches rule
+structure (\Cref{thm:normalform-barrier}); and no submodular
+minimisation argument, in any orientation of either strategy cube
+(\Cref{prop:no-submodular}). For the all-switches rule
 itself we prove three monotonicity laws and an unconditional bound in
 terms of the cycle structure of $\Vmax$
-(\Cref{thm:peak-law,cor:law-b,cor:antichain,thm:component-bound}).
+(\Cref{thm:peak-law,cor:law-b,cor:antichain,thm:component-bound}), and we
+locate the exact ceiling those laws impose: it is $1,2,4,7,13$ for
+$m\le5$, while the largest bottom-antipodal height of an acyclic unique sink
+orientation --- which every all-switches run of a nondegenerate stopping game
+is --- is $1,2,4,7,12$
+(\Cref{prop:auso-census,prop:hstar-five}), so the laws are strictly weaker than
+the axioms they come from.
 
 We emphasise at the outset what this document does \emph{not} contain: it
 does not contain a polynomial-time algorithm for \textsc{SSG-Value}, and
@@ -2815,6 +2823,18 @@ performs, so there are further laws to be had, and the honest ceiling for a
 law-based argument is $h^{\ast}$ and not $f$. Whether $h^{\ast}$ itself is
 attained by improvement orientations of stopping games is the realisability
 question of \Cref{prop:auso-size}, and is untouched by this.
+
+One byproduct. The Schurr--Szab\'o blow-up cited in \Cref{rem:f-auso} raises the
+dimension by two and at least doubles the bottom-antipodal height, so any exact
+value of $h^{\ast}$ is a seed for it. Seeding at $m=4$ and at $m=5$ instead of at
+$m=2$ improves the constant in the exponential lower bound of \Cref{rem:f-auso}
+from $h^{\ast}(m)\ge2^{\lfloor m/2\rfloor}$ to
+\[
+  h^{\ast}(m)\;\ge\;\tfrac74\,2^{m/2}\quad(m\ \text{even},\ m\ge4),
+  \qquad
+  h^{\ast}(m)\;\ge\;3\cdot2^{(m-1)/2}\quad(m\ \text{odd},\ m\ge5),
+\]
+a factor $7/4$ and $3$ respectively over what the two-dimensional seed gives.
 \end{remark}
 
 \subsection{A rule that needs exponentially many switches}
@@ -7353,7 +7373,11 @@ which leaves no redex for a preprocessing step to recognise, so no rule
 of that kind runs in polynomially many rounds unless all-switches already
 does (\Cref{thm:normalform-barrier}); the level above it, which frees one
 average vertex, escapes and is a sound improving rule that is not a
-switching rule at all (\Cref{prop:freeze-escapes}).
+switching rule at all (\Cref{prop:freeze-escapes}). Finally, the one general
+hammer for minimising a polynomial-time computable function over a strategy
+cube is submodularity, and the objective here is not submodular under any
+orientation of either cube, on a five-vertex witness
+(\Cref{lem:readonce,prop:no-submodular}).
 
 \paragraph{Mechanisms, and where they stop.} Three sound polynomial-time
 comparison mechanisms are developed and measured against one yardstick.
