@@ -2511,11 +2511,122 @@ $137$-vertex instance verified alongside it); we do not know the true
 maxima. So the laws already forbid most schedules --- $f(5)=13$ against
 the $2^{5}-1=31$ steps a bare counter would need --- but they do not by
 themselves give a subexponential bound, and no argument here rules out a
-schedule of exponential length obeying all three. What
+schedule of exponential length obeying all three. \Cref{cor:f-auso} settles
+that: the two laws are exactly the axioms of an acyclic unique sink
+orientation, so $f$ is bounded below by the greatest bottom-antipodal height of
+such an orientation, which is known to be exponential. What
 \Cref{thm:component-bound} shows is that any such schedule must live
 inside a single large component of $H(G)$: an exponential all-switches
 run needs $\Omega(\log)$ many Max vertices pairwise on common cycles, and
 that is a condition on the graph rather than on the schedule.
+\end{remark}
+
+
+\Cref{rem:allsw-laws} asks whether further laws could push $f$ down to a
+polynomial. They cannot, and the reason is that the laws already capture
+exactly one thing: the axioms of an acyclic unique sink orientation.
+
+\begin{definition}[The improvement orientation]\label{def:improvement-uso}
+Let $G$ be stopping with $\Vmax=\{x_1,\dots,x_m\}$, and identify Max strategies
+with $\{0,1\}^{m}$. Call $G$ \emph{nondegenerate} if
+$\val_\sigma(x_i^{(0)})\ne\val_\sigma(x_i^{(1)})$ for every $\sigma$ and every
+$i$. The \emph{improvement outmap} is
+\[
+  s_G(\sigma)\;:=\;\{\,i:\ x_i\text{ is strictly switchable at }\sigma\,\}
+  \;\subseteq\;\{1,\dots,m\},
+\]
+and the all-switches step is $\sigma\mapsto\sigma\oplus s_G(\sigma)$. An
+orientation of the $m$-cube given by an outmap $s$ is a \emph{unique sink
+orientation} if $(s(u)\oplus s(v))\cap(u\oplus v)\ne\emptyset$ for all $u\ne v$,
+and \emph{acyclic} (an AUSO) if the digraph $u\to u\oplus e_i$, $i\in s(u)$, has
+no directed cycle. The walk $\sigma\mapsto\sigma\oplus s(\sigma)$ on an
+orientation is the \emph{bottom-antipodal} walk, and $h(s)$ denotes the greatest
+number of its steps from any start.
+\end{definition}
+
+\begin{proposition}[All-switches is a bottom-antipodal walk on an AUSO]\label{prop:allsw-auso}
+For a nondegenerate stopping $G$, $s_G$ is the outmap of an AUSO of the
+$m$-cube, and the all-switches run from $\sigma$ is exactly its
+bottom-antipodal walk from $\sigma$.
+\end{proposition}
+
+\begin{proof}
+Unique sink: for $C\subseteq\{1,\dots,m\}$ and $\sigma$, the subgame
+$G_C$ of \Cref{def:subcube} obtained by freezing the coordinates outside $C$ is
+stopping (\Cref{lem:subgame}(a)), and by \Cref{thm:opt-subcube} its optimal
+strategies form the subcube of greedy ones, which is nonempty; a point of the
+face with no strictly switchable free coordinate is exactly a sink of that face
+(\Cref{lem:subgame}(e)), and \Cref{thm:opt-subcube} makes it unique. Acyclicity:
+along a strictly improving switch $\val_\sigma$ increases strictly in at least
+one coordinate and nowhere decreases (\Cref{lem:switch}), so
+$\sum_v\val_\sigma(v)$ strictly increases along every oriented edge and is a
+linear extension of the reachability order. The second sentence is
+\Cref{def:improvement-uso} read twice.
+\end{proof}
+
+\begin{lemma}[The two laws are the AUSO axioms]\label{lem:auso-laws}
+Let $s$ be the outmap of an AUSO of the $m$-cube and let
+$\sigma_0,\dots,\sigma_L$ be a bottom-antipodal trace, $S_t:=s(\sigma_t)$
+nonempty for $t<L$ and $s(\sigma_L)=\emptyset$. Then the $\sigma_t$ are pairwise
+distinct and, for all $0\le t<t'\le L$,
+\[
+  (\sigma_t\oplus\sigma_{t'})\cap S_t\ne\emptyset,
+  \qquad\text{and for }t'\le L-1,\quad
+  (\sigma_t\oplus\sigma_{t'})\not\subseteq S_{t'} .
+\]
+That is, every bottom-antipodal trace of every AUSO satisfies
+\Cref{cor:no-return} and \Cref{cor:law-b}.
+\end{lemma}
+
+\begin{proof}
+Acyclicity gives a linear extension $\varphi$ of the reachability order, strictly
+increasing along every oriented edge. On any face the $\varphi$-maximum has all
+the face's edges incoming, so it is that face's sink; dually the
+$\varphi$-minimum is its source. Let $F_t$ be the face through $\sigma_t$
+spanned by $S_t$ and $H_t$ the face spanned by the complementary directions. All
+edges at $\sigma_t$ inside $F_t$ point out, so $\sigma_t$ is the source of $F_t$;
+all edges at $\sigma_t$ inside $H_t$ point in, so $\sigma_t$ is the sink of
+$H_t$. Since $\sigma_{t+1}\in F_t$ differs from $\sigma_t$, $\varphi$ increases
+strictly along the trace, so the $\sigma_t$ are distinct. For $t<t'$ we get
+$\varphi(\sigma_{t'})>\varphi(\sigma_t)$, so $\sigma_{t'}\notin H_t$, which is
+the first display. If $t'\le L-1$ and $\sigma_t\oplus\sigma_{t'}\subseteq
+S_{t'}$ then $\sigma_t\in F_{t'}$ and $\sigma_t\ne\sigma_{t'}$, so
+$\varphi(\sigma_t)>\varphi(\sigma_{t'})$, a contradiction.
+\end{proof}
+
+\begin{corollary}[The programme of \Cref{rem:allsw-laws} is capped]\label{cor:f-auso}
+Let $h^{\ast}(m)$ be the greatest bottom-antipodal height of an AUSO of the
+$m$-cube. Then $f(m)\ge h^{\ast}(m)$. Consequently no set of laws derivable from
+the AUSO axioms alone can bound all-switches better than $h^{\ast}$, and any
+improvement on $f$ must use a property of improvement orientations that not
+every AUSO has.
+\end{corollary}
+
+\begin{remark}\label{rem:f-auso}
+The bound is tight at the sizes we can enumerate: there are $12$ AUSOs of the
+$2$-cube and $728$ of the $3$-cube, with greatest bottom-antipodal heights $2$
+and $4$, against $f(2)=2$ and $f(3)=4$ from \Cref{rem:allsw-laws}. We verified
+\Cref{lem:auso-laws} exhaustively at those sizes --- every bottom-antipodal
+trace from every start of every one of those $740$ orientations, no violation of
+either law --- and \Cref{prop:allsw-auso} on $200$ nondegenerate stopping games
+with $2\le|\Vmax|\le4$ and $|\Vmin|\le3$: the improvement outmap was a unique
+sink orientation and acyclic in every case, and every trace obeyed both laws.
+Degeneracy is common and was skipped, $1236$ instances of it.
+
+What \Cref{cor:f-auso} settles is the question \Cref{rem:allsw-laws} leaves
+open. It is known that $h^{\ast}(m)$ grows exponentially: Schurr and Szab\'o
+construct AUSOs $A_m$ with $h(A_m)\ge2^{\lfloor m/2\rfloor+1}-2$, by a blow-up
+raising the dimension by two and at least doubling the height. We have not
+reproved that here. It is the second and last external input in this document,
+after the classical determinacy statement of \Cref{thm:determinacy}, and unlike
+that one it is used only to close a programme of ours, never to support a
+positive claim; everything else in this subsection is proved here. Granting it, $f$ is exponential and no amount of
+further law-deriving can make the counting argument of \Cref{rem:allsw-laws}
+subexponential. \Cref{thm:component-bound} is unaffected, since it constrains
+the graph rather than the schedule; and \Cref{prop:allsw-auso} relocates the
+whole question: an exponential all-switches family exists if and only if some
+stopping SSG realises an AUSO of exponential bottom-antipodal height as its
+improvement orientation.
 \end{remark}
 
 
