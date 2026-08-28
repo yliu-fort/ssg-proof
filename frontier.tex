@@ -2688,6 +2688,72 @@ the other way by an exponential margin. Enumeration will therefore never decide
 this, and neither will sampling; only a construction will.
 \end{remark}
 
+\begin{proposition}[The census of the $m$-cube for $m\le4$]\label{prop:auso-census}
+Enumerate the outmaps $s:\{0,1\}^{m}\to\{0,1\}^{m}$ satisfying the condition of
+\Cref{def:improvement-uso}, that $(s(u)\oplus s(v))\cap(u\oplus v)\ne\emptyset$
+for all $u\ne v$. For $m=2,3,4$ in turn there are
+\[
+  12,\qquad 744,\qquad 5541744
+\]
+unique sink orientations, of which $12$, $728$ and $4792176$ are acyclic,
+falling into $2$, $18$ and $12640$ isomorphism classes under the automorphism
+group $v\mapsto\pi(v)\oplus t$ of the cube, of order $2^{m}m!$. Every
+bottom-antipodal walk of every one of those acyclic orientations terminates,
+and
+\[
+  h^{\ast}(m)\;=\;1,\;2,\;4,\;7\qquad(m=1,2,3,4),
+\]
+the value $h^{\ast}(4)=7$ being attained by exactly $384$ outmaps, a single free
+orbit. Say that an orientation is \emph{Holt--Klee} if every face of dimension
+$d$ carries $d$ internally vertex-disjoint directed paths from its source to its
+sink. Restricting to those leaves $12$, $656$ and $2322704$ acyclic
+orientations, in $2$, $16$ and $6113$ classes, and
+\[
+  h^{\ast}_{\mathrm{HK}}(m)\;=\;1,\;2,\;4,\;6\qquad(m=1,2,3,4).
+\]
+In particular no height-maximal orientation of the $4$-cube is Holt--Klee,
+whereas on the $3$-cube the maximal height is attained by one that is.
+\end{proposition}
+
+\begin{proof}
+The outmap of a unique sink orientation is injective, since
+$(s(u)\oplus s(v))\cap(u\oplus v)\ne\emptyset$ fails when $s(u)=s(v)$; so it is
+a bijection of $\{0,1\}^{m}$ and the orientations are enumerated by a
+depth-first search that assigns $s(0),s(1),\dots$ in turn, testing the
+displayed condition against the values already assigned. Acyclicity is a
+depth-first search on the induced digraph, the bottom-antipodal height is
+$\max_{\sigma}$ of the length of the walk $\sigma\mapsto\sigma\oplus s(\sigma)$,
+isomorphism classes are counted by keeping only the orientation that is
+lexicographically least in its orbit under the $2^{m}m!$ maps
+$s'(\pi(v)\oplus t)=\pi(s(v))$, and the Holt--Klee test is a unit-capacity
+maximum flow, with residual arcs, on the vertex-split graph of each face.
+\end{proof}
+
+\begin{remark}\label{rem:auso-census}
+The counts $744$ and $5541744$ of unique sink orientations of the $3$- and
+$4$-cube agree with the published enumerations, which is the check on the
+program; the rest of the table is what is used below.
+
+Two consequences. First, \Cref{cor:f-auso} is tight one size further than
+\Cref{rem:f-auso} records. \Cref{rem:allsw-laws} gives $f(m)=1,2,4,7$ for
+$m\le4$ by exhaustive search over law-abiding schedules, and $h^{\ast}$ is the
+same sequence, so at every size we can enumerate, the ceiling the two laws
+impose is exactly attained by an acyclic unique sink orientation. Whether
+$f=h^{\ast}$ in general we do not know; the first size at which they could
+separate is $m=5$, where $f(5)=13$.
+
+Second, the Holt--Klee count says where a height-maximal realisation must live.
+By the theorem of Holt and Klee, the orientation induced on the graph of a
+polytope by a generic linear objective admits $d$ vertex-disjoint monotone paths
+between the two optima of every $d$-face; so every LP orientation is Holt--Klee,
+and by \Cref{prop:auso-census} every LP orientation of the $4$-cube has
+bottom-antipodal height at most $6$, against $7$ for orientations in general.
+We do not prove here that the improvement orientation of a one-player game is an
+LP orientation, and nothing below assumes it; but if it is, then the pivot of
+\Cref{cor:f-auso} already separates the one-player from the two-player case at
+$m=4$, by exactly one step.
+\end{remark}
+
 \subsection{A rule that needs exponentially many switches}
 
 \Cref{thm:short-path} says a path of at most $|\Vmax|$ single improving
@@ -4060,6 +4126,45 @@ might produce sub-instances by some route that is neither --- but it does
 say that the two mechanisms the certificate itself suggests are both
 dead, and it explains why no quasi-polynomial bound appears anywhere in
 this document.
+\end{remark}
+
+\begin{remark}[The same question for $|C|$]\label{rem:no-halving-controlled}
+\Cref{prop:no-halving} is about $a$. The problem is fixed-parameter tractable in
+$|C|=|\Vmax|+|\Vmin|$ as well --- by \Cref{thm:determinacy} the value is
+$\max_\sigma\min_\tau v_{\sigma,\tau}$ over the $2^{|C|}$ positional pairs, and
+each $v_{\sigma,\tau}$ costs one application of \Cref{thm:eval-stopfree} --- so
+the same halving question arises there, and a reduction of one instance to
+polynomially many with at most $|C|/2$ controlled vertices would again give
+$N^{O(\log N)}$. That door is shut too, but by \Cref{thm:fold} rather than by
+\Cref{prop:no-halving}.
+
+By \Cref{lem:transport-dim} a point of $Q(G)$ is the harmonic extension of its
+restriction to $C$, so the game is equivalent to the fixed-point system
+$y=\Phi(y)$ on $\mathbb{R}^{C}$ in which each coordinate $\Phi(y)_v$ is a
+maximum or a minimum of two substochastic affine functions of $y$. The reduction
+that structure suggests is to fix the coordinates on a subset $S\subseteq C$,
+solve the residual system --- an instance with $|C|-|S|$ controlled vertices ---
+and close the loop on $S$. Already $|S|=1$ defeats it. Let $P'_D$ be the game
+$P_D$ of \Cref{thm:fold} with $u$ declared a Max vertex, its two out-edges
+$u\to(t_0,t_1)$ unchanged. Both successors of $u$ are sinks, so $u$ lies in no
+trap in the sense of \Cref{lem:trapchar} whatever its kind, and the iterated
+deletion computing the largest trap runs identically in $P_D$ and in $P'_D$;
+hence $P'_D$ is stopping. Freezing deletes $u$'s out-edges, so
+$P'_D[u{:=}\theta]=P_D[u{:=}\theta]$ and \Cref{thm:fold} applies verbatim. Now
+$P'_D$ has $|C|=2D+1$, freezing its controlled vertex $u$ leaves a game with
+$2D$ controlled vertices, and the residual value $R_{u,F_D}$ is not affine in
+$\theta$ but piecewise affine with exactly $2^{D}=2^{(|C|-1)/2}$ pieces. So the
+outer problem on $S$ is not an instance of \Cref{prob:main} with $|S|$
+controlled vertices, and a case analysis over the pieces is exponential in
+$|C|$ from the very first frozen coordinate.
+
+As in \Cref{rem:no-halving}, this refutes the mechanism that the structure
+theory itself suggests, not every conceivable halving. The asymmetry between the
+two parameters is worth recording: substituting a \emph{known} average value
+costs $a$ fresh average vertices by \Cref{prop:no-halving}(a), whereas
+substituting a known controlled decision is free --- it deletes an edge and
+nothing else --- and what fails on the controlled side is instead that the
+dependence on the substituted datum is exponentially many-branched.
 \end{remark}
 
 \begin{corollary}[Deciding wrongness is the whole problem]\label{cor:wrong-equivalence}
