@@ -5919,6 +5919,84 @@ not claim it is impossible.
 \end{remark}
 
 
+\begin{proposition}[The rate is a contraction question]\label{prop:hybrid-rate}
+Let $G$ be stopping with $a=|\Vavg|$, let $\Delta'_k$ be as in
+\Cref{def:hybrid} and write
+\[
+  L_k(v):=\min\{z(v):z\in K(\Delta'_k)\},\qquad
+  U_k(v):=\max\{z(v):z\in K(\Delta'_k)\},\qquad
+  \omega_k:=\max_{v\in V}\bigl(U_k(v)-L_k(v)\bigr)
+\]
+for the box of the polytope over which round $k+1$ optimises. Then
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $\Delta_{k+1}(x,y)\le U_k(x)-L_k(y)$ for all $x,y\in V$;
+\item if $\omega_k<2^{-(a+1)}$ then $\Delta_{k+1}(x,y)<0$ for every pair with
+      $\val(x)<\val(y)$; in particular every value-distinguishing controlled
+      vertex is decided at round $k+1$;
+\item consequently, if $\omega_{k+1}\le\rho\,\omega_k$ for every $k$ and some
+      $\rho=\rho(G)<1$, then every value-distinguishing pair is decided within
+      $\lceil (a+1)/\log_2(1/\rho)\rceil+1$ rounds.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) The transport step of \Cref{def:hybrid} gives
+$\Delta_{k+1}(x,t_0)\le\mathcal P(\Delta'_k)(x,t_0)=\max\{z(x)-z(t_0)\}=U_k(x)$
+and $\Delta_{k+1}(t_0,y)\le\max\{z(t_0)-z(y)\}=-L_k(y)$, both maxima over
+$K(\Delta'_k)$; the min-plus closure that follows it gives
+$\Delta_{k+1}(x,y)\le\Delta_{k+1}(x,t_0)+\Delta_{k+1}(t_0,y)$.
+
+(b) By \Cref{thm:hybrid-sound}, $\val\in K(\Delta'_k)$, so
+$L_k\le\val\le U_k$ and therefore $U_k(x)\le\val(x)+\omega_k$ and
+$L_k(y)\ge\val(y)-\omega_k$. With (a),
+\[
+  \Delta_{k+1}(x,y)\;\le\;\val(x)-\val(y)+2\omega_k .
+\]
+Let $(\sigma^\ast,\tau^\ast)$ be an optimal pair. By
+\Cref{thm:stopping-determinacy} $\val=v_{\sigma^\ast,\tau^\ast}$ is the
+solution of a linear system whose matrix is $I-A_{\sigma^\ast,\tau^\ast}$, so
+by \Cref{lem:denominator-sharp} every coordinate of $\val$ has denominator
+dividing one integer $D\le2^{a}$. Hence two distinct coordinates differ by at
+least $2^{-a}$, and $\val(x)<\val(y)$ forces
+$\val(x)-\val(y)\le-2^{-a}<-2\omega_k$.
+
+(c) Immediate from (b), since $\omega_0\le1$.
+\end{proof}
+
+\begin{remark}\label{rem:hybrid-rate}
+\Cref{prop:hybrid-rate} isolates the whole remaining question in a single
+scalar. A bound $\rho(G)\le1-1/\mathrm{poly}(N)$ holding uniformly over
+stopping SSGs would give a polynomial round count, hence by
+\Cref{thm:decide-one-bit} would put \textsc{SSG-Value} in $\mathsf P$; and the
+only way the mechanism can fail is $\rho\to1$. This is the same shape as the
+lower bound the calculus of \Cref{def:trans-slack} inherits from two-sided
+value iteration, with one difference that is the point of the hybrid: there the
+box is $T^{k}0\le\cdot\le T^{k}1$, which contracts at rate $1-2^{-a}$ and no
+faster (\Cref{thm:contraction} is attained, \Cref{rem:few-avg-tight}); here it
+is the box of a polytope whose average rows are \emph{equalities}, so the
+contraction is not tied to the mixing of the chain. On every instance we have
+measured, $\rho$ is bounded well away from $1$. The slowest we could reach by
+hill climbing is the nine-vertex stopping game $W$ on
+$\{0,\dots,6\}$ with $t_0=7$, $t_1=8$, where $1\in\Vmin$, $5\in\Vmax$ and
+$0,2,3,4,6\in\Vavg$, and
+\[
+  0\to(t_0,2),\quad 1\to(3,2),\quad 2\to(5,3),\quad 3\to(4,6),\quad
+  4\to(5,1),\quad 5\to(4,0),\quad 6\to(t_1,t_0).
+\]
+There $\val=(\tfrac14,\tfrac12,\tfrac12,\tfrac12,\tfrac12,\tfrac12,\tfrac12)$,
+the only value-distinguishing controlled vertex is $5$, the widths $\omega_k$
+run $\tfrac{10}{11},\tfrac{43}{66},\tfrac{365}{792},\tfrac7{44},
+\tfrac{21}{176},\tfrac7{88},0$, so $\rho(W)=\tfrac34$, and the box collapses
+only at round $7$ --- more rounds than the game has vertices --- although the
+vertex is decided at round $4$. Two features of $W$ are what the analysis
+predicts: the Min vertex is what stops the box being pinned from below, as it
+is on $S_r$ where $\val(v)\ge\val(a)=\tfrac12$ pins $L$ at once, and the
+controlled vertices lie on a cycle carrying average vertices, which is what
+\Cref{lem:transport-exact} cannot resolve. A family on which
+$\rho\to1$, and a proof that none exists, are both open, and we claim neither.
+\end{remark}
+
+
 \section{Summary}\label{sec:summary}
 
 \paragraph{Foundations, proved from first principles.} The monotone
