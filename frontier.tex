@@ -2512,9 +2512,12 @@ maxima. So the laws already forbid most schedules --- $f(5)=13$ against
 the $2^{5}-1=31$ steps a bare counter would need --- but they do not by
 themselves give a subexponential bound, and no argument here rules out a
 schedule of exponential length obeying all three. \Cref{cor:f-auso} settles
-that: the two laws are exactly the axioms of an acyclic unique sink
-orientation, so $f$ is bounded below by the greatest bottom-antipodal height of
-such an orientation, which is known to be exponential. What
+that: every bottom-antipodal trace of an acyclic unique sink orientation obeys
+both laws, so $f$ is bounded below by the greatest bottom-antipodal height
+$h^{\ast}$ of such an orientation, which is known to be exponential. The two
+quantities are not equal --- \Cref{prop:hstar-five} gives $f(5)=13$ against
+$h^{\ast}(5)=12$ --- so the laws are strictly weaker than the axioms they come
+from. What
 \Cref{thm:component-bound} shows is that any such schedule must live
 inside a single large component of $H(G)$: an exponential all-switches
 run needs $\Omega(\log)$ many Max vertices pairwise on common cycles, and
@@ -2564,7 +2567,7 @@ linear extension of the reachability order. The second sentence is
 \Cref{def:improvement-uso} read twice.
 \end{proof}
 
-\begin{lemma}[The two laws are the AUSO axioms]\label{lem:auso-laws}
+\begin{lemma}[Every bottom-antipodal trace obeys the two laws]\label{lem:auso-laws}
 Let $s$ be the outmap of an AUSO of the $m$-cube and let
 $\sigma_0,\dots,\sigma_L$ be a bottom-antipodal trace, $S_t:=s(\sigma_t)$
 nonempty for $t<L$ and $s(\sigma_L)=\emptyset$. Then the $\sigma_t$ are pairwise
@@ -2738,9 +2741,9 @@ Two consequences. First, \Cref{cor:f-auso} is tight one size further than
 \Cref{rem:f-auso} records. \Cref{rem:allsw-laws} gives $f(m)=1,2,4,7$ for
 $m\le4$ by exhaustive search over law-abiding schedules, and $h^{\ast}$ is the
 same sequence, so at every size we can enumerate, the ceiling the two laws
-impose is exactly attained by an acyclic unique sink orientation. Whether
-$f=h^{\ast}$ in general we do not know; the first size at which they could
-separate is $m=5$, where $f(5)=13$.
+impose is exactly attained by an acyclic unique sink orientation. They are not equal in
+general: \Cref{prop:hstar-five} separates them at the first size where that is
+possible.
 
 Second, the Holt--Klee count says where a height-maximal realisation must live.
 By the theorem of Holt and Klee, the orientation induced on the graph of a
@@ -2752,6 +2755,66 @@ We do not prove here that the improvement orientation of a one-player game is an
 LP orientation, and nothing below assumes it; but if it is, then the pivot of
 \Cref{cor:f-auso} already separates the one-player from the two-player case at
 $m=4$, by exactly one step.
+\end{remark}
+
+\begin{proposition}[$h^{\ast}(5)=12<f(5)=13$]\label{prop:hstar-five}
+On the $5$-cube there are exactly $22320$ sequences $\sigma_0,\dots,\sigma_{13}$
+with $\sigma_0=0$ obeying \Cref{cor:no-return} and \Cref{cor:law-b}, so
+$f(5)=13$; and none of them is the bottom-antipodal trace of an acyclic unique
+sink orientation, while some sequence of length $12$ is. Hence
+\[
+  h^{\ast}(m)\;=\;1,\;2,\;4,\;7,\;12,\qquad
+  f(m)\;=\;1,\;2,\;4,\;7,\;13\qquad(m=1,\dots,5),
+\]
+and the inequality $f\ge h^{\ast}$ of \Cref{cor:f-auso} is an equality for
+$m\le4$ and strict at $m=5$. In particular the converse of
+\Cref{lem:auso-laws} is false: the two laws do not characterise the
+bottom-antipodal traces of acyclic unique sink orientations.
+\end{proposition}
+
+\begin{proof}
+Both laws are invariant under translation of the cube, so $\sigma_0=0$ may be
+assumed. A sequence is built left to right: choosing $S_t$ requires
+$(\sigma_u\oplus\sigma_t)\not\subseteq S_t$ for every $u<t$, and setting
+$\sigma_{t+1}:=\sigma_t\oplus S_t$ requires
+$(\sigma_u\oplus\sigma_{t+1})\cap S_u\ne\emptyset$ for every $u\le t$; between
+them these two tests cover every pair the two laws constrain, so the
+enumeration is exhaustive. It gives
+$31,750,12390,135930,967560,4378320,12280440,20388600,19136400,9748080,2550240,
+347640,22320$ sequences of lengths $1,\dots,13$ and none of length $14$,
+reproducing $f(5)=13$.
+
+Realisability is then decided sequence by sequence. A sequence of length $L$ is
+the bottom-antipodal trace of an orientation with outmap $s$ if and only if
+$s(\sigma_t)=S_t$ for $t<L$ and $s(\sigma_L)=0$; since the outmap of a unique
+sink orientation is injective, this already forces $L+1$ distinct values, and
+the remaining $2^{m}-L-1$ are assigned by depth-first search subject to
+$(s(u)\oplus s(v))\cap(u\oplus v)\ne\emptyset$, with acyclicity tested at each
+completed assignment. For $L=13$ all $22320$ sequences were tried and none
+completes. For $L=12$ a completion exists; the outmap
+\[
+  \begin{aligned}
+  s=(&15,0,1,2,27,30,12,29,19,26,8,25,22,21,20,23,\\
+     &31,18,28,17,3,6,24,5,7,14,16,13,10,9,4,11)
+  \end{aligned}
+\]
+was checked independently to be a bijection, to satisfy the unique sink
+condition, to have exactly one sink and one source on each of its faces by
+direct inspection of all $211$ faces of positive dimension, to be acyclic, and to have
+bottom-antipodal height exactly $12$, attained from $\sigma_0=0$ along
+$0,15,24,31,20,23,18,14,26,10,2,3,1$.
+\end{proof}
+
+\begin{remark}\label{rem:hstar-five}
+The separation matters for what \Cref{cor:f-auso} does and does not say. It
+still says that no bound derivable from the AUSO axioms alone can beat
+$h^{\ast}$, so the programme of \Cref{rem:allsw-laws} cannot be pushed past that
+ceiling. What it no longer says is that the two laws already exhaust those
+axioms: at $m=5$ they admit a schedule that no acyclic unique sink orientation
+performs, so there are further laws to be had, and the honest ceiling for a
+law-based argument is $h^{\ast}$ and not $f$. Whether $h^{\ast}$ itself is
+attained by improvement orientations of stopping games is the realisability
+question of \Cref{prop:auso-size}, and is untouched by this.
 \end{remark}
 
 \subsection{A rule that needs exponentially many switches}
