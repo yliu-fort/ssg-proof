@@ -4075,6 +4075,31 @@ $\{0,1\}^{\Vmax}$ is polynomial when $\val_\sigma$ is supermodular, and
 formulations are the natural way to beat the $2^{|\Vmin|}$ and $2^{|\Vmax|}$
 enumerations that stand behind Hoffman--Karp iteration, and after
 \Cref{prop:no-submodular} neither is available.
+
+Nor does anything depend on the witness being deterministic or on its values
+being $0$ and $1$. Replacing the sink $t_1$ at the end of the chain by a
+subgame of value $w$ and the sinks $t_0$ by one of value $z<w$ gives
+$\val^{\tau}(m_1)=z+(w-z)\,[\tau=(0,0,0)]$ in the three chain coordinates;
+submodularity is preserved by increasing affine maps and inherited by faces, so
+the refutation survives verbatim, and it survives the presence of further Min
+vertices on which the objective does not depend. Concretely, take the
+nine-vertex game with $m_1,m_2,m_3,y_2\in\Vmin$, $w_2\in\Vmax$,
+$w_1,y_1\in\Vavg$ and
+\[
+  \begin{aligned}
+  &m_1\to(m_2,t_0),\quad m_2\to(m_3,t_0),\quad m_3\to(w_1,t_0),\\
+  &w_1\to(t_0,w_2),\quad w_2\to(w_1,t_1),\quad
+   y_1\to(t_1,y_2),\quad y_2\to(y_1,t_0).
+  \end{aligned}
+\]
+It is stopping, with $w^{\ast}=(0,0,0,\tfrac12,1,\tfrac12,0)$; the cycle
+$w_1w_2$ carries an average and a Max vertex and the cycle $y_1y_2$ an average
+and a Min vertex, so no colour is absent from every cycle and the game lies
+outside \Cref{thm:kacyclic} and everything that theorem contains. Its objective
+is $\val^{\tau}(m_1)=\tfrac12\,[\tau_{m_1}=\tau_{m_2}=\tau_{m_3}=0]$, and none
+of the sixteen orientations of its four-dimensional Min cube makes it
+submodular. We claim nothing about the difficulty of that instance; only that no
+structural promise which excludes the five-vertex chain excludes it either.
 \end{remark}
 
 \section{The selection problem is the whole problem}\label{sec:selection}
