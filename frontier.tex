@@ -95,9 +95,11 @@ stopping games the calculus is in fact exact in the limit
 expressive power; the bracket-seeded variant (\Cref{sec:seeded}); and a
 linear-programming certificate (\Cref{sec:transport}) that is exact on
 successor-closed average parts and therefore settles in one solve both
-instances on which the other mechanisms provably fail, while stalling in
-turn on a seven-vertex game for a complementary reason
-(\Cref{thm:transport-barrier}). Because those two failures are
+instances on which the other mechanisms provably fail, while failing in turn,
+for a complementary reason, to order the two successors on a seven-vertex game
+(\Cref{thm:transport-barrier}) --- though \Cref{rem:own-successor} shows that
+ordering the two successors is the wrong test, and that on that game and on
+the whole family behind it the certificate decides the vertex at once. Because those two failures are
 complementary, we couple the last two into a feedback loop
 (\Cref{sec:hybrid}): the non-convex halves of the controlled rows, which
 a linear programme must drop, are exactly what the slack clauses supply,
@@ -106,16 +108,19 @@ iterating, are what the programme solves at a stroke. On a stopping game
 its every closed matrix pins the polytope to the value vector itself
 (\Cref{thm:hybrid-complete}), an argument that consults the programme
 only at the $4N$ pairs containing a sink (\Cref{cor:hybrid-sink}); it
-disposes of every stall recorded here in one round or two. That last fact
-turns out to mean nothing: all those instances have a single controlled
-vertex, a class \Cref{prop:hybrid-onectrl} shows is decided at round two
-unconditionally, and \Cref{thm:hybrid-lower} exhibits a one-player family
-on $6L+m+5$ vertices, with two Max vertices wired crosswise so that each
-keeps the other's box open, on which the hybrid needs $2^{\Omega(N)}$
-rounds. The certificate is a shrinking chain of convex sets
-(\Cref{thm:hybrid-convex-barrier}), the correct generalisation of the box
-certificate of \Cref{thm:slack-barrier} --- which, as
-\Cref{rem:hybrid-barrier-lift} shows, does not itself lift.
+disposes of every stall recorded here in one round or two --- a fact that
+turns out to mean nothing, since all those instances have a single
+controlled vertex, a class \Cref{prop:hybrid-onectrl} shows is decided at
+round two unconditionally. Its rate is open. What we can prove about it is
+a method for bounding it from below, a shrinking chain of convex
+certificates (\Cref{thm:hybrid-convex-barrier}) generalising the box
+certificate of \Cref{thm:slack-barrier}, which as
+\Cref{rem:hybrid-barrier-lift} shows does not itself lift; and one
+application, a one-player family with two Max vertices wired crosswise on
+which one natural family of entries stays uninformative for
+$2^{\Omega(N)}$ rounds (\Cref{thm:hybrid-lower}) --- though not the
+entries a decision rule actually reads
+(\Cref{rem:own-successor,rem:hybrid-lower-not-a-refutation}).
 
 \emph{Barriers.} No potential of polynomial range
 (\Cref{thm:impedance}); no progress measure of polynomial height
@@ -5562,8 +5567,11 @@ $v\in\Vmax$ and $a,b,b_1,b_2\in\Vavg$, and
 Then $S$ is stopping, $w^\ast=(\tfrac12,\tfrac12,\tfrac38,\tfrac14,\tfrac12)$,
 so the two successors of the only controlled vertex have different
 values, and yet
-$\operatorname{Sep}(a,b)=\operatorname{Sep}(b,a)=+\tfrac18$. The decision
-rule built from \Cref{def:transport} therefore stalls.
+$\operatorname{Sep}(a,b)=\operatorname{Sep}(b,a)=+\tfrac18$: the certificate
+does not order the two successors against each other. It does nevertheless
+decide $v$, by $\operatorname{Sep}(v,b)=-\tfrac18<0$; see
+\Cref{rem:own-successor}, which corrects the reading of this proposition and of
+\Cref{thm:transport-barrier}.
 \end{proposition}
 
 \begin{proof}
@@ -5576,8 +5584,38 @@ $x(b)=\tfrac12(t+\tfrac14)=\tfrac t2+\tfrac18$, while the two Max rows
 give $t\ge\tfrac12$ and $t\ge\tfrac14$; with $x\le1$ the feasible set is
 $t\in[\tfrac12,1]$. Then $x(b)-x(a)=\tfrac t2-\tfrac38$ runs from
 $-\tfrac18$ at $t=\tfrac12$ to $+\tfrac18$ at $t=1$, so both maxima are
-$+\tfrac18$.
+$+\tfrac18$. For the last claim, $x(b)-x(v)=\tfrac18-\tfrac t2$ is maximised at
+$t=\tfrac12$, giving $\operatorname{Sep}(v,b)=-\tfrac18$.
 \end{proof}
+
+\begin{remark}[Compare a controlled vertex with its own successor]\label{rem:own-successor}
+A decision rule in the sense of \Cref{def:decision-rule} must name a controlled
+vertex and say which successor is larger. It need not do so by ordering the two
+successors against each other, and for the mechanisms of this section it should
+not: at $v\in\Vmax$ the row $x(v)\ge x(v^{(i)})$ belongs to $Q(G)$, so
+\[
+  \operatorname{Sep}\bigl(v,v^{(i)}\bigr)\;\le\;0\quad\text{always},\qquad
+  \operatorname{Sep}\bigl(v,v^{(i)}\bigr)\;\ge\;\val(v^{(i)})-\val(v)
+\]
+by \Cref{thm:transport-sound}, and the right-hand side is $0$ at an optimal
+successor. Hence $\operatorname{Sep}(v,v^{(i)})<0$ \emph{proves} $v^{(i)}$ is
+not optimal and therefore decides $v$; at $v\in\Vmin$ the same holds with the
+inequalities reversed. The pair test $\operatorname{Sep}(v^{(0)},v^{(1)})$ is
+strictly weaker, and the difference is not marginal: on $S$ above the pair test
+returns $+\tfrac18$ in both directions while $\operatorname{Sep}(v,b)=-\tfrac18$
+decides $v$ outright, and on the family $S_r$ of \Cref{thm:transport-barrier}
+the pair test returns $2^{-r-2}>0$ while $\operatorname{Sep}(v,b_0)=-2^{-r-2}<0$
+for every $r$, verified exactly for $r=2,\dots,5$.
+
+So \Cref{prop:transport-stalls} and \Cref{thm:transport-barrier} are statements
+about \emph{ordering the two successors}, which is what they prove, and not
+about deciding the vertex, which the certificate does at once on both families.
+The same correction applies to \Cref{rem:transport} and to
+\Cref{thm:hybrid-lower}, and it is the reason
+\Cref{rem:hybrid-lower-not-a-refutation} has to be stated: a lower bound on the
+entry $\Delta_k(v^{(0)},v^{(1)})$ says nothing about the entry
+$\Delta_k(v^{(i)},v)$, and it is the latter that drives the rule.
+\end{remark}
 
 \begin{theorem}[The stall survives every polynomial seed]\label{thm:transport-barrier}
 For $r\ge2$ let $S_r$ be the stopping SSG on
@@ -5633,12 +5671,20 @@ against}, so no average part containing $b_0$ is successor-closed, the
 polytope is a genuine interval rather than a point, and the comparison
 turns on where in that interval $w^\ast(v)$ sits --- which is the question
 one started from. \Cref{thm:transport-barrier} makes the quantitative
-form of this precise: the certificate needs its seed to localise
-$w^\ast(v)$ to within $2^{-\Theta(N)}$, and value iteration, the only
-seed available in polynomial time, takes $2^{\Omega(N)}$ rounds to get
+form of this precise: to order the pair $(a,b_0)$ the certificate needs its
+seed to localise $w^\ast(v)$ to within $2^{-\Theta(N)}$, and value iteration,
+the only seed available in polynomial time, takes $2^{\Omega(N)}$ rounds to get
 there. As with $H_m$, the instance itself is easy --- $S_r$ is one-player
 and \Cref{thm:one-player} solves it by an explicit linear program --- so
-what is refuted is the mechanism, not the tractability of the family.
+what would be refuted is the mechanism, not the tractability of the family.
+
+We stress the qualification just inserted, because without it this remark is
+wrong. What is exponentially hard here is \emph{ordering the two successors
+against each other}. Deciding the vertex is not: by \Cref{rem:own-successor},
+$\operatorname{Sep}(v,b_0)=-2^{-r-2}<0$ on every $S_r$, so the unseeded
+certificate decides $v$ in one linear program. The complementarity recorded
+above is real and is about the pair test; it does not exhibit a stall of the
+decision rule, and none of the mechanisms in this section is known to have one.
 \end{remark}
 
 
@@ -6123,16 +6169,42 @@ under $\xi\mapsto\val+\bigl(x\mapsto\langle\theta_x,\xi\rangle\bigr)$, where
 $z(x)=\langle\theta_x,(z(v_1),z(v_2))\rangle+\rho_x$ is the affine form of
 $Q(CC(L,m))$. Then $(P_k)$ satisfies the hypotheses of
 \Cref{thm:hybrid-convex-barrier}, and
-$\Lambda(P_k)(B_i,A_i)=-\gamma+2u(1-u)M_k$. Consequently the hybrid decides
-neither controlled vertex at any round $k$ with
+$\Lambda(P_k)(B_i,A_i)=-\gamma+2u(1-u)M_k$. Consequently
+$\Delta_k(B_i,A_i)\ge0$ --- the hybrid does not order the two successors of
+either Max vertex against each other --- at every round $k$ with
 $M_k>\gamma/\bigl(2u(1-u)\bigr)$, and since
 $M_k=\lambda^{k}(\tfrac12+2^{-m})-2^{-m}$ this holds for all
 \[
   k\;<\;\frac{(m-\log_23)\ln2}{\ln(1/\lambda)},
   \qquad \ln(1/\lambda)\le\frac1{2^{L}-1},
 \]
-so for fixed $m$ the number of rounds is $2^{\Omega(N)}$.
+so for fixed $m$ that number of rounds is $2^{\Omega(N)}$.
 \end{theorem}
+
+\begin{remark}[What \Cref{thm:hybrid-lower} does not say]\label{rem:hybrid-lower-not-a-refutation}
+It is not a refutation of the hybrid as a decision rule, and we state that
+plainly because we first read it as one. By \Cref{rem:own-successor} the rule
+does not need the entry $\Delta_k(B_i,A_i)$; it needs to know which successor of
+$v_i$ is optimal, and $\Delta_k(B_i,v_i)<0$ supplies that, since
+$\val(v_i)=\max(\val(A_i),\val(B_i))$ forces the maximum onto $A_i$. On
+$CC(L,m)$ that entry is already negative at round one:
+$\theta_{B_1}-\theta_{v_1}=(-2^{-2L},0)$ gives $h_k$ of it equal to $0$, so
+$\Lambda(P_k)(B_1,v_1)=-\gamma$ for every $k$, and the certificate is
+\emph{consistent} with the vertex being decided immediately. It is: we computed
+$\Delta_1(B_1,v_1)=-2^{-4},-2^{-6},-2^{-6}$ on $CC(1,2)$, $CC(2,2)$ and
+$CC(1,4)$, deciding both Max vertices at round one.
+
+So what \Cref{thm:hybrid-lower} exhibits is a family on which one natural
+family of entries stays uninformative for exponentially many rounds while the
+useful entries do not, and what it demonstrates is the method:
+\Cref{thm:hybrid-convex-barrier} can certify exponential lower bounds on
+specified entries of $\Delta_k$. Whether the hybrid decides every stopping SSG
+within polynomially many rounds remains open, and by
+\Cref{thm:decide-one-bit} an affirmative answer would put \textsc{SSG-Value} in
+$\mathsf P$. A refutation must drive $\Delta_k(v^{(i)},v)$ to $0$ for every
+controlled $v$ and both $i$, which by \Cref{rem:own-successor} is a strictly
+harder demand than the one $CC$ meets.
+\end{remark}
 
 \begin{proof}
 Stopping and one-player are immediate: every out-edge leaves a chain towards a
@@ -6205,28 +6277,22 @@ the certificate's guarantee of $1$.
 \end{remark}
 
 \begin{remark}\label{rem:hybrid-rate}
-\Cref{prop:hybrid-rate} isolates the remaining question in the decay of one
-scalar sequence, and \Cref{thm:hybrid-lower} answers it: on $CC(L,m)$ the box
-contracts by the factor $\lambda=1-2^{-L}$ per round, so $\rho\to1$ and the
-hybrid is not polynomial. The mechanism is therefore refuted, in the only way a
-mechanism of this shape can be: not by a permanent stall, which
-\Cref{thm:hybrid-complete} forbids on a stopping game, but by a rate.
+Where this leaves the hybrid. \Cref{prop:hybrid-rate} reduces its rate to the
+decay of the box width $\omega_k$; \Cref{thm:hybrid-lower} shows that the
+natural certificate can be exponentially slow on the entries
+$\Delta_k(v^{(0)},v^{(1)})$; and \Cref{rem:hybrid-lower-not-a-refutation} shows
+that those are not the entries a decision rule uses. The mechanism is therefore
+\emph{not} refuted, and the rate question is open.
 
-Two things are worth separating out. First, why the earlier evidence pointed the
-other way. Every instance on which this document could measure the hybrid before
-$CC$ --- $G_8$, $H_m$, $S$ and the whole family $S_r$ --- has exactly one
-controlled vertex, and \Cref{prop:hybrid-onectrl} shows that class is decided at
-round two unconditionally. The nine-vertex game $W$ on $\{0,\dots,6\}$ with
-$t_0=7$, $t_1=8$, $1\in\Vmin$, $5\in\Vmax$, the rest average and
-\[
-  0\to(t_0,2),\quad 1\to(3,2),\quad 2\to(5,3),\quad 3\to(4,6),\quad
-  4\to(5,1),\quad 5\to(4,0),\quad 6\to(t_1,t_0)
-\]
-was the slowest instance a hill climb over small games produced; it has
-$\val=(\tfrac14,\tfrac12,\tfrac12,\tfrac12,\tfrac12,\tfrac12,\tfrac12)$ and its
-box collapses at round $3$, with widths $\tfrac{10}{11},\tfrac15,0$. Random and
-hill-climbed search over games this size never exceeded three rounds. As
-everywhere else in this document, the hard instance had to be engineered.
+Two things are worth separating out from the attempt. First, why our
+measurements were uninformative. Every instance on which this document could
+measure the hybrid before $CC$ --- $G_8$, $H_m$, $S$ and the whole family $S_r$
+--- has exactly one controlled vertex, and \Cref{prop:hybrid-onectrl} shows that
+class is decided at round two unconditionally. So
+\Cref{prop:hybrid-decides} measures that proposition and nothing else. The
+lesson generalises beyond this section: before believing a measurement, identify
+the parameter the mechanism turns on --- here $|\Vmax|+|\Vmin|$ --- and check
+that the instance set varies it. Ours did not vary it at all.
 
 Second, what $CC$ needs that $W$ and $S_r$ do not have. On $S_r$ the single Max
 vertex has a successor of \emph{pinned} value, $\val(v)\ge\val(a)=\tfrac12$,
@@ -6237,20 +6303,30 @@ vertex compare two chains that both return to the controlled pair, and it uses
 resupplied by $v_2$ and conversely. The cone $\xi_1\ge\lambda\xi_2$,
 $\xi_2\ge\lambda\xi_1$ of \Cref{thm:hybrid-lower} is exactly that mutual
 resupply, and $\lambda=1-2^{-L}$ is the probability of returning to the other
-Max vertex rather than escaping down a chain. One Max vertex cannot do this:
-by \Cref{prop:hybrid-onectrl} there is nothing to resupply it.
+Max vertex rather than escaping down a chain. One Max vertex cannot do this: by
+\Cref{prop:hybrid-onectrl} there is nothing to resupply it. Two constructions
+that lack the crosswise wiring fail accordingly: lengthening a single cycle
+joining a Max vertex to a Min vertex, with each chain leaking back into the
+cycle and one sink escape, so that the return probability is
+$1-2^{-\Theta(k)}$ --- the shape of \Cref{thm:impedance} --- gives a family whose
+values are $\tfrac13$ and $\tfrac23$ for every $k$ and whose box collapses at
+round $2$ for every $k$, because the programme solves the whole cycle at a
+stroke once the two choices are read as inequalities; and having one Max vertex
+compare two such cycles slows the collapse to $k+1$ rounds but leaves the first
+decision at round $2$.
 
-The same reading explains two constructions we tried first and which fail.
-Lengthening a single cycle joining a Max vertex to a Min vertex, with each chain
-leaking back into the cycle and one sink escape, so that the return probability
-is $1-2^{-\Theta(k)}$ --- the shape of \Cref{thm:impedance} --- gives a family
-whose values are $\tfrac13$ and $\tfrac23$ for every $k$ and whose box
-collapses at round $2$ for every $k$: the programme solves the whole cycle at a
-stroke, because it is linear once the two choices are read as inequalities.
-Having a Max vertex compare two such cycles slows the collapse to $k+1$ rounds
-but leaves the first decision at round $2$. What is needed is not a long cycle
-but a \emph{pair} of controlled vertices each of which keeps the other's box
-open, and that is what $CC$ supplies.
+For reference, the slowest instance a hill climb over small games produced is
+the nine-vertex stopping game $W$ on $\{0,\dots,6\}$ with $t_0=7$, $t_1=8$,
+$1\in\Vmin$, $5\in\Vmax$, the rest average and
+\[
+  0\to(t_0,2),\quad 1\to(3,2),\quad 2\to(5,3),\quad 3\to(4,6),\quad
+  4\to(5,1),\quad 5\to(4,0),\quad 6\to(t_1,t_0);
+\]
+it has $\val=(\tfrac14,\tfrac12,\tfrac12,\tfrac12,\tfrac12,\tfrac12,\tfrac12)$
+and its box collapses at round $3$, with widths $\tfrac{10}{11},\tfrac15,0$.
+Random and hill-climbed search over games of this size never exceeded three
+rounds. As everywhere else in this document, whatever is hard has to be
+engineered.
 \end{remark}
 
 
@@ -6374,11 +6450,15 @@ linear program of \Cref{sec:transport} optimises over the monotonicity
 $Tw^\ast=w^\ast$ imposes, is exact on successor-closed average parts
 (\Cref{lem:transport-exact}), and therefore settles in one solve both
 $G_8$ and the family $H_m$ on which the slack calculus stalls
-exponentially. It stalls in turn on a seven-vertex game, and
-\Cref{thm:transport-barrier} shows why the failure is complementary: what
-defeats it is a controlled vertex lying on a cycle through the branch it
-must be compared against, and there it needs its seed to localise the
-value to within $2^{-\Theta(N)}$.
+exponentially. On a seven-vertex game it fails in turn to order the two
+successors, and \Cref{thm:transport-barrier} shows why that failure is
+complementary: what defeats the pair test is a controlled vertex lying on a
+cycle through the branch it must be compared against, and there the test needs
+its seed to localise the value to within $2^{-\Theta(N)}$. It is a pair test
+that fails, not the mechanism: \Cref{rem:own-successor} observes that at a Max
+vertex the row $x(v)\ge x(v^{(i)})$ is already in $Q(G)$, so a negative
+$\operatorname{Sep}(v,v^{(i)})$ decides $v$ outright, and it is negative on
+every instance in question.
 
 Since the two failures are complementary, the two mechanisms are coupled
 in \Cref{sec:hybrid}, and the coupling is a feedback loop rather than a
@@ -6398,18 +6478,23 @@ left is a rate, and \Cref{prop:hybrid-rate} reduces even that to the decay
 of one scalar sequence: the box has width $\omega_k$, a bound
 $\omega_k\le C\rho^{k}$ with $\rho\le1-1/\mathrm{poly}(N)$ would put the
 problem in $\mathsf P$, and $\rho\to1$ is the only way the mechanism can
-fail. It does fail that way. The evidence that it did not was an artefact
-of the sample: every instance in this document on which the hybrid could
-be measured has one controlled vertex, and
-\Cref{prop:hybrid-onectrl} shows that class is decided at round two for
-free. \Cref{thm:hybrid-lower} gives a one-player family with two Max
-vertices wired crosswise, each keeping the other's box open, on which
-$\rho=1-2^{-L}$ and the hybrid needs $2^{\Omega(N)}$ rounds; the lower
-bound comes from \Cref{thm:hybrid-convex-barrier}, which replaces the box
-certificate of \Cref{thm:slack-barrier} --- itself provably too weak here
-(\Cref{rem:hybrid-barrier-lift}) --- by a shrinking chain of convex sets.
-So the strongest mechanism in this document is exponential too, and it
-fails for a reason no earlier barrier covers.
+fail, and we do not know whether it does. What we do know is that the
+evidence suggesting it does not was worthless: every instance in this
+document on which the hybrid could be measured has one controlled vertex,
+and \Cref{prop:hybrid-onectrl} shows that class is decided at round two
+for free. \Cref{thm:hybrid-convex-barrier} supplies the method for lower
+bounds --- a shrinking chain of convex certificates, replacing the box
+certificate of \Cref{thm:slack-barrier}, which \Cref{rem:hybrid-barrier-lift}
+shows is provably too weak here --- and \Cref{thm:hybrid-lower} applies it
+to a one-player family with two Max vertices wired crosswise, each keeping
+the other's box open, on which $\Delta_k(v^{(0)},v^{(1)})$ stays
+nonnegative for $2^{\Omega(N)}$ rounds. That is not a refutation:
+\Cref{rem:own-successor} observes that a decision rule should compare a
+controlled vertex with its \emph{own} successor rather than its two
+successors with each other, and on that family the useful entry is
+negative at round one. The same correction applies to
+\Cref{prop:transport-stalls} and \Cref{thm:transport-barrier}, which order
+successors and do not stall as decision rules.
 
 \paragraph{The gap.} \Cref{def:missing} states it at full strength and
 \Cref{thm:gap-equivalence} proves it equivalent to a polynomial-time
