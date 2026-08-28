@@ -4936,6 +4936,73 @@ using $u_k\ge w^\ast$. Neither sign decides, so no controlled vertex is
 separated. Verified in exact rational arithmetic for $m=3,4,5$.
 \end{proof}
 
+\begin{theorem}[The slack calculus is dominated by two-sided value iteration]\label{thm:slack-vi-upper}
+Let $G$ be an arbitrary SSG, let $\Delta_k$ be as in \Cref{def:slack}, and put
+$u_k:=T^{k}\mathbf 1$ and $l_k:=T^{k}\mathbf 0$, the iterates taken on all of
+$V$ from $u_0\equiv1$ and $l_0\equiv0$. Then for every $k\ge0$ and all
+$x,y\in V$, sinks included,
+\[
+  \Delta_{2k}(x,y)\;\le\;u_k(x)-l_k(y).
+\]
+No stopping hypothesis is needed.
+\end{theorem}
+
+\begin{proof}
+Induction on $k$. For $k=0$ both sides are $1$. Assume the bound at $k$. One
+slack round applies the $(\mathrm{up})$ clause at $x$, the next applies the
+$(\mathrm{down})$ clause at $y$, and we use them in that order.
+
+Let $x$ be a non-sink. Since $\mathrm{ag}^{+}_{x}$ is monotone and commutes with
+adding a constant,
+\[
+  \Delta_{2k+1}(x,y)\le
+  \mathrm{ag}^{+}_{x}\bigl(\Delta_{2k}(x^{(0)},y),\Delta_{2k}(x^{(1)},y)\bigr)
+  \le\mathrm{ag}^{+}_{x}\bigl(u_k(x^{(0)}),u_k(x^{(1)})\bigr)-l_k(y)
+  =u_{k+1}(x)-l_k(y),
+\]
+because $\mathrm{ag}^{+}$ is $\max$ at $\Vmax$, $\min$ at $\Vmin$ and the mean
+at $\Vavg$, which is exactly the action of $T$. If $x=t_0$ the
+$(\mathrm{up})$ clause is unavailable, but $\Delta$ is nonincreasing in $k$ ---
+the clauses are monotone and $\Delta_1\le\Delta_0$ --- so
+$\Delta_{2k+1}(t_0,y)\le\Delta_{2k}(t_0,y)\le u_k(t_0)-l_k(y)$, and
+$u_k(t_0)=u_{k+1}(t_0)=0$ for $k\ge1$ while for $k=0$ the base clause gives
+$\Delta_1(t_0,y)\le0=u_1(t_0)-l_0(y)$. The case $x=t_1$ is the same with
+$u_k(t_1)=1$.
+
+Now let $y$ be a non-sink. By the same two properties of
+$\mathrm{ag}^{-}_{y}$, and because $\mathrm{ag}^{-}_{y}(c-a,c-b)=c-(Tl)(y)$
+when $(a,b)=(l(y^{(0)}),l(y^{(1)}))$ --- $\min$ against $\max$ at $\Vmax$,
+$\max$ against $\min$ at $\Vmin$, the mean against itself at $\Vavg$ ---
+\[
+  \Delta_{2k+2}(x,y)\le
+  \mathrm{ag}^{-}_{y}\bigl(\Delta_{2k+1}(x,y^{(0)}),\Delta_{2k+1}(x,y^{(1)})\bigr)
+  \le u_{k+1}(x)-l_{k+1}(y).
+\]
+For $y=t_1$ the $(\mathrm{down})$ clause is unavailable; there the
+$(\mathrm{up})$ clause at $x$ already gives
+$\Delta_{2k+2}(x,t_1)\le\mathrm{ag}^{+}_{x}(u_{k+1}(x^{(i)}))-1=u_{k+2}(x)-1
+\le u_{k+1}(x)-l_{k+1}(t_1)$, using $u_{k+2}\le u_{k+1}$; and $y=t_0$ is
+symmetric.
+\end{proof}
+
+\begin{remark}\label{rem:slack-sandwich}
+\Cref{thm:slack-barrier} bounds $\Delta_k$ from \emph{below} by
+$u_k(x)-l_k(y)$, but only on two disjoint parts closed under non-sink
+successors and avoiding $Z_0\cup Z_1$. \Cref{thm:slack-vi-upper} bounds it from
+\emph{above} by the same quantity, everywhere and with no hypothesis at all. So
+on the configurations the first covers, the slack calculus \emph{is} two-sided
+value iteration, to within a factor two in the number of rounds; and everywhere
+else it is at least as fast, but never faster than value iteration in this
+measure. This settles the plain calculus of \Cref{def:slack} in both
+directions, and it is exactly what the transitivity clause of
+\Cref{def:trans-slack} escapes: the bound above uses only $(\mathrm{up})$ and
+$(\mathrm{down})$, and \Cref{prop:trans-Hm} shows the closure beats it by an
+exponential factor on $H_m$. We checked the inequality on $300$ random games,
+$207$ of them non-stopping, at all $N^{2}$ pairs and for $k\le6$: no violation,
+and $57{,}353$ instances of equality, so it is attained often and is not slack.
+\end{remark}
+
+
 
 \medskip
 The barrier just proved is a statement about the clauses of
@@ -5774,6 +5841,102 @@ above is real and is about the pair test. A decision stall does exist, but it
 takes a different instance: \Cref{prop:own-stall} exhibits one, on ten
 vertices, at which the own-successor test seeded with $Z_0$ and $Z_1$ decides
 nothing.
+\end{remark}
+
+
+\subsection{Freezing one vertex: the response map folds}\label{sec:fold}
+
+Every mechanism above compares two vertices of one fixed game. A different and
+equally natural idea is to change the game instead: freeze one vertex at a
+prescribed payoff and watch the value move. For a non-sink $u$ and
+$\theta\in[0,1]$ write $G[u{:=}\theta]$ for the game in which $u$'s two
+out-edges are deleted and $u$ is declared a sink of payoff $\theta$. This is
+legitimate inside \Cref{def:ssg}: every proof in
+\Cref{sec:operators,sec:stopping} uses only that sinks are absorbing and carry
+\emph{fixed} payoffs, never that those payoffs are $0$ and $1$; and for dyadic
+$\theta$ the construction is literal, replacing $u$ by an average vertex both of
+whose edges enter a chain of average vertices realising $\theta$ from $t_0,t_1$.
+Under a fixed positional pair the value at any vertex is an affine function of
+$\theta$ whose slope is a hitting probability, so
+\[
+  R_{u,v}(\theta)\;:=\;\val_{G[u:=\theta]}(v)
+\]
+is piecewise affine, monotone and $1$-Lipschitz, and its pieces are exactly the
+regions on which the optimal pair is constant. Any parametric or continuation
+method that sweeps $\theta$ and recomputes at each breakpoint costs at least the
+number of pieces, and its cost is polynomial only if that number is. It is not.
+
+\begin{theorem}[The response map has exponentially many pieces]\label{thm:fold}
+For $D\ge1$ let $P_D$ be the SSG with non-sink vertices $u$,
+$k_1,\dots,k_{2D-1}$ and $X_d,Y_d,F_d,G_d$ for $1\le d\le D$, where
+$u,k_j,X_d,Y_d\in\Vavg$, $F_d\in\Vmax$, $G_d\in\Vmin$, and
+\[
+  \begin{aligned}
+   &u\to(t_0,t_1),\qquad k_j\to(t_0,k_{j+1})\ (j<2D-1),\qquad k_{2D-1}\to(t_0,t_1),\\
+   &X_d\to(t_0,F_{d-1}),\qquad Y_d\to(k_{2D-2d+1},G_{d-1}),\qquad
+    F_d\to(X_d,Y_d),\qquad G_d\to(X_d,Y_d),
+  \end{aligned}
+\]
+under the conventions $F_0:=u$ and $G_0:=t_0$. Then $P_D$ is stopping, has
+$|V|=6D+2$, and with $T(x):=|2x-1|$ the tent map,
+\[
+  \val_{P_D[u:=\theta]}(F_D)\;=\;2^{-(D+1)}\Bigl(\theta+1-2^{-D}+2^{-D}T^{D}(\theta)\Bigr)
+  \qquad(\theta\in[0,1]).
+\]
+Consequently $R_{u,F_D}$ has exactly $2^{D}=2^{(|V|-2)/6}$ affine pieces, with
+breakpoints exactly at $j2^{-D}$ for $1\le j\le2^{D}-1$ and slopes alternating
+between $0$ and $2^{-D}$.
+\end{theorem}
+
+\begin{proof}
+Deleting $u$'s out-edges leaves an acyclic digraph --- every out-edge of
+$X_d,Y_d,F_d,G_d$ goes to a sink, to a chain vertex, or to level $d-1$, and
+every $k_j$ goes to $t_0$ or $k_{j+1}$ --- so $P_D[u{:=}\theta]$ is a stopping
+game with terminal payoffs and its values are computed by backward induction.
+Along the chain $\val(k_{2D-1})=\tfrac12$ and $\val(k_j)=\tfrac12\val(k_{j+1})$,
+so $\val(k_j)=2^{-(2D-j)}$ and $\val(k_{2D-2d+1})=2^{-(2d-1)}$.
+
+Write $f_d:=\val(F_d)$, $g_d:=\val(G_d)$, so $f_0=\theta$ and $g_0=0$. Backward
+induction gives $\val(X_d)=\tfrac12f_{d-1}$ and
+$\val(Y_d)=\tfrac12\bigl(2^{-(2d-1)}+g_{d-1}\bigr)=4^{-d}+\tfrac12g_{d-1}$, and
+then $f_d=\max(\val(X_d),\val(Y_d))$, $g_d=\min(\val(X_d),\val(Y_d))$ --- the
+two controlled vertices share the same pair of successors, which is the whole
+device. Since $\max+\min$ is the sum and $\max-\min$ the absolute difference,
+$s_d:=f_d+g_d$ and $\varphi_d:=f_d-g_d$ obey
+\[
+  s_d=\tfrac12 s_{d-1}+4^{-d},\qquad
+  \varphi_d=\bigl|\tfrac12\varphi_{d-1}-4^{-d}\bigr| .
+\]
+From $\varphi_0=\theta=T^{0}(\theta)$ and $\varphi_{d-1}=4^{-(d-1)}T^{d-1}(\theta)$
+one gets
+$\varphi_d=\bigl|2\cdot4^{-d}T^{d-1}(\theta)-4^{-d}\bigr|=4^{-d}T^{d}(\theta)$;
+and $s_0=\theta$ gives $s_d=2^{-d}(\theta+1-2^{-d})$ by induction. Then
+$f_D=\tfrac12(s_D+\varphi_D)$ is the displayed formula.
+
+For the piece count, $T$ is affine of slope $-2$ on $[0,\tfrac12]$ and $+2$ on
+$[\tfrac12,1]$, each restriction a bijection onto $[0,1]$. Inductively $T^{D}$
+is affine exactly on the intervals $[j2^{-D},(j+1)2^{-D}]$, with slopes
+$\pm2^{D}$ alternating, the alternation persisting across $\theta=\tfrac12$
+because the two halves are mirror images. So $f_D$ has slope
+$2^{-(D+1)}(1\pm1)$, alternately $0$ and $2^{-D}$; consecutive pieces differ, so
+the count is exactly $2^{D}$. Finally $0\le f_D\le2^{-(D+1)}(2+2^{-D})<1$, so
+all values lie in $[0,1]$.
+\end{proof}
+
+\begin{remark}\label{rem:fold}
+The mechanism is a fold, and it is cheap: one Max and one Min vertex sharing the
+same two successors compute $\max$ and $\min$ of the same pair, whose difference
+is $|o_0-o_1|$, and one such pair doubles the number of monotone stretches.
+Every constant the construction needs sits on a single shared chain, so $D$
+folds cost $O(D)$ vertices. What the theorem rules out is the parametric route
+in the form that motivates it: sweeping $\theta$ and tracking the optimal pair
+meets $2^{\Omega(N)}$ distinct pairs, so no continuation method of that shape is
+polynomial. It does \emph{not} rule out parametric methods that avoid tracking
+the pair, and we claim nothing about those. The identity was verified against
+backward induction in exact rational arithmetic at every dyadic grid point,
+every midpoint and five off-grid rationals for $D=1,\dots,12$, with no mismatch
+and the slope set exactly $\{0,2^{-D}\}$; $P_{12}$ has $74$ vertices and
+$4096$ pieces.
 \end{remark}
 
 
