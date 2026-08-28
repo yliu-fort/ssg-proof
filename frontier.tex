@@ -5617,6 +5617,77 @@ entry $\Delta_k(v^{(0)},v^{(1)})$ says nothing about the entry
 $\Delta_k(v^{(i)},v)$, and it is the latter that drives the rule.
 \end{remark}
 
+\begin{proposition}[The own-successor test does stall]\label{prop:own-stall}
+Let $R$ be the SSG on $\{0,\dots,7\}$ with $t_0=8$, $t_1=9$,
+$\Vmin=\{0,1,6,7\}$, $\Vmax=\{4\}$, $\Vavg=\{2,3,5\}$ and
+\[
+  \begin{aligned}
+   &0\to(2,5), &&1\to(5,3), &&2\to(5,2), &&3\to(0,t_1),\\
+   &4\to(0,t_0), &&5\to(t_1,t_0), &&6\to(0,t_0), &&7\to(5,2).
+  \end{aligned}
+\]
+Then $R$ is stopping,
+$w^\ast=(\tfrac12,\tfrac12,\tfrac12,\tfrac34,\tfrac12,\tfrac12,0,\tfrac12)$,
+$Z_0=\{6,t_0\}$ and $Z_1=\{t_1\}$, the value-distinguishing controlled vertices
+are $1$, $4$ and $6$, and the own-successor test of \Cref{rem:own-successor},
+run over $Q(R;L,U)$ with the free seed $U:=0$ on $Z_0$ and $L:=1$ on $Z_1$,
+returns $0$ at all six of the relevant separators. So it decides no controlled
+vertex, and the decision rule built from \Cref{def:transport} stalls on $R$.
+\end{proposition}
+
+\begin{proof}
+Stopping: a trap avoids $t_1$, hence omits $5$ (average, one successor $t_1$)
+and $3$; then $2$ (average, both successors would have to lie inside) and $7$;
+then $0$, $1$, $4$ and $6$, each of which needs a successor inside. The values
+are immediate: $w^\ast(5)=\tfrac12$; $w^\ast(2)=\tfrac12(w^\ast(5)+w^\ast(2))$
+forces $w^\ast(2)=w^\ast(5)=\tfrac12$; $w^\ast(0)=\min(\tfrac12,\tfrac12)$;
+$w^\ast(3)=\tfrac12(w^\ast(0)+1)=\tfrac34$;
+$w^\ast(1)=\min(\tfrac12,\tfrac34)=\tfrac12$;
+$w^\ast(4)=\max(\tfrac12,0)=\tfrac12$; $w^\ast(6)=\min(\tfrac12,0)=0$;
+$w^\ast(7)=\tfrac12$.
+
+For the separators, every $x\in Q(R;L,U)$ has $x(5)=\tfrac12$ from the average
+row at $5$, then $x(2)=x(5)=\tfrac12$ from the average row at $2$, and
+$x(3)=\tfrac12(x(0)+1)$. The Min rows give $x(0)\le\tfrac12$, $x(1)\le x(5)$,
+$x(1)\le x(3)$, $x(6)\le x(0)$, $x(6)\le0$ and $x(7)\le\tfrac12$; the Max rows
+give $x(4)\ge x(0)$ and $x(4)\ge0$; the seed adds $x(6)\le0$, which the Min row
+already implies. Nothing bounds $x(0)$ or $x(4)$ from below except $x\ge0$. So
+$x(0)=x(1)=x(4)=x(6)=0$, $x(2)=x(5)=\tfrac12$, $x(3)=\tfrac12$, $x(7)=0$ is
+feasible; so is the point with $x(0)=0$ and $x(1)=\tfrac12$, at which
+$x(3)=\tfrac12=x(1)$. The six separators are therefore all attained at $0$: at
+the Min vertex $1$ they are $\max\{x(1)-x(5)\}$ and $\max\{x(1)-x(3)\}$, both
+$\le0$ by the Min rows and both met at the second point; at the Max vertex $4$
+they are $\max\{x(0)-x(4)\}$ and $\max\{-x(4)\}$, both $\le0$ by the Max rows
+and both met at the first; and at the Min vertex $6$ they are
+$\max\{x(6)-x(0)\}$ and $\max\{x(6)\}$, and $x(6)=0$ throughout. None is
+negative, so no vertex is decided.
+\end{proof}
+
+\begin{remark}\label{rem:own-stall}
+\Cref{prop:own-stall} restores, with the correct test, what
+\Cref{prop:transport-stalls} was originally asserting and
+\Cref{rem:own-successor} took away: the transport certificate alone, even read
+in the strongest way and seeded with everything that is free, is not a decision
+rule. The mechanism of the stall is visible in the proof and is the same
+non-convexity the whole section turns on. At a Min vertex $Q(G)$ imposes only
+$x(v)\le x(v^{(i)})$, so $x(v)$ can be pushed \emph{down} to touch either
+successor, and the programme cannot see which one attains the minimum; at
+vertex $1$ both separators are therefore $0$ although $w^\ast(5)<w^\ast(3)$.
+Dually at a Max vertex nothing bounds $x(v)$ from below, which is why vertex
+$4$ survives. What the seed removes is only the part of that freedom that
+$Z_0$ and $Z_1$ already pin, and here it removes none of it.
+
+The instance is small but not accidental: hill climbing on the fraction of
+value-distinguishing controlled vertices left undecided reaches $1$ within a few
+hundred stopping games from several independent starts, and the witnesses are
+not degenerate --- one of them, on thirteen non-sink vertices, has values
+$\tfrac5{12},\tfrac{11}{12},\tfrac{23}{24}$ and leaves all four of its
+controlled vertices undecided. Every stall we found before adding the seed was
+an artefact of discarding it, which is why the seed is stated as part of the
+test.
+\end{remark}
+
+
 \begin{theorem}[The stall survives every polynomial seed]\label{thm:transport-barrier}
 For $r\ge2$ let $S_r$ be the stopping SSG on
 $\{v,a,b_0,\dots,b_{r+1}\}$, $N=r+6$, with $v\in\Vmax$ and every other
@@ -5683,8 +5754,10 @@ wrong. What is exponentially hard here is \emph{ordering the two successors
 against each other}. Deciding the vertex is not: by \Cref{rem:own-successor},
 $\operatorname{Sep}(v,b_0)=-2^{-r-2}<0$ on every $S_r$, so the unseeded
 certificate decides $v$ in one linear program. The complementarity recorded
-above is real and is about the pair test; it does not exhibit a stall of the
-decision rule, and none of the mechanisms in this section is known to have one.
+above is real and is about the pair test. A decision stall does exist, but it
+takes a different instance: \Cref{prop:own-stall} exhibits one, on ten
+vertices, at which the own-successor test seeded with $Z_0$ and $Z_1$ decides
+nothing.
 \end{remark}
 
 
