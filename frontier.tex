@@ -2645,18 +2645,48 @@ it. The laws themselves are unaffected --- \Cref{cor:no-return} and
 counted by $f$ --- but the AUSO reading of a run is not available for those
 instances.
 
-We add one observation and label it as such, not as a theorem. Hill climbing
-over \emph{nondegenerate} stopping games, from several independent starts, did
-not exceed bottom-antipodal height $3$ at $|\Vmax|=3$ or at $|\Vmax|=4$,
-against the abstract ceilings $h^{\ast}(3)=4$ and $h^{\ast}(4)=7$ and against
-the degenerate runs of length $4$ and $6$ recorded above; and a census of $4000$
-nondegenerate stopping games at $|\Vmax|=3$ realised $8$ of the $18$
-isomorphism classes of AUSO of the $3$-cube in the one-player case and $6$ of
-$18$ with a Min player, never the class of height $4$. Whether the nondegenerate
-class is genuinely weaker, or whether this is one more instance of search
-failing to find what has to be engineered, we do not know.
+We had at one point recorded, as an observation, that hill climbing over
+\emph{nondegenerate} stopping games did not exceed bottom-antipodal height $3$
+at $|\Vmax|=3$, and asked whether the nondegenerate class is genuinely weaker.
+It is not, at that size: the unique height-$4$ class of the $3$-cube is the
+improvement orientation of a nondegenerate one-player stopping SSG. Searching
+raw games is simply the wrong space --- the right one is the normal form of
+\Cref{lem:transport-dim}'s harmonic reduction, in which a one-player game is a
+family of $2m$ substochastic affine maps and the orientation is read off an
+arrangement --- and this is one more instance of the rule that what is hard here
+has to be engineered rather than sampled. We withdraw the observation.
+
+What does obstruct the census, and cannot be searched away, is size.
 \end{remark}
 
+
+\begin{proposition}[The converse needs a size clause]\label{prop:auso-size}
+A bottom-antipodal trace visits distinct vertices, so $h(s)\le2^{m}$ for every
+orientation of the $m$-cube. Hence an AUSO of height $2^{\Theta(m)}$ yields a
+\emph{superpolynomial} all-switches lower bound only if it is realised by a
+stopping SSG on $N=m^{O(1)}$ vertices. But at most
+\[
+  3^{N}\,(N+2)^{2N}\,N^{m}\;=\;2^{O(N\log N)}
+\]
+orientations of the $m$-cube arise as improvement orientations of stopping SSGs
+on at most $N$ vertices, since such a game is determined by a kind for each of
+$N$ vertices, an ordered successor pair for each, and a choice of which ordered
+$m$-tuple carries the cube. The $m$-cube has $2^{m2^{m-1}}$ orientations in all.
+So for $N$ polynomial in $m$ the realisable ones are a $2^{-\Omega(2^{m})}$
+fraction.
+\end{proposition}
+
+\begin{remark}\label{rem:auso-size}
+\Cref{prop:auso-size} says the equivalence above is not size-preserving in the
+direction that matters, and it explains why an exhaustive census cannot settle
+the question. At $m=3$ and $m=4$ the number of orientations is far smaller than
+the number of parameters a game may spend, and essentially everything is
+realisable --- at $m=3$, sixteen of the eighteen isomorphism classes arise from
+one-player games and the remaining two from two-player ones. At $m=\Theta(\log
+N)$, which is where a superpolynomial run would have to live, the counting goes
+the other way by an exponential margin. Enumeration will therefore never decide
+this, and neither will sampling; only a construction will.
+\end{remark}
 
 \subsection{A rule that needs exponentially many switches}
 
