@@ -2627,10 +2627,34 @@ that one it is used only to close a programme of ours, never to support a
 positive claim; everything else in this subsection is proved here. Granting it, $f$ is exponential and no amount of
 further law-deriving can make the counting argument of \Cref{rem:allsw-laws}
 subexponential. \Cref{thm:component-bound} is unaffected, since it constrains
-the graph rather than the schedule; and \Cref{prop:allsw-auso} relocates the
-whole question: an exponential all-switches family exists if and only if some
-stopping SSG realises an AUSO of exponential bottom-antipodal height as its
-improvement orientation.
+the graph rather than the schedule.
+
+\Cref{prop:allsw-auso} relocates the question, but only within its hypothesis,
+and the hypothesis is not idle. An exponential all-switches family of
+\emph{nondegenerate} stopping SSGs exists if and only if some such game
+realises an AUSO of exponential bottom-antipodal height as its improvement
+orientation. Degenerate games are not covered: there a cube edge can be left
+unoriented, neither endpoint being strictly switchable in that direction, and
+the outmap is then not that of a unique sink orientation. This matters here
+because the longest runs recorded in this document are of exactly that kind.
+The witness of \Cref{prop:overshoot-small} has, in its reduced twelve-variable
+model, ten tied incidences $(\sigma,i)$ out of $64$ and hence five unoriented
+cube edges out of $32$; we recomputed all sixteen value vectors exactly to check
+it. The laws themselves are unaffected --- \Cref{cor:no-return} and
+\Cref{cor:law-b} are proved for all stopping games, so every run is still
+counted by $f$ --- but the AUSO reading of a run is not available for those
+instances.
+
+We add one observation and label it as such, not as a theorem. Hill climbing
+over \emph{nondegenerate} stopping games, from several independent starts, did
+not exceed bottom-antipodal height $3$ at $|\Vmax|=3$ or at $|\Vmax|=4$,
+against the abstract ceilings $h^{\ast}(3)=4$ and $h^{\ast}(4)=7$ and against
+the degenerate runs of length $4$ and $6$ recorded above; and a census of $4000$
+nondegenerate stopping games at $|\Vmax|=3$ realised $8$ of the $18$
+isomorphism classes of AUSO of the $3$-cube in the one-player case and $6$ of
+$18$ with a Min player, never the class of height $4$. Whether the nondegenerate
+class is genuinely weaker, or whether this is one more instance of search
+failing to find what has to be engineered, we do not know.
 \end{remark}
 
 
