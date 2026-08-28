@@ -5624,6 +5624,301 @@ what is refuted is the mechanism, not the tractability of the family.
 \end{remark}
 
 
+\subsection{Coupling the two: the transport--slack hybrid}\label{sec:hybrid}
+
+\Cref{rem:transport} records that the slack calculus and the transport
+certificate fail in complementary configurations. It is therefore natural
+to run them together, and the point of this subsection is that the
+combination is not a disjunction of two tests but a genuine feedback loop,
+because each mechanism supplies exactly what the other lacks.
+
+What $Q(G)$ lacks is one half of every controlled row. The relations
+$\val(v)=\max_i\val(v^{(i)})$ and $\val(v)=\min_i\val(v^{(i)})$ each split
+into a convex half and a non-convex half, and \Cref{def:transport} keeps
+only the convex halves, $x(v)\ge x(v^{(i)})$ and $x(v)\le x(v^{(i)})$. The
+missing halves, $x(v)\le\max_i x(v^{(i)})$ and $x(v)\ge\min_i x(v^{(i)})$,
+are not linear constraints and cannot be added to a linear programme --- but
+their consequences for \emph{differences} are exactly the $(\mathrm{up})$
+and $(\mathrm{down})$ clauses of \Cref{def:slack}. Conversely what
+\Cref{def:slack} lacks is a way to solve the average equalities in one
+step rather than by iteration; that is what a linear programme does, and
+\Cref{lem:transport-exact} is the statement that it does it exactly.
+
+\begin{definition}[The hybrid]\label{def:hybrid}
+Let $G$ be an SSG and $Z_0,Z_1$ as in \Cref{def:simorder}. For a matrix
+$\Delta\colon V\times V\to[-1,1]$ put
+\[
+  K(\Delta)\;:=\;\bigl\{z\in Q(G)\ :\ z(p)-z(q)\le\Delta(p,q)
+  \text{ for all }p,q\in V\bigr\},
+\]
+where as in \Cref{def:transport} every $z\in Q(G)$ has $z(t_0)=0$ and
+$z(t_1)=1$. Write $\mathcal L$ for one round of \Cref{def:slack},
+$\mathcal C$ for the min-plus closure of \Cref{def:trans-slack}, and
+\[
+  \mathcal P(\Delta)(x,y)\;:=\;\max\{z(x)-z(y)\ :\ z\in K(\Delta)\} .
+\]
+The \emph{hybrid} is the iteration $\Delta_0\equiv1$,
+\[
+  \Delta'_k:=\mathcal C\bigl(\min(\Delta_k,\mathcal L\Delta_k)\bigr),
+  \qquad
+  \Delta_{k+1}:=\mathcal C\bigl(\min(\Delta'_k,\mathcal P(\Delta'_k))\bigr),
+\]
+every entry clamped to $[-1,1]$. Call $\Delta$ \emph{closed} if it is
+sound, satisfies $\Delta\le\mathcal L\Delta$, $\Delta\le\mathcal C\Delta$
+and $\Delta\le\mathcal P(\Delta)$ entrywise. One round is $O(N^{2})$
+linear programmes with $N$ variables and $O(N^{2})$ rows, hence
+polynomial; \Cref{cor:hybrid-sink} reduces this to $4N$ programmes.
+\end{definition}
+
+\begin{theorem}[Soundness]\label{thm:hybrid-sound}
+For every SSG, every $k$ and all $x,y$,
+$\Delta_k(x,y)\ge\val(x)-\val(y)$. No stopping hypothesis is needed.
+\end{theorem}
+
+\begin{proof}
+Induction on $k$. The case $k=0$ is trivial, and $\mathcal L$ and
+$\mathcal C$ preserve soundness by \Cref{thm:slack-sound} and
+\Cref{thm:trans-sound}. For $\mathcal P$: if $\Delta$ is sound then
+$\val(p)-\val(q)\le\Delta(p,q)$ for all $p,q$, while
+$\val\in Q(G)$ by \Cref{thm:transport-sound}; hence $\val\in K(\Delta)$,
+so $K(\Delta)\ne\emptyset$ and
+$\mathcal P(\Delta)(x,y)\ge\val(x)-\val(y)$.
+\end{proof}
+
+The analysis rests on reading a closed matrix twice: once column by
+column, once row by row. Write $\widetilde T$ for the operator that
+agrees with $T$ at every non-sink and leaves the two sinks at whatever
+values its argument gives them.
+
+\begin{lemma}[Rows and columns]\label{lem:hybrid-fix}
+Let $\Delta$ be closed. Then for every $y$ the column
+$\varphi_y:=\Delta(\cdot,y)$ satisfies
+$\varphi_y\le\widetilde T\varphi_y$ at every non-sink, and for every $x$
+the negated row $\psi_x:=-\Delta(x,\cdot)$ satisfies
+$\psi_x\ge\widetilde T\psi_x$ at every non-sink. Moreover
+\[
+  \Delta(t_0,y)\le\Delta(t_1,y)-1
+  \qquad\text{and}\qquad
+  \Delta(x,t_1)\le\Delta(x,t_0)-1 .
+\]
+\end{lemma}
+
+\begin{proof}
+The $(\mathrm{up})$ clause of \Cref{def:slack} reads
+$\Delta(x,y)\le\max_i\Delta(x^{(i)},y)$ for $x\in\Vmax$,
+$\le\min_i\Delta(x^{(i)},y)$ for $x\in\Vmin$ and $\le$ the mean for
+$x\in\Vavg$; that is precisely
+$\varphi_y(x)\le(\widetilde T\varphi_y)(x)$. The $(\mathrm{down})$ clause
+reads $\Delta(x,y)\le\min_j\Delta(x,y^{(j)})$ for $y\in\Vmax$,
+$\le\max_j$ for $y\in\Vmin$ and $\le$ the mean for $y\in\Vavg$; negating
+turns $\min$ into $\max$ and back, giving
+$\psi_x(y)\ge(\widetilde T\psi_x)(y)$. For the two displayed
+inequalities, the base clauses give $\Delta(t_0,t_1)\le-1$ because
+$t_0\in Z_0$ and $t_1\in Z_1$, and the min-plus closure gives
+$\Delta(t_0,y)\le\Delta(t_0,t_1)+\Delta(t_1,y)$ and
+$\Delta(x,t_1)\le\Delta(x,t_0)+\Delta(t_0,t_1)$.
+\end{proof}
+
+\begin{lemma}[Comparison with general sink payoffs]\label{lem:gen-comparison}
+Let $G$ be stopping and let $\alpha<\beta$ be reals in $[-1,1]$. Let
+$T^{\alpha,\beta}$ agree with $T$ at every non-sink and return $\alpha$
+at $t_0$ and $\beta$ at $t_1$. Then $T^{\alpha,\beta}$ has a unique fixed
+point in $[-1,1]^{V}$, namely $\alpha+(\beta-\alpha)\val$, and for
+$f\in[-1,1]^{V}$,
+\[
+  f\le T^{\alpha,\beta}f\ \Longrightarrow\ f\le\alpha+(\beta-\alpha)\val,
+  \qquad
+  f\ge T^{\alpha,\beta}f\ \Longrightarrow\ f\ge\alpha+(\beta-\alpha)\val .
+\]
+\end{lemma}
+
+\begin{proof}
+The affine bijection $A(u):=(u-\alpha)/(\beta-\alpha)$ is increasing, and
+$\max$, $\min$ and the mean all commute with increasing affine maps, so
+$A\circ T^{\alpha,\beta}=T\circ A$ at every non-sink; at the sinks
+$A(\alpha)=0$ and $A(\beta)=1$, which are the sink values of $T$. Hence
+$f\le T^{\alpha,\beta}f$ if and only if $Af\le T(Af)$.
+
+It remains to apply \Cref{cor:comparison} to $Af$, which need not lie in
+$\mathcal X=[0,1]^{V}$. This is harmless: the proof of
+\Cref{thm:contraction} bounds $\lVert T^{N}x-T^{N}y\rVert_\infty$ by
+comparing two $N$-stage games that differ only in the terminal payoff
+function, and \Cref{lem:absorption} is strategy-independent, so the
+estimate holds verbatim for any two bounded terminal payoffs, in
+particular on $[-M,M]^{V}$ for every $M$. Consequently $T$ has a unique
+fixed point in $[-M,M]^{V}$ for every $M\ge1$, necessarily $\val$, and
+every orbit converges to it; the monotone argument of
+\Cref{cor:comparison} then gives $Af\le\val$ from $Af\le T(Af)$ and
+$Af\ge\val$ from $Af\ge T(Af)$. Transporting back through $A$ gives both
+implications.
+\end{proof}
+
+\begin{theorem}[Completeness: the polytope collapses]\label{thm:hybrid-complete}
+Let $G$ be stopping and let $\Delta$ be closed. Then
+\[
+  K(\Delta)=\{\val\}
+  \qquad\text{and}\qquad
+  \Delta(x,y)=\val(x)-\val(y)\ \text{ for all }x,y .
+\]
+In particular every pair is decided. Since the sequence $(\Delta_k)$ of
+\Cref{def:hybrid} is nonincreasing and bounded below by
+$\val(x)-\val(y)$, its limit is closed, so the hybrid converges to the
+exact differences on every stopping game.
+\end{theorem}
+
+\begin{proof}
+Write $L(v):=\min\{z(v):z\in K(\Delta)\}$ and
+$U(v):=\max\{z(v):z\in K(\Delta)\}$. These are attained, and
+$\val\in K(\Delta)$ by soundness, so $L\le\val\le U$ with
+$L(t_0)=U(t_0)=0$ and $L(t_1)=U(t_1)=1$. Closedness under $\mathcal P$
+gives the four inequalities
+\begin{equation}\label{eq:hyb-sink}
+  \Delta(t_0,y)\le-L(y),\quad
+  \Delta(t_1,y)\le1-L(y),\quad
+  \Delta(x,t_0)\le U(x),\quad
+  \Delta(x,t_1)\le U(x)-1 ,
+\end{equation}
+since, for instance, $\mathcal P(\Delta)(t_0,y)=\max\{-z(y)\}=-L(y)$.
+
+\emph{Step 1: $\Delta(x,y)\le\val(x)-L(y)$.} Fix $y$ and apply
+\Cref{lem:hybrid-fix}: $\varphi_y\le\widetilde T\varphi_y$ with sink
+values $\alpha:=\Delta(t_0,y)$ and $\beta:=\Delta(t_1,y)$, and
+$\alpha\le\beta-1<\beta$. So $\varphi_y\le T^{\alpha,\beta}\varphi_y$ and
+\Cref{lem:gen-comparison} gives
+$\varphi_y(x)\le\alpha\bigl(1-\val(x)\bigr)+\beta\val(x)$. That
+expression is nondecreasing in $\alpha$ and in $\beta$ because
+$0\le\val(x)\le1$, so by the first two inequalities of
+\eqref{eq:hyb-sink},
+\[
+  \Delta(x,y)\;\le\;-L(y)\bigl(1-\val(x)\bigr)+\bigl(1-L(y)\bigr)\val(x)
+  \;=\;\val(x)-L(y).
+\]
+
+\emph{Step 2: $\Delta(x,y)\le U(x)-\val(y)$.} Fix $x$ and apply
+\Cref{lem:hybrid-fix} to $\psi_x=-\Delta(x,\cdot)$, whose sink values are
+$a:=-\Delta(x,t_0)$ and $b:=-\Delta(x,t_1)$, with $a\le b-1<b$ by the
+second display of that lemma. By \Cref{lem:gen-comparison},
+$\psi_x(y)\ge a(1-\val(y))+b\val(y)$, that is
+\[
+  \Delta(x,y)\;\le\;\Delta(x,t_0)\bigl(1-\val(y)\bigr)+\Delta(x,t_1)\val(y)
+  \;\le\;U(x)\bigl(1-\val(y)\bigr)+\bigl(U(x)-1\bigr)\val(y)
+  \;=\;U(x)-\val(y),
+\]
+using the last two inequalities of \eqref{eq:hyb-sink}.
+
+\emph{Step 3: $U=\val$.} Every $z\in K(\Delta)$ obeys
+$z(x)-z(t_0)\le\Delta(x,t_0)$, i.e.\ $z(x)\le\Delta(x,t_0)$, so
+$U(x)\le\Delta(x,t_0)$. Step 1 with $y=t_0$ gives
+$\Delta(x,t_0)\le\val(x)-L(t_0)=\val(x)$. Hence $U\le\val$, and $U\ge\val$
+was noted above.
+
+\emph{Step 4: $L=\val$.} Every $z\in K(\Delta)$ obeys
+$z(t_1)-z(y)\le\Delta(t_1,y)$, i.e.\ $z(y)\ge1-\Delta(t_1,y)$, so
+$L(y)\ge1-\Delta(t_1,y)$. Step 2 with $x=t_1$ gives
+$\Delta(t_1,y)\le U(t_1)-\val(y)=1-\val(y)$. Hence $L\ge\val$, and
+$L\le\val$ was noted above.
+
+\emph{Step 5.} By Steps 3 and 4 every $z\in K(\Delta)$ satisfies
+$\val=L\le z\le U=\val$, so $K(\Delta)=\{\val\}$ and therefore
+$\mathcal P(\Delta)(x,y)=\val(x)-\val(y)$. Closedness gives
+$\Delta(x,y)\le\val(x)-\val(y)$ and soundness the reverse.
+
+For the last sentence, $(\Delta_k)$ is nonincreasing and bounded below, so
+it converges; $\mathcal L$, $\mathcal C$ and $\mathcal P$ are continuous
+in $\Delta$ (the first two visibly, the third because the optimal value of
+a feasible bounded linear programme is continuous in the right-hand side,
+and $K$ is never empty by soundness), so the limit is a closed matrix.
+\end{proof}
+
+\begin{corollary}[Only the sink rows are used]\label{cor:hybrid-sink}
+\Cref{thm:hybrid-complete} uses the linear programme only through the
+$4N$ values $\mathcal P(\Delta)(t_i,y)$ and $\mathcal P(\Delta)(x,t_i)$,
+$i\in\{0,1\}$. Hence the variant of \Cref{def:hybrid} that applies
+$\mathcal P$ only at pairs containing a sink is already complete on
+stopping games, and one of its rounds costs $4N$ linear programmes rather
+than $N^{2}$.
+\end{corollary}
+
+\begin{remark}\label{rem:hybrid-box}
+\Cref{cor:hybrid-sink} identifies what the linear programme contributes.
+The four quantities it needs are exactly the box
+$\bigl[L,U\bigr]$ of $K(\Delta)$, since
+$\mathcal P(\Delta)(x,t_0)=U(x)$ and
+$\mathcal P(\Delta)(t_1,y)=1-L(y)$. So the hybrid is a
+\emph{box-propagation loop}: from the current difference bounds it forms
+the polytope $K(\Delta)$, reads off its box, feeds the box back as four
+families of difference facts, and lets the slack clauses propagate.
+\Cref{thm:hybrid-complete} says the only fixed point of that loop on a
+stopping game is the exact one. What the theorem does \emph{not} give is a
+rate, and by \Cref{thm:decide-one-bit} a polynomial bound on the number of
+rounds before some value-distinguishing controlled vertex is decided would
+put \textsc{SSG-Value} in $\mathsf P$. That is the exact form in which
+this mechanism leaves the problem open.
+\end{remark}
+
+\begin{proposition}[It disposes of every stall recorded above]\label{prop:hybrid-decides}
+Let $\Delta_k$ be as in \Cref{def:hybrid} and let a pair be
+\emph{decided at round $k$} if $\Delta_k$ is negative at it.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item On $G_8$ of \Cref{prop:simorder-stalls} the pair $(4,1)$ is decided
+      at round $1$, against $7$ rounds for \Cref{def:slack} and $6$ for
+      \Cref{def:trans-slack}.
+\item On $H_m$ of \Cref{cor:slack-stalls} the pair $(c_1,h)$ is decided at
+      round $1$ for $m=3,4,5,6$, against $14,38,100,249$ rounds for
+      \Cref{def:slack} and $9,13,17,21$ for \Cref{def:trans-slack}.
+\item On $S$ of \Cref{prop:transport-stalls}, where \Cref{def:transport}
+      stalls outright, the pair is decided at round $2$; on $S_r$ of
+      \Cref{thm:transport-barrier} it is decided at round $2$ for
+      $r=2,\dots,10$, against $12,25,52,104,210,\dots$ rounds for
+      \Cref{def:slack} and $8,11,15,18,22,\dots$ for
+      \Cref{def:trans-slack}.
+\end{enumerate}
+All of these were computed in exact rational arithmetic, with soundness
+re-verified against the true values at every round, and the same counts
+were obtained by the sink-only variant of \Cref{cor:hybrid-sink}.
+\end{proposition}
+
+\begin{proof}
+By computation from \Cref{def:hybrid}; the values of the instances are
+those recorded in \Cref{prop:simorder-stalls}, \Cref{thm:vi-lower},
+\Cref{prop:transport-stalls} and \Cref{thm:transport-barrier}. The
+mechanism behind (c) is worth recording, since it is what
+\Cref{thm:transport-barrier} shows cannot happen for
+\Cref{def:transport} alone. On $S_r$ the polytope $Q(S_r)$ is a segment
+parametrised by $t=x(v)\in[\tfrac12,1]$, and the certificate needs
+$t$ localised to within $2^{-\Theta(N)}$. Round $1$ of the hybrid adds no
+slack facts beyond the bases, so its linear programme returns exactly the
+two separators of \Cref{thm:transport-barrier}; but one of them,
+$\operatorname{Sep}(b_0,a)=2^{-r-2}$, is \emph{exact}, and it is recorded
+as the difference fact $\Delta_1(a,b_0)\le2^{-r-2}$. At round $2$ the
+$(\mathrm{up})$ clause at the Max vertex $v$ turns this into
+$\Delta_2(v,b_0)\le\max\bigl(\Delta_1(a,b_0),\Delta_1(b_0,b_0)\bigr)=2^{-r-2}$,
+and the constraint $x(v)-x(b_0)\le2^{-r-2}$ collapses the segment to the
+single point $t=\tfrac12$, because $x^{(t)}(v)-x^{(t)}(b_0)=2^{-r}(t-\tfrac14)$.
+The polytope having collapsed, the second separator is now $-2^{-r-2}<0$.
+\end{proof}
+
+\begin{remark}\label{rem:hybrid-where}
+\Cref{prop:hybrid-decides}(c) is the general pattern: the direction in
+which the transport certificate is \emph{tight} is fed to the slack
+clause at a controlled vertex, and the resulting difference constraint
+shrinks the polytope in the direction in which the certificate was loose.
+Neither mechanism does this alone. It also locates where a stall would
+have to sit. \Cref{thm:slack-barrier} and \Cref{thm:seeded-barrier}
+defeat the slack calculus on two disjoint parts $A,B$ closed under
+non-sink successors and avoiding $Z_0\cup Z_1$; but if such a part
+consists only of average vertices then it satisfies the hypothesis of
+\Cref{lem:transport-exact}, so the linear programme pins $x=\val$ on it
+at the first round and no pair drawn from it can witness a stall. Hence
+any configuration defeating the hybrid in the sense of those barriers
+must place a \emph{controlled} vertex inside $A$ or inside $B$ --- which
+is exactly the configuration that defeats \Cref{def:transport}, and
+exactly the one in which the slack clauses at that vertex have something
+to say. We have not been able to satisfy both demands at once, and we do
+not claim it is impossible.
+\end{remark}
+
+
 \section{Summary}\label{sec:summary}
 
 \paragraph{Foundations, proved from first principles.} The monotone
