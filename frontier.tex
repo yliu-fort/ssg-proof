@@ -5607,6 +5607,22 @@ decides $v$ outright, and on the family $S_r$ of \Cref{thm:transport-barrier}
 the pair test returns $2^{-r-2}>0$ while $\operatorname{Sep}(v,b_0)=-2^{-r-2}<0$
 for every $r$, verified exactly for $r=2,\dots,5$.
 
+The principle is not confined to linear programmes. Whenever a mechanism can
+derive $w^\ast(v)\le w^\ast(v^{(i)})$ at $v\in\Vmax$, that derivation forces
+\emph{equality}, since the reverse inequality is automatic; so it proves
+$v^{(i)}$ optimal and decides $v$. For an order-only mechanism the test is
+therefore whether $v\preceq v^{(i)}$ holds, and for the slack calculus whether
+$\Delta_k(v,v^{(i)})\le0$ --- note the non-strict inequality, which is a weaker
+demand than the strict one the pair test needs.
+
+We accordingly re-examined the other negative results of this document against
+this test, and they survive. On $G_8$ the simulation preorder relates neither
+$(5,4)$ nor $(5,1)$, so \Cref{prop:simorder-stalls} holds for the
+own-successor test as well. On $H_m$ the slack calculus first achieves
+$\Delta_k(v,c_1)\le0$ at rounds $15,39,101,250$ for $m=3,\dots,6$, exactly one
+round after the pair test's $14,38,100,249$, so \Cref{cor:slack-stalls} is
+unaffected. Only the claims resting on \Cref{def:transport} needed correcting.
+
 So \Cref{prop:transport-stalls} and \Cref{thm:transport-barrier} are statements
 about \emph{ordering the two successors}, which is what they prove, and not
 about deciding the vertex, which the certificate does at once on both families.
