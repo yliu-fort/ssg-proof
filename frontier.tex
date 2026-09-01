@@ -6144,6 +6144,285 @@ premises leave the separated region and which is therefore not covered by
 the theorem. Whether transitivity suffices is open.
 \end{remark}
 
+\subsection{A multiplicative calculus, and why it stops in the same place}
+\label{sec:ratio}
+
+Every mechanism above is additive: it propagates bounds on differences
+$w^\ast(x)-w^\ast(y)$. The natural alternative is to propagate bounds on
+\emph{ratios}. Two things make that worth doing. The first is that the
+Shapley operator becomes positively homogeneous after one homogenisation
+step, so the classical nonlinear Perron--Frobenius apparatus --- the
+Collatz--Wielandt bounds, Hilbert's projective metric, Birkhoff's
+contraction theorem --- becomes formally available; we show first that it
+is not useful here. The second is that a ratio calculus is genuinely
+\emph{not} an instance of \Cref{def:slack}, because at an average vertex
+it uses the harmonic mean and the mediant where the additive calculus
+uses the arithmetic mean. It therefore tests whether
+\Cref{thm:slack-barrier} is an artefact of additivity. It is not.
+
+\begin{definition}[Homogenisation]\label{def:homog}
+Let $V'$ be the non-sinks of an SSG $G$ and let
+$K:=\mathbb{R}_{\ge0}^{V'\cup\{\ast\}}$. For $y\in K$ define
+$\hat y$ on $V$ by $\hat y(t_0):=0$, $\hat y(t_1):=y(\ast)$ and
+$\hat y(v):=y(v)$ on $V'$, and put
+\[
+  (\widehat Ty)(v):=\mathrm{ag}_v\bigl(\hat y(v^{(0)}),\hat y(v^{(1)})\bigr)
+  \ \ (v\in V'),\qquad (\widehat Ty)(\ast):=y(\ast),
+\]
+$\mathrm{ag}_v$ being $\max$, $\min$ or the mean according to the type of
+$v$. Then $\widehat T$ is order-preserving and positively homogeneous of
+degree one, and $x\mapsto(x,1)$ identifies the fixed points of $T$ with
+those of $\widehat T$ on the slice $y(\ast)=1$.
+\end{definition}
+
+\begin{proposition}[The multiplicative eigenvalue is constant, and its
+bracket bounds nothing]\label{prop:cw}
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item For every SSG and every strictly positive $y\in K$,
+\[
+  \min_{u}\frac{(\widehat Ty)(u)}{y(u)}\ \le\ 1\ \le\
+  \max_{u}\frac{(\widehat Ty)(u)}{y(u)} ,
+\]
+the ratio at $u=\ast$ being exactly $1$. Hence the cone spectral radius
+of $\widehat T$ equals $1$ on every instance; no $y>0$ satisfies
+$\widehat Ty\le\lambda y$ with $\lambda<1$ or $\widehat Ty\ge\lambda y$
+with $\lambda>1$; and a bisection on $\lambda$ returns $1$ whatever the
+game.
+\item The Collatz--Wielandt bracket carries no information about
+$\val$. For $L\ge2$ let $D_L$ be the stopping SSG whose non-sinks are
+average vertices $c_1,\dots,c_L$ with $c_j\to(c_{j+1},c_{j+1})$ for
+$j<L$ and $c_L\to(t_1,t_1)$, so $N=L+2$ and $w^\ast\equiv1$ on $V'$.
+Then $y(c_j):=2^{-(L-j)}$, $y(\ast):=1$ satisfies
+$1\le(\widehat Ty)(u)/y(u)\le2$ for every $u$, yet
+$\max_{v}w^\ast(v)/y(v)=2^{L-1}=2^{N-3}$. So no function $c(\beta)$
+makes ``$\widehat Ty\le\beta y$ implies $w^\ast\le c(\beta)y$'' true.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) $(\widehat Ty)(\ast)=y(\ast)$ exactly, so the ratio at $\ast$ is $1$
+and lies between the minimum and the maximum; and $\widehat Ty\le\lambda y$
+forces $y(\ast)\le\lambda y(\ast)$, that is $\lambda\ge1$, dually in the
+other direction.
+(b) $D_L$ is stopping because $c_1\to\cdots\to c_L\to t_1$ absorbs, and
+$w^\ast\equiv1$ because every play reaches $t_1$. For $j<L$,
+$(\widehat Ty)(c_j)=y(c_{j+1})=2y(c_j)$, and
+$(\widehat Ty)(c_L)=\hat y(t_1)=y(\ast)=1=y(c_L)$; so the bracket is
+$[1,2]$ while $w^\ast(c_1)/y(c_1)=2^{L-1}$. The multiplicative slack
+cannot be scaled away, because rescaling $y$ on $V'$ does not rescale
+$\hat y(t_1)=y(\ast)$: the sink pins the scale.
+\end{proof}
+
+What survives is not the eigenvalue but the calculus.
+
+\begin{definition}[Ratio calculus]\label{def:ratio}
+Let $G$ be an SSG and $Z_0,Z_1$ as in \Cref{def:simorder}. Entries lie in
+$[0,+\infty]$ and are read as ``$w^\ast(x)\le R(x,y)\,w^\ast(y)$''. Put
+$R_0\equiv+\infty$ and let $R_{k+1}(x,y)$ be the minimum of $R_k(x,y)$
+with every applicable entry among: $0$ if $x\in Z_0$; $1$ if $y\in Z_1$;
+$1$ if $x=y$;
+\[
+  \mathrm{ah}^{-}_{y}\bigl(R_k(x,y^{(0)}),R_k(x,y^{(1)})\bigr)
+  \quad(y\text{ a non-sink}),\qquad
+  \mathrm{ah}^{+}_{x}\bigl(R_k(x^{(0)},y),R_k(x^{(1)},y)\bigr)
+  \quad(x\text{ a non-sink}),
+\]
+where $\mathrm{ah}^{-}_{y}$ is $\min$ at $\Vmax$, $\max$ at $\Vmin$ and
+the \emph{harmonic} mean at $\Vavg$, while $\mathrm{ah}^{+}_{x}$ is
+$\max$ at $\Vmax$, $\min$ at $\Vmin$ and the \emph{arithmetic} mean at
+$\Vavg$; and, for $x,y$ non-sinks of the same type, the composites
+$\min_j\max_i R_k(x^{(i)},y^{(j)})$ and $\max_i\min_j R_k(x^{(i)},y^{(j)})$
+at two Max vertices, $\min_i\max_j$ and $\max_j\min_i$ at two Min
+vertices, and $\max_i R_k\bigl(x^{(i)},y^{(\pi(i))}\bigr)$ for either
+bijection $\pi$ at two average vertices. We use $c/0=+\infty$ for $c>0$
+and read the harmonic mean of $0$ with anything as $0$.
+\end{definition}
+
+\begin{theorem}[Soundness]\label{thm:ratio-sound}
+For every SSG, every $k$ and all $x,y$: $w^\ast(x)\le R_k(x,y)w^\ast(y)$,
+and $R_{k+1}\le R_k$. No stopping hypothesis is needed.
+\end{theorem}
+
+\begin{proof}
+Write $D(x,y):=w^\ast(x)/w^\ast(y)$, with the conventions above. It
+suffices that every clause is at least $D$ when evaluated at a matrix
+that is at least $D$; all clauses are monotone and $R_0=+\infty\ge D$.
+Throughout, $Tw^\ast=w^\ast$ by \Cref{thm:lfp-general}.
+
+Denominator clauses. At $y\in\Vmax$, $w^\ast(y)\ge w^\ast(y^{(j)})$ for
+both $j$, so $w^\ast(x)\le R(x,y^{(j)})w^\ast(y^{(j)})\le
+R(x,y^{(j)})w^\ast(y)$ for both, whence the $\min$. At $y\in\Vmin$ the
+minimum is attained at some $j^\ast$ with $w^\ast(y)=w^\ast(y^{(j^\ast)})$,
+so $w^\ast(x)\le R(x,y^{(j^\ast)})w^\ast(y)\le\max_jR(x,y^{(j)})w^\ast(y)$.
+At $y\in\Vavg$, from $w^\ast(y^{(j)})\ge w^\ast(x)/R(x,y^{(j)})$,
+\[
+  w^\ast(y)=\tfrac12\bigl(w^\ast(y^{(0)})+w^\ast(y^{(1)})\bigr)
+  \ \ge\ \tfrac{w^\ast(x)}2\Bigl(\tfrac1{R(x,y^{(0)})}+\tfrac1{R(x,y^{(1)})}\Bigr),
+\]
+which is the harmonic mean bound.
+
+Numerator clauses. At $x\in\Vmax$, $w^\ast(x)=\max_iw^\ast(x^{(i)})\le
+\max_iR(x^{(i)},y)\,w^\ast(y)$; at $x\in\Vmin$, $w^\ast(x)\le w^\ast(x^{(i)})
+\le R(x^{(i)},y)w^\ast(y)$ for each $i$, whence the $\min$; at
+$x\in\Vavg$ the arithmetic mean is immediate.
+
+Composites. Write $a_i:=w^\ast(x^{(i)})$, $b_j:=w^\ast(y^{(j)})$. At two
+Max vertices $D(x,y)=\max_ia_i/\max_jb_j$, which equals
+$\max_i\min_j(a_i/b_j)$ and is at most $\min_j\max_i(a_i/b_j)$; at two
+Min vertices $D(x,y)=\min_ia_i/\min_jb_j$ equals both
+$\min_i\max_j(a_i/b_j)$ and $\max_j\min_i(a_i/b_j)$. At two average
+vertices $D(x,y)=(a_0+a_1)/(b_{\pi(0)}+b_{\pi(1)})\le\max_i a_i/b_{\pi(i)}$
+by the mediant inequality. The bases are immediate from
+$Z_0\subseteq\{w^\ast=0\}$ and $Z_1\subseteq\{w^\ast=1\}$, and
+$R_1\le R_0$ propagates to $R_{k+1}\le R_k$.
+\end{proof}
+
+\begin{theorem}[The ratio calculus is sandwiched by value
+iteration]\label{thm:ratio-sandwich}
+Put $u_k:=T^k\bbone$ and $l_k:=T^k0$, the sinks not pinned in the initial
+vectors.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \textup{(Upper, no hypothesis.)} For every SSG, every $k$ and all
+      $x,y$ including sinks, $R_{2k}(x,y)\le u_k(x)/l_k(y)$.
+\item \textup{(Lower, the barrier.)} If $G$ is stopping and $A,B$ satisfy
+      the hypotheses of \Cref{thm:slack-barrier} --- disjoint, each closed
+      under non-sink successors, and $A\cup B$ disjoint from
+      $Z_0\cup Z_1$ --- then $R_k(x,y)\ge u_k(x)/l_k(y)$ for every $k$ and
+      every $(x,y)\in(A\cup\{t_0,t_1\})\times(B\cup\{t_0,t_1\})$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) is the argument of \Cref{thm:slack-vi-upper} in multiplicative form:
+one round applies the numerator clause at $x$ and the next the
+denominator clause at $y$; the arithmetic mean at an average numerator
+reproduces $T$ in the numerator and the harmonic mean at an average
+denominator reproduces $T$ in the denominator, while $\max$ against
+$\min$ pairs as before, and $R_{k+1}\le R_k$ supplies the monotonicity.
+
+(b) Put $E_k(x,y):=u_k(x)/l_k(y)$, so $E_0=+\infty=R_0$, and note that
+$E_k$ is nonincreasing in $k$ because $u_k$ decreases and $l_k$
+increases. The region $(A\cup\{t_0,t_1\})\times(B\cup\{t_0,t_1\})$ is
+closed under passing to successors on either side, by the
+successor-closedness of $A$ and $B$, and every clause is monotone; so it
+is enough to check that each clause evaluated at $E_k$ is at least
+$E_{k+1}$. The three denominator clauses all evaluate to exactly
+$u_k(x)/l_{k+1}(y)$ --- $\min$ at Max against $\max$ inside $l$, $\max$
+at Min against $\min$, and at an average $y$
+\[
+  \frac{2}{\dfrac{l_k(y^{(0)})}{u_k(x)}+\dfrac{l_k(y^{(1)})}{u_k(x)}}
+  \ \text{ replaced by }\
+  \frac{2u_k(x)}{l_k(y^{(0)})+l_k(y^{(1)})}=\frac{u_k(x)}{l_{k+1}(y)},
+\]
+the harmonic mean of the ratios being the ratio to the arithmetic mean of
+the denominators --- and $u_{k+1}\le u_k$ gives
+$u_k(x)/l_{k+1}(y)\ge E_{k+1}$. The three numerator clauses evaluate to
+$u_{k+1}(x)/l_k(y)\ge E_{k+1}$ because $l_{k+1}\ge l_k$. The two Max and
+two Min composites evaluate to exactly $E_{k+1}$, and the average
+composite is at least $E_{k+1}$ by the mediant inequality. The
+hypothesis $A\cup B$ disjoint from $Z_0\cup Z_1$ makes the two
+$Z$-clauses applicable only at the sinks: at $x=t_0$ one has
+$u_{k+1}(t_0)=0$ so the clause value $0$ equals $E_{k+1}$, and at
+$y=t_1$ one has $l_{k+1}(t_1)=1$ so the clause value $1$ dominates
+$u_{k+1}(x)\le1$. The diagonal clause is applicable only at
+$x=y\in\{t_0,t_1\}$, because $A$ and $B$ are disjoint, and there
+$E_{k+1}$ is $0/0=0$ and $1/1=1$ respectively. This last point is not a
+technicality: off the sinks $E_k(x,x)=u_k(x)/l_k(x)>1$ exceeds the
+diagonal clause, which is exactly why the two parts must be disjoint,
+as in \Cref{cor:separable}(a).
+\end{proof}
+
+\begin{corollary}[Exact in the limit]\label{cor:ratio-complete}
+Let $G$ be stopping and $M:=\lim_kR_k$, which exists by monotonicity and
+\Cref{thm:ratio-sound}. Then $M(x,y)=w^\ast(x)/w^\ast(y)$ whenever
+$w^\ast(y)>0$. Every stall of the ratio calculus is therefore a question
+of the number of rounds, never of expressive power.
+\end{corollary}
+
+\begin{proof}
+$M\ge D$ is \Cref{thm:ratio-sound}, and
+$M\le R_{2k}\le u_k(x)/l_k(y)\to w^\ast(x)/w^\ast(y)$ by
+\Cref{thm:ratio-sandwich}(a) and \Cref{thm:contraction}.
+\end{proof}
+
+\begin{corollary}[The same exponential stall]\label{cor:ratio-stall}
+On the family $H_m$ of \Cref{cor:slack-stalls} the ratio calculus stalls
+for $2^{\Omega(N)}$ rounds. Taking $A=\{h\}$ and $B=\{c_1,\dots,c_{2m}\}$
+in \Cref{thm:ratio-sandwich}(b) gives
+$R_k(h,c_1)\ge\tfrac12/l_k(c_1)>1$ and
+$R_k(c_1,h)\ge u_k(c_1)/\tfrac12\ge w^\ast(c_1)/\tfrac12>1$ for every
+$k<\ln2\cdot2^{m-2}$, so neither entry decides and the multiplicative
+decision rule abstains at the unique controlled vertex. Measured
+exactly, the own-successor test of \Cref{rem:own-successor} first fires
+at rounds $15,39,101$ for $m=3,4,5$ --- the same rounds as the additive
+calculus --- and the bound of \Cref{thm:ratio-sandwich}(b) is attained
+with equality entry by entry, at $32$ of the $36$, $79$ of the $84$ and
+$204$ of the $210$ entries examined, the remainder being rounds at which
+$R_k$ is still $+\infty$.
+\end{corollary}
+
+\begin{proposition}[Incomparable with the additive
+calculus]\label{prop:ratio-incomparable}
+Neither of \Cref{def:slack} and \Cref{def:ratio} dominates the other.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item On the stopping player-free game $W$ with average vertices $0,1,2$,
+      $t_0=3$, $t_1=4$ and $0\to(t_0,2)$, $1\to(t_0,t_1)$, $2\to(t_1,1)$,
+      one has $w^\ast=(\tfrac38,\tfrac12,\tfrac34)$ and
+      $R_2(0,2)=\tfrac12<1$, which certifies $w^\ast(0)<w^\ast(2)$, while
+      $\Delta_2(0,2)=0$ does not.
+\item On the stopping player-free game $W'$ with seven average vertices,
+      $t_0=7$, $t_1=8$ and out-edges
+      $(6,5),(0,7),(1,4),(3,0),(8,5),(2,7),(5,4)$, one has
+      $w^\ast=(\tfrac27,\tfrac17,\tfrac{18}{49},\tfrac27,\tfrac{29}{49},
+      \tfrac9{49},\tfrac{19}{49})$ and $\Delta_7(3,6)=-\tfrac1{64}$
+      certifies $w^\ast(3)<w^\ast(6)$, while $R_7(3,6)=\tfrac{259}{240}>1$
+      does not; the ratio calculus catches up only at round $8$, with
+      $\tfrac{221}{240}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Both games are stopping and player-free, so the stated value vectors are
+the unique solutions of the corresponding linear systems, and all the
+quoted entries are finite exact rational computations from
+\Cref{def:slack} and \Cref{def:ratio}. The successive values are
+$R_k(0,2)=\infty,\tfrac12,\tfrac12,\tfrac12$ against
+$\Delta_k(0,2)=1,0,-\tfrac14,-\tfrac38$ in (a), and
+$R_k(3,6)=\infty,\infty,4,\tfrac52,\tfrac74,\tfrac{53}{40},
+\tfrac{259}{240},\tfrac{221}{240}$ against
+$\Delta_k(3,6)=1,1,\tfrac12,\tfrac14,\tfrac18,\tfrac1{32},
+-\tfrac1{64},-\tfrac3{64}$ in (b).
+\end{proof}
+
+\begin{remark}\label{rem:ratio}
+The point of this subsection is the combination of
+\Cref{prop:ratio-incomparable} with \Cref{thm:ratio-sandwich}(b). The
+ratio calculus is not an instance of \Cref{def:slack}: at an average
+vertex it uses the harmonic mean on the denominator side and the mediant
+in the composite, neither of which is an additive clause in disguise, and
+on explicit instances it decides pairs the additive calculus cannot and
+fails on pairs the additive calculus decides. Yet on a separated
+configuration it obeys the \emph{same} two-sided value-iteration bound,
+by the same $A,B$ and the same quantity $u_k,l_k$, and it stalls on the
+same family $H_m$ for the same number of rounds. So
+\Cref{thm:slack-barrier} is not a fact about additive propagation: what
+it constrains is any calculus whose clauses match the two branches of an
+average vertex one at a time, whatever the algebra used to combine them.
+That is the same moral as \Cref{rem:magnitude}, reached from the other
+side.
+
+Two limits. \Cref{prop:cw} closes the multiplicative \emph{eigenvalue}
+route but says nothing about the calculus; and
+\Cref{cor:ratio-complete} means the ratio calculus, like
+\Cref{def:trans-slack}, can only ever be defeated by a rate, so
+\Cref{cor:ratio-stall} is a statement about a particular family and not
+about the mechanism in general. We do not know whether a min-plus ---
+here min-times --- closure of \Cref{def:ratio} escapes
+\Cref{thm:ratio-sandwich}(b) as \Cref{prop:trans-Hm} escapes
+\Cref{thm:slack-barrier}.
+\end{remark}
+
+
 \subsection{The branch-compensation barrier}\label{sec:matching-barrier}
 
 The failures of \Cref{sec:simorder} can now be made into a theorem about
