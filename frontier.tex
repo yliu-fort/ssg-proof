@@ -4153,6 +4153,124 @@ polynomial in $N$ can be the missing mechanism unless the all-switches
 rule already is.
 \end{remark}
 
+Every rule considered so far moves one player. Moving both at once, and
+letting each veto the other, gives a rule that needs no fallback clause at
+all.
+
+\begin{definition}[Bidirectional improvement]\label{def:bsi}
+Let $G$ be stopping and $(\sigma,\tau)$ a pair of positional strategies.
+Write $L:=\val_\sigma$, the value when Max is frozen to $\sigma$, and
+$U:=\val^\tau$, the value when Min is frozen to $\tau$; both are computable
+by \Cref{thm:eval-stopfree} applied to $G$ and to the dual $\bar G$ of
+\Cref{lem:duality}. Put
+\[
+  S_\sigma:=\{v\in\Vmax: L(\bar\sigma(v))>L(\sigma(v))\},\qquad
+  S^\tau:=\{u\in\Vmin: U(\bar\tau(u))<U(\tau(u))\},
+\]
+and let each player veto the other's switches:
+\[
+  C_{\max}:=\{v\in S_\sigma: U(\bar\sigma(v))\ge U(\sigma(v))\},\qquad
+  C_{\min}:=\{u\in S^\tau: L(\bar\tau(u))\le L(\tau(u))\}.
+\]
+The rule \emph{BSI} iterates
+$(\sigma,\tau)\mapsto(\sigma[C_{\max}],\tau[C_{\min}])$ and halts when
+$C_{\max}=C_{\min}=\emptyset$. The \emph{strict} variant replaces the two
+veto conditions by $U(\bar\sigma(v))>U(\sigma(v))$ and
+$L(\bar\tau(u))<L(\tau(u))$.
+\end{definition}
+
+\begin{theorem}[BSI never stalls]\label{thm:bsi-nostall}
+Let $G$ be stopping and $(\sigma,\tau)$ any pair state. If
+$C_{\max}=C_{\min}=\emptyset$ then $L=U=w^\ast$; in particular $\sigma$ and
+$\tau$ are both optimal and $S_\sigma=S^\tau=\emptyset$. The same holds for
+the strict variant.
+\end{theorem}
+
+\begin{proof}
+This is the argument of \Cref{lem:max-deficit} with $w^\ast$ replaced by
+$U$. Put $g:=U-L\ge0$ (\Cref{cor:comparison}), $M:=\max g$ and
+$Z:=\operatorname{argmax}g$, and suppose $M>0$. The sinks have $g=0$, so
+$Z$ contains none. By \Cref{thm:contraction}, $L$ is the unique fixed point
+of $T_\sigma$ and $U$ of $T^\tau$, so $L(x)=L(\sigma(x))$ and
+$U(x)=\max_iU(x^{(i)})$ at $x\in\Vmax$, and dually at $x\in\Vmin$.
+
+If $x\in Z$ is average then $g(x)=\tfrac12(g(x^{(0)})+g(x^{(1)}))$ with both
+terms at most $M$, so both successors lie in $Z$.
+
+Let $x\in Z\cap\Vmax$, $p:=\sigma(x)$, $q:=\bar\sigma(x)$. If
+$x\notin S_\sigma$ then $L(q)\le L(p)$; choose $y\in\{p,q\}$ with
+$U(y)=U(x)$; then $L(y)\le L(p)=L(x)$, so
+$M=U(y)-L(x)\le U(y)-L(y)=g(y)\le M$ and $y\in Z$. If $x\in S_\sigma$ then
+$C_{\max}=\emptyset$ forces $U(q)<U(p)$ --- for the strict variant,
+$U(q)\le U(p)$ --- so $U(x)=U(p)$ and $M=g(p)$, putting $p\in Z$. The case
+$x\in Z\cap\Vmin$ is dual, using $C_{\min}=\emptyset$.
+
+So $Z$ is a nonempty sink-free set in which every average vertex keeps both
+successors and every controlled vertex keeps one: by \Cref{lem:trapchar} it
+is a trap, contradicting stopping. Hence $M=0$, that is $L=U$; and
+$L\le w^\ast\le U$ gives $L=U=w^\ast$.
+\end{proof}
+
+\begin{corollary}[BSI is a correct algorithm]\label{cor:bsi-correct}
+On a stopping SSG, from any pair state, BSI terminates at a pair
+$(\sigma,\tau)$ with $\val_\sigma=\val^\tau=w^\ast$, both strategies
+optimal. Each round costs two linear programmes, and the number of rounds
+is at most $2N4^{a}$.
+\end{corollary}
+
+\begin{proof}
+By \Cref{thm:bsi-nostall} the halting condition holds only at an optimal
+pair, so before that at least one of $C_{\max},C_{\min}$ is nonempty.
+Switching a nonempty subset of $S_\sigma$ strictly increases $\val_\sigma$
+and switching a nonempty subset of $S^\tau$ strictly decreases $\val^\tau$,
+so \Cref{thm:switch-count} applied to $G$ and to $\bar G$ --- which is
+stopping because exchanging the sinks does not change the traps --- bounds
+each track by $N4^{a}$.
+\end{proof}
+
+\begin{proposition}[Stopping is necessary]\label{prop:bsi-nonstopping}
+For the SSG on non-sinks $0,\dots,5$ with $t_0=6$, $t_1=7$, types
+$(\mathrm{avg},\min,\max,\max,\mathrm{avg},\max)$ and successor pairs
+$(6,7),(7,1),(7,0),(0,4),(5,0),(3,1)$, the set $\{1,5\}$ is a trap, so the
+game is not stopping. At $\sigma=(2\mapsto t_1,3\mapsto0,5\mapsto1)$ and
+$\tau=(1\mapsto t_1)$ one has
+$\val_\sigma=(\tfrac12,0,1,\tfrac12,\tfrac14,0)$,
+$w^\ast=(\tfrac12,0,1,\tfrac12,\tfrac12,\tfrac12)$ and
+$\val^\tau=(\tfrac12,1,1,\tfrac34,\tfrac34,1)$, so $S_\sigma=\{5\}$ is
+nonempty while $C_{\max}=C_{\min}=\emptyset$: BSI halts at a pair that is
+not optimal.
+\end{proposition}
+
+\begin{remark}\label{rem:bsi}
+Three things and a caution. First, \Cref{thm:bsi-nostall} is what a
+one-sided rule cannot have: \Cref{def:rule}'s rules halt when no vertex is
+strictly switchable, which is a statement about $\sigma$ alone, whereas the
+veto in \Cref{def:bsi} can leave $S_\sigma$ nonempty and still halt --- and
+the theorem says that when it does, it is right to. Second, no barrier in
+this document covers BSI: \Cref{cor:no-height} constrains measures on the
+Max strategy lattice alone, \Cref{thm:normalform-barrier} and
+\Cref{thm:window-barrier} cover rules that read only $\val_\sigma$, and
+\Cref{prop:locality} is about bounded radius. Third, we know of no
+superpolynomial family for it.
+
+The caution is that symmetry by itself buys nothing, and the reason is
+already in this document. Dropping the vetoes gives
+$C_{\max}=S_\sigma$ and $C_{\min}=S^\tau$, and the two tracks then run
+independently: unguided bidirectional improvement is exactly all-switches
+on $G$ run beside all-switches on $\bar G$, and by the disjoint-union
+gadget in the proof of \Cref{thm:compare-equivalence} a polynomial bound
+for it is equivalent to one for all-switches. What the vetoes add is
+information from the opposite track, and the natural way to quantify that
+--- asking for a guide $U$ whose order at every Max vertex agrees with
+$w^\ast$'s --- is target-equivalent, being the non-adaptive sufficiency of
+\Cref{thm:compare-equivalence}: such a guide is exactly the $n$ comparison
+bits, and $\operatorname{argmax}U$ is then already optimal by
+\Cref{thm:opt-subcube}. So the content of \Cref{def:bsi} is the veto by
+$\val^\tau$, which is \emph{not} such a guide, and what is open is its
+round count.
+\end{remark}
+
+
 
 \subsection{The induced orientation of the two-player cube can be cyclic}
 
