@@ -1510,7 +1510,14 @@ content of \Cref{thm:escape-class} is that the rate be polynomially
 bounded below, which the other classes achieve by combinatorial means
 and $E_D$ by none of them. Whether every stopping game whose bracket
 contracts quickly admits a certificate attaining that rate we have not
-determined; the theorem needs only the direction proved. Second, the
+determined; the theorem needs only the direction proved. Second, the theorem is a small one: it changes exactly one estimate in
+the running-time proof of \Cref{thm:few-escape}, the per-block absorption
+bound $1-2^{-d(G)}$ coming from \Cref{lem:descent-refined}, replacing it
+by the certified $\lambda$; the algorithm, its correctness and its
+stopping test are unchanged, and \Cref{lem:survival}(a) is the
+monotonicity of $T$ read coordinatewise. The content is
+\Cref{prop:escape-family}: that this single substitution reaches
+instances the combinatorial exponents do not. The
 sub-eigenvector inequality $Sx\le\lambda x$ and the accompanying
 Collatz--Wielandt vocabulary are classical, and the observation that a
 maximum on the left of an inequality splits into a conjunction is what
