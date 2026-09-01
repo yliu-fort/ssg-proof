@@ -131,7 +131,10 @@ and no better bound obtainable from the value grid
 only flippable one (\Cref{prop:serialiser}); and no rule whose advantage
 comes from resolving the deterministic part of the game, since a
 value-preserving and irreducible normalisation deletes exactly that
-structure (\Cref{thm:normalform-barrier}); and no submodular
+structure (\Cref{thm:normalform-barrier}) --- nor, more generally, any
+rule that solves exactly a number of average vertices bounded by a
+polynomial, since a longer padding of the same kind blinds every such
+rule at once (\Cref{thm:window-barrier}); and no submodular
 minimisation argument, in any orientation of either strategy cube
 (\Cref{prop:no-submodular}). For the all-switches rule
 itself we prove three monotonicity laws and an unconditional bound in
@@ -3597,7 +3600,10 @@ $w^\ast(1)=\frac12(w^\ast(2)+1)$, whose unique solution is $1$ throughout.
 Three consequences, and one caution.
 First, \Cref{thm:normalform-barrier} is exactly a statement about the
 bottom level $B=\emptyset$ of \Cref{def:freeze}: already
-$|B|=1$ escapes it, on a game that is reduced and normal. The escape is
+$|B|=1$ escapes it, on a game that is reduced and normal --- though
+\Cref{thm:window-barrier} below shows that the escape is itself a
+property of the presentation, and that a longer padding restores the
+barrier at every bounded level of \Cref{def:freeze} at once. The escape is
 measurable but small on the instances we can compute: on the normalised
 ladders $N'(L_n)$, $n=2,\dots,6$, the rule that tries every single $c$ and
 keeps the best takes $n-1$ rounds where all-switches and the residue rule
@@ -3619,6 +3625,220 @@ ones, and it is the latter that $\rho_B$ exploits.
 The caution is that nothing here is progress on \Cref{prob:main}. No
 bound better than $N4^{a}$ is proved for any $\rho_B$ with $B\ne\Vavg$,
 and $\rho_{\Vavg}$, which finishes in one round, is not polynomial time.
+\end{remark}
+
+The escape of \Cref{prop:freeze-escapes} is real, but it is not what it
+looks like. A longer padding removes it, and removes it at every level of
+\Cref{def:freeze} at once.
+
+\begin{definition}[The $k$-blinding normalisation]\label{def:kblind}
+Let $k\ge0$ and put $m:=k+1$. For an SSG $G$ let $N_k(G)$ be obtained by
+replacing \emph{every} edge $(z,u)$ of $G$ --- $z$ any non-sink, $u$
+either of its two successors --- by a chain of $m$ copies of the gadget
+of \Cref{lem:normalform}:
+\[
+  z\to g^{z,u}_1,\qquad
+  g^{z,u}_j\to\bigl(g^{z,u}_{j+1},\,h^{z,u}_j\bigr),\qquad
+  h^{z,u}_j\to\bigl(g^{z,u}_{j+1},\,g^{z,u}_j\bigr)
+  \qquad(1\le j\le m),
+\]
+where $g^{z,u}_{m+1}:=u$ and the $2m$ vertices $g^{z,u}_j,h^{z,u}_j$ are
+fresh average vertices, one family for each edge. We call
+$g^{z,u}_1,\dots,g^{z,u}_m$ the \emph{spine} of that edge. Thus
+$N_0(G)$ subdivides every edge once, where the $N'(G)$ of
+\Cref{lem:normalform} subdivides only the edges joining two controlled
+vertices.
+\end{definition}
+
+\begin{lemma}\label{lem:kblind}
+Let $G$ be an SSG on $N$ vertices and put $H:=N_k(G)$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $|V(H)|=N+4(k+1)(N-2)\le(4k+5)N$; no controlled vertex of $H$ has
+      a controlled successor; and $H$ carries no redex of either
+      reduction of \Cref{lem:splice} at all, whether or not $G$ carries
+      one.
+\item For $y\in[0,1]^{V(G)}$ let $\hat y$ agree with $y$ on $V(G)$ and
+      take the value $y(u)$ at every vertex of the chain of the edge
+      $(z,u)$. Then $T^{H}\hat y=\widehat{T^{G}y}$, and every fixed point
+      of $T^{H}$ has the form $\hat y$; the same holds for $T_\sigma$
+      under the bijection $\sigma\mapsto\tilde\sigma$ sending the
+      successor $u$ of $v$ to $g^{v,u}_1$.
+\item $H$ is stopping if and only if $G$ is, and then
+      $\val^{H}=\widehat{\val^{G}}$ and
+      $\val^{H}_{\tilde\sigma}=\widehat{\val^{G}_{\sigma}}$ for every
+      $\sigma$.
+\item $S_{\tilde\sigma}=S_\sigma$ for every $\sigma$, so the all-switches
+      runs from $\sigma_0$ in $G$ and from $\tilde\sigma_0$ in $H$ have
+      the same length and pass through corresponding strategies.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) Each of the $2(N-2)$ edges contributes $2m=2(k+1)$ vertices, and
+every successor of a controlled vertex is a spine head, which is
+average. For the redexes, note first that an old average vertex now has
+as its two successors the spine heads of its own two edges, which are
+distinct fresh vertices even when its two $G$-successors coincided; and
+that distinct old vertices have disjoint families of spine heads. A
+splice redex is an average vertex with two equal successors: no old
+vertex is one by the previous sentence, and $g^{z,u}_j$ has the distinct
+successors $g^{z,u}_{j+1}$ and $h^{z,u}_j$, while $h^{z,u}_j$ has
+$g^{z,u}_{j+1}$ and $g^{z,u}_j$. A merge redex is a pair of distinct
+average vertices with equal successor multisets. If a vertex $v$ has a
+successor $w$ of which $v$ is the unique predecessor, no other vertex can
+have $v$'s multiset, since it would then be a second predecessor of $w$.
+Every old average vertex has such a successor, namely either spine head
+of its own two edges, and so does every $g^{z,u}_j$, namely
+$h^{z,u}_j$. There remain the pairs $h^{z,u}_j,h^{z',u'}_{j'}$, whose
+multisets $\{g^{z,u}_{j+1},g^{z,u}_j\}$ and
+$\{g^{z',u'}_{j'+1},g^{z',u'}_{j'}\}$ are equal only if the chains and
+the indices coincide. So $H$ carries no redex.
+
+(ii) The two equations at $g_j$ and $h_j$ read
+$2y(g_j)=y(g_{j+1})+y(h_j)$ and $2y(h_j)=y(g_{j+1})+y(g_j)$; subtracting
+gives $3\bigl(y(g_j)-y(h_j)\bigr)=0$, so $y(g_j)=y(h_j)=y(g_{j+1})$, and
+descending induction on $j$ gives $y\equiv y(u)$ on the whole chain.
+This shows both that $\hat y$ satisfies the new equations wherever $y$
+satisfied the old ones and that every fixed point is of that form; at a
+controlled or old average vertex the two operators take the maximum,
+minimum or mean of the same two numbers, because a spine head carries
+the value of the head of its edge.
+
+(iii) Let $U$ be a nonempty trap of $H$. If $g^{z,u}_j\in U$ then both
+its successors lie in $U$, hence $g^{z,u}_{j+1}\in U$ and, descending,
+$u\in U$; the same holds for $h^{z,u}_j$. Since a trap contains no sink,
+this forces $u$ to be a non-sink vertex of $G$, so $U\cap V(G)\ne
+\emptyset$. A controlled $v\in U$ has some successor $g^{v,u}_1\in U$
+and hence some $G$-successor $u$ in $U$; an old average vertex of $U$ has
+both spine heads in $U$ and hence both $G$-successors in $U$. So
+$U\cap V(G)$ is a nonempty trap of $G$. Conversely a nonempty trap of
+$G$ lifts by adjoining the chains of all its internal edges. Apply
+\Cref{lem:trapchar}, and then (ii) with \Cref{thm:contraction} for the
+values.
+
+(iv) By (iii) $\val^{H}_{\tilde\sigma}(g^{v,u}_1)=\val^{G}_\sigma(u)$, so
+the test defining $S_{\tilde\sigma}$ at $v$ compares the same two numbers
+as the test defining $S_\sigma$; and the correspondence commutes with
+$\sigma\mapsto\sigma[S_\sigma]$.
+\end{proof}
+
+\begin{definition}[$k$-window rule]\label{def:window}
+A rule $R$ assigning to every stopping SSG $G$ and Max strategy $\sigma$
+a strategy $R(G,\sigma)$ is a \emph{$k$-window rule} if for every such
+pair there is a set $B=B_R(G,\sigma)\subseteq\Vavg$ with $|B|\le k$ and
+$R(G,\sigma)=\rho_B(\sigma)$ in the sense of \Cref{def:freeze}. The
+choice of $B$ is unrestricted: it may depend on $G$ and on $\sigma$ in
+any way whatever and need not be computable. In particular the rule that
+evaluates $\rho_B(\sigma)$ for all $\binom{a}{\le k}$ admissible $B$ and
+returns the one maximising $\val_{\rho_B(\sigma)}$ is a $k$-window rule,
+and so is the residue rule, with $k=0$.
+\end{definition}
+
+\begin{theorem}[The freezing hierarchy is blinded]\label{thm:window-barrier}
+Let $G$ be a stopping SSG, let $k\ge0$ and put $H:=N_k(G)$. Then for
+every Max strategy $\tilde\sigma$ of $H$ and every $B\subseteq\Vavg(H)$
+with $|B|\le k$,
+\[
+  \rho_B(\tilde\sigma)\;=\;\tilde\sigma[S_{\tilde\sigma}].
+\]
+Consequently, if a $k$-window rule halts within $p(|V|)$ rounds on every
+stopping SSG and every starting strategy, with $p$ nondecreasing, then
+the all-switches rule halts within $p\bigl((4k+5)N\bigr)$ rounds on
+every stopping SSG with $N$ vertices. In particular no $k$-window rule
+with $k$ bounded by a polynomial in $N$ runs in polynomially many rounds
+unless the all-switches rule already does, and any superpolynomial lower
+bound for all-switches transfers to every such rule.
+\end{theorem}
+
+\begin{proof}
+Write $x:=\val^{H}_{\tilde\sigma}$ and let $D$ be the value of the
+residual $\widehat H_B(x)$ of \Cref{def:freeze}, extended by $x$ off
+$B\cup\Vmax\cup\Vmin$. Fix an edge $(z,u)$ of $G$ and abbreviate its
+chain by $g_1,\dots,g_m,h_1,\dots,h_m$. By \Cref{lem:kblind}(ii),
+$x$ is constant on that chain, equal to the number $\alpha:=x(u)$.
+
+Since $|B|\le k<m$, at least one spine vertex lies outside $B$; let $j$
+be least with $g_j\notin B$. Put
+\[
+  W\;:=\;\{g_1,\dots,g_{j-1}\}\ \cup\ \bigl(\{h_1,\dots,h_{j-1}\}\cap B\bigr),
+\]
+a set of average vertices all of which lie in $B$ and are therefore
+vertices --- not terminals --- of $\widehat H_B(x)$. Every successor of a
+vertex of $W$ either lies in $W$ or is a terminal of $\widehat H_B(x)$
+belonging to the same chain: the successors of $g_i$ with $i<j$ are
+$g_{i+1}$, which lies in $W$ if $i+1<j$ and is the terminal $g_j$ if
+$i+1=j$, and $h_i$, which lies in $W$ if $h_i\in B$ and is a terminal
+otherwise; the successors of an $h_i\in W$ are $g_{i+1}$ and $g_i$,
+handled the same way. Each such terminal carries the payoff $\alpha$,
+because $x$ is constant on the chain. The equations of
+$\widehat H_B(x)$ on $W$ therefore form a linear system in the unknowns
+$(D(w))_{w\in W}$ whose only inhomogeneous data is $\alpha$, and that
+system is nonsingular because $\widehat H_B(x)$ is stopping
+(\Cref{prop:freeze-sound}). The constant vector $\alpha$ solves it, so
+$D\equiv\alpha$ on $W$. If $j=1$ then $g_1\notin B$ is itself a terminal
+with payoff $x(g_1)=\alpha$. Either way
+\[
+  D(g_1)\;=\;\alpha\;=\;x(g_1),
+\]
+and this holds for every edge of $G$, the argument being confined to a
+single chain.
+
+Now let $v$ be a controlled vertex of $H$. Its two successors are the
+spine heads $g^{v,v^{(0)}}_1$ and $g^{v,v^{(1)}}_1$, at which $D$ agrees
+with $x$ by the display; so for $v\in\Vmax$
+\[
+  D(v)=\max\bigl(D(g^{v,v^{(0)}}_1),D(g^{v,v^{(1)}}_1)\bigr)
+      =\max\bigl(x(g^{v,v^{(0)}}_1),x(g^{v,v^{(1)}}_1)\bigr).
+\]
+The maximum is attained at $\tilde\sigma(v)$ exactly when
+$v\notin S_{\tilde\sigma}$, and is attained \emph{only} at the other
+successor when $v\in S_{\tilde\sigma}$. By the tie-break of
+\Cref{def:freeze}, $\rho_B(\tilde\sigma)$ keeps $\tilde\sigma(v)$ in the
+first case and switches in the second, which is
+$\tilde\sigma[S_{\tilde\sigma}]$.
+
+For the transfer, let $R$ be a $k$-window rule and $\sigma_0$ any
+starting strategy of a stopping $G$ on $N$ vertices. By
+\Cref{lem:kblind}(i),(iii) the game $H$ is stopping with at most
+$(4k+5)N$ vertices, and by the first part every round of $R$ on
+$(H,\tilde\sigma_0)$ is an all-switches round, so the run of $R$ there is
+the all-switches run and halts within $p((4k+5)N)$ rounds. By
+\Cref{lem:kblind}(iv) the all-switches run on $(G,\sigma_0)$ has the same
+length.
+\end{proof}
+
+\begin{remark}\label{rem:window-barrier}
+\Cref{prop:freeze-escapes} and \Cref{thm:window-barrier} must be read
+together, and the second is the stronger statement. Freeing one average
+vertex does escape \Cref{thm:normalform-barrier}, and it does so on a
+game that is both reduced and normal; but the escape is again a property
+of the presentation. \Cref{def:kblind} places every value in the game
+behind a chain of $k+1$ average two-cycles, so that an improvement
+originating at a strictly switchable controlled vertex can be seen at
+another controlled vertex only by a residual that keeps a whole spine
+live --- and a window of $k$ vertices cannot. The length $k+1$ is the
+least that works: if the whole spine $g_1,\dots,g_m$ of an edge $(z,u)$
+lies in $B$ and $D(u)>x(u)$, then $D(g_m)=\frac12(D(u)+D(h_m))
+\ge\frac12(D(u)+x(u))>x(u)$ because $D\ge x$ by
+\Cref{prop:freeze-sound}, and descending induction gives $D(g_j)>x(g_j)$
+for every $j$, so a window of size $k+1$ does carry a strict improvement
+across a spine. It can also change the verdict: among $6152$ spine-sized
+windows on the normalisations $N_1(G),N_2(G)$ of $90$ random stopping
+games, $28$ returned a strategy different from
+$\tilde\sigma[S_{\tilde\sigma}]$.
+
+Two limits are worth stating plainly. The transfer is useful only while
+$(4k+5)N$ is polynomial in $N$; that is automatic for any rule one could
+run, so the whole polynomial-time part of \Cref{def:freeze} is covered.
+And the theorem says nothing about windows that are a constant fraction
+of $\Vavg$, in particular nothing about $\rho_{\Vavg}$, which finishes in
+one round and is not polynomial: on $N_k(G)$ the average set has grown to
+$a+4(k+1)(N-2)$, so a proportional window is not blinded by this
+construction and we do not know whether it can be. What the barrier now
+says is therefore sharper than \Cref{rem:freeze} suggested: no rule that
+solves exactly a number of average vertices bounded by \emph{any}
+polynomial in $N$ can be the missing mechanism unless the all-switches
+rule already is.
 \end{remark}
 
 
