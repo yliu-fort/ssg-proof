@@ -2042,6 +2042,390 @@ $a$ to $\Theta(N^{2})$. It is precisely because \Cref{lem:descent} needs no
 stopping hypothesis that the theorem applies to arbitrary games.
 \end{remark}
 
+\subsection{The value alphabet}\label{sec:alphabet}
+
+The five classes above are all read off the \emph{presentation}: the
+number of average vertices, the escape exponent, which colour misses the
+cycles, the size of the Max-reachability components, the rate certified
+by the survival operator. This subsection isolates a parameter of the
+\emph{answer} instead, and shows that it too drives an algorithm, that it
+is never worse than $a$, and that it is exponentially better on the
+document's own families.
+
+\begin{definition}[Value alphabet]\label{def:alphabet}
+For an SSG $G$ let $\Lambda(G):=\{\val(v):v\in V\}\subseteq[0,1]$ be its
+\emph{value alphabet}, $k(G):=|\Lambda(G)|$, and $D(G)$ the least common
+denominator of the members of $\Lambda(G)$. Since $\val(t_0)=0$ and
+$\val(t_1)=1$ we always have $\{0,1\}\subseteq\Lambda(G)$ and $k(G)\ge2$.
+\end{definition}
+
+The first observation is that an alphabet is all one needs: the fixed
+point may be computed by iterating $T$ inside \emph{any} finite grid that
+contains the answer, provided the rounding is upward.
+
+\begin{theorem}[Alphabet iteration is exact]\label{thm:alphabet-iteration}
+Let $G$ be an arbitrary SSG --- no stopping hypothesis --- and let
+$\Lambda\subseteq[0,1]$ be any finite set with
+$\Lambda(G)\subseteq\Lambda$. Write
+$\lceil t\rceil_\Lambda:=\min\{\mu\in\Lambda:\mu\ge t\}$ and
+$\Psi(x):=\lceil Tx\rceil_\Lambda$ coordinatewise on $V'=V\setminus\{t_0,t_1\}$,
+with the sinks pinned at $0$ and $1$. Then the iterates $x_0:=\bbone_{\{t_1\}}$,
+$x_{j+1}:=\Psi(x_j)$ increase and reach $\val$ after at most
+$|V'|\,(|\Lambda|-1)$ productive steps; each step costs $O(N\log|\Lambda|)$,
+so $\val$ is computed in $O(N^{2}|\Lambda|\log|\Lambda|)$ operations.
+\end{theorem}
+
+\begin{proof}
+Let $\mathcal L$ be the set of $x$ with $x(v)\in\Lambda$ for $v\in V'$ and
+$x(t_0)=0$, $x(t_1)=1$. As $0,1\in\Lambda(G)\subseteq\Lambda$, the set
+$\mathcal L$ is a finite lattice under the coordinatewise order, with least
+element $x_0$ and greatest element $\bbone$. It is closed under $\Psi$:
+$T$ maps $[0,1]^{V}$ into itself, so $\lceil (Tx)(v)\rceil_\Lambda$ is
+defined, and the sinks are pinned by $T$. And $\Psi$ is monotone, being
+the composite of the monotone $T$ with the nondecreasing
+$\lceil\cdot\rceil_\Lambda$.
+
+Now $\val\in\mathcal L$ by the hypothesis $\Lambda(G)\subseteq\Lambda$, and
+$T\val=\val$ by \Cref{thm:lfp-general}(b), so
+$\Psi(\val)=\lceil\val\rceil_\Lambda=\val$. Since $x_0\le\val$ and $\Psi$
+is monotone, induction gives $x_j\le\val$ for every $j$; and
+$x_1=\Psi(x_0)\ge x_0$ because $x_0$ is least, so, again by monotonicity,
+the sequence is nondecreasing. Being nondecreasing and bounded in a finite
+lattice it stabilises, at some $c\le\val$ with $c=\Psi(c)$. From
+$c=\lceil Tc\rceil_\Lambda\ge Tc$ and the minimality clause of
+\Cref{thm:lfp-general}(b) --- $\val=\min\{x\in\mathcal X:Tx\le x\}$, valid
+on arbitrary games --- we get $\val\le c$. Hence $c=\val$.
+
+For the count, every productive step raises at least one of the $|V'|$
+coordinates by at least one letter, and a coordinate can rise at most
+$|\Lambda|-1$ times.
+\end{proof}
+
+The upward direction is the whole content of the theorem, and it is not a
+matter of taste.
+
+\begin{remark}[Rounding downward is false]\label{rem:alphabet-down}
+The least fixed point of $x\mapsto\lfloor Tx\rfloor_\Lambda$ above $x_0$
+need not be $\val$, even on a stopping game and even for
+$\Lambda=\Lambda(G)$. Take $V'=\{0,1,2,3,4\}$ with
+$\Vmin=\{1\}$, $\Vavg=\{0,2,3,4\}$ and
+\[
+  0\mapsto(3,t_0),\quad 1\mapsto(t_0,t_1),\quad 2\mapsto(2,4),\quad
+  3\mapsto(4,2),\quad 4\mapsto(t_1,0).
+\]
+No nonempty trap exists --- vertices $0$, $1$ and $4$ each have a sink
+successor, and \Cref{lem:trapchar} then removes $2$ and $3$ --- so the game
+is stopping and $\val=(\tfrac13,0,\tfrac23,\tfrac23,\tfrac23)$ is its
+unique fixed point, with $\Lambda(G)=\{0,\tfrac13,\tfrac23,1\}$. The upward
+iteration returns $\val$; the downward one halts at
+$(0,0,0,0,\tfrac13)$. The reason is structural: a fixed point of
+$\lfloor T\cdot\rfloor_\Lambda$ satisfies only $c\le Tc$, which by
+\Cref{thm:lfp-general} bounds $c$ above by the greatest fixed point and
+below by nothing at all. The instance also shows that values need not be
+dyadic.
+\end{remark}
+
+\begin{corollary}[Grid iteration]\label{cor:grid-iteration}
+If $D$ is a positive integer with $D\val(v)\in\mathbb Z$ for every $v$,
+then $\val$ is computed by at most $|V'|D$ productive sweeps of
+$x\mapsto\lceil Tx\rceil_{D}$ from $\bbone_{\{t_1\}}$, where
+$\lceil\cdot\rceil_D$ rounds up to a multiple of $1/D$. Writing
+$x=y/D$ with $y$ integral, a sweep is
+$y(v)\leftarrow\max$, $\min$ or $\lceil (y(v^{(0)})+y(v^{(1)}))/2\rceil$,
+so all intermediate quantities are integers in $[0,D]$ and the algorithm
+runs in $O(N^{2}D)$ integer operations.
+\end{corollary}
+
+\begin{proof}
+\Cref{thm:alphabet-iteration} with $\Lambda=\tfrac1D\mathbb Z\cap[0,1]$,
+which contains $\Lambda(G)$ by hypothesis.
+\end{proof}
+
+\begin{remark}
+Iterating a monotone map on a finite sublattice and invoking
+Knaster--Tarski is of course standard, and rounded value iteration on a
+grid is a routine device for Markov decision processes. What is specific
+to \Cref{thm:alphabet-iteration} is the pair of facts that make it
+\emph{exact} rather than approximate: that $\val$ is the \emph{least}
+pre-fixed point on an arbitrary game (\Cref{thm:lfp-general}(b), which is
+where the absence of a stopping hypothesis comes from), and that only the
+upward rounding preserves that characterisation
+(\Cref{rem:alphabet-down}).
+\end{remark}
+
+\medskip
+The next three results say that the alphabet of a stopping game is a very
+rigid object: it is determined, as a set, by a system of $k-2$ midpoint
+equations, and this pins its denominator.
+
+\begin{lemma}[Covering lemma]\label{lem:alphabet-cover}
+Let $G$ be stopping and let $\lambda\in\Lambda(G)$ with $0<\lambda<1$.
+Then some average vertex $v$ with $\val(v)=\lambda$ has
+$\val(v^{(0)})\ne\val(v^{(1)})$. Consequently $\Lambda(G)$ contains
+letters $\lambda_i<\lambda<\lambda_j$ with
+$\lambda=\tfrac12(\lambda_i+\lambda_j)$.
+\end{lemma}
+
+\begin{proof}
+Put $S:=\{v\in V:\val(v)=\lambda\}$, which is nonempty and, as
+$0<\lambda<1$, contains neither sink. Suppose no average vertex of $S$ has
+successors of distinct values. An average vertex $v\in S$ then has
+$\val(v^{(0)})=\val(v^{(1)})$, and their mean is $\lambda$, so both
+successors lie in $S$. A Max vertex $v\in S$ has
+$\lambda=\val(v)=\max_i\val(v^{(i)})$, so a maximising successor lies in
+$S$; dually at a Min vertex. By \Cref{lem:trapchar}, $S$ is a nonempty
+trap, contradicting the hypothesis that $G$ is stopping. So some average
+$v\in S$ has $\val(v^{(0)})\ne\val(v^{(1)})$; these two values are letters
+of $\Lambda(G)$, they average to $\lambda$, and being distinct they
+straddle it.
+\end{proof}
+
+\begin{theorem}[Rigidity of the alphabet]\label{thm:alphabet-rigid}
+Let $G$ be stopping with $\Lambda(G)=\{\lambda_1<\dots<\lambda_k\}$, so
+$\lambda_1=0$ and $\lambda_k=1$. Then there are indices
+$i_l<l<j_l$ for $2\le l\le k-1$ such that the linear system
+\[
+  \mu_1=0,\qquad \mu_k=1,\qquad
+  \mu_l=\tfrac12(\mu_{i_l}+\mu_{j_l})\quad(2\le l\le k-1)
+\]
+has $(\lambda_1,\dots,\lambda_k)$ as its \emph{unique} solution. In
+particular at most $\binom{k}{2}^{\,k-2}$ sets occur as the alphabet of a
+stopping SSG with $k$ values, and the list of them is computable from $k$
+alone.
+\end{theorem}
+
+\begin{proof}
+\Cref{lem:alphabet-cover} supplies, for each interior $l$, a pair
+$i_l<l<j_l$ with $\lambda_{i_l}+\lambda_{j_l}=2\lambda_l$; fix one such
+pair for each $l$. Write the system on the interior unknowns
+$\mu':=(\mu_2,\dots,\mu_{k-1})$ as $(I-P)\mu'=b$, where $P_{l,t}$ is the
+number of times $t$ occurs among $\{i_l,j_l\}$ divided by $2$, restricted
+to interior $t$, and $b_l$ collects the contributions of $\mu_1=0$ and
+$\mu_k=1$. Then $P\ge0$ has row sums at most $1$ and zero diagonal, since
+$i_l<l<j_l$.
+
+We claim $\rho(P)<1$. If not, then since $P$ is nonnegative with row sums
+at most $1$ there is a nonempty set $U$ of interior indices on which $P$
+restricts to a stochastic matrix, i.e.\ every $l\in U$ has both $i_l$ and
+$j_l$ interior and lying in $U$. Take $l:=\min U$; then $i_l\in U$ and
+$i_l<l$, contradicting minimality. So $\rho(P)<1$, $I-P$ is nonsingular,
+and the system has a unique solution --- which must be $\Lambda(G)$, since
+$\Lambda(G)$ solves it.
+
+For the count, each of the $k-2$ interior letters admits at most
+$\binom{k}{2}$ choices of the pair $(i_l,j_l)$, and each choice determines
+at most one candidate alphabet; discard the choices whose solution is not
+strictly increasing or leaves $[0,1]$.
+\end{proof}
+
+\begin{corollary}[The alphabet is a small game's value vector]\label{cor:alphabet-chain}
+The alphabet of a stopping SSG with $k$ values is the value vector of a
+\emph{player-free} SSG on $k-2$ average vertices, in which the vertex
+carrying $\lambda_l$ has one successor of strictly smaller value and one
+of strictly larger, with $\lambda_1$ read as $t_0$ and $\lambda_k$ as
+$t_1$.
+\end{corollary}
+
+\begin{proof}
+The system of \Cref{thm:alphabet-rigid} is that game's fixed-point
+equation, and $\rho(P)<1$ makes the game stopping, so by
+\Cref{cor:comparison} its value vector is the unique solution, namely
+$\Lambda(G)$.
+\end{proof}
+
+\begin{theorem}[Denominator against the alphabet]\label{thm:alphabet-denominator}
+Every stopping SSG satisfies $D(G)\le2^{\,k(G)-2}$, equivalently
+$k(G)\ge2+\log_2 D(G)$. The bound is attained: the ladder $L_n$ of
+\Cref{def:ladder} has $k=n+2$ and $D=2^{n}$.
+\end{theorem}
+
+\begin{proof}
+In the notation of \Cref{thm:alphabet-rigid}, $\lambda'=(2I-2P)^{-1}(2b)$,
+where $2I-2P$ is an integer matrix --- $2$ on the diagonal, and $-1$ for
+each interior member of $\{i_l,j_l\}$ --- and $2b\in\{0,1\}^{k-2}$,
+since $\mu_1=0$ contributes nothing and $\mu_k=1$ contributes $\tfrac12$.
+Now $P$ is nonnegative with row sums at most $1$ and $\rho(P)<1$, so
+\Cref{lem:watched} gives $0<\det(I-P)\le1$, whence
+\[
+  \det(2I-2P)=2^{\,k-2}\det(I-P)
+\]
+is a positive integer at most $2^{k-2}$. By Cramer's rule every
+$\lambda_l$ is an integer divided by $\det(2I-2P)$, so
+$D(G)\mid\det(2I-2P)\le2^{\,k-2}$.
+
+Sharpness is the back-substitution of \Cref{thm:ladder}:
+$W_i=\tfrac12(V_{i+1}+W_{i+1})$ with $V_{n+1}=0$, $W_{n+1}=1$ gives
+$W_1=1-2^{-n}$ and $n+2$ distinct values in all.
+\end{proof}
+
+\begin{theorem}[A polynomial class from the denominator]\label{thm:few-denominator}
+There is a deterministic algorithm which, given an arbitrary stopping SSG
+and no other information, outputs $\val$ exactly in
+$O(N^{2}D(G)^{2})$ integer operations on integers of $O(\log D(G))$ bits.
+Consequently \Cref{prob:main} is decidable in polynomial time on every
+family of stopping SSGs with $D(G)=\mathrm{poly}(N)$, and in particular
+on every family with $k(G)=O(\log N)$.
+\end{theorem}
+
+\begin{proof}
+For $D=1,2,3,\dots$ run \Cref{cor:grid-iteration} on the grid
+$\tfrac1D\mathbb Z\cap[0,1]$, obtaining $x_D$, and return the first $x_D$
+with $Tx_D=x_D$. The test is $O(N)$ arithmetic operations and the loop
+halts at $D\le D(G)$, since at $D=D(G)$ the grid contains $\Lambda(G)$ and
+\Cref{cor:grid-iteration} returns $\val$, a fixed point. Whatever $D$ it
+halts at, the output is a fixed point of $T$, and on a stopping game the
+fixed point is unique (\Cref{cor:comparison}); so the output is $\val$.
+The cost is $\sum_{D\le D(G)}O(N^{2}D)=O(N^{2}D(G)^{2})$. The last clause
+is \Cref{thm:alphabet-denominator}: $k=O(\log N)$ forces
+$D\le2^{k-2}=\mathrm{poly}(N)$.
+\end{proof}
+
+\begin{remark}[Against $a$, and against the other four]\label{rem:alphabet-compare}
+By \Cref{lem:denominator-sharp} and \Cref{thm:alphabet-denominator},
+\[
+  D(G)\ \le\ 2^{\min(a,\;k-2)},
+\]
+so \Cref{thm:few-denominator} never loses to \Cref{thm:few-avg} by more
+than the squaring, and it wins outright wherever $k\ll a$. On this
+document's own families the two parameters are exponentially far apart in
+neither direction but coincide: computation in exact arithmetic gives
+$k=2+\log_2 D$ \emph{with equality} on $L_n$ ($n=3,5,7$), $H_m$ and $G_m$
+($m=2,3,4$), $\mathrm{WD}(3,2,5)$, $\mathrm{WD}(4,3,6)$,
+$\mathrm{WD}(3,3,7)$, $\mathrm{CC}(2,2)$ and $\mathrm{CC}(3,3)$. So on
+every hard family built here the alphabet carries exactly as much
+information as the denominator and no more, and the gap opens only on
+instances built for it. Two such instances stand at the extremes: the
+gambler's-ruin chain $\mathrm{GR}(n)$ --- $u_i\in\Vavg$ with
+$u_i\mapsto(u_{i-1},u_{i+1})$, $u_0=t_0$, $u_{n+1}=t_1$ --- has
+$\val(u_i)=i/(n+1)$, so $D=k-1$, the least possible, and
+\Cref{thm:few-denominator} runs in $O(N^{3})$ although $a=N-2$; while
+$L_n$ has the same $k$ and $D=2^{k-2}$, the largest possible. It is $D$,
+not $k$, that the algorithm sees.
+\end{remark}
+
+\begin{proposition}[Alphabets with at most four letters]\label{prop:alphabet-four}
+The value alphabet of a stopping SSG with $k\le4$ is one of
+\[
+  \{0,1\},\quad\{0,\tfrac12,1\},\quad\{0,\tfrac14,\tfrac12,1\},\quad
+  \{0,\tfrac13,\tfrac23,1\},\quad\{0,\tfrac12,\tfrac34,1\},
+\]
+and all five occur. Such a game is therefore solved by
+\Cref{cor:grid-iteration} with $D\le4$, in $O(N^{2})$ operations.
+\end{proposition}
+
+\begin{proof}
+For $k=3$, \Cref{lem:alphabet-cover} forces $\lambda_2=\tfrac12(0+1)$.
+For $k=4$, write the alphabet $\{0,\lambda,\mu,1\}$ with $0<\lambda<\mu<1$.
+The straddling pairs available to $\lambda$ are $(0,\mu)$ and $(0,1)$, and
+to $\mu$ they are $(0,1)$ and $(\lambda,1)$. The four combinations give
+$(\lambda,\mu)=(\tfrac\mu2,\tfrac12)=(\tfrac14,\tfrac12)$;
+$(\tfrac\mu2,\tfrac{\lambda+1}2)$, i.e.\ $4\lambda=\lambda+1$, so
+$(\tfrac13,\tfrac23)$; $(\tfrac12,\tfrac12)$, excluded by
+$\lambda<\mu$; and $(\tfrac12,\tfrac34)$. Realisations: $v\mapsto(t_0,t_1)$
+gives $\{0,\tfrac12,1\}$ and a single edge to a sink gives $\{0,1\}$;
+$L_2$ gives $\{0,\tfrac14,\tfrac12,1\}$ and its dual (\Cref{lem:duality})
+gives $\{0,\tfrac12,\tfrac34,1\}$; the game of \Cref{rem:alphabet-down},
+and also $\mathrm{FV}(n)$ below, gives $\{0,\tfrac13,\tfrac23,1\}$.
+\end{proof}
+
+\begin{proposition}[Four values, $a=\Theta(N)$, outside all five classes]\label{prop:fv-family}
+For $n\ge2$ let $\mathrm{FV}(n)$ have vertex set
+$\{X_i,Y_i,L_i,M_i:i\in\mathbb Z_n\}$ with $X_i\in\Vmax$, $Y_i\in\Vmin$,
+$L_i,M_i\in\Vavg$ and
+\[
+  X_i\mapsto(L_i,L_{i+1}),\quad Y_i\mapsto(M_i,M_{i+1}),\quad
+  L_i\mapsto(t_0,Y_{i+1}),\quad M_i\mapsto(t_1,X_{i+1}).
+\]
+Then $\mathrm{FV}(n)$ is stopping, $N=4n+2$, $a=2n$, both players are
+present, and
+\[
+  \val\equiv\tfrac13\ \text{on the }X_i,L_i,\qquad
+  \val\equiv\tfrac23\ \text{on the }Y_i,M_i,
+\]
+so $k=4$ and $D=3$ and \Cref{thm:few-denominator} solves it in four
+sweeps for every $n$. It lies outside \Cref{thm:few-avg} ($a=\Theta(N)$),
+outside \Cref{thm:kacyclic} for every colour (the cycle
+$X_0L_0Y_1M_1X_2\dots$ carries a Max, a Min and an average vertex), and
+outside every $\mathcal K_k$ of \Cref{thm:bounded-components} with
+$k=o(n)$, the Max-reachability digraph being a single component of size
+$n$.
+
+Let $\mathrm{FV}_2(n)$ be $\mathrm{FV}(n)$ with $X_0$ redirected to
+$(L_0,C_0)$ and a chain of fresh average vertices
+$C_q\mapsto(C_{q+1},C_0)$ for $q<n-1$, $C_{n-1}\mapsto(L_0,C_0)$,
+adjoined. Then $N=5n+2$, $a=3n$, the game is stopping, the value vector is
+unchanged on the old vertices and equal to $\tfrac13$ on the chain, so
+$k=4$ and $D=3$ still; and in addition $\mathrm{FV}_2(n)$ lies outside
+\Cref{thm:few-escape}, its escape exponent being $d=n+2$, and outside
+\Cref{thm:escape-class}: every escape certificate $(\lambda,x)$ satisfies
+\[
+  \frac{a+\log_2\kappa(x)}{\log_2(1/\lambda)}\ \ge\ 2^{\,n-1}.
+\]
+So the class of \Cref{thm:few-denominator} is contained in none of the
+five.
+\end{proposition}
+
+\begin{proof}
+The displayed vector is a fixed point of $T$: at $L_i$ it reads
+$\tfrac12(0+\tfrac23)=\tfrac13$, at $M_i$ it reads
+$\tfrac12(1+\tfrac13)=\tfrac23$, at $X_i$ it reads
+$\max(\tfrac13,\tfrac13)$ and at $Y_i$ it reads
+$\min(\tfrac23,\tfrac23)$. For stopping, let $U$ be a trap. Each $L_i$ has
+the successor $t_0$ and each $M_i$ the successor $t_1$, so by
+\Cref{lem:trapchar} no $L_i$ or $M_i$ lies in $U$; then $X_i$ and $Y_i$
+have no successor in $U$, so $U=\emptyset$. By \Cref{cor:comparison} the
+fixed point is $\val$. The three exclusions are read off the definition.
+
+For $\mathrm{FV}_2$: every $C_q$ reaches $L_0$ with probability $1$, so its
+value is $\val(L_0)=\tfrac13$ and $X_0$ still evaluates to
+$\max(\tfrac13,\tfrac13)$; the same trap argument applies, since
+$C_{n-1}$'s successor $L_0$ is outside every trap. For the escape bound,
+let $(\lambda,x)$ be an escape certificate. By \Cref{lem:survival}(b),
+$S^{t}\bbone\le\lambda^{t}\kappa(x)$ on $V'$. Escaping the chain from $C_0$ requires $n$
+consecutive first-successor choices --- $n-1$ of them to climb to
+$C_{n-1}$ and one more to leave --- each taken with probability
+$\tfrac12$, every $C_q$ being an average vertex where $S$ is the exact
+one-step mean, so $(S^{t}\bbone)(C_0)\ge1-t\,2^{-n}$ and in particular
+$(S^{t}\bbone)(C_0)\ge\tfrac12$ at $t=2^{\,n-1}$. Hence
+$\lambda^{t}\kappa\ge\tfrac12$, i.e.\
+$t\log_2(1/\lambda)\le1+\log_2\kappa$, which is the display after
+absorbing the constant into $a+\log_2\kappa\ge1+\log_2\kappa$. For the escape exponent, the levels of \Cref{lem:descent} are
+$\ell(M_i)=1$, $\ell(Y_i)=2$, $\ell(L_i)=3$, $\ell(X_i)=4$ and
+$\ell(C_q)=n+3-q$, so the descent path
+$C_0C_1\dots C_{n-1}L_0Y_1M_1t_1$ has $\omega=1$ at each of the $n$ chain
+vertices (whose other successor $C_0$ is the top level), at $L_0$ (whose
+other successor is $t_0$, of infinite level) and at $M_1$ (whose other
+successor $X_2$ has larger level), and $\omega=0$ at $Y_1\in\Vmin$. Hence
+$A(C_0)=n+2$; no descent path is longer, and the tie at $X_0$ is the only
+freedom in $\sigma^\ast$ and does not lower the count, so
+$d(\mathrm{FV}_2(n))=n+2$.
+\end{proof}
+
+\begin{remark}[The alphabet as a reformulation, and its strength]\label{rem:alphabet-equivalence}
+\Cref{thm:alphabet-iteration} converts the problem into the manufacture of
+a candidate alphabet, and that conversion is exact in both directions:
+\textsc{SSG-Value} is in $\mathsf P$ \emph{if and only if} there is a
+polynomial-time algorithm which, given $G$, outputs a set of rationals of
+cardinality polynomial in $N$ containing every value of $G$. The forward
+direction is the standard search-to-decision reduction, which computes
+$\val$ outright; the converse is \Cref{thm:alphabet-iteration}. So the
+reformulation belongs with \Cref{thm:compare-equivalence},
+\Cref{thm:order-determines} and \Cref{thm:decide-one-bit} in
+\Cref{sec:selection}: it is of the same strength as the target and
+relocates the difficulty rather than reducing it. What it relocates it
+\emph{to} is worth recording, because it is less than those theorems ask
+for. A candidate alphabet is a set of numbers with no assignment of
+letters to vertices; \Cref{thm:order-determines} needs the induced
+preorder on $\Vavg$, and \Cref{rem:bsi} needs a guide ordering each Max
+vertex's two successors. By \Cref{thm:alphabet-rigid} the candidate is
+moreover pinned by $k-2$ midpoint equations, so the search space is a list
+computable from $k$ alone. What is not known is any bound on $k$: by
+\Cref{thm:alphabet-denominator} and the equality
+$k=2+\log_2 D$ measured on every hard family of
+\Cref{rem:alphabet-compare}, $k$ is $\Theta(N)$ exactly where the problem
+is hard.
+\end{remark}
+
 \section{The structure of the optimal set}\label{sec:structure}
 
 Throughout this section $G$ is a \emph{stopping} SSG with value vector
