@@ -126,10 +126,13 @@ round two unconditionally. Its rate is open. What we can prove about it is
 a method for bounding it from below, a shrinking chain of convex
 certificates (\Cref{thm:hybrid-convex-barrier}) generalising the box
 certificate of \Cref{thm:slack-barrier}, which as
-\Cref{rem:hybrid-barrier-lift} shows does not itself lift; and one
-application, a one-player family with two Max vertices wired crosswise on
+\Cref{rem:hybrid-barrier-lift} shows does not itself lift; and two
+applications: a one-player family with two Max vertices wired crosswise on
 which one natural family of entries stays uninformative for
-$2^{\Omega(N)}$ rounds (\Cref{thm:hybrid-lower}) --- though not the
+$2^{\Omega(N)}$ rounds (\Cref{thm:hybrid-lower}), and the wedge of
+\Cref{sec:wedge}, on which the entries a decision rule does read stay
+uninformative for a proved $2^{\Omega(N)}$ rounds
+(\Cref{thm:wedge-proved,cor:wedge-count}) --- though not the
 entries a decision rule actually reads
 (\Cref{rem:own-successor,rem:hybrid-lower-not-a-refutation}).
 
@@ -8360,6 +8363,151 @@ $4$, with $\Delta_k(b_1,a_{1,1})=\tfrac7{512},\tfrac5{1024},\tfrac1{2048},
 -\tfrac7{512}$.
 \end{proposition}
 
+\Cref{prop:wedge} is a measurement, but it need not be: the clause
+condition of \Cref{thm:hybrid-convex-barrier} can be verified once and for
+all, by the method \Cref{thm:hybrid-lower} uses on $CC(L,m)$.
+
+\begin{definition}[The wedge certificate chain]\label{def:wedge-chain}
+For $WD(e,j,m)$ put $u:=2^{1-j}$, $\lambda:=1-u$, $\gamma:=2^{-m}$,
+$\mu:=2\gamma/\lambda$ and, for $e>j$,
+$\mu^{\dagger}:=\mu/(1-2^{\,j-e})$. In the coordinates
+$\xi=z|_C-\val|_C$ of \Cref{rem:wedge} set
+\[
+  M_0:=\tfrac12,\qquad M_{k+1}:=\lambda M_k-2\gamma,\qquad
+  P_k:=\bigl\{\xi\in[0,M_k]^2:\ \xi_1\ge\lambda\xi_2-2\gamma,\
+  \xi_2\ge\lambda\xi_1-2\gamma\bigr\},
+\]
+so that $P_0=Q(WD)-\val$, and let $K:=\max\{k:M_k\ge\mu^{\dagger}\}$ and
+$\delta_k:=M_k-M_{k+1}=uM_k+2\gamma$.
+\end{definition}
+
+\begin{lemma}[Vertices]\label{lem:wedge-verts}
+If $M_k\ge\mu^{\dagger}$ then $M_k>\mu>0$, $0<M_{k+1}\le M_k$,
+$\delta_k\ge\mu$, and $P_k$ is the convex hull of
+$A_0=(0,0)$, $A_1=(\mu,0)$, $A_2=(M_k,M_{k+1})$, $A_3=(M_k,M_k)$,
+$A_4=(M_{k+1},M_k)$, $A_5=(0,\mu)$. Moreover $P_{k+1}\subseteq P_k$ and,
+for $c$ with $c_1\ge0\ge c_2$,
+\[
+  h_{P_k}(c):=\max_{\xi\in P_k}\langle c,\xi\rangle
+  =\max\bigl(c_1\mu,\ c_1M_k+c_2M_{k+1}\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+$\mu^{\dagger}>\mu$ as $0<2^{j-e}<1$; $M_{k+1}>0$ is $M_k>\mu$;
+$M_{k+1}\le M_k$ is $\lambda<1$; and
+$\delta_k=uM_k+2\gamma\ge u\mu+2\gamma=2\gamma(u+\lambda)/\lambda=\mu$. The
+six points satisfy the four inequalities, $A_1$ and $A_5$ because
+$\lambda\mu-2\gamma=0$ and $A_2$, $A_4$ because one wedge row is tight and
+the other slack. Conversely $P_k$ is cut out by six lines, of whose
+fifteen pairwise intersections the parallel pair gives nothing and the
+remaining thirteen give exactly $A_0,\dots,A_5$ together with seven
+infeasible points --- $\{\xi_1=0,\xi_2=M_k\}$ and its mirror need
+$0\ge M_{k+1}$; $\xi_1=0$ with the second wedge line gives
+$\xi_2=-2\gamma$ and its mirror likewise; $\xi_1=M_k$ with the first gives
+$\xi_2=(M_k+2\gamma)/\lambda>M_k$ and its mirror likewise; and the two
+wedge lines meet where $\xi_1(1-\lambda^2)=-2\gamma(1+\lambda)<0$.
+For the support function, with $c_1\ge0\ge c_2$ the values at
+$A_0,A_3,A_4,A_5$ are dominated by those at $A_1,A_2$, since
+$(c_1+c_2)M_k\le c_1M_k+c_2M_{k+1}$, $(c_1-c_2)(M_{k+1}-M_k)\le0$,
+$c_2\mu\le0$ and $0\le c_1\mu$.
+\end{proof}
+
+\begin{theorem}[The wedge, proved]\label{thm:wedge-proved}
+Let $j\ge2$, $e\ge2j-1$ and $m\ge j+2$. Then for every $k\le K$ the
+hybrid of \Cref{def:hybrid} with the free $Z$-seed satisfies
+$\Delta_k\ge\Lambda(P_k)$ on $WD(e,j,m)$, and the own-successor test of
+\Cref{rem:own-successor}, read in both directions, fires at neither Max
+vertex at any round $k\le K$. The same silence holds for
+\Cref{def:slack}, \Cref{def:trans-slack} and \Cref{def:transport}.
+\end{theorem}
+
+\begin{proof}
+By \Cref{thm:hybrid-convex-barrier} it suffices that every clause of
+\Cref{def:slack} evaluated at $\Lambda(P_k)$ is at least
+$\Lambda(P_{k+1})$. Most are free. Each $z\in P_k$ satisfies the rows of
+$Q(G)$, so at $y\in\Vmax$ we have $z(y)\ge z(y^{(j)})$ and hence
+$\Lambda(P_k)(x,y^{(j)})\ge\Lambda(P_{k+1})(x,y)$ for both $j$; dually the
+(up) clause at $x\in\Vmin$; and at an average vertex $z$ is the exact mean
+of its successors, so
+$z(x)-z(y)=\tfrac12\sum_j(z(x)-z(y^{(j)}))$, which covers the average
+(up), (down) and both average composites. The $Z$ clauses hold because the
+free seed pins $z$ on $Z_0$ and $Z_1$, the constant and diagonal clauses
+trivially. As $\Vmin=\emptyset$ only the (up) clause at $v_1,v_2$ and the
+$\Vmax\times\Vmax$ composites remain.
+
+For the (up) clause take $i=1$; $i=2$ is the automorphism exchanging the
+two indices. A maximum of two maxima over the same set being the maximum
+of the pointwise maximum,
+\[
+  \max\bigl(\Lambda(P_k)(a_{1,1},y),\Lambda(P_k)(b_1,y)\bigr)
+  =\max_{\xi\in P_k}\bigl[z(v_1)-D(\xi)-z(y)\bigr],\qquad
+  D(\xi):=\min\Bigl(2^{-e}\xi_1,\ \gamma+\tfrac12(\xi_1-\lambda\xi_2)\Bigr),
+\]
+$D\ge0$ on $Q(G)$ by \Cref{rem:wedge}. Both sides carry the constant
+$\val(v_1)-\val(y)$, so with $c:=\epsilon_1-\theta_y$ the claim is
+$\Phi_k(c):=\max_{P_k}[\langle c,\xi\rangle-D(\xi)]\ge h_{P_{k+1}}(c)$.
+The vectors $\theta_y$ are $0$, $\epsilon_i$, $\alpha\epsilon_i$ with
+$\alpha\in\{1-2^{-r}:1\le r\le e\}$, and
+$\tfrac12(\epsilon_i+\lambda\epsilon_o)$, so every such $c$ has
+$c_1\ge0\ge c_2$ and lies in
+\[
+  \mathcal C=\{(\beta,0)\}\cup\{(1,-\alpha)\}\cup
+  \bigl\{(1-\tfrac\lambda2,-\tfrac12),(\tfrac12,-\tfrac\lambda2)\bigr\}.
+\]
+Evaluating at $A_0$, $A_4$ and $A_2$, where $D(A_0)=0$,
+$D(A_4)=\min(\cdot,\gamma+\tfrac12(M_{k+1}-\lambda M_k))=0$ and
+$D(A_2)\le2^{-e}M_k$, gives
+$\Phi_k(c)\ge\max\bigl(0,\ c_1M_{k+1}+c_2M_k,\ c_1M_k+c_2M_{k+1}-2^{-e}M_k\bigr)$.
+If $c_2=0$ then $h_{P_{k+1}}(c)=\beta M_{k+1}$, attained at $A_4$. If
+$c_2<0$, two bounds are needed. For
+$\Phi_k(c)\ge c_1M_{k+1}+c_2M_{k+2}$, the point $A_2$ and
+$M_{k+1}-M_{k+2}=\lambda\delta_k$ give a difference
+$(c_1+\lambda c_2)\delta_k-2^{-e}M_k$, and $\delta_k\ge uM_k$ reduces it to
+$u(c_1+\lambda c_2)\ge2^{-e}$; now $c_1+\lambda c_2$ is $1-\lambda\alpha\ge u$
+at $(1,-\alpha)$, is $u$ at $(1-\tfrac\lambda2,-\tfrac12)$ and is
+$\tfrac12u(1+\lambda)\ge\tfrac u2$ at $(\tfrac12,-\tfrac\lambda2)$, so
+$u(c_1+\lambda c_2)\ge u^2/2=2^{1-2j}\ge2^{-e}$ by $e\ge2j-1$. For
+$\Phi_k(c)\ge c_1\mu$, again at $A_2$ and using $\mu-2\gamma=u\mu$: at
+$(1,-\alpha)$ with $\alpha\le1$ the difference is at least
+$(u-2^{-e})M_k-u\mu\ge0$ whenever $M_k\ge\mu/(1-2^{\,j-1-e})$, which
+follows from $M_k\ge\mu^{\dagger}$; at $(1-\tfrac\lambda2,-\tfrac12)$ the
+same expression appears; and at $(\tfrac12,-\tfrac\lambda2)$ the difference
+is $(\tfrac12u(1+\lambda)-2^{-e})M_k-\tfrac12u(1+\lambda)\mu$, nonnegative
+once $M_k\ge\mu/(1-2^{1-e}/(u(1+\lambda)))$, and
+$2^{1-e}/(u(1+\lambda))\le2^{\,j-e}$.
+
+The $\Vmax\times\Vmax$ composites reduce to the same estimate through
+$\max_i\min_j\le\min_j\max_i$ and the branch $a_{1,1}$, and need only
+$e\ge2j-2$. Silence is then \Cref{cor:wedge-cert}: on $P_k$ one has
+$\Lambda(P_k)(v_1,a_{1,1})=2^{-e}M_k>0$ and
+$\Lambda(P_k)(v_1,b_1)\ge\gamma+\mu/2>0$, while
+$\Lambda(P_k)(a_{1,1},v_1)=0$ at $A_0$ and $\Lambda(P_k)(b_1,v_1)=0$ at
+$A_4$, so no entry the test reads is decisive. The transfer to
+\Cref{def:slack}, \Cref{def:trans-slack} and \Cref{def:transport} is that
+each is dominated by the hybrid entrywise.
+\end{proof}
+
+\begin{corollary}[The count]\label{cor:wedge-count}
+For $e=2j$ and $m=j+4$, so $N=6j+9$, one has
+$M_k=\lambda^k\tfrac9{16}-\tfrac1{16}$ and
+\[
+  K=1,\,6,\,15,\,33,\,68,\,138,\,279,\,560\qquad(j=2,\dots,9),
+\]
+with $K\ge2^{\,j-1}$ for $j\ge3$ and hence $K\ge2^{(N-15)/6}$. The
+silence of \Cref{thm:wedge-proved} is therefore $2^{\Omega(N)}$ rounds,
+unconditionally.
+\end{corollary}
+
+\begin{proof}
+The closed form is the linear recursion with
+$2\gamma/(1-\lambda)=2^{\,j-m}=\tfrac1{16}$. For $j\ge3$ put
+$n:=2^{\,j-1}\ge4$; since $(1-1/n)^n$ increases in $n$,
+$\lambda^n\ge(3/4)^4>0.316$ and $M_n>0.316\cdot\tfrac9{16}-\tfrac1{16}>0.115$,
+while $\mu^{\dagger}=2^{-j-3}/(\lambda(1-2^{-j}))$ decreases in $j$ from
+$\tfrac1{42}<0.024$ at $j=3$; so $M_{2^{j-1}}>\mu^{\dagger}$.
+\end{proof}
+
 \begin{remark}\label{rem:wedge}
 The mechanism is the wedge. In the coordinates $\xi=z|_C-\val|_C$ the polytope
 $Q(WD)-\val$ is
@@ -8367,17 +8515,18 @@ $\{\xi\in[0,\tfrac12]^2:\lambda\xi_1-2\gamma\le\xi_2\le(\xi_1+2\gamma)/\lambda\}
 with $\lambda=1-2^{1-j}$, a thin wedge with apex at the origin; the two
 hyperplanes $\{g_{v_i,\bar i}=0\}$ support it at the apex and touch it there
 without containing it, which is exactly \Cref{cor:wedge-cert}, and each round
-shrinks the wedge by the factor $\lambda$ only. The chain $P_k$ obtained by
-intersecting with $[0,M_k]^2$, $M_0=\tfrac12$ and
-$M_{k+1}=\lambda M_k-2\gamma$, satisfies the clause condition of
-\Cref{thm:hybrid-convex-barrier} at every parameter we tested --- all
-$(e,j,m)\in\{(4,2,6),(6,2,6),(7,3,7),(7,3,10),(8,4,8),(8,4,12),(9,5,9)\}$
-together with $(2j,j,j+4)$ for $2\le j\le8$, checked at all $N^2$ pairs and
-every round --- and certifies $K-1$ silent rounds with
-$K-1\ge(m-j-1)\ln2\,(2^{j-1}-1)-2$, two rounds short of the measured value
-throughout. We have \emph{not} proved the clause condition for all parameters,
-so we state \Cref{prop:wedge} as a measurement, verified in exact rational
-arithmetic, and not the asymptotic bound it points to.
+shrinks the wedge by the factor $\lambda$ only. The chain $P_k$ of \Cref{def:wedge-chain} makes this
+unconditional: \Cref{thm:wedge-proved} proves the clause condition of
+\Cref{thm:hybrid-convex-barrier} for every $j\ge2$, $e\ge2j-1$,
+$m\ge j+2$, and \Cref{cor:wedge-count} turns it into $2^{\Omega(N)}$
+silent rounds. \Cref{prop:wedge} remains the sharper statement at the
+sizes it covers --- the certificate is two rounds short of the measurement
+throughout --- but it is no longer the only one. We verified the proof's
+load-bearing inequality, $\Phi_k(c)\ge h_{P_{k+1}}(c)$ at every direction
+and every $k\le K$, in exact rational arithmetic over the $60$ triples
+$j\le6$, $e\in\{2j-1,2j,2j+1,3j\}$, $m\in\{j+2,j+4,j+6\}$, and the
+conclusion $\Delta_k\ge\Lambda(P_k)$ directly against a run of the hybrid
+at $j=2,3,4$, with no violation in either.
 
 The scope is narrower than it first appears, and this is the important
 qualification. $WD$ is one-player, so by \Cref{thm:seed-dichotomy} the seeded
