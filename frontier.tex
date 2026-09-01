@@ -5905,15 +5905,156 @@ and soundness gives $\Delta^{T}_k(q,p)\ge D(q,p)=\tfrac14>0$. The
 displayed equalities and the damped counts are exact computations.
 \end{proof}
 
+\Cref{lem:phi-certificate} is the only certificate of its kind, and that
+fact explains both the scope of \Cref{thm:slack-barrier} and the fact
+that \Cref{prop:trans-stall} had to leave the stopping class.
+
+\begin{definition}[Separable schedule]\label{def:separable}
+A sequence $(M_k)_{k\ge0}$ of matrices on $V\times V$ is \emph{separable}
+if $M_k(x,y)=\varphi_k(x)-\psi_k(y)$ for functions
+$\varphi_k,\psi_k\colon V\to\mathbb{R}$. It is \emph{admissible} if
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $M_0\le1$ and, for every $k$, $M_{k+1}$ is at most every clause of
+      \Cref{def:slack} --- the constant $1$, the four bases, \emph{(up)},
+      \emph{(down)} and the composite --- evaluated at $M_k$; and
+\item every $M_{k+1}$ satisfies
+      $M_{k+1}(x,y)\le M_{k+1}(x,z)+M_{k+1}(z,y)$ for all $x,y,z$.
+\end{enumerate}
+Condition (a) alone is what an induction proving $M_k\le\Delta_k$
+requires; (b) is what the closure $C$ of \Cref{def:trans-slack} adds.
+\end{definition}
+
+\begin{lemma}\label{lem:separable-lower}
+An admissible sequence, separable or not, satisfies
+$M_k\le\Delta^{T}_k$ for every $k$; under (a) alone it satisfies
+$M_k\le\Delta_k$.
+\end{lemma}
+
+\begin{proof}
+Induction, with $M_0\le1=\Delta^{T}_0$. Suppose $M_k\le\Delta^{T}_k$.
+Every clause of \Cref{def:slack} is monotone, so applying them to
+$\Delta^{T}_k$ gives entrywise at least what they give at $M_k$, and (a)
+yields $M_{k+1}\le L(\Delta^{T}_k)$. By (b), for every path
+$x=z_0,\dots,z_r=y$,
+\[
+  M_{k+1}(x,y)\ \le\ \sum_{i<r}M_{k+1}(z_i,z_{i+1})
+              \ \le\ \sum_{i<r}L(\Delta^{T}_k)(z_i,z_{i+1}),
+\]
+so $M_{k+1}\le C(L(\Delta^{T}_k))$. Finally $M_{k+1}\le1$ by the constant
+clause, so $M_{k+1}\le\min\bigl(1,C(L(\Delta^{T}_k))\bigr)$, and clamping
+from below only increases, so $M_{k+1}\le\Delta^{T}_{k+1}$. The statement
+for $\Delta_k$ is the same argument without the closure step.
+\end{proof}
+
+\begin{theorem}[Separable certificates are exactly the fixed points of
+$T$]\label{thm:separable}
+Let $G$ be an SSG and $(M_k)$ an admissible separable sequence. Then for
+every $k\ge1$ the two functions coincide, $\varphi_k=\psi_k$, and,
+normalising $\varphi_k(t_0)=0$,
+\[
+  \varphi_k(t_1)=1,\qquad
+  (T\varphi_k)(v)=\varphi_k(v)\ \text{ for every non-sink }v .
+\]
+If $G$ is stopping, then $\varphi_k=w^\ast$ and hence
+\[
+  M_k(x,y)\;=\;w^\ast(x)-w^\ast(y)\qquad(k\ge1),
+\]
+which by \Cref{thm:trans-complete} is precisely the limit of
+$\Delta^{T}_k$. Consequently no admissible separable sequence can witness
+that $\Delta^{T}_k$ is bounded away from $w^\ast(x)-w^\ast(y)$ on a
+stopping game, at any round.
+\end{theorem}
+
+\begin{proof}
+Fix $k\ge0$ and abbreviate $\varphi:=\varphi_{k+1}$, $\psi:=\psi_{k+1}$.
+The base clause ``$0$ if $x=y$'' and (a) give $M_{k+1}(x,x)\le0$, that is
+$\varphi\le\psi$. Condition (b) with $y:=x$ gives, for every $z$,
+\[
+  \varphi(x)-\psi(x)\;=\;M_{k+1}(x,x)\;\le\;M_{k+1}(x,z)+M_{k+1}(z,x)
+  \;=\;\bigl(\varphi(x)-\psi(x)\bigr)+\bigl(\varphi(z)-\psi(z)\bigr),
+\]
+so $\psi\le\varphi$. Hence $\varphi_{k+1}=\psi_{k+1}$ for every $k\ge0$.
+
+Now let $k\ge1$, so that $\psi_k=\varphi_k$, and let $x$ be a non-sink.
+Because $\max$, $\min$ and the mean commute with adding a constant, the
+\emph{(up)} clause of \Cref{def:slack} evaluated at $M_k$ and at the pair
+$(x,x)$ equals
+$\mathrm{ag}^{+}_{x}\bigl(\varphi_k(x^{(i)})-\psi_k(x)\bigr)
+=(T\varphi_k)(x)-\varphi_k(x)$, where $T$ is formed with the sink values
+$\varphi_k(t_0)$ and $\varphi_k(t_1)$; and the \emph{(down)} clause at
+$(x,x)$ equals $\varphi_k(x)-(T\psi_k)(x)=\varphi_k(x)-(T\varphi_k)(x)$,
+by $c-\max=\min(c-\cdot)$, $c-\min=\max(c-\cdot)$ and
+$c-\mathrm{mean}=\mathrm{mean}(c-\cdot)$. Condition (a) applied to each,
+together with $M_{k+1}(x,x)=0$, gives
+\[
+  0\le(T\varphi_k)(x)-\varphi_k(x)
+  \qquad\text{and}\qquad
+  0\le\varphi_k(x)-(T\varphi_k)(x),
+\]
+so $T\varphi_k=\varphi_k$ at every non-sink. Since $M_k$ depends only on
+differences of $\varphi_k$ we may normalise $\varphi_k(t_0)=0$. Taking
+$x=t_0\in Z_0$ and $y=t_1\in Z_1$, the base clause $-1$ and (a) give
+$\varphi_k(t_0)-\varphi_k(t_1)\le-1$, and the constant clause at
+$(t_1,t_0)$ gives $\varphi_k(t_1)-\varphi_k(t_0)\le1$; so
+$\varphi_k(t_1)=1$.
+
+If $G$ is stopping, $\varphi_k$ is a fixed point of $T^{0,1}=T$ lying in
+$[-1,1]^{V}$ --- the constant clause at the pairs $(x,t_0)$ and
+$(t_0,x)$ gives $\varphi_k(x)\le1$ and $-\varphi_k(x)\le1$ ---
+so $\varphi_k=w^\ast$ by \Cref{lem:gen-comparison} with $\alpha=0$,
+$\beta=1$, and $M_k(x,y)=w^\ast(x)-w^\ast(y)$.
+\end{proof}
+
+\begin{corollary}\label{cor:separable}
+Three consequences.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item The certificate $E_k(x,y):=u_k(x)-l_k(y)$ of
+      \Cref{thm:slack-barrier} \emph{does} satisfy the triangle
+      inequality, since
+      $E_k(x,z)+E_k(z,y)-E_k(x,y)=u_k(z)-l_k(z)\ge0$. What it violates is
+      the diagonal base of \Cref{def:slack}: $E_k(x,x)=u_k(x)-l_k(x)>0$
+      wherever value iteration has not yet converged at $x$. That is
+      exactly why \Cref{thm:slack-barrier} is stated for two
+      \emph{disjoint} successor-closed parts, on which the diagonal never
+      arises; and by \Cref{thm:separable} the restriction cannot be
+      removed.
+\item \Cref{lem:phi-certificate} exhibits the general separable
+      certificate, and \Cref{thm:separable} says it is the only one. On a
+      stopping game it therefore says no more than
+      \Cref{thm:trans-complete} already does, and a permanent stall such
+      as \Cref{prop:trans-stall}'s must occur, as it does, on a game that
+      is not stopping --- where $T$ has a second fixed point.
+\item Any proof that $\Delta^{T}$ needs superpolynomially many rounds on
+      stopping games must use a certificate that is not of the form
+      $\varphi(x)-\psi(y)$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(a) is the displayed identity together with
+$\Delta_k(x,x)\le0$, which holds for $k\ge1$ by the diagonal base. (b)
+and (c) are \Cref{thm:separable} read backwards; for (b), the second
+fixed point of $T$ on the game $A_0$ of \Cref{prop:trans-stall} is
+$\varphi=(\tfrac12,1,\tfrac34,1)$ at $(a,p,q,u)$, and
+$\varphi(p)-\varphi(q)=\tfrac14$ is exactly the value at which
+$\Delta^{T}$ stalls there.
+\end{proof}
+
 \begin{remark}\label{rem:trans}
 Three corrections to the reading of \Cref{sec:slack} follow.
 First, \Cref{thm:slack-barrier} and \Cref{cor:slack-stalls} are sharp for
 the clauses they quantify over and for no others:
 \Cref{prop:trans-Hm} turns the same family from $2^{\Omega(N)}$ rounds
-into $4m-3$. The barrier's proof cannot be repaired, because any
-invariant a min-plus closure propagates must satisfy the triangle
-inequality, and the two-sided bound $u_k(x)-l_k(y)$ does not --- its
-diagonal $u_k(z)-l_k(z)$ is strictly positive.
+into $4m-3$. The barrier's proof cannot be repaired, and
+\Cref{thm:separable} says why: an invariant a min-plus closure
+propagates must satisfy the triangle inequality, which forces a
+separable invariant $\varphi(x)-\psi(y)$ to have $\varphi=\psi$ and
+hence to be a fixed point of $T$, of which a stopping game has exactly
+one. The two-sided bound $u_k(x)-l_k(y)$ does satisfy the triangle
+inequality --- an earlier version of this remark said otherwise --- but
+its diagonal $u_k(z)-l_k(z)$ is strictly positive, which is what puts it
+above $\Delta_k(z,z)\le0$ and confines \Cref{thm:slack-barrier} to two
+disjoint parts.
 Second, by \Cref{thm:trans-complete} no stall on a stopping game is ever
 permanent: the mechanism of \Cref{sec:slack} expresses $w^\ast$ exactly in
 the limit, and the entire question is how many rounds it needs. This is
