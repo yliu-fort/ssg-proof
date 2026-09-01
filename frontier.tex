@@ -2587,6 +2587,111 @@ The statement about $\Phi$ follows because $\Phi$ is strictly increasing
 on pointwise-comparable distinct vectors.
 \end{proof}
 
+The converse direction is just as easy and is used less often, so we record
+it here. It says that re-routing a set of vertices that are \emph{not}
+switchable can only lose, and --- because improving runs are monotone ---
+that it stays lost for ever.
+
+\begin{lemma}[Dead re-routings]\label{lem:dead-switch}
+Let $G$ be an arbitrary SSG --- no stopping hypothesis --- let $\sigma$ be
+a Max strategy, and let $W\subseteq\Vmax$ satisfy $W\cap S_\sigma=\emptyset$.
+Then $\val_{\sigma[W]}\le\val_\sigma$ pointwise. If in addition $G$ is
+stopping, then $\val_{\sigma[W]}\le\val_{\sigma_t}$ for every strategy
+$\sigma_t$ reached from $\sigma$ by strictly improving switches, single or
+multiple --- in particular at every later round of an all-switches run.
+\end{lemma}
+
+\begin{proof}
+Write $x:=\val_\sigma$ and $\sigma':=\sigma[W]$. At a vertex $v\notin W$
+the operators $T_{\sigma'}$ and $T_\sigma$ agree, so
+$(T_{\sigma'}x)(v)=(T_\sigma x)(v)=x(v)$ by \Cref{thm:lfp-general}(a).
+At $v\in W$, that same theorem gives $x(v)=x(\sigma(v))$, while
+$v\notin S_\sigma$ gives $x(\bar\sigma(v))\le x(\sigma(v))$; hence
+$(T_{\sigma'}x)(v)=x(\bar\sigma(v))\le x(v)$. So $T_{\sigma'}x\le x$, and
+the minimality clause of \Cref{thm:lfp-general}(a) ---
+$\val_{\sigma'}=\min\{y\in\mathcal X:T_{\sigma'}y\le y\}$, which needs no
+stopping hypothesis --- gives $\val_{\sigma'}\le x$.
+
+For the second claim, \Cref{lem:switch} applied at each switch of the run
+gives $\val_\sigma\le\val_{\sigma_t}$, and stopping is used exactly there.
+\end{proof}
+
+Combined with \Cref{lem:switch} this yields a law of the all-switches run
+that has nothing to do with any potential function: certain configurations
+of the Max strategy, once passed over, can never be entered again. Call
+$(W,\pi)$, with $W\subseteq\Vmax$ and $\pi(v)\in\{v^{(0)},v^{(1)}\}$ for
+$v\in W$, a \emph{closed configuration} if every vertex reachable from
+$\pi(W)$ by a path whose interior avoids $W$ is an average vertex or a
+sink. Under any Max strategy $\sigma$ with $\sigma|_W=\pi$ and any Min
+strategy $\tau$ the play started in $W$ is then a Markov chain on
+$W\cup\{t_0,t_1\}$ together with average vertices, consulting neither
+$\sigma$ off $W$ nor $\tau$ at all; so on a stopping game
+$\val_{\sigma,\tau}$ restricted to $W$ is one and the same vector
+$\lambda_W$ for all such $\sigma,\tau$, and $\lambda_W=\val_\sigma|_W$
+whenever $\sigma|_W=\pi$. The canonical example is a cycle of Max vertices
+each of whose $\pi$-options reaches the next through average vertices that
+otherwise exit only to sinks.
+
+\begin{proposition}[A closed configuration is being entered now, or never]\label{prop:closed-now-or-never}
+Let $G$ be stopping, let $(W,\pi)$ be a closed configuration with value
+$\lambda_W$, and let $\sigma_0,\sigma_1,\dots$ be a run of strictly
+improving switches, all-switches included. Suppose that at round $t$ the
+set $W_t:=\{v\in W:\sigma_t(v)\ne\pi(v)\}$ is nonempty and contains no
+strictly switchable vertex, i.e.\ $W_t\cap S_{\sigma_t}=\emptyset$. Then
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $\val_{\sigma_{t'}}\ge\lambda_W$ on $W$ for every $t'\ge t$; and
+\item $\sigma_{t'}|_W\ne\pi$ for every $t'\ge t$: the configuration is
+      never entered again.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) The strategy $\sigma_t[W_t]$ agrees with $\pi$ on all of $W$, so
+$\val_{\sigma_t[W_t]}=\lambda_W$ there. Since $W_t\cap S_{\sigma_t}=\emptyset$,
+\Cref{lem:dead-switch} gives $\lambda_W=\val_{\sigma_t[W_t]}\le\val_{\sigma_t}$
+on $W$, and \Cref{lem:switch} propagates the bound forward.
+
+(b) Suppose not, and let $t''>t$ be least with $\sigma_{t''}|_W=\pi$; then
+$\val_{\sigma_{t''}}=\lambda_W$ on $W$. Some $v\in W_{t''-1}\subseteq W$ was
+switched at round $t''-1$, so $v\in S_{\sigma_{t''-1}}$ and
+$\sigma_{t''}(v)=\bar\sigma_{t''-1}(v)=\pi(v)$. Using
+\Cref{thm:lfp-general}(a) at $\sigma_{t''}$, then
+$\val_{\sigma_{t''}}\ge\val_{\sigma_{t''-1}}$ from \Cref{lem:switch}, then
+strict switchability, then (a):
+\[
+  \lambda_W(v)=\val_{\sigma_{t''}}(v)=\val_{\sigma_{t''}}(\pi(v))
+  \;\ge\;\val_{\sigma_{t''-1}}(\pi(v))
+  \;>\;\val_{\sigma_{t''-1}}(\sigma_{t''-1}(v))=\val_{\sigma_{t''-1}}(v)
+  \;\ge\;\lambda_W(v),
+\]
+a contradiction.
+\end{proof}
+
+\begin{remark}[What this does and does not give the pivot]\label{rem:closed-now-or-never}
+\Cref{prop:closed-now-or-never} is an irreversibility law, and
+irreversible events are what a polynomial bound on the all-switches run
+would have to count: each closed configuration is entered at most once
+along a run, and a round at which no closed configuration is being entered
+kills every one that is not already entered. It is also the reason the
+published exponential lower bounds for the all-switches rule do not
+transfer to this model as they stand. Those constructions --- for
+locally-optimising strategy improvement on parity games, and for Howard's
+rule on Markov decision processes --- time their exponential jumps by
+keeping a cycle attractive but unentered for many rounds, which they do by
+offering the vertex a \emph{third} action of larger appeal and withdrawing
+it later. Here every vertex has exactly two actions, so a vertex whose
+$\pi$-option is attractive is strictly switchable towards it, and by
+\Cref{prop:closed-now-or-never} a configuration that is not entered while
+it is attractive is dead. That is not a barrier: a Max vertex whose
+successor is another Max vertex simulates a three-way choice one round
+later, and \Cref{def:damping} makes such a tree cheap, so the postponement
+can in principle be reintroduced with a lag --- and a two-player game has
+a second source of withdrawable appeal in Min's best response, which
+changes discontinuously. It does say that a construction for this model
+must supply the delay by one of those two devices rather than by a third
+action, and it says which lemma any such construction must evade.
+\end{remark}
+
 \begin{theorem}[Short improving paths]\label{thm:short-path}
 Let $G$ be a stopping SSG, let $\sigma\notin\Opt$ and let
 $\sigma^\ast\in\Opt$ be arbitrary. Then there exists a vertex
