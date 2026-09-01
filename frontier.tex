@@ -7618,7 +7618,11 @@ which leaves no redex for a preprocessing step to recognise, so no rule
 of that kind runs in polynomially many rounds unless all-switches already
 does (\Cref{thm:normalform-barrier}); the level above it, which frees one
 average vertex, escapes and is a sound improving rule that is not a
-switching rule at all (\Cref{prop:freeze-escapes}). Finally, the one general
+switching rule at all (\Cref{prop:freeze-escapes}), but only because the
+padding was too short --- lengthening each of its gadgets to $k+1$ links
+blinds every rule that frees at most $k$ average vertices, so the whole
+hierarchy is covered for every polynomially bounded $k$
+(\Cref{thm:window-barrier}). Finally, the one general
 hammer for minimising a polynomial-time computable function over a strategy
 cube is submodularity, and the objective here is not submodular under any
 orientation of either cube, on a five-vertex witness
