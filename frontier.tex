@@ -81,13 +81,20 @@ mere order of the average values determines everything
 (\Cref{thm:order-determines}) --- but each bit of it is again an instance
 of the problem.
 
-\emph{Mechanisms, and where each stops.} Five sound polynomial-time
+\emph{Mechanisms, and where each stops.} Six sound polynomial-time
 comparison mechanisms are developed and measured against one another: an
 arithmetic-free simulation preorder (\Cref{sec:simorder}), which beats
 every bounded radius and dies on branch compensation, as does its whole
 class (\Cref{thm:matching-barrier}); a slack calculus
 (\Cref{sec:slack}), which repairs that and inherits a value-iteration
-bound on separated parts (\Cref{thm:slack-barrier}) --- for its own
+bound on separated parts (\Cref{thm:slack-barrier}) --- and, being read multiplicatively
+rather than additively, inherits it again --- the ratio calculus of
+\Cref{sec:ratio}, whose average clauses are the harmonic mean and the
+mediant, is incomparable with the additive one pair by pair yet obeys the
+same two-sided bound on the same configurations and stalls on the same
+family for the same number of rounds
+(\Cref{thm:ratio-sandwich,cor:ratio-stall,prop:ratio-incomparable}), so
+the barrier is not a fact about additivity; for its own
 clauses only, since adding transitivity collapses the witnessing family
 from $2^{\Omega(N)}$ rounds to $4m-3$ (\Cref{prop:trans-Hm}), and on
 stopping games the calculus is in fact exact in the limit
