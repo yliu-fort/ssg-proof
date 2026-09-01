@@ -1458,6 +1458,92 @@ feasibility programme in $|V'|$ variables with at most $2|V'|$ structural
 rows.
 \end{proof}
 
+The rate a certificate can achieve is bounded below by an ordinary
+spectral radius, and this converts every claim of the form ``this family
+lies outside the escape class'' --- a statement quantified over all
+certificates --- into a computation on the game itself.
+
+\begin{definition}[Selections and the survival rate]\label{def:survival-rate}
+A \emph{selection} is a map $\pi$ assigning to each controlled vertex
+$v\in\Vmax\cup\Vmin$ one of $v^{(0)},v^{(1)}$. Let $M_\pi$ be the
+nonnegative matrix on $V'=V\setminus\{t_0,t_1\}$ whose row at a controlled
+$v$ is the indicator of $\pi(v)$, read as the zero row if $\pi(v)$ is a
+sink, and whose row at an average $v$ is
+$\tfrac12(e_{v^{(0)}}+e_{v^{(1)}})$ with the sink coordinates again
+deleted. Put $\Lambda(G):=\max_\pi\rho(M_\pi)$, the maximum over the
+$2^{|C|}$ selections.
+\end{definition}
+
+Each $M_\pi$ is substochastic, and comparing \Cref{def:survival} with
+\Cref{def:survival-rate} gives $Sx=\max_\pi M_\pi x$ for every $x\ge0$:
+the maximum at a controlled vertex is the choice of $\pi$ there, and the
+average rows do not depend on $\pi$ at all.
+
+\begin{lemma}[Every certificate is bounded by every selection]\label{lem:escape-rate}
+Let $(\lambda,x)$ be an escape certificate for $G$. Then
+$\lambda\ge\rho(M_\pi)$ for \emph{every} selection $\pi$, hence
+$\lambda\ge\Lambda(G)$. Consequently the bound of
+\Cref{thm:escape-class} is never smaller than
+$(a+\log_2\kappa(x))/\log_2(1/\Lambda(G))$, and a family of games with
+$1-\Lambda(G)=2^{-\Omega(N)}$ carries no escape certificate with
+$\log_2(1/\lambda)\ge1/\mathrm{poly}(N)$: it lies outside the escape
+class. Moreover $\Lambda(G)<1$ if and only if $G$ is stopping.
+\end{lemma}
+
+\begin{proof}
+Fix $\pi$. From $M_\pi x\le Sx\le\lambda x$ and $x\ge\bbone$: let
+$y\ge0$, $y\ne0$, be a left Perron vector of the nonnegative matrix
+$M_\pi$, so that $y^{\mathsf T}M_\pi=\rho(M_\pi)\,y^{\mathsf T}$
+(Perron--Frobenius needs no irreducibility for this). Then
+\[
+  \rho(M_\pi)\,y^{\mathsf T}x=y^{\mathsf T}M_\pi x\le\lambda\,y^{\mathsf T}x,
+\]
+and $y^{\mathsf T}x\ge y^{\mathsf T}\bbone>0$, so $\rho(M_\pi)\le\lambda$.
+
+For the last clause, $M_\pi$ is substochastic, so $\rho(M_\pi)=1$ exactly
+when some nonempty $U\subseteq V'$ has every $M_\pi$-row of a vertex of
+$U$ supported in $U$ with row sum $1$ --- at a controlled $v$ that says
+$\pi(v)\in U$, at an average $v$ that says both successors lie in $U$.
+Maximising over $\pi$, such a $U$ exists for some $\pi$ exactly when some
+nonempty $U$ has \emph{some} successor in $U$ at every controlled vertex
+and both at every average one, which by \Cref{lem:trapchar} is exactly a
+nonempty trap. So $\Lambda(G)=1$ iff $G$ is not stopping.
+\end{proof}
+
+\begin{remark}\label{rem:escape-rate}
+Three uses and one attribution. First, \Cref{lem:escape-rate} needs only
+\emph{one} selection to be exhibited, and it recovers the wedge bound of
+\Cref{rem:escape-class} without composing constraints by hand: computing
+$\Lambda$ over all selections gives
+$\Lambda(\mathrm{WD}(e,j,m))=0.8846\ldots,0.9497\ldots,0.9768\ldots,0.9889\ldots$
+at $\max(e,j)=2,3,4,5$, so $1-\Lambda\to0$ geometrically in $\max(e,j)$
+while $N$ grows linearly in it. The measurement also shows that
+$\Lambda(\mathrm{WD}(e,j,m))$ depends on $e$ and $j$ only through
+$\max(e,j)$ --- it agrees on $(2,3,5),(3,2,5),(3,3,5)$ and on
+$(2,4,6),(4,2,6),(3,4,6),(4,3,6)$ --- and not on $e$ alone.
+
+Second, on the player-free family $G_m$ of \Cref{thm:vi-lower} there is
+only one selection and $\Lambda(G_m)=1/(2u)$, where $u$ is the root in
+$(\tfrac12,1)$ of $2u-1=u^{m}$; so $1-\Lambda(G_m)=2^{-m}(1+o(1))$, and
+value iteration's exponential lower bound there is visible as a spectral
+radius. Third, the last clause of the lemma re-proves
+\Cref{lem:survival}(c) and its converse in one line: a game is stopping
+exactly when \emph{some} rate below $1$ is certifiable at all.
+
+The converse inequality --- that for every rational $\lambda>\Lambda(G)$
+an escape certificate with that rate exists --- is true but is not used
+here, and it is not elementary: it is the statement that the joint
+spectral radius of a family of nonnegative matrices with independent row
+uncertainty is attained at a constant selection, which is
+Blondel--Nesterov's theorem for rectangular families, and in the language
+of nonnegative dynamic programming the stationarity of growth-optimal
+policies. With it, $\Lambda(G)$ is exactly the least certifiable rate and
+the escape class of \Cref{thm:escape-class} is precisely
+$\{G:1-\Lambda(G)\ge1/\mathrm{poly}(N)\}$, an intrinsic spectral
+condition; without it, \Cref{lem:escape-rate} still gives the direction
+that every exclusion argument needs.
+\end{remark}
+
 \begin{proposition}[The escape class contains none of the
 others]\label{prop:escape-family}
 For $D\ge3$ let $Z_D$ have $\Vavg=\{s_1,\dots,s_D\}$,
