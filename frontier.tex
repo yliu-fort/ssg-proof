@@ -6430,6 +6430,109 @@ here min-times --- closure of \Cref{def:ratio} escapes
 \end{remark}
 
 
+The two calculi are the endpoints of a one-parameter family, and the
+barrier holds along all of it for a reason that does not involve the
+parameter.
+
+\begin{definition}[The M\"obius family]\label{def:mobius}
+For $\beta\ge0$ let $G^{\beta}$ be $G$ with the sinks paid $\beta$ and
+$1+\beta$ instead of $0$ and $1$. Since $x\mapsto x+\beta$ is an
+increasing affine bijection and $\max$, $\min$ and the mean all commute
+with it, the operator of $G^\beta$ is
+$T^{\beta}(x)=\beta+T(x-\beta)$; consequently $G^\beta$ has value
+$w^\ast+\beta$ and its value iterates from the constants $1+\beta$ and
+$\beta$ are $u_k+\beta$ and $l_k+\beta$. Let $R^{\beta}$ be
+\Cref{def:ratio} run on $G^{\beta}$: entries read
+\[
+  w^\ast(x)+\beta\ \le\ R^{\beta}(x,y)\,\bigl(w^\ast(y)+\beta\bigr),
+\]
+the clauses are those of \Cref{def:ratio} verbatim, and for $\beta>0$ the
+bases become $1$ if $x\in Z_0$, $1$ if $y\in Z_1$, $\beta/(1+\beta)$ if
+both, $1$ if $x=y$, together with the global cap $(1+\beta)/\beta$ in
+place of $R_0\equiv+\infty$. Thus $R^{0}=R$ is \Cref{def:ratio}.
+\end{definition}
+
+\begin{proposition}[The whole family stops in the same
+place]\label{prop:mobius}
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item For every $\beta\ge0$ and every SSG, $R^{\beta}$ is sound in the
+      above reading and $R^{\beta}_{k+1}\le R^{\beta}_k$.
+\item \Cref{thm:ratio-sandwich} holds verbatim for $R^{\beta}$ with
+      $u_k,l_k$ replaced by $u_k+\beta$ and $l_k+\beta$: the upper bound
+      $R^{\beta}_{2k}(x,y)\le(u_k(x)+\beta)/(l_k(y)+\beta)$ with no
+      hypothesis, and the lower bound
+      $R^{\beta}_{k}(x,y)\ge(u_k(x)+\beta)/(l_k(y)+\beta)$ on the
+      separated configurations of \Cref{thm:slack-barrier}.
+\item The decisive condition does not involve $\beta$:
+      $(u_k(x)+\beta)/(l_k(y)+\beta)>1$ if and only if $u_k(x)>l_k(y)$.
+      Hence \emph{every} member of the family stalls on $H_m$ for
+      $2^{\Omega(N)}$ rounds, and the first firing round of the
+      own-successor test is the same for all of them.
+\item The family is nevertheless not a reparametrisation, and its members
+      are pairwise incomparable. On the game $W$ of
+      \Cref{prop:ratio-incomparable}(a) the pair $(0,2)$ is decided at
+      round $2$ by $\beta=0$ and only at round $3$ by
+      $\beta=\tfrac14,1,4$; on $W'$ the pair $(3,6)$ is decided at round
+      $7$ by $\beta=1,4$ and only at round $8$ by $\beta=0,\tfrac14$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) and (b) are \Cref{thm:ratio-sound} and \Cref{thm:ratio-sandwich}
+applied to $G^{\beta}$. Those proofs use only that $T$ fixes the value
+vector, that the three aggregators are $\max$, $\min$ and the mean, and
+that the extreme values are attained on $Z_0$ and $Z_1$; all four survive
+the substitution of $\beta,1+\beta$ for the sink payoffs, and the value
+iterates transform as stated in \Cref{def:mobius}. For $\beta>0$ every
+value is at least $\beta>0$, so no ratio is ever $0/0$ and the entries
+are finite from the start. (c) is immediate from
+$(c+\beta)/(t+\beta)>1\iff c>t$, and $H_m$ then follows exactly as in
+\Cref{cor:ratio-stall}. (d) is a finite exact computation.
+\end{proof}
+
+\begin{remark}\label{rem:mobius}
+The family interpolates. Writing $R^{\beta}=1+\Delta/\beta$ and expanding
+as $\beta\to\infty$, the harmonic mean of $1+a/\beta$ and $1+b/\beta$ is
+$1+\tfrac12(a+b)/\beta+O(\beta^{-2})$, the arithmetic mean is the same to
+first order, and $\min$, $\max$ and the composites transform into their
+additive counterparts; so the clause set of $R^{\beta}$ converges to that
+of \Cref{def:slack}, of which \Cref{def:ratio} is the opposite end at
+$\beta=0$. The measurements agree: on $W'$ the additive calculus decides
+$(3,6)$ at round $7$, and so do $R^{1}$ and $R^{4}$, while $R^{0}$ needs
+round $8$.
+
+What this adds to \Cref{rem:ratio} is that the obstruction is not located
+at either endpoint. A continuum of mutually incomparable sound
+mechanisms, differing in which pairs they decide and in what order, is
+stopped by one family at one round count, because the quantity that
+decides whether the barrier bound is informative --- the sign of
+$u_k(x)-l_k(y)$ --- is invariant along the whole family. Escaping it
+requires leaving the family altogether, in the direction
+\Cref{def:trans-slack} takes: a closure clause whose premises leave the
+separated region. We do not know whether the min-times closure of
+\Cref{def:ratio} escapes \Cref{thm:ratio-sandwich}(b) as
+\Cref{prop:trans-Hm} escapes \Cref{thm:slack-barrier}.
+
+\Cref{thm:separable} transfers to that question unchanged. Suppose a
+sequence $M_k(x,y)=\varphi_k(x)/\psi_k(y)$ of positive matrices is
+dominated by every clause of \Cref{def:ratio} at $M_k$ and closed under
+the min-times triangle inequality
+$M(x,y)\le M(x,z)M(z,y)$. The latter reads
+$1\le\varphi_k(z)/\psi_k(z)$, so $\psi_k\le\varphi_k$, while the
+diagonal base $M_k(x,x)\le1$ gives $\varphi_k\le\psi_k$; so
+$\varphi_k=\psi_k$. Evaluated at $(x,x)$ the numerator clause is
+$(T\varphi_k)(x)/\varphi_k(x)$ in all three cases, and the denominator
+clause is $\varphi_k(x)/(T\varphi_k)(x)$ --- the harmonic mean of
+$\varphi_k(x)/\varphi_k(x^{(j)})$ being $\varphi_k(x)$ over the
+arithmetic mean of the $\varphi_k(x^{(j)})$ --- so both being at least
+$1$ forces $T\varphi_k=\varphi_k$ at every non-sink, whence on a
+stopping game $\varphi_k$ is the increasing affine image
+$\alpha+(\beta-\alpha)w^\ast$ of the value vector determined by its
+own sink values $\alpha=\varphi_k(t_0)<\beta=\varphi_k(t_1)$, by
+\Cref{lem:gen-comparison}. So here too a rate proof needs a certificate
+that is not a ratio of two potentials.
+\end{remark}
+
 \subsection{The branch-compensation barrier}\label{sec:matching-barrier}
 
 The failures of \Cref{sec:simorder} can now be made into a theorem about
