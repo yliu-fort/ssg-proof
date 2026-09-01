@@ -6509,9 +6509,7 @@ decides whether the barrier bound is informative --- the sign of
 $u_k(x)-l_k(y)$ --- is invariant along the whole family. Escaping it
 requires leaving the family altogether, in the direction
 \Cref{def:trans-slack} takes: a closure clause whose premises leave the
-separated region. We do not know whether the min-times closure of
-\Cref{def:ratio} escapes \Cref{thm:ratio-sandwich}(b) as
-\Cref{prop:trans-Hm} escapes \Cref{thm:slack-barrier}.
+separated region. That direction does work here as well.
 
 \Cref{thm:separable} transfers to that question unchanged. Suppose a
 sequence $M_k(x,y)=\varphi_k(x)/\psi_k(y)$ of positive matrices is
@@ -6531,6 +6529,46 @@ $\alpha+(\beta-\alpha)w^\ast$ of the value vector determined by its
 own sink values $\alpha=\varphi_k(t_0)<\beta=\varphi_k(t_1)$, by
 \Cref{lem:gen-comparison}. So here too a rate proof needs a certificate
 that is not a ratio of two potentials.
+\end{remark}
+
+\begin{proposition}[The multiplicative closure escapes, too]\label{prop:ratio-closure}
+Let $R^{T}$ be \Cref{def:ratio} with each round followed by the
+\emph{min-times} closure
+$R(x,y)\le R(x,z)R(z,y)$, the all-pairs shortest-path closure of
+\Cref{def:trans-slack} read multiplicatively. Then $R^{T}$ is sound on
+every SSG, and it escapes \Cref{thm:ratio-sandwich}(b): on the family
+$H_m$, on which $R$ itself stalls for $2^{\Omega(N)}$ rounds by
+\Cref{cor:ratio-stall}, the own-successor test fires after a number of
+rounds linear in $N$.
+\end{proposition}
+
+\begin{proof}
+Soundness: with the conventions $c/0=+\infty$ for $c>0$ and $0/0=0$, one
+has $D(x,y)\le D(x,z)D(z,y)$ for the true ratios, with equality whenever
+$w^\ast(z)>0$; the clause is monotone, so it may be added to the
+induction of \Cref{thm:ratio-sound} unchanged. The escape is a finite
+exact computation: measured for the variant in which every entry is
+rounded up to a multiple of $2^{-(2a+2)}$ and capped at $2^{a}$ --- both
+sound, the cap because a positive value is at least $2^{-a}$ by
+\Cref{lem:denominator-sharp} --- the first firing round on $H_m$ is
+$7,11,15,20,24$ for $m=3,\dots,7$, against $9,13,17,21,25$ for
+\Cref{def:trans-slack} and $15,39,101$ for $R$ and $\Delta$ at
+$m=3,4,5$. Soundness was asserted against $w^\ast$ at every entry and
+every round of every run.
+\end{proof}
+
+\begin{remark}\label{rem:ratio-closure}
+So the escape from the value-iteration sandwich is a property of the
+\emph{closure clause} and not of the algebra used to combine branches:
+\Cref{prop:trans-Hm} and \Cref{prop:ratio-closure} are the additive and
+multiplicative halves of one phenomenon, and the multiplicative half is
+marginally the faster of the two on this family. What
+\Cref{thm:slack-barrier} and \Cref{thm:ratio-sandwich}(b) constrain is
+exactly the clauses whose premises stay inside the separated region;
+what neither constrains is a premise that leaves it. Both closures are
+then covered by \Cref{thm:separable} and by the multiplicative form of
+it above: whatever bounds their rate from below cannot be a difference,
+or a ratio, of two potentials.
 \end{remark}
 
 \subsection{The branch-compensation barrier}\label{sec:matching-barrier}
