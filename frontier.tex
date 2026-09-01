@@ -165,8 +165,8 @@ terms of the cycle structure of $\Vmax$
 (\Cref{thm:peak-law,cor:law-b,cor:antichain,thm:component-bound}), and we
 locate the exact ceiling those laws impose: it is $1,2,4,7,13$ for
 $m\le5$, while the largest bottom-antipodal height of an acyclic unique sink
-orientation --- which every all-switches run of a nondegenerate stopping game
-is --- is $1,2,4,7,12$
+orientation --- which, by \Cref{cor:ceiling-general}, every all-switches run
+of every stopping game is, degenerate or not --- is $1,2,4,7,12$
 (\Cref{prop:auso-census,prop:hstar-five}), so the laws are strictly weaker than
 the axioms they come from; and the tallest orientation the census admits at
 $m=4$ is realised, by a nondegenerate two-player stopping game on $97$
@@ -3525,6 +3525,202 @@ S_{t'}$ then $\sigma_t\in F_{t'}$ and $\sigma_t\ne\sigma_{t'}$, so
 $\varphi(\sigma_t)>\varphi(\sigma_{t'})$, a contradiction.
 \end{proof}
 
+\medskip
+The nondegeneracy hypothesis of \Cref{prop:allsw-auso} can be deleted. That
+matters, because the longest all-switches runs recorded in this document ---
+\Cref{prop:overshoot-small} and \Cref{prop:allswitch-overshoot} --- are
+heavily degenerate, so the AUSO ceiling $h^{\ast}(m)$ of
+\Cref{cor:f-auso} did not, as things stood, apply to them.
+
+\begin{definition}[Flat coordinates and flat classes]\label{def:flat}
+For a stopping $G$ and a Max strategy $\sigma$ put, alongside
+$S(\sigma):=S_\sigma$,
+\[
+  D(\sigma):=\bigl\{i:\val_\sigma(\bar\sigma(x_i))=\val_\sigma(\sigma(x_i))\bigr\},
+\]
+the \emph{flat} coordinates. Call the cube edge $\{\sigma,\sigma\oplus e_i\}$
+\emph{flat} when $i\in D(\sigma)$, and let the \emph{flat classes} be the
+connected components of the graph of flat edges.
+\end{definition}
+
+\begin{lemma}[Trichotomy: no edge points out at both ends]\label{lem:trichotomy}
+Let $G$ be stopping, $\sigma$ a Max strategy, $i$ a coordinate and
+$\sigma':=\sigma\oplus e_i$. Then exactly one of
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $i\in S(\sigma)$, and then $i\notin S(\sigma')\cup D(\sigma')$;
+\item $i\in S(\sigma')$, and then $i\notin S(\sigma)\cup D(\sigma)$;
+\item $i\in D(\sigma)\cap D(\sigma')$, and then $\val_{\sigma'}=\val_\sigma$.
+\end{enumerate}
+In particular an edge is flat at one end if and only if it is flat at the
+other, and the two ends of a flat edge carry the same value vector.
+\end{lemma}
+
+\begin{proof}
+Write $a:=\sigma(x_i)$, $b:=\bar\sigma(x_i)=\sigma'(x_i)$, $x:=\val_\sigma$,
+$y:=\val_{\sigma'}$, and split on the sign of $x(b)-x(a)$.
+
+If $x(b)=x(a)$ then $T_{\sigma'}x=x$: the two operators differ only at $x_i$,
+where $(T_{\sigma'}x)(x_i)=x(b)=x(a)=x(x_i)$ by \Cref{thm:lfp-general}(a).
+By \Cref{thm:contraction} the fixed point of $T_{\sigma'}$ is unique, so
+$y=x$; then $y(a)=x(a)=x(b)=y(b)$, so $i\in D(\sigma)\cap D(\sigma')$ and we
+are in case (c).
+
+If $x(b)>x(a)$ then $i\in S(\sigma)$. Suppose $y(a)\ge y(b)$. The operators
+$T_\sigma$ and $T_{\sigma'}$ differ only at $x_i$, where
+$(T_\sigma y)(x_i)=y(a)\ge y(b)=y(x_i)$, so $T_\sigma y\ge y$ and
+\Cref{cor:comparison} gives $y\le\val_\sigma=x$. But $i\in S(\sigma)$ and
+\Cref{lem:switch} give $y\ge x$ with strict inequality at $x_i$, a
+contradiction. Hence $y(b)>y(a)$, that is $i\notin S(\sigma')\cup D(\sigma')$:
+case (a). The case $x(b)<x(a)$ is the same with the roles of $\sigma$ and
+$\sigma'$ exchanged, and gives (b).
+\end{proof}
+
+\begin{lemma}[The flat classes are the level sets]\label{lem:flat-class}
+Let $G$ be stopping.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $S$ and $D$ are constant on each flat class, and the class of $\sigma$
+      is the subcube $\sigma\oplus\operatorname{span}\{e_i:i\in D(\sigma)\}$.
+\item $\val_\sigma=\val_{\sigma'}$ if and only if $\sigma$ and $\sigma'$ lie
+      in the same flat class: the flat classes are exactly the level sets of
+      $\sigma\mapsto\val_\sigma$.
+\item $\Phi(\val_\sigma):=\sum_v\val_\sigma(v)$ is constant on classes and
+      strictly increases along every non-flat edge in the direction it
+      points, so the quotient digraph on classes is acyclic and the
+      strategies of an all-switches run lie in pairwise distinct classes.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) If $i\in D(\sigma)$ then $\val_{\sigma\oplus e_i}=\val_\sigma$ by
+\Cref{lem:trichotomy}(c). For $j\ne i$ the two successors of $x_j$ and the
+choice made there are the same at $\sigma$ and $\sigma\oplus e_i$, and the
+value vector is the same, so $j\in S(\sigma)\Leftrightarrow j\in S(\sigma\oplus e_i)$
+and likewise for $D$; and $i\in D(\sigma\oplus e_i)$ by the same trichotomy.
+So $S$ and $D$ are unchanged by a flat flip, and the class is obtained by
+flipping the coordinates of the constant set $D$ in all ways.
+
+(b) One direction is (a). Conversely let $\val_\sigma=\val_{\sigma'}$ and let
+$i$ be a coordinate where they differ. By \Cref{thm:lfp-general}(a),
+$\val_\sigma(x_i)=\val_\sigma(\sigma(x_i))$ and
+$\val_{\sigma'}(x_i)=\val_{\sigma'}(\sigma'(x_i))$; the two left sides agree
+and $\val_{\sigma'}=\val_\sigma$, so $\val_\sigma$ takes the same value at
+both successors of $x_i$, that is $i\in D(\sigma)$. Every differing
+coordinate is flat, so $\sigma'$ lies in the class of $\sigma$ by (a).
+
+(c) Constancy is (b). The strict increase is \Cref{lem:switch}; the run's
+strategies therefore have strictly increasing $\Phi$ and lie in distinct
+classes.
+\end{proof}
+
+\begin{lemma}[Every face has a sink subcube]\label{lem:face-sink}
+Let $G$ be stopping and let $F$ be a face of the $m$-cube with free direction
+set $J$. Then $\{\sigma\in F:S(\sigma)\cap J=\emptyset\}$ is nonempty, equals
+$\{\sigma\in F:\val_\sigma=\max_{F}\val\}$, and is $A\cap F$ for a single
+flat class $A$; it is a subcube of $F$ with direction set $D_A\cap J$.
+\end{lemma}
+
+\begin{proof}
+Freezing the coordinates outside $J$ gives the subgame $G_F$ of
+\Cref{def:subcube}, which is stopping by \Cref{lem:subgame}(a), and by
+\Cref{lem:subgame}(e) a point of $F$ with no strictly switchable free
+coordinate is exactly a strategy of $G_F$ with no strictly switchable
+vertex, i.e.\ an optimal one (\Cref{lem:local-global}). By
+\Cref{thm:opt-subcube} those form a nonempty subcube, and they all carry the
+same value vector, namely that of $G_F$; by \Cref{lem:flat-class}(b) they
+therefore lie in one flat class $A$, and conversely every member of $A\cap F$
+has the same $S$, hence is also a sink of $F$.
+\end{proof}
+
+\begin{theorem}[Resolution]\label{thm:flat-resolution}
+Let $G$ be stopping with $|\Vmax|=m$, and choose a corner $c_A$ in each flat
+class $A$. Then
+\[
+  s'(\sigma)\;:=\;S(\sigma)\;\cup\;\bigl\{i\in D(\sigma):\sigma_i\ne(c_{A(\sigma)})_i\bigr\}
+\]
+is the outmap of an acyclic unique sink orientation of the $m$-cube, and
+$s'(c_A)=S(c_A)$ for every class $A$.
+\end{theorem}
+
+\begin{proof}
+\emph{Orientation.} Let $\{\sigma,\sigma'\}$ be an edge in direction $i$. In
+cases (a) and (b) of \Cref{lem:trichotomy} the coordinate $i$ is flat at
+neither end, so $s'$ inherits $S$'s single orientation. In case (c) both ends
+lie in one class $A$ and differ at $i$, so exactly one of them disagrees with
+$c_A$ at $i$ and receives the direction.
+
+\emph{Unique sink.} Let $F$ be a face with free set $J$. By
+\Cref{lem:face-sink} the $S$-sinks of $F$ are $A\cap F$ for one class $A$, a
+subcube with direction set $D_A\cap J$, on which $S$ and $D$ are constant.
+For $\sigma\in F$ we have $s'(\sigma)\cap J=\emptyset$ exactly when
+$S(\sigma)\cap J=\emptyset$ --- i.e.\ $\sigma\in A\cap F$ --- and $\sigma$
+agrees with $c_A$ on $D_A\cap J$. All members of $A$ agree off $D_A$, so
+$c_A$ does too, and $A\cap F$ contains exactly one point agreeing with $c_A$
+on $D_A\cap J$.
+
+\emph{Acyclicity.} By \Cref{lem:flat-class}(c) the quotient digraph on classes
+is acyclic; fix a topological order $\psi$ of it. Along an $s'$-arc that is
+not flat, the class strictly increases in $\psi$; along a flat one the class
+is unchanged and the Hamming distance to $c_A$ drops by one, since the arc
+points from disagreement to agreement. So
+$\bigl(\psi(A(\sigma)),-\mathrm{dist}(\sigma,c_A)\bigr)$ increases
+lexicographically along every arc.
+
+Finally $c_A$ disagrees with itself nowhere, so $s'(c_A)=S(c_A)$.
+\end{proof}
+
+\begin{corollary}[The ceiling holds for degenerate games too]\label{cor:ceiling-general}
+For every stopping SSG with $|\Vmax|=m$, degenerate or not, and every
+starting strategy, the all-switches run $\sigma_0,\dots,\sigma_L$ is the
+bottom-antipodal walk from $\sigma_0$ of an AUSO of the $m$-cube. Hence
+$L\le h^{\ast}(m)$, and in particular $L\le1,2,4,7,12$ for $m\le5$: no
+stopping SSG with five Max vertices has an all-switches run of length $13$,
+although \Cref{cor:no-return} and \Cref{cor:law-b} permit such schedules.
+\end{corollary}
+
+\begin{proof}
+By \Cref{lem:flat-class}(c) the $\sigma_t$ lie in pairwise distinct classes,
+so setting $c_{A(\sigma_t)}:=\sigma_t$ is a consistent choice of corners;
+extend it arbitrarily to the remaining classes and apply
+\Cref{thm:flat-resolution}. Then $s'(\sigma_t)=S(\sigma_t)=S_t$ for $t<L$ and
+$s'(\sigma_L)=\emptyset$, so the $s'$-bottom-antipodal walk from $\sigma_0$ is
+the run. The numerical ceiling is \Cref{prop:auso-census} and
+\Cref{prop:hstar-five}.
+\end{proof}
+
+\begin{corollary}[A third law]\label{cor:law-u}
+Along every all-switches run of every stopping SSG, with $S_L:=\emptyset$,
+\[
+  (S_t\,\triangle\,S_{t'})\cap(\sigma_t\oplus\sigma_{t'})\ \ne\ \emptyset
+  \qquad(0\le t<t'\le L).
+\]
+Consequently the switched sets $S_0,\dots,S_L$ are pairwise distinct, which
+is strictly stronger than \Cref{cor:antichain}.
+\end{corollary}
+
+\begin{proof}
+The display is the defining condition of a unique sink orientation applied to
+the two distinct vertices $\sigma_t,\sigma_{t'}$ of the AUSO supplied by
+\Cref{cor:ceiling-general}, whose outmap agrees with $S_t$ along the run. If
+$S_t=S_{t'}$ the symmetric difference is empty and the condition fails.
+\end{proof}
+
+\begin{remark}\label{rem:flat}
+Three consequences. First, \Cref{prop:allsw-auso}'s nondegeneracy hypothesis
+is no longer load-bearing anywhere: degenerate combinatorics is not a
+separate object, and the search for a superpolynomial family may be conducted
+among AUSOs without loss. Second, \Cref{cor:f-auso}'s cap now applies to
+every stopping game, so \emph{any} improvement on the ceiling must use a
+property that SSG-realisable orientations have and general AUSOs lack ---
+which is what \Cref{prop:auso-size} says cannot be found by enumeration.
+Third, \Cref{cor:law-u} tightens the law programme of
+\Cref{rem:allsw-laws}: adding it to \Cref{cor:no-return} and
+\Cref{cor:law-b}, exhaustive search reports the ceiling
+$1,2,4,7,12,21$ at $m\le6$ in place of $f=1,2,4,7,13,25$, so at $m=5$ the
+law bound now equals $h^{\ast}(5)=12$ exactly. Those two counts are
+computations we have not reproduced here and are recorded as measurements;
+everything else in this subsection is proved.
+\end{remark}
+
 \begin{corollary}[The programme of \Cref{rem:allsw-laws} is capped]\label{cor:f-auso}
 Let $h^{\ast}(m)$ be the greatest bottom-antipodal height of an AUSO of the
 $m$-cube. Then $f(m)\ge h^{\ast}(m)$. Consequently no set of laws derivable from
@@ -3557,21 +3753,20 @@ further law-deriving can make the counting argument of \Cref{rem:allsw-laws}
 subexponential. \Cref{thm:component-bound} is unaffected, since it constrains
 the graph rather than the schedule.
 
-\Cref{prop:allsw-auso} relocates the question, but only within its hypothesis,
-and the hypothesis is not idle. An exponential all-switches family of
-\emph{nondegenerate} stopping SSGs exists if and only if some such game
-realises an AUSO of exponential bottom-antipodal height as its improvement
-orientation. Degenerate games are not covered: there a cube edge can be left
-unoriented, neither endpoint being strictly switchable in that direction, and
-the outmap is then not that of a unique sink orientation. This matters here
-because the longest runs recorded in this document are of exactly that kind.
-The witness of \Cref{prop:overshoot-small} has, in its reduced twelve-variable
-model, ten tied incidences $(\sigma,i)$ out of $64$ and hence five unoriented
-cube edges out of $32$; we recomputed all sixteen value vectors exactly to check
-it. The laws themselves are unaffected --- \Cref{cor:no-return} and
-\Cref{cor:law-b} are proved for all stopping games, so every run is still
-counted by $f$ --- but the AUSO reading of a run is not available for those
-instances.
+\Cref{prop:allsw-auso} relocates the question. Its nondegeneracy hypothesis
+looked at first like a real restriction, since the longest runs recorded in
+this document are degenerate --- the witness of
+\Cref{prop:overshoot-small} has, in its reduced twelve-variable model, ten
+tied incidences $(\sigma,i)$ out of $64$ and hence five unoriented cube edges
+out of $32$, and we recomputed all sixteen value vectors exactly to check it
+--- and there a cube edge can be left unoriented, so the outmap is not that of
+a unique sink orientation. \Cref{thm:flat-resolution} removes the restriction
+entirely: such an outmap is still a \emph{flat} orientation, every flat
+orientation resolves to an AUSO preserving any one prescribed run, and
+\Cref{cor:ceiling-general} therefore reads every all-switches run of every
+stopping game as a bottom-antipodal walk. So an exponential all-switches
+family of stopping SSGs exists if and only if some stopping game realises an
+AUSO of exponential bottom-antipodal height, with no hypothesis attached.
 
 We had at one point recorded, as an observation, that hill climbing over
 \emph{nondegenerate} stopping games did not exceed bottom-antipodal height $3$
