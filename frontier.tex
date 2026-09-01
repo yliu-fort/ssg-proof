@@ -8150,7 +8150,26 @@ rounds $30$ and $87$ for $j=2,3$ and not within $170$ rounds for $j=4$
 \Cref{def:trans-slack}, so it is defeated by the same family and is on
 this one the slower of the two, having been the faster on $H_m$
 (\Cref{prop:ratio-closure}). The wedge is therefore the one obstruction
-in this document that no calculus here evades. What would be needed to defeat that as well is a two-player
+in this document that no calculus here evades.
+
+One further attempt is worth recording because it looks like the right
+one and is not. In the coordinates $\xi$ a multiplicative cut
+$z(p)\le R(p,q)z(q)$ reads
+$\xi(p)\le R\xi(q)+(R\,w^\ast(q)-w^\ast(p))$, whose constant vanishes
+when $R$ is exact; an exact ratio cut is therefore a \emph{cone through
+the apex}, which is the shape the wedge is made of. Adjoining all such
+cuts, with $R$ taken from \Cref{def:ratio} and its min-times closure, to
+the difference cuts of \Cref{def:hybrid} changes nothing: on
+$WD(2j,j,j+4)$ for $j=2,3,4$ the first firing round remains $4,8,17$,
+and the polygon is \emph{identical} at every round --- on $WD(4,2,6)$
+the augmented programme adds $346$ to $348$ ratio cuts per round beside
+the $218$ to $372$ difference cuts and the vertex set never moves. The
+reason is that a ratio read off the polytope is by construction a
+supporting half-plane of it, and on this family the ratios the clauses
+supply are never tighter than the ones the polytope already implies. The
+obstruction is the rate at which the cone narrows, $\lambda=1-2^{1-j}$
+per round, and adding further cones through the same apex does not
+change a rate. What would be needed to defeat that as well is a two-player
 wedge, and \Cref{thm:seed-dichotomy} says any such instance is a stopping game
 on which switch-all improvement has not converged --- the same pivot that
 \Cref{cor:f-auso} and \Cref{prop:auso-size} leave open.
