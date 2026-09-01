@@ -8386,6 +8386,129 @@ $w^\ast$. Finally a point that is the unique minimiser of a linear functional
 over a polytope is a vertex of it.
 \end{proof}
 
+\medskip
+The obstruction \Cref{thm:transport-objective} identifies --- the exact set
+is $Q(G)$ cut by the $|C|$ \emph{quadratic} complementarity equalities
+\[
+  q_v(x)\;:=\;\bigl(x(v)-x(v^{(0)})\bigr)\bigl(x(v)-x(v^{(1)})\bigr)\;=\;0,
+\]
+so the difficulty is a choice among $2^{|C|}$ branches --- has one obvious
+remedy: lift the quadratic equalities into a semidefinite programme instead
+of branching on them. That is the Lasserre--Shor moment relaxation, and a
+positive answer at any fixed degree would put \Cref{prob:main} in
+$\mathsf P$. It fails already at the first degree, and it fails in the worst
+possible way.
+
+\begin{definition}[The degree-two relaxation]\label{def:lasserre-two}
+By \Cref{lem:transport-dim} every $x\in Q(G)$ is determined by its
+restriction to $C$, so write $\tilde Q(G)\subseteq\mathbb R^{C}$ for the
+image and $g_{v,i}$ for the affine form giving $x(v^{(i)})$ in those
+coordinates. The \emph{degree-two relaxation} is the set of pairs
+$(u,Y)\in\mathbb R^{C}\times\mathbb R^{C\times C}$ with
+\[
+  \begin{pmatrix}1&u^{\mathsf T}\\ u&Y\end{pmatrix}\succeq0,\qquad
+  u\in\tilde Q(G),\qquad
+  L(q_v)=0\ \ (v\in C),
+\]
+where $L$ is the linear functional sending $1\mapsto1$, $x_i\mapsto u_i$ and
+$x_ix_j\mapsto Y_{ij}$. Since $q_v(w^\ast)=0$ and $w^\ast\in\tilde Q(G)$, the
+rank-one pair $(w^\ast,w^\ast w^{\ast\mathsf T})$ is always feasible; the
+relaxation is \emph{exact} on $G$ if it is the only feasible $u$.
+\end{definition}
+
+\begin{theorem}[Degree two is not merely inexact but vacuous]\label{thm:lasserre-vacuous}
+There is a stopping SSG $W_{10}$ on ten vertices with two Max and one Min
+vertex, and a one-player stopping SSG $W_{14}$ on fourteen vertices with
+three Max vertices, on each of which the degree-two relaxation admits a
+feasible point whose $u$ is the maximiser of $x(v_1)$ over $\tilde Q(G)$
+itself. So on those games the lift improves the bound on $x(v_1)$ by
+nothing at all, while $w^\ast(v_1)=\tfrac12$ in both.
+\end{theorem}
+
+\begin{proof}
+$W_{10}$: put $\Vmax=\{v_1,v_2\}$, $\Vmin=\{v_3\}$, $\Vavg=\{e,r,g_1,g_2,g_3\}$ and
+\[
+ \begin{aligned}
+  &v_1\to(v_2,v_3),\quad v_2\to(e,g_1),\quad v_3\to(r,g_1),\quad e\to(t_1,t_0),\\
+  &r\to(e,t_0),\quad g_1\to(v_1,g_2),\quad g_2\to(v_1,g_3),\quad g_3\to(v_1,t_0).
+ \end{aligned}
+\]
+Each of $e$, $r$, $g_3$ has a $t_0$ successor, so by \Cref{lem:trapchar} the
+greatest trap is empty and the game is stopping; solving,
+$w^\ast=(\tfrac12,\tfrac12,\tfrac14)$ on $(v_1,v_2,v_3)$. Its harmonic normal
+form --- the first-passage law of each action over $C\cup\{t_1\}$ --- is
+\[
+  v_1:(e_2;0),\ (e_3;0);\qquad
+  v_2:(0;\tfrac12),\ (\tfrac78e_1;0);\qquad
+  v_3:(0;\tfrac14),\ (\tfrac78e_1;0),
+\]
+so $\tilde Q(W_{10})$ is $x_1\ge x_2$, $x_1\ge x_3$, $x_2\ge\tfrac12$,
+$x_2\ge\tfrac78x_1$, $x_3\le\tfrac14$, $x_3\le\tfrac78x_1$ and the box, whose
+maximum of $x_1$ is $1$, attained only at $u:=(1,\tfrac78,\tfrac14)$. Take
+\[
+  Y:=uu^{\mathsf T}+S,\qquad
+  S:=\tfrac1{64}\begin{pmatrix}525&360&360\\360&315&189\\360&189&315\end{pmatrix}.
+\]
+The moment matrix is $\succeq0$ by the Schur complement, since $S\succ0$: its
+leading principal minors are $\tfrac{525}{64}$, $\tfrac{35775}{4096}$ and
+$\tfrac{42525}{16384}$. For the equalities, $L(q_v)$ is the value of $q_v$ at
+$u$ plus $\alpha_v^{(0)\mathsf T}S\,\alpha_v^{(1)}$, where $\alpha_v^{(i)}$ is
+the gradient of $x(v)-g_{v,i}$. At $v_1$ these gradients are $e_1-e_2$ and
+$e_1-e_3$, giving $(1-\tfrac78)(1-\tfrac14)=\tfrac3{32}$ and
+$\tfrac{525-360-360+189}{64}=-\tfrac3{32}$, which cancel. At $v_2$ the second
+factor of $q_{v_2}$ vanishes ($\tfrac78=\tfrac78\cdot1$) and the quadratic term
+is $\tfrac{315-\tfrac78\cdot360}{64}=0$; at $v_3$ the first factor vanishes and
+the quadratic term is $\tfrac{315-\tfrac78\cdot360}{64}=0$ likewise.
+
+$W_{14}$: put $\Vmax=\{v_1,v_2,v_3\}$, $\Vmin=\emptyset$, and
+\[
+ \begin{aligned}
+  &v_1\to(v_2,v_3),\quad v_2\to(e,g_1),\quad v_3\to(c_1,g_1),\quad e\to(t_1,t_0),\\
+  &g_1\to(v_1,g_2),\ g_2\to(v_1,g_3),\ g_3\to(v_1,t_0),\\
+  &c_1\to(t_0,c_2),\ c_2\to(t_1,c_3),\ c_3\to(t_1,c_4),\ c_4\to(t_1,c_5),\ c_5\to(t_1,t_0).
+ \end{aligned}
+\]
+It is stopping by the same test, $w^\ast=(\tfrac12,\tfrac12,\tfrac{15}{32})$,
+and the normal form is $v_1:(e_2;0),(e_3;0)$; $v_2:(0;\tfrac12),(\tfrac78e_1;0)$;
+$v_3:(0;\tfrac{15}{32}),(\tfrac78e_1;0)$. The maximum of $x_1$ over
+$\tilde Q(W_{14})$ is again $1$, attained only at $u:=(1,\tfrac78,\tfrac78)$,
+and with
+$S:=\tfrac1{128}\left(\begin{smallmatrix}175&120&120\\120&105&63\\120&63&105\end{smallmatrix}\right)$,
+whose leading minors are $\tfrac{175}{128}$, $\tfrac{3975}{16384}$,
+$\tfrac{1575}{131072}$, the three equalities read
+$(1-\tfrac78)^2+\tfrac{175-120-120+63}{128}=\tfrac1{64}-\tfrac1{64}=0$ and
+$\tfrac{105-\tfrac78\cdot120}{128}=0$ twice.
+\end{proof}
+
+\begin{remark}\label{rem:lasserre}
+Three readings. First, the failure is not a matter of two players: $W_{14}$
+is one-player, so the degree-two relaxation is already inexact on transient
+two-action Markov decision processes, where the value is computed by a
+linear programme (\Cref{thm:one-player}). The lift is therefore not weak
+because the problem is hard; it is weak because complementarity at three
+vertices already outruns one moment matrix.
+
+Second, the theorem is stated in the vacuous form on purpose. Non-exactness
+alone would leave open that the lift improves the bound somewhat, and a
+bound improving by a fixed factor per degree would still be worth having.
+What the two games show is that in the direction $x(v_1)$ --- and $v_1$ is
+value-distinguishing in both --- the degree-two lift returns the linear
+programme's own answer.
+
+Third, what this does and does not close. Exactness at any \emph{fixed}
+degree $2t$ would give a semidefinite programme of size $N^{O(t)}$ whose
+optimum is $w^\ast(v_0)$, and with the denominator bound of
+\Cref{lem:denominator-sharp} that would decide \Cref{prob:main} in
+polynomial time; so a negative answer at degree two was the expected one and
+is not surprising. Degree four is not refuted here, and by the same
+reduction any conjecture that some fixed degree \emph{is} exact is
+target-equivalent and must not be made. Nor is the failure an argument
+against convex lifts in general: \Cref{thm:hybrid-convex-barrier} already
+describes what a shrinking chain of convex certificates would have to do,
+and \Cref{thm:lasserre-vacuous} says only that the first member of the
+Lasserre chain is not such a certificate.
+\end{remark}
+
 \begin{remark}\label{rem:transport-objective}
 This is a reformulation and not progress, and it is worth being exact about
 which. Choosing the objective in \Cref{thm:transport-objective} means naming an
