@@ -2151,7 +2151,11 @@ document's own families.
 For an SSG $G$ let $\Lambda(G):=\{\val(v):v\in V\}\subseteq[0,1]$ be its
 \emph{value alphabet}, $k(G):=|\Lambda(G)|$, and $D(G)$ the least common
 denominator of the members of $\Lambda(G)$. Since $\val(t_0)=0$ and
-$\val(t_1)=1$ we always have $\{0,1\}\subseteq\Lambda(G)$ and $k(G)\ge2$.
+$\val(t_1)=1$ we always have $\{0,1\}\subseteq\Lambda(G)$ and $k(G)\ge2$. As with every parameter in this
+section, $\Lambda$, $k$ and $D$ are to be read on the subgame reachable from
+the start vertex $v_0$: adjoining an unreachable copy of $L_n$ raises $D$ to
+$2^{n}$ without changing the answer at $v_0$, so on the game as presented the
+parameter would not be a property of the decision instance at all.
 \end{definition}
 
 The first observation is that an alphabet is all one needs: the fixed
@@ -2299,11 +2303,16 @@ to interior $t$, and $b_l$ collects the contributions of $\mu_1=0$ and
 $\mu_k=1$. Then $P\ge0$ has row sums at most $1$ and zero diagonal, since
 $i_l<l<j_l$.
 
-We claim $\rho(P)<1$. If not, then since $P$ is nonnegative with row sums
-at most $1$ there is a nonempty set $U$ of interior indices on which $P$
-restricts to a stochastic matrix, i.e.\ every $l\in U$ has both $i_l$ and
-$j_l$ interior and lying in $U$. Take $l:=\min U$; then $i_l\in U$ and
-$i_l<l$, contradicting minimality. So $\rho(P)<1$, $I-P$ is nonsingular,
+We claim $\rho(P)<1$. Suppose $\rho(P)=1$ --- it is at most $1$, the row sums
+being at most $1$. By Perron--Frobenius there is $z\ge0$, $z\ne0$, with
+$Pz=z$. Put $U:=\{l:z_l=\max z\}$, which is nonempty. For $l\in U$,
+\[
+  \max z=z_l=\sum_tP_{l,t}z_t\;\le\;\Bigl(\sum_tP_{l,t}\Bigr)\max z\;\le\;\max z,
+\]
+so both inequalities are equalities: the $l$-th row sum of $P$ is $1$, and
+$P_{l,t}>0$ forces $z_t=\max z$, that is $t\in U$. A row sum of $1$ means both
+$i_l$ and $j_l$ are interior, and they then lie in $U$. Take $l:=\min U$;
+then $i_l\in U$ with $i_l<l$, contradicting minimality. So $\rho(P)<1$, $I-P$ is nonsingular,
 and the system has a unique solution --- which must be $\Lambda(G)$, since
 $\Lambda(G)$ solves it.
 
@@ -2380,8 +2389,24 @@ By \Cref{lem:denominator-sharp} and \Cref{thm:alphabet-denominator},
 \[
   D(G)\ \le\ 2^{\min(a,\;k-2)},
 \]
-so \Cref{thm:few-denominator} never loses to \Cref{thm:few-avg} by more
-than the squaring, and it wins outright wherever $k\ll a$. On this
+and it is worth being exact about what that buys, because the obvious
+reading is wrong. \Cref{thm:few-denominator} costs $O(N^{2}D^{2})$ and
+\Cref{thm:few-avg} costs $\mathrm{poly}(N)2^{a}$, so the displayed bound
+gives only $O(N^{2}4^{a})$: the denominator algorithm can \emph{lose} to
+\Cref{thm:few-avg} by as much as a square, and on the ladder it does ---
+$L_n$ has $a=n$ and $D=2^{n}$, so the two bounds are $4^{n}$ against
+$2^{n}$. The squaring is the price of not being told $D$; given $D$,
+\Cref{cor:grid-iteration} costs $O(N^{2}D)\le O(N^{2}2^{a})$ and the two
+are comparable. Where \Cref{thm:few-denominator} wins is where
+$D\ll2^{a/2}$, and that is not a matter of $k$ being merely smaller than
+$a$: on $H_m$ ($a=2m+1$, $D=2^{m+1}$) and on $G_m$ ($a=2m$, $D=2^{m+1}$)
+one has $D^{2}=\Theta(2^{a})$ and the two bounds agree up to a constant.
+The wins are exponential and they are on instances built for it:
+$\mathrm{FV}_2(n)$ below has $a=3n$ and $D=3$, and the gambler's-ruin
+chain $\mathrm{GR}(n)$ has $a=n$ and $D=n+1$, where the bounds are
+$O(N^{4})$ against $\mathrm{poly}(N)2^{n}$.
+
+On this
 document's own families the two parameters are exponentially far apart in
 neither direction but coincide: computation in exact arithmetic gives
 $k=2+\log_2 D$ \emph{with equality} on $L_n$ ($n=3,5,7$), $H_m$ and $G_m$
@@ -2396,6 +2421,17 @@ $\val(u_i)=i/(n+1)$, so $D=k-1$, the least possible, and
 \Cref{thm:few-denominator} runs in $O(N^{3})$ although $a=N-2$; while
 $L_n$ has the same $k$ and $D=2^{k-2}$, the largest possible. It is $D$,
 not $k$, that the algorithm sees.
+
+One significance question is left open here, and it is the one
+\Cref{rem:escape-class} answers for the escape class. Every other class in
+this section carries a rate --- $1-2^{-a}$, $1-2^{-d}$, the certified
+$\lambda$ --- from which it follows that no member can be a stalling
+instance for the propagation mechanisms of \Cref{sec:gap}. A small $D$
+supplies no such rate: \Cref{cor:grid-iteration} converges quickly in the
+\emph{rounded} iteration, and nothing here bounds the plain bracket
+$u_k-l_k$ that \Cref{thm:slack-vi-upper} consults. Whether
+$\{D\le\mathrm{poly}\}$ contains a stall for any of $M1$--$M6$ or
+\Cref{def:bsi} we have not determined.
 \end{remark}
 
 \begin{proposition}[Alphabets with at most four letters]\label{prop:alphabet-four}
@@ -2418,8 +2454,8 @@ $(\tfrac\mu2,\tfrac{\lambda+1}2)$, i.e.\ $4\lambda=\lambda+1$, so
 $(\tfrac13,\tfrac23)$; $(\tfrac12,\tfrac12)$, excluded by
 $\lambda<\mu$; and $(\tfrac12,\tfrac34)$. Realisations: $v\mapsto(t_0,t_1)$
 gives $\{0,\tfrac12,1\}$ and a single edge to a sink gives $\{0,1\}$;
-$L_2$ gives $\{0,\tfrac14,\tfrac12,1\}$ and its dual (\Cref{lem:duality})
-gives $\{0,\tfrac12,\tfrac34,1\}$; the game of \Cref{rem:alphabet-down},
+$L_2$ gives $\{0,\tfrac12,\tfrac34,1\}$ and its dual (\Cref{lem:duality})
+gives $\{0,\tfrac14,\tfrac12,1\}$; the game of \Cref{rem:alphabet-down},
 and also $\mathrm{FV}(n)$ below, gives $\{0,\tfrac13,\tfrac23,1\}$.
 \end{proof}
 
@@ -2458,6 +2494,14 @@ $k=4$ and $D=3$ still; and in addition $\mathrm{FV}_2(n)$ lies outside
 \]
 So the class of \Cref{thm:few-denominator} is contained in none of the
 five.
+
+Both families are, however, easy in a stronger sense than membership of a
+class: every controlled vertex of $\mathrm{FV}(n)$ and $\mathrm{FV}_2(n)$
+has two successors of \emph{equal} value, so no controlled vertex is
+value-distinguishing and every sound decision rule settles all of them at
+once. They separate the \emph{bounds} the six theorems supply, which is
+how \Cref{rem:escape-class} says such comparisons are to be read, and
+they show nothing about the frontier.
 \end{proposition}
 
 \begin{proof}
@@ -2475,8 +2519,10 @@ For $\mathrm{FV}_2$: every $C_q$ reaches $L_0$ with probability $1$, so its
 value is $\val(L_0)=\tfrac13$ and $X_0$ still evaluates to
 $\max(\tfrac13,\tfrac13)$; the same trap argument applies, since
 $C_{n-1}$'s successor $L_0$ is outside every trap. For the escape bound,
-let $(\lambda,x)$ be an escape certificate. By \Cref{lem:survival}(b),
-$S^{t}\bbone\le\lambda^{t}\kappa(x)$ on $V'$. Escaping the chain from $C_0$ requires $n$
+let $(\lambda,x)$ be an escape certificate. Since $\bbone\le x/\min x$ and $S$ is monotone and positively
+homogeneous, $S^{t}\bbone\le S^{t}x/\min x\le\lambda^{t}x/\min x
+\le\lambda^{t}\kappa(x)$ on $V'$ --- the displayed chain inside the proof
+of \Cref{lem:survival}(b). Escaping the chain from $C_0$ requires $n$
 consecutive first-successor choices --- $n-1$ of them to climb to
 $C_{n-1}$ and one more to leave --- each taken with probability
 $\tfrac12$, every $C_q$ being an average vertex where $S$ is the exact
@@ -2672,111 +2718,6 @@ $\val_{\sigma'}(v)=(T_{\sigma'}\val_{\sigma'})(v)\ge(T_{\sigma'}x)(v)>x(v)$.
 The statement about $\Phi$ follows because $\Phi$ is strictly increasing
 on pointwise-comparable distinct vectors.
 \end{proof}
-
-The converse direction is just as easy and is used less often, so we record
-it here. It says that re-routing a set of vertices that are \emph{not}
-switchable can only lose, and --- because improving runs are monotone ---
-that it stays lost for ever.
-
-\begin{lemma}[Dead re-routings]\label{lem:dead-switch}
-Let $G$ be an arbitrary SSG --- no stopping hypothesis --- let $\sigma$ be
-a Max strategy, and let $W\subseteq\Vmax$ satisfy $W\cap S_\sigma=\emptyset$.
-Then $\val_{\sigma[W]}\le\val_\sigma$ pointwise. If in addition $G$ is
-stopping, then $\val_{\sigma[W]}\le\val_{\sigma_t}$ for every strategy
-$\sigma_t$ reached from $\sigma$ by strictly improving switches, single or
-multiple --- in particular at every later round of an all-switches run.
-\end{lemma}
-
-\begin{proof}
-Write $x:=\val_\sigma$ and $\sigma':=\sigma[W]$. At a vertex $v\notin W$
-the operators $T_{\sigma'}$ and $T_\sigma$ agree, so
-$(T_{\sigma'}x)(v)=(T_\sigma x)(v)=x(v)$ by \Cref{thm:lfp-general}(a).
-At $v\in W$, that same theorem gives $x(v)=x(\sigma(v))$, while
-$v\notin S_\sigma$ gives $x(\bar\sigma(v))\le x(\sigma(v))$; hence
-$(T_{\sigma'}x)(v)=x(\bar\sigma(v))\le x(v)$. So $T_{\sigma'}x\le x$, and
-the minimality clause of \Cref{thm:lfp-general}(a) ---
-$\val_{\sigma'}=\min\{y\in\mathcal X:T_{\sigma'}y\le y\}$, which needs no
-stopping hypothesis --- gives $\val_{\sigma'}\le x$.
-
-For the second claim, \Cref{lem:switch} applied at each switch of the run
-gives $\val_\sigma\le\val_{\sigma_t}$, and stopping is used exactly there.
-\end{proof}
-
-Combined with \Cref{lem:switch} this yields a law of the all-switches run
-that has nothing to do with any potential function: certain configurations
-of the Max strategy, once passed over, can never be entered again. Call
-$(W,\pi)$, with $W\subseteq\Vmax$ and $\pi(v)\in\{v^{(0)},v^{(1)}\}$ for
-$v\in W$, a \emph{closed configuration} if every vertex reachable from
-$\pi(W)$ by a path whose interior avoids $W$ is an average vertex or a
-sink. Under any Max strategy $\sigma$ with $\sigma|_W=\pi$ and any Min
-strategy $\tau$ the play started in $W$ is then a Markov chain on
-$W\cup\{t_0,t_1\}$ together with average vertices, consulting neither
-$\sigma$ off $W$ nor $\tau$ at all; so on a stopping game
-$\val_{\sigma,\tau}$ restricted to $W$ is one and the same vector
-$\lambda_W$ for all such $\sigma,\tau$, and $\lambda_W=\val_\sigma|_W$
-whenever $\sigma|_W=\pi$. The canonical example is a cycle of Max vertices
-each of whose $\pi$-options reaches the next through average vertices that
-otherwise exit only to sinks.
-
-\begin{proposition}[A closed configuration is being entered now, or never]\label{prop:closed-now-or-never}
-Let $G$ be stopping, let $(W,\pi)$ be a closed configuration with value
-$\lambda_W$, and let $\sigma_0,\sigma_1,\dots$ be a run of strictly
-improving switches, all-switches included. Suppose that at round $t$ the
-set $W_t:=\{v\in W:\sigma_t(v)\ne\pi(v)\}$ is nonempty and contains no
-strictly switchable vertex, i.e.\ $W_t\cap S_{\sigma_t}=\emptyset$. Then
-\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
-\item $\val_{\sigma_{t'}}\ge\lambda_W$ on $W$ for every $t'\ge t$; and
-\item $\sigma_{t'}|_W\ne\pi$ for every $t'\ge t$: the configuration is
-      never entered again.
-\end{enumerate}
-\end{proposition}
-
-\begin{proof}
-(a) The strategy $\sigma_t[W_t]$ agrees with $\pi$ on all of $W$, so
-$\val_{\sigma_t[W_t]}=\lambda_W$ there. Since $W_t\cap S_{\sigma_t}=\emptyset$,
-\Cref{lem:dead-switch} gives $\lambda_W=\val_{\sigma_t[W_t]}\le\val_{\sigma_t}$
-on $W$, and \Cref{lem:switch} propagates the bound forward.
-
-(b) Suppose not, and let $t''>t$ be least with $\sigma_{t''}|_W=\pi$; then
-$\val_{\sigma_{t''}}=\lambda_W$ on $W$. Some $v\in W_{t''-1}\subseteq W$ was
-switched at round $t''-1$, so $v\in S_{\sigma_{t''-1}}$ and
-$\sigma_{t''}(v)=\bar\sigma_{t''-1}(v)=\pi(v)$. Using
-\Cref{thm:lfp-general}(a) at $\sigma_{t''}$, then
-$\val_{\sigma_{t''}}\ge\val_{\sigma_{t''-1}}$ from \Cref{lem:switch}, then
-strict switchability, then (a):
-\[
-  \lambda_W(v)=\val_{\sigma_{t''}}(v)=\val_{\sigma_{t''}}(\pi(v))
-  \;\ge\;\val_{\sigma_{t''-1}}(\pi(v))
-  \;>\;\val_{\sigma_{t''-1}}(\sigma_{t''-1}(v))=\val_{\sigma_{t''-1}}(v)
-  \;\ge\;\lambda_W(v),
-\]
-a contradiction.
-\end{proof}
-
-\begin{remark}[What this does and does not give the pivot]\label{rem:closed-now-or-never}
-\Cref{prop:closed-now-or-never} is an irreversibility law, and
-irreversible events are what a polynomial bound on the all-switches run
-would have to count: each closed configuration is entered at most once
-along a run, and a round at which no closed configuration is being entered
-kills every one that is not already entered. It is also the reason the
-published exponential lower bounds for the all-switches rule do not
-transfer to this model as they stand. Those constructions --- for
-locally-optimising strategy improvement on parity games, and for Howard's
-rule on Markov decision processes --- time their exponential jumps by
-keeping a cycle attractive but unentered for many rounds, which they do by
-offering the vertex a \emph{third} action of larger appeal and withdrawing
-it later. Here every vertex has exactly two actions, so a vertex whose
-$\pi$-option is attractive is strictly switchable towards it, and by
-\Cref{prop:closed-now-or-never} a configuration that is not entered while
-it is attractive is dead. That is not a barrier: a Max vertex whose
-successor is another Max vertex simulates a three-way choice one round
-later, and \Cref{def:damping} makes such a tree cheap, so the postponement
-can in principle be reintroduced with a lag --- and a two-player game has
-a second source of withdrawable appeal in Min's best response, which
-changes discontinuously. It does say that a construction for this model
-must supply the delay by one of those two devices rather than by a third
-action, and it says which lemma any such construction must evade.
-\end{remark}
 
 \begin{theorem}[Short improving paths]\label{thm:short-path}
 Let $G$ be a stopping SSG, let $\sigma\notin\Opt$ and let
@@ -3139,6 +3080,101 @@ by the same formulas, so there $(T_{\sigma'}x)(u)=(T_\sigma x)(u)=x(u)$.
 Thus $T_{\sigma'}x\le x$ and \Cref{cor:comparison} gives
 $\val_{\sigma'}\le x=\val_\sigma$, contrary to hypothesis.
 \end{proof}
+
+\begin{remark}[The stopping hypothesis is not needed]\label{rem:monotone-law-general}
+\Cref{lem:monotone-law} is usually applied in its contrapositive form: if
+$W\subseteq\Vmax$ contains no vertex strictly switchable at $\sigma$, then
+$\val_{\sigma[W]}\le\val_\sigma$. In that form the stopping hypothesis can
+be dropped. Indeed, with $x:=\val_\sigma$ and $\sigma':=\sigma[W]$, the
+computation in the proof above gives $T_{\sigma'}x\le x$ on an arbitrary
+SSG, and instead of \Cref{cor:comparison} one may invoke the minimality
+clause of \Cref{thm:lfp-general}(a),
+$\val_{\sigma'}=\min\{y\in\mathcal X:T_{\sigma'}y\le y\}$, which carries no
+stopping hypothesis. Combined with \Cref{lem:switch}, which does need
+stopping, the conclusion propagates forward along any run of strictly
+improving switches: $\val_{\sigma[W]}\le\val_{\sigma_t}$ for every $t$.
+\end{remark}
+
+That last sentence is a statement about the future of a run, and it yields
+a law of the all-switches rule that involves no potential function at all:
+certain configurations of the Max strategy, once passed over, can never be
+entered again. Call $(W,\pi)$, with $W\subseteq\Vmax$ and
+$\pi(v)\in\{v^{(0)},v^{(1)}\}$ for $v\in W$, a \emph{closed configuration}
+if every vertex reachable from $\pi(W)$ by a path whose interior avoids
+$W$ is an average vertex or a sink. Under any Max strategy $\sigma$ with
+$\sigma|_W=\pi$ and any Min strategy $\tau$ the play started in $W$ is then
+a Markov chain on $W$, the sinks and those average vertices, consulting
+neither $\sigma$ off $W$ nor $\tau$ at all; so on a stopping game
+$\val_{\sigma,\tau}$ restricted to $W$ is one and the same vector
+$\lambda_W$ for all such $\sigma,\tau$, and $\lambda_W=\val_\sigma|_W$
+whenever $\sigma|_W=\pi$. The canonical example is a cycle of Max vertices
+each of whose $\pi$-options reaches the next through average vertices that
+otherwise exit only to sinks.
+
+\begin{proposition}[A closed configuration is being entered now, or
+never]\label{prop:closed-now-or-never}
+Let $G$ be stopping, let $(W,\pi)$ be a closed configuration with value
+$\lambda_W$, and let $\sigma_0,\sigma_1,\dots$ be a run of strictly
+improving switches, all-switches included. Suppose that at round $t$ the
+set $W_t:=\{v\in W:\sigma_t(v)\ne\pi(v)\}$ is nonempty and contains no
+strictly switchable vertex, i.e.\ $W_t\cap S_{\sigma_t}=\emptyset$. Then
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $\val_{\sigma_{t'}}\ge\lambda_W$ on $W$ for every $t'\ge t$; and
+\item $\sigma_{t'}|_W\ne\pi$ for every $t'\ge t$: the configuration is
+      never entered again.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) The strategy $\sigma_t[W_t]$ agrees with $\pi$ on all of $W$, so
+$\val_{\sigma_t[W_t]}=\lambda_W$ there. Since
+$W_t\cap S_{\sigma_t}=\emptyset$, \Cref{rem:monotone-law-general} gives
+$\lambda_W=\val_{\sigma_t[W_t]}\le\val_{\sigma_t}$ on $W$, and
+\Cref{lem:switch} propagates the bound forward.
+
+(b) Suppose not, and let $t''>t$ be least with $\sigma_{t''}|_W=\pi$; then
+$\val_{\sigma_{t''}}=\lambda_W$ on $W$. Some $v\in W$ was switched at round
+$t''-1$, so $v\in S_{\sigma_{t''-1}}$ and
+$\sigma_{t''}(v)=\bar\sigma_{t''-1}(v)=\pi(v)$. Using
+\Cref{thm:lfp-general}(a) at $\sigma_{t''}$, then
+$\val_{\sigma_{t''}}\ge\val_{\sigma_{t''-1}}$ from \Cref{lem:switch}, then
+strict switchability, then (a):
+\[
+  \lambda_W(v)=\val_{\sigma_{t''}}(v)=\val_{\sigma_{t''}}(\pi(v))
+  \;\ge\;\val_{\sigma_{t''-1}}(\pi(v))
+  \;>\;\val_{\sigma_{t''-1}}(\sigma_{t''-1}(v))=\val_{\sigma_{t''-1}}(v)
+  \;\ge\;\lambda_W(v),
+\]
+a contradiction.
+\end{proof}
+
+\begin{remark}\label{rem:closed-now-or-never}
+\Cref{prop:closed-now-or-never} is an irreversibility law, and
+irreversible events are what a polynomial bound on the all-switches run
+would have to count: each closed configuration is entered at most once
+along a run, and a round at which nothing is switching into one kills it
+for good. It should not, however, be read as an obstruction to lower-bound
+constructions, and we state carefully what it does and does not say.
+
+The published exponential lower bounds for locally-optimising strategy
+improvement --- on parity games, and for Howard's rule on Markov decision
+processes --- delay a switch into an already attractive cycle by offering
+the vertex a competing action of larger appeal and withdrawing it later.
+With out-degree two there is no third action to play that role, so the
+delay must come from somewhere else, and \Cref{prop:closed-now-or-never}
+says that for the special case of a closed configuration it cannot come
+from nowhere: an unentered closed configuration whose vertices are not
+switching towards it is dead. But this rules nothing out. A Max vertex
+whose successor is another Max vertex simulates a three-way choice one
+round later, and \Cref{def:damping} makes such a tree cheap, so the
+postponement can be reintroduced with a lag; a two-player game has a
+second source of withdrawable appeal in Min's best response, which changes
+discontinuously and which the proposition does not constrain; and the
+hypothesis ``closed'' is strong, excluding every configuration whose value
+depends on the strategy elsewhere, which is the generic case. The
+proposition covers none of $M1$--$M6$ or \Cref{def:bsi}: it is a law of
+runs, not a barrier against algorithms.
+\end{remark}
 
 \begin{theorem}[Peak law]\label{thm:peak-law}
 Let $G$ be stopping and let $\sigma,\sigma'$ satisfy
@@ -4834,6 +4870,14 @@ Along any BSI run on a stopping game the pair
 $\Phi(\sigma,\tau):=(M,|Z|)$ strictly decreases in the lexicographic order
 at every productive round. Consequently the run halts, and its length is
 at most $|V|$ times the number of distinct values $M$ takes along it.
+
+The second sentence is a reparametrisation and not a bound: every level
+lasts at least one round, so the number of levels lies between
+$(\text{rounds})/|V|$ and $\text{rounds}$. What is new is the first
+sentence --- a strictly decreasing progress measure for a rule for which
+none was known --- and the fact that it is \emph{lexicographic}, which is
+why \Cref{thm:impedance} and \Cref{cor:no-height}, both about scalar
+measures of bounded range or height, do not apply to it.
 \end{corollary}
 
 \begin{proof}
@@ -4895,8 +4939,11 @@ veto conditions of \Cref{def:bsi}.
 \Cref{cor:bsi-levels} replaces the crude $2N4^{a}$ of
 \Cref{cor:bsi-correct} by $|V|$ times the number of \emph{levels} --- the
 distinct values of $M=\max(\val^\tau-\val_\sigma)$ along the run --- and
-nothing here bounds that number. So the question is sharp, and it is a
-dichotomy:
+nothing here bounds that number --- indeed, as \Cref{cor:bsi-levels}
+notes, the levels are within a factor $|V|$ of the rounds, so the
+corollary names the quantity to be bounded rather than reducing it. What
+it adds is a measure that provably falls. The question is sharp, and it is
+a dichotomy:
 \begin{quote}
 either the number of distinct values of $M$ along a BSI run on a stopping
 SSG is bounded by a polynomial in $N$, in which case
@@ -5026,8 +5073,10 @@ subset can be small enough to change the order of the round count. On the
 ladder $L_n$ of \Cref{def:ladder}, exhaustively over all $2^{n}$ starting
 strategies and in exact arithmetic, the worst case for $R_{\mathrm{BR}}$
 is $\lfloor\log_2n\rfloor+1$ rounds --- $1,2,2,3,3,3,3,4$ at
-$n=1,\dots,8$ --- where all-switches takes $n$; the same counts hold on
-the two-player disjoint union of $L_n$ with its dual.
+$n=1,\dots,8$ --- where all-switches takes $n$. On the two-player
+disjoint union of $L_n$ with its dual the same counts were seen, but over
+a sample of starting pairs and not exhaustively, so that half is a
+measurement of a sample and nothing more.
 
 Being one-sided, $R_{\mathrm{BR}}$ is a candidate for the barriers, and
 they miss it for the same reason they miss \Cref{def:bsi}. It is not
@@ -5041,14 +5090,21 @@ either, its measures being required to increase along \emph{every}
 improving switch. The round count of $R_{\mathrm{BR}}$ is open, exactly as
 that of \Cref{def:bsi} is.
 
-Attribution: carrying both players' strategies and letting each filter the
-other's switches is the symmetric strategy improvement of
-Schewe--Trivedi--Varghese for parity games. What is different here is the
-model and the filter: their rule uses the opponent's improvement in the
-dual game to break ties among improving switches, whereas
-\Cref{def:bsi} and \Cref{prop:bsi-br} use the opponent's \emph{value}
-$\val^\tau$ as a veto, which can leave $S_\sigma$ nonempty and still be
-right to halt.
+Attribution, and it is owed twice over. Carrying both players'
+strategies and letting each filter the other's switches is the symmetric
+strategy improvement of Schewe--Trivedi--Varghese for parity games; and
+the pair-carrying form with mutual vetoes that \Cref{def:bsi} writes down
+is, we are advised, the generalised symmetric strategy iteration of
+van~Dijk, Loho and Maat, of which $R_{\mathrm{BR}}$ is the variant with
+one track collapsed to a best response. Neither \Cref{def:bsi} nor
+\Cref{prop:bsi-br} should be read as new: what is offered here is the
+transcription to Condon's model, proofs from this document's own lemmas,
+and the quantitative statements
+\Cref{lem:bsi-pairloc,cor:bsi-levels,prop:bsi-twice,prop:bsi-oneplayer}.
+The identification with van~Dijk--Loho--Maat is recorded on the strength
+of an audit and has not been checked against the source here; if it holds
+then the round count of \Cref{def:bsi} is their open question and not
+ours.
 \end{remark}
 
 \begin{proposition}[Stopping is necessary]\label{prop:bsi-nonstopping}
@@ -9337,7 +9393,7 @@ equality on the min side. The family below meets it by placing the entanglement
 on the \emph{non-optimal} branch, which is exactly what $CC$ does not do.
 
 \begin{definition}[The wedge family]\label{def:wedge}
-For $e\ge1$, $j\ge2$, $m\ge j+1$ put $\varepsilon=2^{-e}$, $\delta=2^{-j}$,
+For $e\ge1$, $j\ge2$, $m\ge j+2$ put $\varepsilon=2^{-e}$, $\delta=2^{-j}$,
 $\gamma=2^{-m}$. Let $WD(e,j,m)$ have $\Vmax=\{v_1,v_2\}$, $\Vmin=\emptyset$,
 every other non-sink average, and
 \[
@@ -9354,7 +9410,11 @@ every other non-sink average, and
 Then $N=2e+j+m+5$, the game is stopping and one-player,
 $\val(w_1)=\tfrac12-2^{j-m}$, $\val(v_i)=\val(a_{i,1})=\tfrac12$ and
 $\val(b_i)=\tfrac12-\gamma$, so both Max vertices are value-distinguishing with
-gap $\gamma$ and $a_{i,1}$ is the optimal successor.
+gap $\gamma$ and $a_{i,1}$ is the optimal successor. The bound $m\ge j+2$,
+that is $L\ge2$, is needed: at $L=1$ the two prescriptions for $w_1$ ---
+$w_1\to(t_0,w_2)$ and $w_L\to(t_1,t_0)$ --- contradict each other, and reading
+the second gives $\val(w_1)=\tfrac12$ against the stated
+$\tfrac12-2^{j-m}=0$; every use of the family below has $L=4$.
 \end{definition}
 
 \begin{proposition}[The wedge defeats the own-successor rule]\label{prop:wedge}
