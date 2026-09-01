@@ -63,7 +63,11 @@ which improves the average-vertex bound $\mathrm{poly}(N)2^{a}$ of
 \Cref{thm:few-avg} by $\Theta(N)$ in the exponent on an explicit family;
 games in which no cycle carries two Max vertices, and more generally
 those whose Max-reachability components are small
-(\Cref{thm:bounded-components}); and, in general, a subexponential
+(\Cref{thm:bounded-components}); a quantitative class incomparable with
+all of these, defined by a linear-programming certificate for the rate at
+which the two-sided value iteration contracts
+(\Cref{thm:escape-class}), with an explicit family inside it and outside
+every one of the others (\Cref{prop:escape-family}); and, in general, a subexponential
 Las~Vegas algorithm of expected running time
 $e^{2\sqrt n}\,\mathrm{poly}(N)$ (\Cref{thm:subexp}), which is the
 strongest general upper bound we obtain.
@@ -1341,6 +1345,184 @@ as was the consequence that every positive value is at least $2^{-d}$,
 and the certificate of \Cref{lem:certificate} accepted the true value
 vector on $2862$ instances of which $2179$ were not stopping.
 \end{remark}
+
+The exponents $a$ and $d(G)$ are combinatorial. There is also a purely
+quantitative sufficient condition, certifiable by one linear programme,
+which is incomparable with all of the above; it is the one useful thing
+the multiplicative view of \Cref{sec:ratio} yields, the eigenvalue itself
+being vacuous by \Cref{prop:cw}.
+
+\begin{definition}[Survival operator, escape certificate]\label{def:survival}
+Write $V':=V\setminus\{t_0,t_1\}$ and for $x\in[0,\infty)^{V'}$ let
+$\hat x$ extend $x$ by $\hat x(t_0)=\hat x(t_1)=0$. The \emph{survival
+operator} is
+\[
+  (Sx)(v):=\begin{cases}
+    \max\bigl(\hat x(v^{(0)}),\hat x(v^{(1)})\bigr), & v\in\Vmax\cup\Vmin,\\[2pt]
+    \tfrac12\bigl(\hat x(v^{(0)})+\hat x(v^{(1)})\bigr), & v\in\Vavg,
+  \end{cases}
+\]
+the maximum being taken at \emph{every} controlled vertex, Min's as well
+as Max's. An \emph{escape certificate} is a pair $(\lambda,x)$ with
+$\lambda\in(0,1)$ rational and $x$ a rational vector with $x\ge\bbone$
+and $Sx\le\lambda x$; its \emph{conditioning} is
+$\kappa(x):=\max_{V'}x/\min_{V'}x$.
+\end{definition}
+
+\begin{lemma}\label{lem:survival}
+Let $G$ be an SSG.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item For all $y,z$ agreeing with the sink payoffs,
+      $|T^ky-T^kz|\le S^k|y-z|$ on $V'$.
+\item If $(\lambda,x)$ is an escape certificate then
+      $\bigl\|T^k\bbone-T^k0\bigr\|_\infty\le\lambda^{k}\kappa(x)$.
+\item A game carrying an escape certificate is stopping.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) $|\max(a_0,a_1)-\max(b_0,b_1)|\le\max_i|a_i-b_i|$ and the same for
+$\min$, while $|\tfrac12\sum a_i-\tfrac12\sum b_i|\le\tfrac12\sum|a_i-b_i|$;
+$T$ pins the sinks, so their contribution to the difference is $0$, which
+is what $\hat x(t_j)=0$ records. Induct, using that $S$ is monotone.
+
+(b) $|\bbone-0|=\bbone\le x/\min x$ pointwise, and $S$ is monotone and
+positively homogeneous, so
+$S^k\bbone\le S^kx/\min x\le\lambda^kx/\min x\le\lambda^k\kappa(x)$;
+now apply (a).
+
+(c) For any positional pair $(\sigma,\tau)$ and any $v$, the probability
+of not reaching a sink within $k$ steps is at most $(S^k\bbone)(v)$,
+because at an average vertex $S$ is the exact one-step average and at a
+controlled vertex the maximum dominates whichever successor the profile
+chooses. By (b) this tends to $0$, so absorption is certain.
+\end{proof}
+
+\begin{theorem}[The escape class]\label{thm:escape-class}
+Let $G$ carry an escape certificate $(\lambda,x)$. Then the algorithm of
+\Cref{thm:few-escape} --- iterate $T$ in binary fixed point, round after
+each block to the nearest rational vector of denominator at most $2^{a}$,
+and stop when \Cref{lem:certificate} accepts --- outputs $\val$ after
+\[
+  O\!\left(\frac{a+\log_2\kappa(x)}{\log_2(1/\lambda)}\right)
+\]
+iterations of $T$. Consequently \Cref{prob:main} is decidable in
+polynomial time on every family of SSGs carrying escape certificates with
+$\log_2\kappa(x)=\mathrm{poly}(N)$ and $\log_2(1/\lambda)\ge1/\mathrm{poly}(N)$.
+The algorithm uses no knowledge of $\lambda$ or $x$; the certificate
+enters only the running-time analysis. Finally, for a fixed rational
+$\lambda$ and bound $B$ the existence of a certificate with
+$\bbone\le x\le2^{B}\bbone$ is decided by a single linear programme with
+$|V'|$ variables and $O(N)$ rows.
+\end{theorem}
+
+\begin{proof}
+Write $l_k:=T^k0$ and $u_k:=T^k\bbone$, so $l_k\le\val\le u_k$ and, by
+\Cref{lem:survival}(b), $u_k-l_k\le\lambda^k\kappa(x)$. Two distinct
+coordinates of $\val$ differ by at least $4^{-a}$, since by
+\Cref{lem:denominator-sharp} both have denominators dividing an integer
+at most $2^{a}$. So once $\lambda^k\kappa(x)<4^{-a}$, which is the stated
+number of iterations, the rounding step of \Cref{thm:few-escape} returns
+$\val$ exactly and \Cref{lem:certificate} accepts. Correctness on every
+input is the soundness half of \Cref{lem:certificate} and does not depend
+on the certificate.
+
+For the programme: $Sx\le\lambda x$ is the conjunction of
+$\hat x(v^{(i)})\le\lambda x(v)$ for both $i$ at each controlled $v$ and
+of $\tfrac12(\hat x(v^{(0)})+\hat x(v^{(1)}))\le\lambda x(v)$ at each
+average $v$, because a maximum on the \emph{left} of a $\le$ splits into
+a conjunction. With the box $\bbone\le x\le2^{B}\bbone$ this is a
+feasibility programme in $|V'|$ variables with at most $2|V'|$ structural
+rows.
+\end{proof}
+
+\begin{proposition}[The escape class contains none of the
+others]\label{prop:escape-family}
+For $D\ge2$ let $E_D$ have
+$\Vavg=\{s_1,\dots,s_D,p_1,\dots,p_D,r,z,g_0\}$,
+$\Vmax=\{q_1,\dots,q_D,v_0\}$, $\Vmin=\{u\}$ and
+\[
+ \begin{aligned}
+  &s_1\to(t_1,t_0),\quad s_j\to(s_{j-1},t_0)\ (2\le j\le D);\qquad
+   q_i\to(p_i,t_0),\quad p_i\to(q_{i\bmod D+1},t_1);\\
+  &u\to(r,t_1),\quad r\to(u,t_0);\qquad
+   z\to(s_D,u),\quad v_0\to(z,q_1),\quad g_0\to(t_1,s_D),
+ \end{aligned}
+\]
+with start vertex $g_0$. Then $N=3D+7$, $a=2D+3$, $|\Vmax|=D+1$, $E_D$ is
+stopping and $\val(g_0)=\tfrac12+2^{-(D+1)}$. Moreover
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $x(s_j)=x(q_i)=x(u)=x(g_0)=1$, $x(p_i)=x(r)=\tfrac34$,
+      $x(z)=\tfrac43$, $x(v_0)=\tfrac{16}9$ satisfies $Sx\le\tfrac34x$,
+      so $(\tfrac34,x)$ is an escape certificate of conditioning
+      $\kappa=\tfrac{64}{27}$, independent of $D$, and
+      \Cref{thm:escape-class} decides $E_D$ in $O(N)$ iterations;
+\item $a=2D+3$, so \Cref{thm:few-avg} gives only $2^{\Theta(N)}$;
+\item $d(E_D)=D+1$, so \Cref{thm:few-escape} gives only $2^{\Theta(N)}$;
+\item some cycle carries a Max vertex, some carries a Min vertex and some
+      carries an average vertex, so $E_D$ is $k$-acyclic for no colour $k$
+      and \Cref{thm:kacyclic} --- hence also \Cref{thm:avg-acyclic},
+      \Cref{thm:player-free} and \Cref{thm:one-player} --- does not apply;
+\item the Max-reachability digraph of \Cref{def:maxreach} has a strongly
+      connected component of size $D$, so \Cref{thm:bounded-components}
+      gives only $2^{\Theta(N)}$ and $E_D$ lies in no $K_k$;
+\item $|\Vmax|=D+1$, so \Cref{thm:subexp} gives only
+      $e^{2\sqrt{D+1}}\mathrm{poly}(N)$.
+\end{enumerate}
+Conversely $F_k$ of \Cref{prop:fk-family} has $d(F_k)=2$ and carries no
+escape certificate for any $\lambda<1$, being non-stopping. The escape
+class is therefore incomparable with each of the four.
+\end{proposition}
+
+\begin{proof}
+The values: $\val(s_1)=\tfrac12$ and $\val(s_j)=\tfrac12\val(s_{j-1})$
+give $\val(s_D)=2^{-D}$, whence $\val(g_0)=\tfrac12(1+2^{-D})$; around
+the $q,p$ cycle $\val(q_i)=\val(p_i)$ and
+$\val(p_i)=\tfrac12(\val(q_{i+1})+1)$ force $\val\equiv1$ there; and
+$\val(u)=\val(r)=\tfrac12\val(u)$ forces $\val(u)=\val(r)=0$. Only the empty set is a trap: each of $s_j$, $p_i$, $r$ and
+$g_0$ is average with a sink among its successors, so lies in no trap;
+then $z$, being average with successor $s_D$, lies in none; then $q_i$,
+$u$ and $v_0$, being controlled with both successors outside, lie in
+none. So $E_D$ is stopping by \Cref{lem:trapchar}.
+
+(i) is checked entrywise: at $s_j$, $\tfrac12(1+0)=\tfrac12\le\tfrac34$;
+at $q_i$, $\max(\tfrac34,0)=\tfrac34\le\tfrac34$; at $p_i$,
+$\tfrac12(1+0)=\tfrac12\le\tfrac34\cdot\tfrac34$; at $u$, read as a
+maximum, $\max(\tfrac34,0)=\tfrac34\le\tfrac34$; at $r$,
+$\tfrac12\le\tfrac9{16}$; at $z$, $\tfrac12(1+1)=1\le\tfrac34\cdot\tfrac43$;
+at $v_0$, $\max(\tfrac43,1)=\tfrac43\le\tfrac34\cdot\tfrac{16}9$; at
+$g_0$, $\tfrac12\le\tfrac34$. (ii), (v) and (vi) are counts. For (iii),
+the levels of \Cref{lem:descent} are $\ell(s_j)=j$, $\ell(g_0)=1$,
+$\ell(p_i)=1$, $\ell(q_i)=2$ and $\ell(z)=D+1$, while $u,r\notin
+C_\infty$; each $s_j$ and each $p_i$ and $z$ has exactly one successor of
+smaller level, so the descent path $z\to s_D\to\cdots\to s_1\to t_1$ has
+weight $D+1$ and none has more. (iv): $q_i\to p_i\to q_{i+1}$ is a cycle
+through a Max and an average vertex and $u\to r\to u$ one through a Min
+and an average vertex.
+\end{proof}
+
+\begin{remark}\label{rem:escape-class}
+Three qualifications. First, the condition is quantitative rather than
+structural. On a stopping game $S^k\bbone\to0$ --- the converse of
+\Cref{lem:survival}(c), absorption being certain --- and
+\Cref{thm:contraction} bounds that rate by $(1-2^{-a})^{k/N}$; the
+content of \Cref{thm:escape-class} is that the rate be polynomially
+bounded below, which the other classes achieve by combinatorial means
+and $E_D$ by none of them. Whether every stopping game whose bracket
+contracts quickly admits a certificate attaining that rate we have not
+determined; the theorem needs only the direction proved. Second, the
+sub-eigenvector inequality $Sx\le\lambda x$ and the accompanying
+Collatz--Wielandt vocabulary are classical, and the observation that a
+maximum on the left of an inequality splits into a conjunction is what
+makes it an ordinary linear programme; what is specific here is the
+survival operator, in which \emph{both} players are read as maximisers,
+and \Cref{prop:escape-family}. Third, this is the only positive
+consequence the multiplicative view yields: by \Cref{prop:cw} the
+eigenvalue of the homogenised Shapley operator is $1$ on every instance
+and its Collatz--Wielandt bracket bounds nothing, so it is the survival
+operator, and not the Shapley operator, that carries the information.
+\end{remark}
+
 
 
 \begin{definition}[Average-jump digraph]\label{def:jump}
