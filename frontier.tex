@@ -4807,6 +4807,140 @@ is a trap, contradicting stopping. Hence $M=0$, that is $L=U$; and
 $L\le w^\ast\le U$ gives $L=U=w^\ast$.
 \end{proof}
 
+The proof used the two vetoes only at the vertices of $Z$, and that is worth
+isolating, because it turns \Cref{thm:bsi-nostall} from a halting statement
+into a progress statement.
+
+\begin{lemma}[Pair localisation]\label{lem:bsi-pairloc}
+Let $G$ be stopping and $(\sigma,\tau)$ a pair state with
+$M:=\max(U-L)>0$, and put $Z:=\operatorname{argmax}(U-L)$. Then
+$Z\cap(C_{\max}\cup C_{\min})\ne\emptyset$, in the veto variant and in the
+strict variant alike.
+\end{lemma}
+
+\begin{proof}
+Suppose not. Inspect the proof of \Cref{thm:bsi-nostall}: the hypothesis
+$C_{\max}=\emptyset$ is used there only at a vertex $x\in Z\cap\Vmax$ with
+$x\in S_\sigma$, and $C_{\min}=\emptyset$ only at the dual vertices of
+$Z\cap\Vmin$. Under $Z\cap(C_{\max}\cup C_{\min})=\emptyset$ each such $x$
+lies in $Z$ and hence outside $C_{\max}$ (resp.\ $C_{\min}$), which is
+exactly what those steps need. The four cases therefore go through
+verbatim and make $Z$ a nonempty sink-free trap, contradicting
+\Cref{lem:trapchar}.
+\end{proof}
+
+\begin{corollary}[A lexicographic potential, and the round count]\label{cor:bsi-levels}
+Along any BSI run on a stopping game the pair
+$\Phi(\sigma,\tau):=(M,|Z|)$ strictly decreases in the lexicographic order
+at every productive round. Consequently the run halts, and its length is
+at most $|V|$ times the number of distinct values $M$ takes along it.
+\end{corollary}
+
+\begin{proof}
+Write $\sigma':=\sigma[C_{\max}]$, $\tau':=\tau[C_{\min}]$, $L':=\val_{\sigma'}$,
+$U':=\val^{\tau'}$, $g:=U-L$ and $g':=U'-L'$. Since $C_{\max}\subseteq S_\sigma$,
+\Cref{lem:switch} gives $L'\ge L$; applying it in $\bar G$ and carrying the
+result back by \Cref{lem:duality} gives $U'\le U$. So $g'\le g$ pointwise
+and $M'\le M$.
+
+By \Cref{lem:bsi-pairloc} there is $x\in Z\cap(C_{\max}\cup C_{\min})$; say
+$x\in Z\cap C_{\max}$, the other case being dual. Then
+$\sigma'(x)=\bar\sigma(x)$, so by \Cref{thm:lfp-general}(a) and $L'\ge L$
+and $x\in S_\sigma$,
+\[
+  L'(x)=L'(\bar\sigma(x))\ \ge\ L(\bar\sigma(x))\ >\ L(\sigma(x))=L(x),
+\]
+whence $g'(x)<g(x)=M$. If $M'<M$ the first coordinate has dropped. If
+$M'=M$ then $Z'=\{v:g'(v)=M\}\subseteq\{v:g(v)\ge M\}=Z$ while $x\in Z$
+and $x\notin Z'$, so $|Z'|<|Z|$. Since $\Phi$ takes values in a finite
+set, the run halts, and between two consecutive drops of $M$ the second
+coordinate can fall at most $|V|$ times.
+\end{proof}
+
+\begin{proposition}[A vertex can be switched twice]\label{prop:bsi-twice}
+There is a stopping SSG on six vertices, with both players present, on
+which BSI switches one vertex twice. Take $V'=\{0,1,2,3\}$ with
+$\Vavg=\{0\}$, $\Vmax=\{1,3\}$, $\Vmin=\{2\}$ and
+\[
+  0\mapsto(t_1,2),\qquad 1\mapsto(t_0,t_1),\qquad
+  2\mapsto(1,t_0),\qquad 3\mapsto(1,0),
+\]
+so that $w^\ast=(\tfrac12,1,0,1)$; start from
+$\sigma=\{1\mapsto t_0,\ 3\mapsto1\}$ and $\tau=\{2\mapsto1\}$. The run is
+\[
+\begin{array}{c|cccc}
+ \text{round} & L & U & (M,|Z|) & C_{\max}\ /\ C_{\min}\\\hline
+ 0 & (\tfrac12,0,0,0) & (1,1,1,1) & (1,3) & \{1,3\}\ /\ \{2\}\\
+ 1 & (\tfrac12,1,0,\tfrac12) & (\tfrac12,1,0,1) & (\tfrac12,1) & \{3\}\ /\ \emptyset\\
+ 2 & w^\ast & w^\ast & (0,6) & \emptyset\ /\ \emptyset
+\end{array}
+\]
+and vertex $3$ is switched at both productive rounds, returning to its
+original successor. Hence no argument of the form ``each controlled vertex
+is switched at most once'' is available for BSI, and \Cref{cor:bsi-levels}
+cannot be improved to a bound of $|C|$ rounds by such means.
+\end{proposition}
+
+\begin{proof}
+The game is stopping: vertices $0$ and $1$ have a sink successor, so by
+\Cref{lem:trapchar} neither lies in a trap; $2$ then has no successor in a
+trap, and neither does $3$. The displayed $w^\ast$ is a fixed point of
+$T$, hence the value by \Cref{cor:comparison}. The table is a direct
+computation of $\val_\sigma$ as the minimum over all positional $\tau$ and
+of $\val^\tau$ as the maximum over all positional $\sigma$, and of the two
+veto conditions of \Cref{def:bsi}.
+\end{proof}
+
+\begin{remark}[The exact gap for BSI]\label{rem:bsi-gap}
+\Cref{cor:bsi-levels} replaces the crude $2N4^{a}$ of
+\Cref{cor:bsi-correct} by $|V|$ times the number of \emph{levels} --- the
+distinct values of $M=\max(\val^\tau-\val_\sigma)$ along the run --- and
+nothing here bounds that number. So the question is sharp, and it is a
+dichotomy:
+\begin{quote}
+either the number of distinct values of $M$ along a BSI run on a stopping
+SSG is bounded by a polynomial in $N$, in which case
+\Cref{cor:bsi-correct} and \Cref{thm:stopping-transform} put
+\Cref{prob:main} in $\mathsf P$; or there is a family of stopping SSGs on
+polynomially many vertices along whose BSI runs some controlled vertex is
+switched superpolynomially often.
+\end{quote}
+The second horn is what \Cref{prop:bsi-twice} leaves open and what the
+$2^{-\Theta(a)}$ grid of \Cref{lem:denominator-sharp} permits: $M$ lives
+on that grid, so the levels could a priori number $4^{a}$. Two structural
+facts constrain the search for such a family: \Cref{prop:bsi-oneplayer}
+below, which rules out every one-player instance --- and therefore all of
+$L_n$, $H_m$, $\mathrm{CC}(L,m)$ and $\mathrm{WD}(e,j,m)$ --- and the
+observation that the disjoint union of a game with its dual does not
+couple the two tracks, each running in its own component and neither
+seeing the other's values. A family for BSI must be genuinely two-player
+and must couple the tracks through shared vertices.
+\end{remark}
+
+\begin{proposition}[BSI is trivial with one player]\label{prop:bsi-oneplayer}
+Let $G$ be a stopping SSG with $\Vmin=\emptyset$. Then BSI halts within
+$|\Vmax|$ productive rounds from every starting strategy, in both
+variants.
+\end{proposition}
+
+\begin{proof}
+With $\Vmin$ empty there is one Min strategy, the empty one, and
+$U=\val^\tau=w^\ast$. Call $v\in\Vmax$ \emph{greedy} if
+$w^\ast(\sigma(v))=\max_iw^\ast(v^{(i)})$. The veto
+$U(\bar\sigma(v))\ge U(\sigma(v))$ says exactly that $\bar\sigma(v)$
+attains that maximum, so every switch performed makes its vertex greedy;
+and a greedy vertex stays greedy, since a later switch of it again
+requires the other successor to attain the maximum. So the set of
+non-greedy vertices never grows. It strictly shrinks at every productive
+round: if $\sigma\notin\Opt$ then \Cref{lem:max-deficit} supplies a
+$v\in\Vmax$ that is wrong at $\sigma$ --- so
+$w^\ast(\bar\sigma(v))>w^\ast(\sigma(v))$, and $v$ passes the veto in
+both variants --- and strictly switchable, so $v\in C_{\max}$ and $v$ is
+non-greedy before the round and greedy after. Hence there are at most
+$|\Vmax|$ productive rounds, and by \Cref{thm:bsi-nostall} the halt is at
+an optimal pair.
+\end{proof}
+
 \begin{corollary}[BSI is a correct algorithm]\label{cor:bsi-correct}
 On a stopping SSG, from any pair state, BSI terminates at a pair
 $(\sigma,\tau)$ with $\val_\sigma=\val^\tau=w^\ast$, both strategies
