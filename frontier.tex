@@ -1493,6 +1493,18 @@ stated in are all $\Theta(N)$ on $Z_D$, whereas the certificate supplies
 a polynomial one. A polynomial class in this sense is a set of instances
 on which some proved bound is polynomial, and that is how all five should
 be read.
+
+The class has a reading that makes it less arbitrary than the inequality
+$Sx\le\lambda x$ suggests. Summing \Cref{lem:survival}(b),
+\[
+  \sum_{k\ge0}(S^{k}\bbone)(v)\ \le\ \frac{\kappa(x)}{1-\lambda}
+  \qquad\text{for every }v,
+\]
+and the left side is the expected time the token survives off the sinks
+when \emph{both} players play to survive. So a certificate of polynomial
+conditioning and rate is exactly a polynomial bound on that survival time,
+and $Z_D$ says the four combinatorial exponents can all be $\Theta(N)$
+while it is $O(1)$.
 \end{proposition}
 
 \begin{proof}
