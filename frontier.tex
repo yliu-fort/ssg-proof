@@ -6027,6 +6027,25 @@ Three consequences.
 \item Any proof that $\Delta^{T}$ needs superpolynomially many rounds on
       stopping games must use a certificate that is not of the form
       $\varphi(x)-\psi(y)$.
+\item The same applies verbatim to the hybrid of \Cref{def:hybrid}: one
+      of its rounds applies $\mathcal L$ and then $\mathcal C$, so an
+      admissible separable sequence for it is admissible in the sense of
+      \Cref{def:separable}. This is the structural reason behind
+      \Cref{rem:hybrid-barrier-lift}, which records the same failure for
+      one family and attributes it to \Cref{lem:transport-exact}: no box
+      certificate can bound the hybrid, whatever the game.
+\item What \Cref{thm:hybrid-convex-barrier} does to escape is to zero
+      the diagonal. Its certificates are the support-function differences
+      $\Lambda(P)(x,y)=\max_{z\in P}(z(x)-z(y))$, which satisfy
+      $\Lambda(P)(x,x)=0$ and are therefore not separable, the two
+      conditions of \Cref{def:separable} that forced the collapse being
+      met for a different reason. The repair is not free: zeroing the
+      diagonal of $u_k(x)-l_k(y)$ restores \Cref{def:separable}(b) and
+      the diagonal base but not the clause conditions, and it cannot,
+      since \Cref{prop:trans-Hm} exhibits a stopping game on which
+      $\Delta^{T}$ decides in $4m-3$ rounds while $u_k-l_k$ stays
+      positive for $2^{\Omega(N)}$. The disjointness hypothesis of
+      \Cref{thm:slack-barrier} is doing real work.
 \end{enumerate}
 \end{corollary}
 
@@ -7344,7 +7363,10 @@ is pinned by the programme at once, so the box certificate
 $\{l_k\le z\le u_k\}$ is far too weak to bound the hybrid.
 \Cref{thm:hybrid-convex-barrier} is the correct generalisation --- the box is
 replaced by an arbitrary shrinking chain of convex certificates --- and it is
-what the next theorem uses.
+what the next theorem uses. \Cref{cor:separable}(d),(e) give the structural
+form of the same fact: no separable certificate bounds the hybrid on any
+stopping game, and what the convex certificates change is that their
+diagonal vanishes.
 \end{remark}
 
 \begin{theorem}[The hybrid needs exponentially many rounds]\label{thm:hybrid-lower}
