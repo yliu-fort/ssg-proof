@@ -8802,6 +8802,25 @@ to stall, and it is not evidence that the lift is weak where the problem is
 hard. It is evidence that it is weak already where the problem is easy.
 \end{remark}
 
+\begin{remark}[The complementarity route, and why we do not pursue it]\label{rem:lcp}
+The same fixed-point system is a linear complementarity problem, and its
+matrix is a $P$-matrix; interior-point methods solve $\mathrm{LCP}(M,q)$ in
+$O\bigl((1+\kappa)\sqrt n\,L\bigr)$ iterations when $M$ is sufficient with
+handicap $\kappa$, so a polynomially bounded handicap would decide
+\Cref{prob:main}. We do not develop this, because it is not ours and it is
+closed. The reduction of turn-based stochastic games to $P$-matrix LCPs and
+the computation of the interior-point bounds for them is Hansen and
+Ibsen-Jensen's, after Jurdzi\'nski and Savani for the deterministic case and
+Stickney and Watson for the LCP--orientation correspondence this document
+meets again in \Cref{prop:allsw-auso}; that the handicap of a sufficient
+matrix can be exponential in its size, so that those bounds are not
+polynomial, is de~Klerk and E.-Nagy's; and the invariance of the handicap
+under principal pivot transforms, and the characterisation of the LCPs
+solvable by a single linear programme, are older still. A round of this
+project reconstructed all of that independently before the attributions were
+identified, which is recorded here so that it is not reconstructed again.
+\end{remark}
+
 \begin{remark}\label{rem:transport-objective}
 This is a reformulation and not progress, and it is worth being exact about
 which. Choosing the objective in \Cref{thm:transport-objective} means naming an
