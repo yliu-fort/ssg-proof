@@ -8143,7 +8143,14 @@ qualification. $WD$ is one-player, so by \Cref{thm:seed-dichotomy} the seeded
 calculus \Cref{def:seeded} decides both Max vertices at slack round zero: the
 family defeats \Cref{def:simorder}, \Cref{def:slack}, \Cref{def:trans-slack},
 \Cref{def:transport} and the hybrid of \Cref{sec:hybrid}, but not
-\Cref{sec:seeded}. What would be needed to defeat that as well is a two-player
+\Cref{sec:seeded}. It defeats the multiplicative mechanisms as well: on
+$WD(2j,j,j+4)$ the min-times closure of \Cref{def:ratio} first fires at
+rounds $30$ and $87$ for $j=2,3$ and not within $170$ rounds for $j=4$
+--- $N=21,27,33$ --- against $21$, $51$ and $112$ for
+\Cref{def:trans-slack}, so it is defeated by the same family and is on
+this one the slower of the two, having been the faster on $H_m$
+(\Cref{prop:ratio-closure}). The wedge is therefore the one obstruction
+in this document that no calculus here evades. What would be needed to defeat that as well is a two-player
 wedge, and \Cref{thm:seed-dichotomy} says any such instance is a stopping game
 on which switch-all improvement has not converged --- the same pivot that
 \Cref{cor:f-auso} and \Cref{prop:auso-size} leave open.
