@@ -1537,8 +1537,10 @@ spectral radius of a family of nonnegative matrices with independent row
 uncertainty is attained at a constant selection, which is
 Blondel--Nesterov's theorem for rectangular families, and in the language
 of nonnegative dynamic programming the stationarity of growth-optimal
-policies. With it, $\Lambda(G)$ is exactly the least certifiable rate and
-the escape class of \Cref{thm:escape-class} is precisely
+policies. With it, $\Lambda(G)$ is exactly the infimum of the certifiable rates ---
+an infimum, not a minimum: a certificate exists for every rational
+$\lambda>\Lambda(G)$ but not in general at $\Lambda(G)$ itself --- and the
+escape class of \Cref{thm:escape-class} is precisely
 $\{G:1-\Lambda(G)\ge1/\mathrm{poly}(N)\}$, an intrinsic spectral
 condition; without it, \Cref{lem:escape-rate} still gives the direction
 that every exclusion argument needs.
