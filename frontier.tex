@@ -1374,8 +1374,13 @@ Let $G$ be an SSG.
 \begin{enumerate}[label=(\alph*),leftmargin=2.2em]
 \item For all $y,z$ agreeing with the sink payoffs,
       $|T^ky-T^kz|\le S^k|y-z|$ on $V'$.
-\item If $(\lambda,x)$ is an escape certificate then
-      $\bigl\|T^k\bbone-T^k0\bigr\|_\infty\le\lambda^{k}\kappa(x)$.
+\item Let $u_0$ be $\bbone$ on $V'$ and $l_0$ be $0$ on $V'$, both
+      carrying the sink payoffs $0$ at $t_0$ and $1$ at $t_1$, and put
+      $u_{k+1}:=Tu_k$, $l_{k+1}:=Tl_k$. If $(\lambda,x)$ is an escape
+      certificate then $\|u_k-l_k\|_\infty\le\lambda^{k}\kappa(x)$ on
+      $V'$. The sink payoffs must be carried: starting from the constants
+      $\bbone$ and $0$ the bound fails already at $k=1$, because the
+      first application then reads the wrong value at a sink successor.
 \item A game carrying an escape certificate is stopping.
 \end{enumerate}
 \end{lemma}
@@ -1386,10 +1391,11 @@ $\min$, while $|\tfrac12\sum a_i-\tfrac12\sum b_i|\le\tfrac12\sum|a_i-b_i|$;
 $T$ pins the sinks, so their contribution to the difference is $0$, which
 is what $\hat x(t_j)=0$ records. Induct, using that $S$ is monotone.
 
-(b) $|\bbone-0|=\bbone\le x/\min x$ pointwise, and $S$ is monotone and
-positively homogeneous, so
-$S^k\bbone\le S^kx/\min x\le\lambda^kx/\min x\le\lambda^k\kappa(x)$;
-now apply (a).
+(b) $u_0$ and $l_0$ agree with the sink payoffs and
+$|u_0-l_0|=\bbone\le x/\min x$ on $V'$, so (a) applies and gives
+$|u_k-l_k|\le S^k\bbone$. Since $S$ is monotone and positively
+homogeneous,
+$S^k\bbone\le S^kx/\min x\le\lambda^kx/\min x\le\lambda^k\kappa(x)$.
 
 (c) For any positional pair $(\sigma,\tau)$ and any $v$, the probability
 of not reaching a sink within $k$ steps is at most $(S^k\bbone)(v)$,
@@ -1417,8 +1423,10 @@ $|V'|$ variables and $O(N)$ rows.
 \end{theorem}
 
 \begin{proof}
-Write $l_k:=T^k0$ and $u_k:=T^k\bbone$, so $l_k\le\val\le u_k$ and, by
-\Cref{lem:survival}(b), $u_k-l_k\le\lambda^k\kappa(x)$. Two distinct
+With $u_k,l_k$ as in \Cref{lem:survival}(b) one has
+$l_k\le\val\le u_k$ by monotonicity of $T$, and
+$u_k-l_k\le\lambda^k\kappa(x)$. Note $l_0=\bbone_{\{t_1\}}$ is exactly
+the vector \Cref{thm:few-escape} iterates. Two distinct
 coordinates of $\val$ differ by at least $4^{-a}$, since by
 \Cref{lem:denominator-sharp} both have denominators dividing an integer
 at most $2^{a}$. So once $\lambda^k\kappa(x)<4^{-a}$, which is the stated
