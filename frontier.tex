@@ -2245,13 +2245,19 @@ which contains $\Lambda(G)$ by hypothesis.
 \begin{remark}
 Iterating a monotone map on a finite sublattice and invoking
 Knaster--Tarski is of course standard, and rounded value iteration on a
-grid is a routine device for Markov decision processes. What is specific
-to \Cref{thm:alphabet-iteration} is the pair of facts that make it
-\emph{exact} rather than approximate: that $\val$ is the \emph{least}
-pre-fixed point on an arbitrary game (\Cref{thm:lfp-general}(b), which is
-where the absence of a stopping hypothesis comes from), and that only the
-upward rounding preserves that characterisation
-(\Cref{rem:alphabet-down}).
+grid is a routine device for Markov decision processes. Sharper: the theorem is an instance of a standard exactness criterion of
+abstract interpretation. If $\rho$ is monotone and extensive on a complete
+lattice and fixes the least fixed point of a monotone $T$, then
+$\lfp(\rho\circ T)=\lfp T$, because every fixed point of $\rho\circ T$ is a
+pre-fixed point of $T$; $\lceil\cdot\rceil_\Lambda$ is such a $\rho$ and
+$\lfloor\cdot\rfloor_\Lambda$ is not extensive, which is
+\Cref{rem:alphabet-down}. Two-sided rounded iteration for stochastic games
+is Haddad--Monmege's, and is the nearest published relative of
+\Cref{cor:grid-iteration}. What is specific
+to \Cref{thm:alphabet-iteration} is therefore only the SSG input: that
+$\val$ is the \emph{least} pre-fixed point on an arbitrary game
+(\Cref{thm:lfp-general}(b), which is where the absence of a stopping
+hypothesis comes from).
 \end{remark}
 
 \medskip
@@ -2323,6 +2329,21 @@ $\binom{k}{2}$ choices of the pair $(i_l,j_l)$, and each choice determines
 at most one candidate alphabet; discard the choices whose solution is not
 strictly increasing or leaves $[0,1]$.
 \end{proof}
+
+The bound $\binom{k}{2}^{k-2}$ is crude, and the true count is small enough
+to enumerate. Solving every such system exactly and keeping the strictly
+increasing solutions in $[0,1]$ leaves
+\[
+ \begin{array}{c|ccccccc}
+  k & 2&3&4&5&6&7&8\\\hline
+  \#\{\text{candidate alphabets}\} & 1&1&3&16&130&1494&22604
+ \end{array}
+\]
+distinct sets; the entry $3$ at $k=4$ is \Cref{prop:alphabet-four}. Note
+that the covering condition of \Cref{lem:alphabet-cover} deletes nothing
+from this list, since every solution of such a system satisfies it by
+construction: the list is what rigidity gives, and cutting it further needs
+an argument rigidity does not supply.
 
 \begin{corollary}[The alphabet is a small game's value vector]\label{cor:alphabet-chain}
 The alphabet of a stopping SSG with $k$ values is the value vector of a
@@ -5103,7 +5124,16 @@ is $\lfloor\log_2n\rfloor+1$ rounds --- $1,2,2,3,3,3,3,4$ at
 $n=1,\dots,8$ --- where all-switches takes $n$. On the two-player
 disjoint union of $L_n$ with its dual the same counts were seen, but over
 a sample of starting pairs and not exhaustively, so that half is a
-measurement of a sample and nothing more.
+measurement of a sample and nothing more. On $G^{\sharp}$ of
+\Cref{prop:auso-seven}, where all-switches attains its extremal $7$ rounds,
+$R_{\mathrm{BR}}$ takes $4$ --- exhaustively over all sixteen starts and,
+since \Cref{prop:bsi-br} allows \emph{any} best response, over every choice
+of one at every round, in both veto variants --- and along the longest run
+the Max vertex $c_1$ is switched twice, the switch sets being
+$\{c_1,c_3\},\{c_4\},\{c_2\},\{c_1\}$. So $R_{\mathrm{BR}}$ is not bounded
+by the number of Max vertices for the trivial reason, and
+\Cref{prop:bsi-twice}'s phenomenon occurs on an instance the document
+already carries.
 
 Being one-sided, $R_{\mathrm{BR}}$ is a candidate for the barriers, and
 they miss it for the same reason they miss \Cref{def:bsi}. It is not
