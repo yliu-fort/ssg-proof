@@ -67,7 +67,16 @@ those whose Max-reachability components are small
 all of these, defined by a linear-programming certificate for the rate at
 which the two-sided value iteration contracts
 (\Cref{thm:escape-class}), with an explicit family inside it and outside
-every one of the others (\Cref{prop:escape-family}); and, in general, a subexponential
+every one of the others (\Cref{prop:escape-family}); a class keyed not to
+the presentation but to the \emph{answer}, namely the stopping games whose
+values share a polynomially bounded denominator $D$
+(\Cref{thm:few-denominator}), which rests on the exactness of the
+\emph{upward}-rounded Shapley iteration on an arbitrary grid containing
+the values (\Cref{thm:alphabet-iteration}) and on the rigidity of the
+value alphabet, whose $k$ letters satisfy $D\le2^{k-2}$ sharply
+(\Cref{thm:alphabet-rigid,thm:alphabet-denominator}), and which contains a
+stopping family with four values, $a=\Theta(N)$ and both players that lies
+outside all five of the above (\Cref{prop:fv-family}); and, in general, a subexponential
 Las~Vegas algorithm of expected running time
 $e^{2\sqrt n}\,\mathrm{poly}(N)$ (\Cref{thm:subexp}), which is the
 strongest general upper bound we obtain.
@@ -9193,7 +9202,15 @@ absent from every cycle (\Cref{thm:kacyclic,prop:kacyclic-strict});
 games in which no cycle carries two Max vertices, and more generally in
 which the components of the Max-reachability digraph have size
 $O(\log N)$ (\Cref{thm:bounded-components}), a class that
-\Cref{prop:k1-family} shows meets none of the others; and, in general, a
+\Cref{prop:k1-family} shows meets none of the others; a quantitative
+class defined by a linear-programming certificate for the rate at which
+two-sided value iteration contracts (\Cref{thm:escape-class}), with a
+family inside it and outside all four combinatorial ones
+(\Cref{prop:escape-family}); the stopping games whose value alphabet has
+a polynomially bounded common denominator, solved in $O(N^{2}D^{2})$ with
+no advance knowledge of $D$ (\Cref{thm:few-denominator}) --- a class read
+off the answer and not the presentation, which \Cref{prop:fv-family}
+shows lies inside none of the five; and, in general, a
 Las~Vegas algorithm of expected time $e^{2\sqrt n}\,\mathrm{poly}(N)$
 obtained from a full analysis of random-facet strategy improvement
 (\Cref{thm:rf-correct,thm:rf-bound,lem:fbound,thm:subexp}). The last is
