@@ -8371,17 +8371,25 @@ arithmetic, and not the asymptotic bound it points to.
 
 The scope is narrower than it first appears, and this is the important
 qualification. $WD$ is one-player, so by \Cref{thm:seed-dichotomy} the seeded
-calculus \Cref{def:seeded} decides both Max vertices at slack round zero: the
-family defeats \Cref{def:simorder}, \Cref{def:slack}, \Cref{def:trans-slack},
-\Cref{def:transport} and the hybrid of \Cref{sec:hybrid}, but not
-\Cref{sec:seeded}. It defeats the multiplicative mechanisms as well: on
+calculus \Cref{def:seeded} decides both Max vertices at slack round zero. It
+does not defeat \Cref{def:simorder} either, and for a different reason: the
+greatest fixed point there contains the pair $(v_i,a_{i,1})$, so
+$w^\ast(v_i)\le w^\ast(a_{i,1})$ is derived, which at a Max vertex forces
+equality and proves $a_{i,1}$ optimal --- firing direction (i) of
+\Cref{rem:own-successor}, at round zero. We verified this on $WD(4,2,6)$ and
+$WD(6,3,7)$, the preorder being sound there with no violation among its derived
+pairs. So the family defeats \Cref{def:slack}, \Cref{def:trans-slack},
+\Cref{def:transport} and the hybrid of \Cref{sec:hybrid}, and neither
+\Cref{def:simorder} nor \Cref{sec:seeded}. It defeats the multiplicative mechanisms as well: on
 $WD(2j,j,j+4)$ the min-times closure of \Cref{def:ratio} first fires at
 rounds $30$ and $87$ for $j=2,3$ and not within $170$ rounds for $j=4$
 --- $N=21,27,33$ --- against $21$, $51$ and $112$ for
 \Cref{def:trans-slack}, so it is defeated by the same family and is on
 this one the slower of the two, having been the faster on $H_m$
-(\Cref{prop:ratio-closure}). The wedge is therefore the one obstruction
-in this document that no calculus here evades.
+(\Cref{prop:ratio-closure}). Among the mechanisms that \emph{propagate}
+a matrix, the wedge is therefore the one obstruction here that none
+evades; the two mechanisms it fails against, \Cref{def:simorder} and
+\Cref{sec:seeded}, both decide it without iterating at all.
 
 One further attempt is worth recording because it looks like the right
 one and is not. In the coordinates $\xi$ a multiplicative cut
