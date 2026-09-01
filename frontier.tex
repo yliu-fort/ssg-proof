@@ -1446,67 +1446,59 @@ rows.
 
 \begin{proposition}[The escape class contains none of the
 others]\label{prop:escape-family}
-For $D\ge2$ let $E_D$ have
-$\Vavg=\{s_1,\dots,s_D,p_1,\dots,p_D,r,z,g_0\}$,
-$\Vmax=\{q_1,\dots,q_D,v_0\}$, $\Vmin=\{u\}$ and
+For $D\ge3$ let $Z_D$ have $\Vavg=\{s_1,\dots,s_D\}$,
+$\Vmax=\{M_2,\dots,M_D\}$, $\Vmin=\{W\}$ and
 \[
- \begin{aligned}
-  &s_1\to(t_1,t_0),\quad s_j\to(s_{j-1},t_0)\ (2\le j\le D);\qquad
-   q_i\to(p_i,t_0),\quad p_i\to(q_{i\bmod D+1},t_1);\\
-  &u\to(r,t_1),\quad r\to(u,t_0);\qquad
-   z\to(s_D,u),\quad v_0\to(z,q_1),\quad g_0\to(t_1,s_D),
- \end{aligned}
+  s_1\to(t_1,W),\qquad s_j\to(M_j,t_0)\ (2\le j\le D),\qquad
+  M_j\to(s_{j-1},t_0),\qquad W\to(s_D,t_1),
 \]
-with start vertex $g_0$. Then $N=3D+7$, $a=2D+3$, $|\Vmax|=D+1$, $E_D$ is
-stopping and $\val(g_0)=\tfrac12+2^{-(D+1)}$. Moreover
+with start vertex $s_D$. Then $N=2D+2$, $a=D$, $|\Vmax|=D-1$, $Z_D$ is
+stopping, every non-sink is reachable from the start vertex, and all
+$2D$ non-sinks lie in a single strongly connected component, which
+therefore carries all three colours. Moreover
 \begin{enumerate}[label=(\roman*),leftmargin=2.2em]
-\item $x(s_j)=x(q_i)=x(u)=x(g_0)=1$, $x(p_i)=x(r)=\tfrac34$,
-      $x(z)=\tfrac43$, $x(v_0)=\tfrac{16}9$ satisfies $Sx\le\tfrac34x$,
-      so $(\tfrac34,x)$ is an escape certificate of conditioning
-      $\kappa=\tfrac{64}{27}$, independent of $D$, and
-      \Cref{thm:escape-class} decides $E_D$ in $O(N)$ iterations;
-\item $a=2D+3$, so \Cref{thm:few-avg} gives only $2^{\Theta(N)}$;
-\item $d(E_D)=D+1$, so \Cref{thm:few-escape} gives only $2^{\Theta(N)}$;
-\item some cycle carries a Max vertex, some carries a Min vertex and some
-      carries an average vertex, so $E_D$ is $k$-acyclic for no colour $k$
-      and \Cref{thm:kacyclic} --- hence also \Cref{thm:avg-acyclic},
-      \Cref{thm:player-free} and \Cref{thm:one-player} --- does not apply;
-\item the Max-reachability digraph of \Cref{def:maxreach} has a strongly
-      connected component of size $D$, so \Cref{thm:bounded-components}
-      gives only $2^{\Theta(N)}$ and $E_D$ lies in no $K_k$;
-\item $|\Vmax|=D+1$, so \Cref{thm:subexp} gives only
-      $e^{2\sqrt{D+1}}\mathrm{poly}(N)$.
+\item $x:=\bbone$ on $\Vavg$ and $\tfrac32$ on $\Vmax\cup\Vmin$ satisfies
+      $Sx\le\tfrac34x$, so $(\tfrac34,x)$ is an escape certificate of
+      conditioning $\kappa=\tfrac32$, independent of $D$, and
+      \Cref{thm:escape-class} decides $Z_D$ in $O(N)$ iterations;
+\item $a=D$, so \Cref{thm:few-avg} gives only $2^{\Theta(N)}$;
+\item $d(Z_D)=D$, so \Cref{thm:few-escape} gives only $2^{\Theta(N)}$;
+\item the unique non-trivial strongly connected component carries a Max,
+      a Min and an average vertex, so $Z_D$ is $k$-acyclic for no colour
+      $k$ and \Cref{thm:kacyclic} --- hence also \Cref{thm:avg-acyclic},
+      \Cref{thm:player-free} and \Cref{thm:one-player} --- does not
+      apply, and neither does any refinement of it that treats the
+      strongly connected components separately;
+\item the Max-reachability digraph of \Cref{def:maxreach} is a single
+      component of size $D-1$, so \Cref{thm:bounded-components} gives
+      only $2^{\Theta(N)}$ and $Z_D$ lies in no $K_k$;
+\item $|\Vmax|=D-1$, so \Cref{thm:subexp} gives only
+      $e^{2\sqrt{D-1}}\mathrm{poly}(N)$.
 \end{enumerate}
-Conversely $F_k$ of \Cref{prop:fk-family} has $d(F_k)=2$ and carries no
-escape certificate for any $\lambda<1$, being non-stopping. The escape
+Conversely $F_k$ of \Cref{prop:fk-family} carries no escape certificate
+for any $\lambda<1$, being non-stopping, while $d(F_k)=2$. The escape
 class is therefore incomparable with each of the four.
 \end{proposition}
 
 \begin{proof}
-The values: $\val(s_1)=\tfrac12$ and $\val(s_j)=\tfrac12\val(s_{j-1})$
-give $\val(s_D)=2^{-D}$, whence $\val(g_0)=\tfrac12(1+2^{-D})$; around
-the $q,p$ cycle $\val(q_i)=\val(p_i)$ and
-$\val(p_i)=\tfrac12(\val(q_{i+1})+1)$ force $\val\equiv1$ there; and
-$\val(u)=\val(r)=\tfrac12\val(u)$ forces $\val(u)=\val(r)=0$. Only the empty set is a trap: each of $s_j$, $p_i$, $r$ and
-$g_0$ is average with a sink among its successors, so lies in no trap;
-then $z$, being average with successor $s_D$, lies in none; then $q_i$,
-$u$ and $v_0$, being controlled with both successors outside, lie in
-none. So $E_D$ is stopping by \Cref{lem:trapchar}.
+Every non-sink lies on the cycle
+$s_D\to M_D\to s_{D-1}\to\cdots\to s_1\to W\to s_D$, which gives both the
+reachability and the single component, and that cycle carries $s_j$,
+$M_j$ and $W$. Stopping: every $s_j$ is average with a sink among its
+successors, so lies in no trap, and then $M_j$ and $W$ are controlled
+with both successors outside one, so \Cref{lem:trapchar} applies.
 
-(i) is checked entrywise: at $s_j$, $\tfrac12(1+0)=\tfrac12\le\tfrac34$;
-at $q_i$, $\max(\tfrac34,0)=\tfrac34\le\tfrac34$; at $p_i$,
-$\tfrac12(1+0)=\tfrac12\le\tfrac34\cdot\tfrac34$; at $u$, read as a
-maximum, $\max(\tfrac34,0)=\tfrac34\le\tfrac34$; at $r$,
-$\tfrac12\le\tfrac9{16}$; at $z$, $\tfrac12(1+1)=1\le\tfrac34\cdot\tfrac43$;
-at $v_0$, $\max(\tfrac43,1)=\tfrac43\le\tfrac34\cdot\tfrac{16}9$; at
-$g_0$, $\tfrac12\le\tfrac34$. (ii), (v) and (vi) are counts. For (iii),
-the levels of \Cref{lem:descent} are $\ell(s_j)=j$, $\ell(g_0)=1$,
-$\ell(p_i)=1$, $\ell(q_i)=2$ and $\ell(z)=D+1$, while $u,r\notin
-C_\infty$; each $s_j$ and each $p_i$ and $z$ has exactly one successor of
-smaller level, so the descent path $z\to s_D\to\cdots\to s_1\to t_1$ has
-weight $D+1$ and none has more. (iv): $q_i\to p_i\to q_{i+1}$ is a cycle
-through a Max and an average vertex and $u\to r\to u$ one through a Min
-and an average vertex.
+(i) Under $S$ every controlled vertex is a maximiser and every sink reads
+$0$, so the constraints are $x(W)/2\le\lambda x(s_1)$,
+$x(M_j)/2\le\lambda x(s_j)$, $x(s_{j-1})\le\lambda x(M_j)$ and
+$x(s_D)\le\lambda x(W)$. With $\lambda=\tfrac34$ and the stated $x$ they
+read $\tfrac34\le\tfrac34$, $\tfrac34\le\tfrac34$, $1\le\tfrac98$ and
+$1\le\tfrac98$. Composing the first pair around the cycle shows the
+constraints are satisfiable only for $2\lambda^{2}\ge1$, so
+$\lambda=\tfrac34$ is close to the least admissible value $2^{-1/2}$ and
+no smaller rational rate is available. (ii), (v) and (vi) are counts.
+(iii) is a computation from \Cref{def:escape}, minimised over the
+optimal Max strategies. (iv) is the previous paragraph.
 \end{proof}
 
 \begin{remark}\label{rem:escape-class}
@@ -1529,6 +1521,32 @@ consequence the multiplicative view yields: by \Cref{prop:cw} the
 eigenvalue of the homogenised Shapley operator is $1$ on every instance
 and its Collatz--Wielandt bracket bounds nothing, so it is the survival
 operator, and not the Shapley operator, that carries the information.
+
+Fourth, and this bounds the significance of the class exactly: no member
+of it can be a stalling instance for any of the propagation mechanisms of
+\Cref{sec:gap}. By \Cref{thm:slack-vi-upper},
+$\Delta_{2k}(x,y)\le u_k(x)-l_k(y)$, and a certificate gives
+$u_k-l_k\le\lambda^{k}\kappa$, so
+$\Delta_{2k}(x,y)\le w^\ast(x)-w^\ast(y)+2\lambda^{k}\kappa$; two
+distinct values differ by at least $4^{-a}$, so the own-successor test of
+\Cref{rem:own-successor} fires for the plain calculus of
+\Cref{def:slack} --- and hence for every mechanism dominating it ---
+within the same $O((a+\log_2\kappa)/\log_2(1/\lambda))$ rounds. The
+escape class therefore lies entirely on the easy side of every stall
+recorded in this document, and cannot reach the frontier; its interest is
+that it is a polynomial class disjoint from the four combinatorial ones,
+not that it is close to the open problem.
+
+A word on how the family was found, because the failure is instructive.
+A first candidate placed the separating structure --- the cycles carrying
+the three colours, the large Max-reachability component --- in a part of
+the game the designated start vertex could not reach, leaving a
+player-free acyclic chain to decide, which \Cref{thm:avg-acyclic}
+settles in linear time. Membership of a polynomial class is a property of
+the instance \emph{as posed}, so every such claim must be checked on the
+subgame reachable from $v_0$; $Z_D$ is reachable in its entirety, and its
+single strongly connected component is what makes it immune to a
+component-by-component refinement of \Cref{thm:kacyclic} as well.
 \end{remark}
 
 
