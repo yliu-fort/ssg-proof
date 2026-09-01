@@ -6059,6 +6059,41 @@ $\varphi(p)-\varphi(q)=\tfrac14$ is exactly the value at which
 $\Delta^{T}$ stalls there.
 \end{proof}
 
+\Cref{lem:separable-lower} also supplies the tool that
+\Cref{cor:separable}(c) asks for, and it is the analogue for
+$\Delta^{T}$ of \Cref{thm:hybrid-convex-barrier}.
+
+\begin{corollary}[Set certificates for the transitive
+calculus]\label{cor:set-certificate}
+Let $P_0\supseteq P_1\supseteq\cdots$ be nonempty subsets of $[0,1]^{V}$
+and put $\Lambda(P)(x,y):=\sup_{z\in P}\bigl(z(x)-z(y)\bigr)$. If
+$\Lambda(P_{k+1})$ is at most every clause of \Cref{def:slack}
+evaluated at $\Lambda(P_{k})$, then $\Delta^{T}_k\ge\Lambda(P_k)$ for
+every $k$.
+\end{corollary}
+
+\begin{proof}
+$\Lambda(P)(x,y)\le\Lambda(P)(x,w)+\Lambda(P)(w,y)$ for every $w$,
+because a single $z$ attaining the left side is admissible in both terms
+on the right; and $\Lambda(P_0)\le1$ since $P_0\subseteq[0,1]^{V}$. So
+$(\Lambda(P_k))_k$ is admissible in the sense of \Cref{def:separable}
+and \Cref{lem:separable-lower} applies.
+\end{proof}
+
+\begin{remark}\label{rem:set-certificate}
+Like \Cref{thm:hybrid-convex-barrier}, this is a method and not a
+barrier: its hypothesis is an invariant the prover has to supply, so by
+itself it excludes no algorithm. What \Cref{thm:separable} adds is that
+the method is the \emph{only} one available --- a certificate of the form
+$\varphi(x)-\psi(y)$ cannot be made to work, and every $\Lambda(P)$ has
+vanishing diagonal, which is precisely the feature the separable
+certificates lack. The hypothesis is also genuinely restrictive: taking
+$P_k:=\{z:l_k\le z\le u_k\}$ gives $\Lambda(P_k)(x,y)=u_k(x)-l_k(y)$
+off the diagonal, which satisfies the clause conditions on the separated
+configuration of \Cref{thm:slack-barrier} and, by
+\Cref{prop:trans-Hm}, cannot satisfy them in general.
+\end{remark}
+
 \begin{remark}\label{rem:trans}
 Three corrections to the reading of \Cref{sec:slack} follow.
 First, \Cref{thm:slack-barrier} and \Cref{cor:slack-stalls} are sharp for
