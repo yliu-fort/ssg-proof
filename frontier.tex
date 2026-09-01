@@ -1540,7 +1540,16 @@ distinct values differ by at least $4^{-a}$, so the own-successor test of
 \Cref{def:slack} --- and hence for every mechanism dominating it ---
 within the same $O((a+\log_2\kappa)/\log_2(1/\lambda))$ rounds. The
 escape class therefore lies entirely on the easy side of every stall
-recorded in this document, and cannot reach the frontier; its interest is
+recorded in this document, and cannot reach the frontier. The wedge shows
+how far: at $v_i$ the survival dynamics may enter the chain
+$a_{i,1},\dots,a_{i,e}$, each of whose vertices returns to $v_i$ with
+probability $\tfrac12$, and writing $V:=x(v_i)$, $A_q:=x(a_{i,q})$ the
+constraints $\lambda V\ge A_1$ and $2\lambda A_q\ge V+A_{q+1}$ compose
+to $A_e\le\bigl(\alpha^\ast+(2\lambda)^{e-1}(\lambda-\alpha^\ast)\bigr)V$
+with $\alpha^\ast=1/(2\lambda-1)$; since $A_e\ge V/(2\lambda)>0$ this
+forces $(2\lambda)^{e-1}(2\lambda+1)(1-\lambda)<1$, so every admissible
+$\lambda$ on $WD(e,j,m)$ has $1-\lambda<2^{1-e}/3$ and
+$\log_2(1/\lambda)=2^{-\Theta(N)}$. Its interest is therefore
 that it is a polynomial class disjoint from the four combinatorial ones,
 not that it is close to the open problem.
 
