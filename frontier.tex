@@ -2701,25 +2701,38 @@ We now come to the main positive structural statement. It says that
 improving paths are always \emph{short}; the difficulty of
 \Cref{prob:main} is therefore entirely one of \emph{finding} them.
 
-\begin{lemma}[Single-switch improvement]\label{lem:switch}
-Let $G$ be stopping, $\sigma$ a Max strategy and $v\in S_\sigma$. Then
-$\val_{\sigma[v]}\ge\val_\sigma$ pointwise, with strict inequality at $v$.
-Consequently $\Phi(\val_{\sigma[v]})>\Phi(\val_\sigma)$, where
-$\Phi(x):=\sum_{u\in V}x(u)$.
+\begin{lemma}[Improvement, one switch or many]\label{lem:switch}
+Let $G$ be stopping, $\sigma$ a Max strategy and $S$ a nonempty subset of
+$S_\sigma$. Then $\val_{\sigma[S]}\ge\val_\sigma$ pointwise, with strict
+inequality at every $v\in S$. Consequently
+$\Phi(\val_{\sigma[S]})>\Phi(\val_\sigma)$, where
+$\Phi(x):=\sum_{u\in V}x(u)$. The case $S=\{v\}$ is the single switch.
 \end{lemma}
 
 \begin{proof}
-Put $x:=\val_\sigma$ and $\sigma':=\sigma[v]$. Then
+Put $x:=\val_\sigma$ and $\sigma':=\sigma[S]$. For $v\in S$,
 $(T_{\sigma'}x)(v)=x(\bar\sigma(v))>x(\sigma(v))=x(v)$, while
-$(T_{\sigma'}x)(u)=(T_\sigma x)(u)=x(u)$ for every other $u$; hence
-$x\le T_{\sigma'}x$ with strict inequality at $v$. By
-\Cref{cor:comparison} --- this is where stopping is used ---
-$x\le\val_{\sigma'}$. Applying $T_{\sigma'}$ once more at the coordinate
-$v$ and using monotonicity,
+$(T_{\sigma'}x)(u)=(T_\sigma x)(u)=x(u)$ for every $u\notin S$, the two
+operators being given there by the same formula; hence $x\le T_{\sigma'}x$
+with strict inequality on $S$. By \Cref{cor:comparison} --- this is where
+stopping is used --- $x\le\val_{\sigma'}$. Applying $T_{\sigma'}$ once more
+at a coordinate $v\in S$ and using monotonicity,
 $\val_{\sigma'}(v)=(T_{\sigma'}\val_{\sigma'})(v)\ge(T_{\sigma'}x)(v)>x(v)$.
 The statement about $\Phi$ follows because $\Phi$ is strictly increasing
 on pointwise-comparable distinct vectors.
 \end{proof}
+
+\begin{remark}
+The multiple-switch case is stated because it is used repeatedly ---
+by \Cref{thm:switch-count} for multi-switch rules, by
+\Cref{cor:bsi-correct} and \Cref{cor:bsi-levels} for a BSI round, which
+switches the whole of $C_{\max}$ at once, and by
+\Cref{prop:closed-now-or-never} --- and the single-switch statement does
+not imply it: switching the members of $S$ one at a time is not available,
+because a vertex of $S_\sigma$ need not still be strictly switchable after
+another has moved (\Cref{thm:all-switches-refuted}). The proof above never
+switches one at a time, so nothing is lost.
+\end{remark}
 
 \begin{theorem}[Short improving paths]\label{thm:short-path}
 Let $G$ be a stopping SSG, let $\sigma\notin\Opt$ and let
@@ -3867,7 +3880,17 @@ $1,3,7,15,31,63,127,255,511,1023,2047,4095$.
 Three things are worth separating. First, $L_n$ is as easy as an SSG can
 be --- acyclic, one-player, solvable by back-substitution in linear time
 --- so this is a lower bound against a \emph{rule}, not evidence about the
-problem. Second, the all-switches rule terminates on $L_n$ in exactly $n$
+problem. Second, and this is an attribution the theorem owes: the pair
+``exponential for the least-index rule, linear for all-switches, on a
+two-action instance'' is Melekopoglou and Condon's, whose $2^{n}-1$ lower
+bound for the simple (least-index) policy-improvement rule on Markov
+decision processes with two actions per state is the published source of
+this phenomenon, and whose instances are one-player games of exactly this
+shape. \Cref{thm:ladder} should be read as that result transcribed into
+\Cref{def:ssg}'s model, with the smallest-gap rule added; the open
+question they leave --- whether Howard's rule is superpolynomial with two
+actions per state --- is precisely the one-player half of the pivot of
+\Cref{sec:refutations}. The all-switches rule terminates on $L_n$ in exactly $n$
 iterations (exact computation, $n=1,\dots,12$), so least-index and
 all-switches are exponentially separated here, in the direction opposite
 to \Cref{thm:all-switches-refuted} and \Cref{prop:allswitch-overshoot};
@@ -3922,8 +3945,8 @@ $D_j\le2^{a}$; a positive difference of two of them is therefore at least
 $2^{-a}$. Hence $\Phi$ increases by at least $2^{-a}$ at every step, and
 $\Phi$ ranges in an interval of length $N$, giving $L\le N2^{a}$.
 
-For a multi-switch step the same argument gives $\Phi(x_{j+1})>\Phi(x_j)$
-but compares coordinates of two \emph{different} vectors, of denominators
+For a multi-switch step \Cref{lem:switch} gives $\Phi(x_{j+1})>\Phi(x_j)$
+just as well, but the estimate compares coordinates of two \emph{different} vectors, of denominators
 $D_j$ and $D_{j+1}$; the difference is then at least
 $1/(D_jD_{j+1})\ge4^{-a}$, whence $L\le N4^{a}$. Tightness: on $L_n$ one
 has $a=n$ and $N=2n+2$, and \Cref{thm:ladder} exhibits a single-switch
