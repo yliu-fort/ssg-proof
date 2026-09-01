@@ -3719,6 +3719,15 @@ $1,2,4,7,12,21$ at $m\le6$ in place of $f=1,2,4,7,13,25$, so at $m=5$ the
 law bound now equals $h^{\ast}(5)=12$ exactly. Those two counts are
 computations we have not reproduced here and are recorded as measurements;
 everything else in this subsection is proved.
+
+What this does not do should be said plainly. It yields no bound on any
+algorithm, no polynomial class, no barrier and no lower-bound family, and
+quantitatively it improves only the trivial ceiling $L\le2^{m}-1$ --- trivial
+because $\Phi(\val_{\sigma})$ strictly increases along the run --- to
+$h^{\ast}(m)$, which is itself at least $2^{\lfloor m/2\rfloor}$ by the
+Schurr--Szab\'o bound cited in \Cref{rem:f-auso}. Its value is
+bookkeeping: it removes a hypothesis under which half of this document's
+own instances fell, so that the pivot may be stated without one.
 \end{remark}
 
 \begin{corollary}[The programme of \Cref{rem:allsw-laws} is capped]\label{cor:f-auso}
@@ -3869,15 +3878,95 @@ $m=4$ as the smallest concrete instance of the question left open, and
 \Cref{prop:auso-seven} settles it affirmatively. Two qualifications keep
 it in proportion. It settles the instance, not the question: $h^{\ast}(4)=7$
 is a constant, and what a superpolynomial run would need is a family, which
-by \Cref{prop:auso-size} no census can supply. And the two players are
-doing real work only conditionally --- the orientation violates Holt--Klee,
-so \emph{if} the improvement orientation of a nondegenerate one-player
-stopping SSG is always an LP orientation, as \Cref{rem:auso-census} records
-without proof, then no one-player game realises it; we do not prove that
-implication here, and note that its natural proof needs the nondegeneracy
-of every game obtained by freezing Min, which does not follow from
-nondegeneracy of the game itself.
+by \Cref{prop:auso-size} no census can supply. And the two players are doing real work, which
+\Cref{cor:seven-two-player} below now establishes rather than assumes: the
+orientation violates Holt--Klee, and \Cref{prop:oneplayer-lp} shows every
+nondegenerate one-player improvement orientation is an LP orientation and
+hence Holt--Klee. The obstacle noted here earlier --- that the natural proof
+would need nondegeneracy of every game obtained by freezing Min --- does not
+arise, because with $\Vmin$ empty there is nothing to freeze.
 \end{remark}
+
+\begin{proposition}[One-player improvement orientations are LP orientations]\label{prop:oneplayer-lp}
+Let $G$ be a nondegenerate stopping SSG with $\Vmin=\emptyset$ and
+$\Vmax=\{x_1,\dots,x_m\}$, and let $(p^{v,a},q^{v,a})$ be its harmonic
+normal form: the first-passage law of action $a$ at $v$ onto $\Vmax$ and
+onto $t_1$. Put
+\[
+  X(G):=\Bigl\{y\in\mathbb R^{2m}_{\ge0}\ :\
+    \textstyle\sum_a y_{w,a}-\sum_{v,a}p^{v,a}_{w}\,y_{v,a}=1\ \ (w\in\Vmax)\Bigr\},
+  \qquad \mathrm{obj}(y):=\sum_{v,a}q^{v,a}y_{v,a}.
+\]
+Then the vertices of $X(G)$ are exactly the $2^{m}$ points $y^{\sigma}$
+supported on a strategy, with
+$y^{\sigma}_{v,\sigma(v)}=\bigl((I-P_\sigma^{\mathsf T})^{-1}\bbone\bigr)_v\ge1$;
+$X(G)$ is a simple $m$-polytope whose graph is the $m$-cube and whose faces
+are its subcubes; $\mathrm{obj}(y^{\sigma})=\sum_v\val_\sigma(v)$; and
+$\mathrm{obj}$ is non-constant on every edge, increasing from $y^{\sigma}$ to
+$y^{\sigma[v]}$ exactly when $v\in S_\sigma$. Hence $s_G$ is the orientation
+induced by a generic linear functional on a polytope combinatorially
+equivalent to the $m$-cube, and is therefore a Holt--Klee orientation.
+\end{proposition}
+
+\begin{proof}
+Every feasible $y$ has $\sum_a y_{w,a}\ge1$ for each $w$, the subtracted term
+being nonnegative. A basic feasible solution of a system with $m$ equalities
+has at most $m$ nonzero coordinates, so exactly one per $w$: it is supported
+on a strategy $\sigma$, where the equations read
+$(I-P_\sigma^{\mathsf T})y=\bbone$ with $(P_\sigma)_{v,w}:=p^{v,\sigma(v)}_w$.
+Stopping makes $P_\sigma$ transient, so the inverse exists and is
+$\sum_k P_\sigma^{k}\ge I$, giving $y^{\sigma}\ge\bbone$. Conversely each
+$y^{\sigma}$ is feasible and has $m$ tight nonnegativity constraints, hence
+is a nondegenerate vertex; relaxing the single constraint
+$y_{v,\bar\sigma(v)}=0$ gives a one-dimensional face joining $y^{\sigma}$ to
+$y^{\sigma[v]}$. So the graph is the $m$-cube and, faces being the sets with a
+prescribed set of vanishing coordinates, the faces are its subcubes.
+
+For the objective, $y^{\sigma}_{v}=\sum_w N_{w,v}$ with
+$N:=(I-P_\sigma)^{-1}$ the expected number of visits, so
+$\mathrm{obj}(y^{\sigma})=\sum_v q^{v,\sigma(v)}\sum_wN_{w,v}
+=\sum_w\sum_vN_{w,v}q^{v,\sigma(v)}=\sum_w\val_\sigma(w)$.
+For the edges, \Cref{thm:impedance} expresses the change in $\val_\sigma$ at
+$w$ caused by switching $v$ as
+$(\val_\sigma(\bar\sigma(v))-\val_\sigma(\sigma(v)))\,h(w\!\to\!v)/(1-h(b\!\to\!v))$
+with $h(v\!\to\!v)=1$, so every term has the sign of
+$\val_\sigma(\bar\sigma(v))-\val_\sigma(\sigma(v))$, which is nonzero by
+nondegeneracy; summing over $w$ gives the claim and shows $\mathrm{obj}$ is
+generic. Holt--Klee's theorem applies to $X(G)$ and to each of its faces.
+\end{proof}
+
+\begin{corollary}[The height-seven orbit needs two players]\label{cor:seven-two-player}
+No nondegenerate one-player stopping SSG has the improvement orientation of
+\Cref{prop:auso-seven}, nor any orientation in its orbit. The two Min
+vertices of $G^{\sharp}$ are therefore necessary, and the implication left
+conditional in \Cref{rem:auso-seven} holds.
+\end{corollary}
+
+\begin{proof}
+That orientation violates Holt--Klee --- we verified this by a unit
+vertex-capacity max-flow test on every face, which returns three
+vertex-disjoint monotone source-to-sink paths on the whole $4$-cube where
+four are required --- and \Cref{prop:oneplayer-lp} makes every nondegenerate
+one-player improvement orientation Holt--Klee.
+\end{proof}
+
+\begin{remark}\label{rem:oneplayer-lp}
+\Cref{prop:oneplayer-lp} is a rediscovery and must be labelled one. $X(G)$ is
+the classical occupancy, or dual, linear programme of a transient Markov
+decision process, which goes back to d'Epenoux; that improvement orientations
+arising from linear programmes are Holt--Klee is Holt and Klee's theorem
+together with the observation of G\"artner, Morris and Ruest that realisable
+unique sink orientations inherit it. The content added here is only the
+identification of the SSG data with that programme and the resulting
+\Cref{cor:seven-two-player}. Note also what the corollary does \emph{not}
+say. Nondegeneracy is a genuine hypothesis: this document's longest
+one-player all-switches runs are degenerate, and \Cref{thm:flat-resolution}
+resolves those into AUSOs that need not be Holt--Klee, since the resolution
+is a combinatorial completion and not an LP orientation. So the corollary
+bounds the heights of nondegenerate one-player games and says nothing about
+degenerate ones.
+\end{remark}
+
 
 \begin{proposition}[The census of the $m$-cube for $m\le4$]\label{prop:auso-census}
 Enumerate the outmaps $s:\{0,1\}^{m}\to\{0,1\}^{m}$ satisfying the condition of
@@ -8702,6 +8791,15 @@ against convex lifts in general: \Cref{thm:hybrid-convex-barrier} already
 describes what a shrinking chain of convex certificates would have to do,
 and \Cref{thm:lasserre-vacuous} says only that the first member of the
 Lasserre chain is not such a certificate.
+
+Finally, and this bounds the result's significance sharply: the two
+witnesses have $|C|=3$, and \emph{every} hard family in this document has
+$|C|\le2$ --- the wedge $WD(e,j,m)$ of \Cref{def:wedge} and
+$\mathrm{CC}(L,m)$ have two controlled vertices, and $G8$, $S$, $S_r$,
+$H_m$ and $G_m$ have at most one. So \Cref{thm:lasserre-vacuous} touches
+none of the instances on which the mechanisms of \Cref{sec:gap} are known
+to stall, and it is not evidence that the lift is weak where the problem is
+hard. It is evidence that it is weak already where the problem is easy.
 \end{remark}
 
 \begin{remark}\label{rem:transport-objective}
