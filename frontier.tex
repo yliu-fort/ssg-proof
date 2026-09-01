@@ -4738,6 +4738,99 @@ stopping because exchanging the sinks does not change the traps --- bounds
 each track by $N4^{a}$.
 \end{proof}
 
+Collapsing one of the two tracks gives a genuinely one-sided rule that
+still never stalls, and it costs a weaker hypothesis than
+\Cref{thm:bsi-nostall} needs: nothing at all is assumed about
+$C_{\min}$.
+
+\begin{proposition}[Best-response restart never stalls]\label{prop:bsi-br}
+Let $G$ be stopping, let $\sigma$ be a Max strategy with
+$S_\sigma\ne\emptyset$, and let $\tau$ be \emph{any} Min best response to
+$\sigma$, that is any positional $\tau$ with
+$\val_{\sigma,\tau}=\val_\sigma$. Then $C_{\max}\ne\emptyset$, for the
+veto variant and for the strict variant alike. Consequently the rule
+\[
+  R_{\mathrm{BR}}(\sigma)\;:=\;\sigma\bigl[\{v\in S_\sigma:
+    \val^\tau(\bar\sigma(v))\ge\val^\tau(\sigma(v))\}\bigr],
+  \qquad\tau\ \text{a best response to }\sigma,
+\]
+is a switching rule in the sense of \Cref{def:rule}: it is computable in
+polynomial time by \Cref{thm:eval-stopfree}, it switches only strictly
+improving vertices, and it halts only at an optimal $\sigma$.
+\end{proposition}
+
+\begin{proof}
+Put $L:=\val_\sigma$, $U:=\val^\tau$, $g:=U-L$, $M:=\max g$ and
+$Z:=\operatorname{argmax}g$. Since $S_\sigma\ne\emptyset$, $\sigma$ is not
+optimal (\Cref{lem:local-global}), so $L\ne w^\ast$; with
+$L\le w^\ast\le U$ this gives $M>0$. The sinks have $g=0$, so $Z$ contains
+neither. Suppose $Z\cap C_{\max}=\emptyset$.
+
+At an average $x\in Z$, $g(x)=\tfrac12(g(x^{(0)})+g(x^{(1)}))$ with both
+terms at most $M$, so both successors lie in $Z$.
+
+Let $x\in Z\cap\Vmin$ and $p:=\tau(x)$. Then $U(x)=U(p)$, because $\tau$ is
+frozen in $\val^\tau$; and $L(x)=L(p)$, because
+$\val_{\sigma,\tau}=\val_\sigma$ and $\val_{\sigma,\tau}(x)=\val_{\sigma,\tau}(\tau(x))$.
+So $g(p)=g(x)=M$ and $p\in Z$ --- and this is the step at which the
+hypothesis on $C_{\min}$ in \Cref{thm:bsi-nostall} is replaced by the
+best-response property.
+
+Let $x\in Z\cap\Vmax$, $p:=\sigma(x)$, $q:=\bar\sigma(x)$, so $L(x)=L(p)$
+and $U(x)=\max(U(p),U(q))$. If $U(p)\ge U(q)$ then $U(x)=U(p)$ and
+$g(p)=U(x)-L(x)=M$, so $p\in Z$. Otherwise $U(q)>U(p)$, whence
+$U(x)=U(q)$; were $x\in S_\sigma$ we should have $x\in C_{\max}$ in either
+variant, against $Z\cap C_{\max}=\emptyset$; so $x\notin S_\sigma$, that is
+$L(q)\le L(p)=L(x)$, and therefore
+$g(q)=U(x)-L(q)\ge U(x)-L(x)=M$, forcing $g(q)=M$ and $q\in Z$.
+
+So $Z$ is a nonempty sink-free set in which every average vertex keeps both
+successors and every controlled vertex keeps one; by \Cref{lem:trapchar} it
+is a trap, contradicting stopping. Hence $Z\cap C_{\max}\ne\emptyset$.
+
+For the consequence: $R_{\mathrm{BR}}$ switches a nonempty subset of
+$S_\sigma$ whenever $S_\sigma\ne\emptyset$, so by \Cref{lem:switch} the
+vector $\val_\sigma$ strictly increases at each round and no strategy
+recurs; the rule can therefore halt only at $S_\sigma=\emptyset$, which is
+optimality by \Cref{lem:local-global}.
+\end{proof}
+
+\begin{remark}\label{rem:bsi-br}
+\Cref{prop:bsi-br} is not \Cref{thm:bsi-nostall} specialised: BSI with
+$\tau$ reset to a best response after every round is a strictly one-sided
+rule, its Min track carrying no state, and the proposition says that
+Max's veto by $\val^\tau$ alone is already enough. Nor is it
+Hoffman--Karp, which switches all of $S_\sigma$; $R_{\mathrm{BR}}$
+switches the subset that Min's own value function endorses, and that
+subset can be small enough to change the order of the round count. On the
+ladder $L_n$ of \Cref{def:ladder}, exhaustively over all $2^{n}$ starting
+strategies and in exact arithmetic, the worst case for $R_{\mathrm{BR}}$
+is $\lfloor\log_2n\rfloor+1$ rounds --- $1,2,2,3,3,3,3,4$ at
+$n=1,\dots,8$ --- where all-switches takes $n$; the same counts hold on
+the two-player disjoint union of $L_n$ with its dual.
+
+Being one-sided, $R_{\mathrm{BR}}$ is a candidate for the barriers, and
+they miss it for the same reason they miss \Cref{def:bsi}. It is not
+residue-blind: on the normal form $N'(G)$ of \Cref{lem:normalform} no
+controlled vertex has a controlled successor, and a residue-blind rule is
+by definition all-switches there, whereas $R_{\mathrm{BR}}$ still filters
+$S_\sigma$ by an order --- that of $\val^\tau$ --- which $\val_\sigma$ does
+not determine. So neither \Cref{thm:normalform-barrier} nor
+\Cref{thm:window-barrier} applies, and \Cref{cor:no-height} does not
+either, its measures being required to increase along \emph{every}
+improving switch. The round count of $R_{\mathrm{BR}}$ is open, exactly as
+that of \Cref{def:bsi} is.
+
+Attribution: carrying both players' strategies and letting each filter the
+other's switches is the symmetric strategy improvement of
+Schewe--Trivedi--Varghese for parity games. What is different here is the
+model and the filter: their rule uses the opponent's improvement in the
+dual game to break ties among improving switches, whereas
+\Cref{def:bsi} and \Cref{prop:bsi-br} use the opponent's \emph{value}
+$\val^\tau$ as a veto, which can leave $S_\sigma$ nonempty and still be
+right to halt.
+\end{remark}
+
 \begin{proposition}[Stopping is necessary]\label{prop:bsi-nonstopping}
 For the SSG on non-sinks $0,\dots,5$ with $t_0=6$, $t_1=7$, types
 $(\mathrm{avg},\min,\max,\max,\mathrm{avg},\max)$ and successor pairs
