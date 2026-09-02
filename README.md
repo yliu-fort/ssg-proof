@@ -9,7 +9,7 @@ The repository holds two kinds of artefact:
 | Path | Purpose |
 | --- | --- |
 | `*.tex` (repo root) | the prose proof, compiled to PDF with `latexmk` |
-| `lean/` | a Lean 4 + Mathlib project for machine-checking the argument |
+| `lean/` | a Lean 4 + Mathlib project for machine-checking the argument; `SSGProof/Blowup.lean` formalises `thm:blowup` of `frontier.tex` (core library only, no `sorry`, standard axioms) |
 | `scripts/setup-env.sh` | one-shot environment setup |
 | `Makefile` | build entry points |
 

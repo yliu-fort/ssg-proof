@@ -4477,6 +4477,19 @@ orientation's walk from the old sink has length only $4,4,5,5,6$; and
 reversing the inner edges in the directions of $z$ alone, $v\mapsto
 s(v)\oplus z$, which is a unique sink orientation, is no longer acyclic
 from the second level on.
+
+The theorem is also machine-checked. The file \texttt{lean/SSGProof/Blowup.lean}
+of the repository formalises cube orientations as maps
+$(\iota\to\mathbf{2})\to(\iota\to\mathbf{2})$, the Szab\'o--Welzl condition,
+acyclicity as the existence of a bounded rank decreasing along every edge,
+the bottom-antipodal step and the height function, and proves in Lean~4
+--- with no import beyond the core library, and depending only on the
+axioms \texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound}
+--- the three statements \texttt{isUSO\_blow} (for every $z$ and every
+parity function), \texttt{isAcyclic\_blow} (likewise) and
+\texttt{walk\_blow}: from the start of the proof the bottom-antipodal walk
+of the blow-up reaches $(0,0,u)$ after exactly $2h(u)+2$ steps and at no
+earlier step. It is the first result of this document to be formalised.
 \end{remark}
 
 \begin{remark}[What a game would have to read]\label{rem:blowup-realise}
