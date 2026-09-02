@@ -42,10 +42,10 @@ We give a self-contained, fully proved development of the theory
 surrounding the decision problem \textsc{SSG-Value}: given a simple
 stochastic game and a start vertex $v_0$, decide whether
 $\val(v_0)\ge\tfrac12$. Everything asserted below is proved from first
-principles --- with two imported exceptions, named where they occur (the
-classical determinacy statement of \Cref{thm:determinacy} and the
-Schurr--Szab\'o bound of \Cref{rem:f-auso}), and a handful of computations
-recorded explicitly as measurements --- and every negative statement is
+principles --- with one imported exception, named where it occurs (the
+classical determinacy statement of \Cref{thm:determinacy}), and a handful of
+computations recorded explicitly as measurements --- and every negative
+statement is
 witnessed by an explicit instance verified in exact rational arithmetic.
 
 \emph{Foundations.} The monotone fixed-point theory of the Shapley
@@ -174,8 +174,10 @@ and we locate the exact ceiling the first two laws impose: it is
 $1,2,4,7,13$ for $m\le5$, while the largest bottom-antipodal height of an
 acyclic unique sink orientation --- which, by \Cref{cor:ceiling-general},
 every all-switches run of every stopping game is, degenerate or not --- is
-$1,2,4,7,12$ (\Cref{prop:auso-census,prop:hstar-five}), so those two laws
-are strictly weaker than the axioms they come from; with the fourth law
+$1,2,4,7,12$ (\Cref{prop:auso-census,prop:hstar-five}) and grows
+exponentially, by a height-doubling blow-up proved here rather than
+imported (\Cref{thm:blowup}), so those two laws are strictly weaker than the
+axioms they come from; with the fourth law
 added the ceiling is reported to drop to $12$ at $m=5$, a computation
 recorded as a measurement (\Cref{rem:flat}). The tallest orientation the
 census admits at $m=4$ is realised, by a nondegenerate two-player stopping
@@ -249,11 +251,8 @@ Given an SSG $G$ and a start vertex $v_0$, decide whether
 $\val(v_0)\ge\tfrac12$.
 \end{problem}
 
-The first of the two external facts we import is the following classical
-determinacy statement (the second is the Schurr--Szab\'o lower bound on
-bottom-antipodal heights, cited in \Cref{rem:f-auso} and used only to close
-a programme of ours); everything else in this document is proved from
-scratch.
+The only external fact we import is the following classical determinacy
+statement; everything else in this document is proved from scratch.
 
 \begin{theorem}[Positional determinacy; Shapley, Condon]\label{thm:determinacy}
 For every SSG and every vertex $u$,
@@ -3842,8 +3841,8 @@ What this does not do should be said plainly. It yields no bound on any
 algorithm, no polynomial class, no barrier and no lower-bound family, and
 quantitatively it improves only the trivial ceiling $L\le2^{m}-1$ --- trivial
 because $\Phi(\val_{\sigma})$ strictly increases along the run --- to
-$h^{\ast}(m)$, which is itself at least $2^{\lfloor m/2\rfloor}$ by the
-Schurr--Szab\'o bound cited in \Cref{rem:f-auso}. Its value is
+$h^{\ast}(m)$, which is itself at least $2^{m/2+1}-2$ (even $m$) or
+$3\cdot2^{(m-1)/2}-2$ (odd $m$) by \Cref{thm:blowup}. Its value is
 bookkeeping: it removes a hypothesis under which half of this document's
 own instances fell, so that the pivot may be stated without one.
 \end{remark}
@@ -3870,14 +3869,13 @@ Degeneracy is common and was skipped, $1236$ instances of it.
 What \Cref{cor:f-auso} settles is the question \Cref{rem:allsw-laws} leaves
 open. It is known that $h^{\ast}(m)$ grows exponentially: Schurr and Szab\'o
 construct a blow-up that raises the dimension by two and at least doubles the
-bottom-antipodal height, so iterating it from a two-dimensional seed of height
-$2$ gives $h^{\ast}(m)\ge2^{\lfloor m/2\rfloor}$. We have not
-reproved that here. It is the second and last external input in this document,
-after the classical determinacy statement of \Cref{thm:determinacy}, and unlike
-that one it is used only to close a programme of ours, never to support a
-positive claim; everything else in this subsection is proved here. Granting it, $f$ is exponential and no amount of
-further law-deriving can make the counting argument of \Cref{rem:allsw-laws}
-subexponential. \Cref{thm:component-bound} is unaffected, since it constrains
+bottom-antipodal height. \Cref{thm:blowup} below proves a blow-up of that
+kind from scratch, with the recurrence $h^{\ast}(m+2)\ge2h^{\ast}(m)+2$, so
+that nothing is imported: iterating it from the one- and two-dimensional
+seeds gives $h^{\ast}(m)\ge3\cdot2^{(m-1)/2}-2$ for odd $m$ and
+$h^{\ast}(m)\ge2^{m/2+1}-2$ for even $m$. So $f$ is exponential and no
+amount of further law-deriving can make the counting argument of
+\Cref{rem:allsw-laws} subexponential. \Cref{thm:component-bound} is unaffected, since it constrains
 the graph rather than the schedule.
 
 \Cref{prop:allsw-auso} relocates the question. Its nondegeneracy hypothesis
@@ -4215,17 +4213,15 @@ law-based argument is $h^{\ast}$ and not $f$. Whether $h^{\ast}$ itself is
 attained by improvement orientations of stopping games is the realisability
 question of \Cref{prop:auso-size}, and is untouched by this.
 
-One byproduct. The Schurr--Szab\'o blow-up cited in \Cref{rem:f-auso} raises the
-dimension by two and at least doubles the bottom-antipodal height, so any exact
-value of $h^{\ast}$ is a seed for it. Seeding at $m=4$ and at $m=5$ instead of at
-$m=2$ improves the constant in the exponential lower bound of \Cref{rem:f-auso}
-from $h^{\ast}(m)\ge2^{\lfloor m/2\rfloor}$ to
+One byproduct. The blow-up of \Cref{thm:blowup} raises the dimension by two
+and takes the height $h$ to $2h+2$, so any exact value of $h^{\ast}$ is a seed
+for it. Seeding at $m=4$ and at $m=5$ instead of at $m=1$ or $m=2$ gives
 \[
-  h^{\ast}(m)\;\ge\;\tfrac74\,2^{m/2}\quad(m\ \text{even},\ m\ge4),
+  h^{\ast}(m)\;\ge\;9\cdot2^{(m-4)/2}-2\quad(m\ \text{even},\ m\ge4),
   \qquad
-  h^{\ast}(m)\;\ge\;3\cdot2^{(m-1)/2}\quad(m\ \text{odd},\ m\ge5),
+  h^{\ast}(m)\;\ge\;14\cdot2^{(m-5)/2}-2\quad(m\ \text{odd},\ m\ge5),
 \]
-a factor $7/4$ and $3$ respectively over what the two-dimensional seed gives.
+that is $16,34,70,\dots$ at $m=6,8,10$ and $26,54,110,\dots$ at $m=7,9,11$.
 \end{remark}
 
 Two further facts about $h^{\ast}$ are cheap and worth recording, since
@@ -4315,18 +4311,160 @@ persists is not proved, and we do not use it.
 \end{proof}
 
 \begin{remark}\label{rem:D-quadratic}
-The operation was found by a search for a rule of the Schurr--Szab\'o shape
+The operation was found by a search over rules of the Schurr--Szab\'o shape
 --- outer outmap a function of the layer and of the inner height modulo a
-small integer --- that would double the height; no rule of that shape does,
-and $D$ is the best of them. It is weaker than the Schurr--Szab\'o blow-up
-itself, which at least doubles the height per two dimensions and gives
-$h^{\ast}(9)\ge48$ from the seed $h^{\ast}(5)=12$, and weaker than
-\Cref{lem:hstar-super} beyond dimension $9$. Its interest is the other
+small integer --- with the translation vector fixed at $\bar1$;
+\Cref{thm:blowup} below shows that the vector was the only thing wrong with
+it, since with $z=o\oplus u$ the same rule doubles. Its interest is the other
 clause: from dimension $5$ on its products violate Holt--Klee, so by
 \Cref{prop:oneplayer-lp} no nondegenerate one-player game realises them,
 and any realisation --- which is the open question of \Cref{prop:auso-size}
 for this family as for every other --- must use both players, as
 \Cref{prop:auso-seven} does at dimension $4$.
+\end{remark}
+
+\begin{theorem}[A height-doubling blow-up]\label{thm:blowup}
+Let $s$ be an acyclic unique sink orientation of the $m$-cube, $o$ its
+sink, $u$ a vertex of maximal bottom-antipodal height $h:=h(u)$, and
+$z:=o\oplus u$. On the $(m+2)$-cube with vertices $(\alpha,\beta,v)$ define
+the outmap $B(s)$ by its inner part
+\[
+  I_{\alpha\beta}(v):=\begin{cases} s(v\oplus z),&(\alpha,\beta)=(0,0),\\
+  s(v),&\text{otherwise,}\end{cases}
+\]
+and its outer part $O_{\alpha\beta}(v)\subseteq\{\alpha,\beta\}$, which
+depends only on the layer and on the parity of $h(v)$:
+\[
+ \begin{array}{c|cc}
+   (\alpha,\beta) & h(v)\ \text{even} & h(v)\ \text{odd}\\ \hline
+   (0,0) & \emptyset & \emptyset\\
+   (1,0) & \{\alpha,\beta\} & \{\alpha\}\\
+   (0,1) & \{\beta\} & \{\alpha,\beta\}\\
+   (1,1) & \{\alpha\} & \{\beta\}
+ \end{array}
+\]
+Then $B(s)$ is an acyclic unique sink orientation of the $(m+2)$-cube, and
+its bottom-antipodal height is at least $2h+2$. Consequently
+\[
+  h^{\ast}(m+2)\;\ge\;2h^{\ast}(m)+2\qquad(m\ge1),
+\]
+so that $h^{\ast}(m)\ge3\cdot2^{(m-1)/2}-2$ for odd $m$ and
+$h^{\ast}(m)\ge2^{m/2+1}-2$ for even $m$; seeded at $h^{\ast}(4)=7$ and
+$h^{\ast}(5)=12$ instead, $h^{\ast}(m)\ge9\cdot2^{(m-4)/2}-2$ for even
+$m\ge4$ and $h^{\ast}(m)\ge14\cdot2^{(m-5)/2}-2$ for odd $m\ge5$.
+\end{theorem}
+
+\begin{proof}
+Write $L$ for a layer, $O_L(v)$ for the outer part and $I_L(v)$ for the
+inner part. Translation is an automorphism of the cube, so
+$v\mapsto s(v\oplus z)$ is again an acyclic unique sink orientation of the
+inner cube, with sink $o\oplus z=u$.
+
+\emph{Unique sink.} Let $(L,v)\ne(L',v')$; we exhibit a coordinate in
+$(B(s)(L,v)\oplus B(s)(L',v'))\cap((L,v)\oplus(L',v'))$. If $L=L'$ then
+$v\ne v'$ and the inner parts are values of one unique sink orientation
+($s$ or its translate), which supplies an inner coordinate. If $L\ne L'$
+and $v=v'$, the required coordinate is outer, and it exists because for
+each parity the outer rule is itself a unique sink orientation of the
+$2$-cube: for even $h(v)$ the outmaps $\emptyset,\{\alpha,\beta\},
+\{\beta\},\{\alpha\}$ at $(0,0),(1,0),(0,1),(1,1)$ satisfy the
+Szab\'o--Welzl condition on all six pairs, and so do
+$\emptyset,\{\alpha\},\{\alpha,\beta\},\{\beta\}$ for odd $h(v)$; the
+inner parts, which may differ when one layer is $(0,0)$, are irrelevant
+since no inner coordinate lies in $(L,v)\oplus(L',v')$. If $L\ne L'$ and
+$v\ne v'$ with neither layer equal to $(0,0)$, both inner parts are values
+of $s$ and supply an inner coordinate. Finally let $L=(0,0)\ne L'$ and
+$v\ne v'$: then $O_L(v)=\emptyset$ while $O_{L'}(v')$ contains, in both
+parities, a coordinate on which $L'$ has a $1$ --- $\alpha$ for
+$L'=(1,0)$, $\beta$ for $L'=(0,1)$, and $\alpha$ or $\beta$ for
+$L'=(1,1)$ --- and that coordinate lies in $L\oplus L'$.
+
+\emph{Acyclic.} No outer edge leaves layer $(0,0)$, and inside it the
+orientation is the translate of $s$, so a directed cycle meeting $(0,0)$
+would lie in it and contradict acyclicity. A cycle avoiding $(0,0)$ uses
+inner edges of the three layers $(1,0),(0,1),(1,1)$, all of which carry
+the same $s$, and outer edges among them: $(1,0)\to(1,1)$ by $\beta$ at
+even $h$, $(0,1)\to(1,1)$ by $\alpha$ at odd $h$, $(1,1)\to(0,1)$ by
+$\alpha$ at even $h$ and $(1,1)\to(1,0)$ by $\beta$ at odd $h$. Projecting
+the cycle to the inner cube gives a closed directed walk of $s$, hence a
+constant $v$; but every outer cycle among the three layers uses, at that
+one $v$, two outer edges with opposite parity requirements ---
+$(1,0)\to(1,1)\to(1,0)$ needs $h(v)$ even and odd, so does
+$(0,1)\to(1,1)\to(0,1)$, and the four-cycle
+$(1,0)\to(1,1)\to(0,1)\to(1,1)$ needs even, even and odd --- which is
+impossible. So $B(s)$ has no directed cycle, and being a unique sink
+orientation of a cube it has a unique sink, namely $(0,0,u)$.
+
+\emph{Height.} Along the bottom-antipodal walk of $s$ the height drops by
+exactly one per step. Start at $(1,0,u)$ if $h$ is even and at $(0,1,u)$
+if $h$ is odd; in either case the outer part is $\{\alpha,\beta\}$ and the
+inner part is $s(u)$, so one step leads to the other of the two layers
+with the inner vertex advanced one step along the walk of $s$, whose
+height now has the other parity --- and the outer part is again
+$\{\alpha,\beta\}$. This repeats for $h$ steps, at the end of which the
+inner vertex is $o$, of height $0$, and the layer is $(1,0)$ in both
+cases. There $O=\{\alpha,\beta\}$ and $I=s(o)=\emptyset$, so the next
+vertex is $(0,1,o)$, where $O=\{\beta\}$ leads to $(0,0,o)$: two more
+steps. In layer $(0,0)$ the walk is, in the coordinates $y:=v\oplus z$,
+the bottom-antipodal walk of $s$ from $y=o\oplus z=u$, which has $h$
+further steps before reaching $y=o$, that is $v=u$, the sink of $B(s)$.
+The walk has length $2h+2$. The numerical bounds follow by induction from
+$h^{\ast}(1)=1$, $h^{\ast}(2)=2$, $h^{\ast}(4)=7$ and $h^{\ast}(5)=12$
+(\Cref{prop:auso-census,prop:hstar-five}).
+\end{proof}
+
+\begin{remark}\label{rem:blowup-measured}
+We ran the construction in exact arithmetic on the one-cube, on the
+two-cube, on $G^{\sharp}$'s orientation and on the height-$12$
+orientation of \Cref{prop:hstar-five}: the heights are $4,10,22,46,94$;
+$2,6,14,30$; $7,16,34,70$; and $12,26,54,110$, each exactly $2h+2$, with
+the unique-sink and acyclicity predicates confirmed at every step. Two
+things the computation adds to the theorem. First, the translation vector
+$z=o\oplus u$ is a \emph{single} coordinate at every level from the second
+on --- the $\alpha$ coordinate introduced two dimensions earlier --- so
+the layer $(0,0)$ of a level presents the previous level ``as if its
+$\alpha$ had been flipped''. Second, the vector is the whole difference
+between doubling and not: with $z=\bar1$ the operation is $D$ of
+\Cref{prop:D-quadratic} and the heights are $4,9,16,25,36$; with the
+reversal $v\mapsto\bar1\oplus s(v)$ of all inner edges in place of the
+translation --- the operation a game performs by exchanging its two sink
+payoffs --- the heights are $4,10,16,23,30$, because the reversed
+orientation's walk from the old sink has length only $4,4,5,5,6$; and
+reversing the inner edges in the directions of $z$ alone, $v\mapsto
+s(v)\oplus z$, which is a unique sink orientation, is no longer acyclic
+from the second level on.
+\end{remark}
+
+\begin{remark}[What a game would have to read]\label{rem:blowup-realise}
+\Cref{thm:blowup} sharpens the realisability question of
+\Cref{prop:auso-size} to a statement about what the values of a game can
+express. Two of its three ingredients are available. Its outer
+coordinates switch in every round of the inner walk, and a switching
+vertex of a game can do that: on the ladder $L_n$ a Max vertex whose two
+options are mixtures of $\val(v_1)$ and $\val(v_2)$ with a suitable
+threshold flips $3,4,4,4,7,8,8,8$ times along the run of length
+$n=3,\dots,10$, measured in exact arithmetic over all lines through the
+run's $(\val(v_1),\val(v_2))$ path. And the inner walk is run twice, which
+in a game means that the inner values keep increasing, as \Cref{lem:switch}
+guarantees along every run. The third ingredient is the obstacle: on the
+layer $(0,0)$ the inner orientation is that of $v\oplus e_\alpha$, the
+\emph{bit} of a coordinate that switches every round, whereas the values
+of a game reveal only the \emph{order} of that coordinate's two options,
+which alternates. The substitutes a game does offer --- exchanging the
+sink payoffs, thresholds on monotone quantities, the switchability of the
+previous level's outer vertices --- give heights $4,10,16,23,30$, at most
+$4,6,8$ and at most $4,8,10$ respectively in the same rule family, that is
+linear growth. So either there is a gadget that reads such a bit, and
+then an SSG-realisable family of exponential bottom-antipodal height
+exists, or there is a theorem that no realisable orientation can, and then
+the improvement orientations of stopping games form a class of acyclic
+unique sink orientations on which the bottom-antipodal walk is
+subexponential: that dichotomy is the pivot of \Cref{rem:auso-size},
+restated in a form in which one side is a construction and the other a
+lemma about linear functionals of value vectors. A datum on the same
+side: the linear-programming orientation of the Klee--Minty cube, on which
+Dantzig's rule is exponential, has bottom-antipodal height exactly $d$ in
+every dimension $d\le12$, exact arithmetic again.
 \end{remark}
 
 \subsection{A rule that needs exponentially many switches}
