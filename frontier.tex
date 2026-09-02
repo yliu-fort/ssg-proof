@@ -4070,6 +4070,50 @@ two --- and \Cref{prop:oneplayer-lp} makes every nondegenerate
 one-player improvement orientation Holt--Klee.
 \end{proof}
 
+\begin{proposition}[The two-player cube of $G^{\sharp}$]\label{prop:gsharp-bigcube}
+Orient the $6$-cube of profiles $(\sigma,\tau)$ of $G^{\sharp}$ by letting a
+controlled vertex be \emph{out} at a profile when its owner strictly prefers
+its other action under the profile's value vector --- Max when the other
+action has the larger value, Min when it has the smaller. Computed from the
+normal form printed in \Cref{prop:auso-seven}, this orientation has no tie
+at any of the $384$ incidences, is a unique sink orientation, is acyclic,
+and satisfies Holt--Klee; its bottom-antipodal height is $5$. For each
+$\sigma$ the face $\{\sigma\}\times\{0,1\}^{2}$ has a unique sink, at
+Min's best response to $\sigma$, and the Max coordinates out at that sink
+are exactly $s_{G^{\sharp}}(\sigma)$: the improvement orientation of the
+Max cube is the sink projection of the two-player orientation. So the
+projection destroys Holt--Klee, which the $6$-cube has and the $4$-cube
+lacks (\Cref{cor:seven-two-player}), and raises the bottom-antipodal height
+from $5$ to $7$.
+\end{proposition}
+
+\begin{proof}
+A computation in exact arithmetic: the $64$ profile values by one linear
+solve each, the $384$ strict comparisons, the Szab\'o--Welzl condition on
+all pairs, acyclicity by depth-first search, Holt--Klee by a unit
+vertex-capacity maximum flow on each of the $729$ faces, and the projection
+by locating the Min-face sinks. The rows are those of
+\Cref{prop:auso-seven}; the Max-cube outmap recomputed from them agrees
+with the one printed there.
+\end{proof}
+
+\begin{remark}\label{rem:gsharp-bigcube}
+The two-player orientation is the unique sink orientation that the
+linear complementarity formulation of a stopping game induces on its
+cube of complementary bases, after Stickney and Watson, and that such
+orientations are Holt--Klee is the theorem of G\"artner, Morris and
+R\"ust; we use neither fact, having checked the instance directly. What
+the instance shows is the shape of the two-player half of the
+realisability question: every improvement orientation of a stopping SSG
+with Min vertices is the sink projection of a Holt--Klee unique sink
+orientation of a larger cube, and the projection is where the height is
+gained --- here two extra coordinates take a Holt--Klee orientation of
+height $5$ to a non-Holt--Klee one of height $7$. Whether every acyclic
+unique sink orientation is such a projection, with polynomially many extra
+coordinates, and which of those projections a game actually realises, is
+\Cref{rem:blowup-realise} in another guise.
+\end{remark}
+
 \begin{remark}\label{rem:oneplayer-lp}
 \Cref{prop:oneplayer-lp} is a rediscovery and must be labelled one. $X(G)$ is
 the classical occupancy, or dual, linear programme of a transient Markov
