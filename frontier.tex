@@ -2943,7 +2943,10 @@ of $Z$ need \emph{not} be strictly switchable --- among $2976$
 (game, non-optimal strategy) pairs drawn from stopping games, $481$ wrong
 vertices of $Z$ had $x(\bar\sigma(v))=x(\sigma(v))$ --- but in every one
 of those $2976$ pairs at least one wrong vertex of $Z$ was strictly
-switchable, as the lemma asserts. The lemma does not yield an algorithm:
+switchable, as the lemma asserts; an independent second run over $575$
+such pairs from random stopping games with three to eight non-sinks, every
+Max strategy of each game enumerated, met $90$ further wrong-but-not-strict
+vertices of $Z$ and no violation. The lemma does not yield an algorithm:
 $Z$ is defined through $w^\ast$, so computing it is again the whole
 problem. What it does is identify \emph{which} vertices a selection rule
 should be trying to find.
@@ -3105,7 +3108,10 @@ function of an absorbing chain as in Kemeny and Snell, and ``transfer
 impedance'' and ``escape probability'' are the vocabulary of Doyle and
 Snell. The identity was verified in exact rational arithmetic on $544$
 (game, profile, switched vertex) instances over stopping games, with no
-mismatch, and the equality $h=h'$ was confirmed in every case.
+mismatch, and the equality $h=h'$ was confirmed in every case; a second,
+independent run over $668$ instances drawn from random stopping games with
+three to eight non-sinks, all three vertex kinds present and sinks allowed
+as successors, again gave no mismatch and $h=h'$ throughout.
 
 Its content is this. The numerator $h(v\to u)\in[0,1]$ is a bounded
 \emph{transfer impedance}: it says how strongly a perturbation at $u$ is
