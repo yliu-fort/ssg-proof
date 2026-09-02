@@ -6394,7 +6394,10 @@ $2^{\Theta(a\log a)}$, worse than the $2^{a}\mathrm{poly}(N)$ of
 \Cref{thm:compare-equivalence} each of the $O((a+2)\log(a+2))$ comparisons
 is itself an instance of \Cref{prob:main}. The decoding procedure was
 implemented and checked against exhaustive computation on $903$ stopping
-games, reproducing the exact value vector every time. The theorem is a
+games, reproducing the exact value vector every time, and a second
+implementation written independently from the statement reproduced it on
+$4000$ random stopping games with three to twelve non-sinks, both players
+present and sinks as successors, again without a mismatch. The theorem is a
 rediscovery and is attributed as one: the decoder is the reconstruction
 half of Gimbert and Horn's algorithm for games with few random vertices,
 which enumerates the orderings of the random vertices and rebuilds the
