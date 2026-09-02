@@ -52,3 +52,15 @@ archived in `../round14/harness/` and the full round-14 code under the
 scratchpads of sessions `26460c0d` and `ef1cfad9`), drop the routes whose
 results are already in `results/`, and call the Workflow tool with that
 `scriptPath`.
+
+## Run log
+
+- 06:50 UTC: launched (run `wf_2e2aee70-8e9`, task `w3jg6ovj6`).
+- ~07:21 UTC: the Claude Code process exited and took the run with it; 15
+  agents had started and 2 paper audits (structure, foundations) had
+  returned. Their findings were repaired in commits `551a6ad`, `c1de116`,
+  `ab23d8d`.
+- 08:15 UTC: relaunched from the same session with `resumeFromRunId`
+  (task `wqdgy614x`); the two audits were served from cache, the 7 routes and
+  6 remaining paper audits re-ran from scratch (their scratch directories on
+  disk were kept).
