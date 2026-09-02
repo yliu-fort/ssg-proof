@@ -4478,6 +4478,19 @@ reversing the inner edges in the directions of $z$ alone, $v\mapsto
 s(v)\oplus z$, which is a unique sink orientation, is no longer acyclic
 from the second level on.
 
+The first level is realised: $B$ of the one-cube, the orientation
+$(0,1,3,6,7,4,5,2)$ of height $4$, is the improvement orientation of a
+nondegenerate one-player stopping SSG on $58$ vertices (three Max,
+fifty-three average, two sinks), found by the integer search of
+\Cref{prop:auso-seven}'s kind and verified from the game; it is Holt--Klee,
+as \Cref{prop:oneplayer-lp} requires. The second level, of height $10$ at
+dimension $5$, is not Holt--Klee, so any realisation needs Min vertices,
+and it is the smallest instance on which the translation is genuine; our
+searches for it, with two or three Min vertices, did not converge, but the
+same searches also failed to re-find the known walks of $G^{\sharp}$ and
+of a one-player height-$6$ game within the same budget, so that is not
+evidence.
+
 The theorem is also machine-checked. The file \texttt{lean/SSGProof/Blowup.lean}
 of the repository formalises cube orientations as maps
 $(\iota\to\mathbf{2})\to(\iota\to\mathbf{2})$, the Szab\'o--Welzl condition,
