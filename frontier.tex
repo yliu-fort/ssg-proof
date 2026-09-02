@@ -4503,22 +4503,46 @@ threshold flips $3,4,4,4,7,8,8,8$ times along the run of length
 $n=3,\dots,10$, measured in exact arithmetic over all lines through the
 run's $(\val(v_1),\val(v_2))$ path. And the inner walk is run twice, which
 in a game means that the inner values keep increasing, as \Cref{lem:switch}
-guarantees along every run. The third ingredient is the obstacle: on the
-layer $(0,0)$ the inner orientation is that of $v\oplus e_\alpha$, the
-\emph{bit} of a coordinate that switches every round, whereas the values
-of a game reveal only the \emph{order} of that coordinate's two options,
-which alternates. The substitutes a game does offer --- exchanging the
-sink payoffs, thresholds on monotone quantities, the switchability of the
-previous level's outer vertices --- give heights $4,10,16,23,30$, at most
-$4,6,8$ and at most $4,8,10$ respectively in the same rule family, that is
-linear growth. So either there is a gadget that reads such a bit, and
-then an SSG-realisable family of exponential bottom-antipodal height
-exists, or there is a theorem that no realisable orientation can, and then
-the improvement orientations of stopping games form a class of acyclic
-unique sink orientations on which the bottom-antipodal walk is
-subexponential: that dichotomy is the pivot of \Cref{rem:auso-size},
-restated in a form in which one side is a construction and the other a
-lemma about linear functionals of value vectors. A datum on the same
+guarantees along every run. The third ingredient needs care, and a first analysis of it was wrong.
+The condition is not the obstacle: since the outer rule returns
+$\emptyset$ exactly on the layer $(0,0)$, the orientation $B(s)$ is
+unchanged if one reads its definition as ``translate the inner orientation
+exactly when both outer coordinates are at rest'', and rest is readable in
+the same round --- a Max vertex $x$ with successors $p,q$ is at rest iff
+$\val(x)=\max(\val(p),\val(q))$, and the right-hand side is the value of a
+Max vertex over $p$ and $q$. The obstacle is the operation. On that layer
+every inner vertex must compare its options as it would at $v\oplus e_j$,
+and the state of $j$ reaches the rest of the game only through
+$\val(j)$, so the inner game would have to be shown the \emph{anti-value}
+$\val(j^{(0)})+\val(j^{(1)})-\val(j)$ of $j$, which is strictly decreasing
+in $\val(j)$. No vertex of any SSG has such a value: under fixed
+strategies every value is a nonnegative combination of the others, and
+Min's best response is a minimum of such combinations, so every value is
+nondecreasing in every other. Substituting a value therefore cannot do
+it. What a gadget could still do is reproduce the \emph{signs}: an inner
+vertex whose two options read $j$ with weights $w_p,w_q$ compares, at
+$v\oplus e_j$, a quantity in which the coefficient of $\val(j)$ has the
+opposite sign and the constant is shifted by
+$(w_p-w_q)(\val(j^{(0)})+\val(j^{(1)}))$; both the swapped weights and the
+shift are mixtures of readable values, and the conditional presence of a
+summand is available through a Min vertex against a threshold signal
+$\theta$, since $\min(\theta,x)$ is $x$ when $\theta$ is high and $\theta$
+when it is low. Whether those pieces assemble into a game --- with the
+threshold signal itself produced from the two rest predicates, and with
+the precision that the nested scales require --- is a finite design
+problem that we have not carried out. The substitutes we did try ---
+exchanging the sink payoffs, thresholds on monotone quantities, the
+switchability of the previous level's outer vertices --- give heights
+$4,10,16,23,30$, at most $4,6,8$ and at most $4,8,10$ respectively in the
+same rule family, that is linear growth. So either the weight-swapping
+gadget exists, and then an SSG-realisable family of exponential
+bottom-antipodal height exists, or there is a theorem that the sign
+patterns of a translated orientation cannot be produced by monotone
+readouts of the untranslated one, and then the improvement orientations of
+stopping games form a class of acyclic unique sink orientations on which
+the bottom-antipodal walk is subexponential: that dichotomy is the pivot
+of \Cref{rem:auso-size}, restated in a form in which one side is a gadget
+and the other a lemma about monotone functionals of value vectors. A datum on the same
 side: the linear-programming orientation of the Klee--Minty cube, on which
 Dantzig's rule is exponential, has bottom-antipodal height exactly $d$ in
 every dimension $d\le12$, exact arithmetic again.
