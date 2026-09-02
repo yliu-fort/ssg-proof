@@ -3944,9 +3944,13 @@ conditional in \Cref{rem:auso-seven} holds.
 
 \begin{proof}
 That orientation violates Holt--Klee --- we verified this by a unit
-vertex-capacity max-flow test on every face, which returns three
-vertex-disjoint monotone source-to-sink paths on the whole $4$-cube where
-four are required --- and \Cref{prop:oneplayer-lp} makes every nondegenerate
+vertex-capacity max-flow test on every face, which returns two
+internally vertex-disjoint monotone source-to-sink paths on the whole
+$4$-cube where four are required, a count confirmed by enumerating all
+$42$ simple directed source-to-sink paths of that orientation and taking
+a largest pairwise internally disjoint subfamily; already a $3$-face
+(the one spanned by coordinates $1,2,4$ at the vertex $4$) carries only
+two --- and \Cref{prop:oneplayer-lp} makes every nondegenerate
 one-player improvement orientation Holt--Klee.
 \end{proof}
 
@@ -4104,6 +4108,107 @@ from $h^{\ast}(m)\ge2^{\lfloor m/2\rfloor}$ to
   h^{\ast}(m)\;\ge\;3\cdot2^{(m-1)/2}\quad(m\ \text{odd},\ m\ge5),
 \]
 a factor $7/4$ and $3$ respectively over what the two-dimensional seed gives.
+\end{remark}
+
+Two further facts about $h^{\ast}$ are cheap and worth recording, since
+they bound what a construction may hope for. The first is that heights add
+under a composition that keeps both walks going at once; the second is an
+explicit operation, found in the course of the search for a family, that
+raises the dimension by two and the height by a growing but merely
+additive amount, and whose products leave the Holt--Klee class as soon as
+they are interesting.
+
+\begin{lemma}[Superadditivity of $h^{\ast}$]\label{lem:hstar-super}
+$h^{\ast}(k+l)\ge h^{\ast}(k)+h^{\ast}(l)$ for all $k,l\ge1$. In particular
+$h^{\ast}(6)\ge13$, $h^{\ast}(8)\ge14$ and $h^{\ast}(9)\ge19$.
+\end{lemma}
+
+\begin{proof}
+Let $s_1$ be an AUSO of the $k$-cube attaining $h^{\ast}(k)$, translated so
+that its sink is $0$, and $s_2$ an AUSO of the $l$-cube attaining
+$h^{\ast}(l)$; write $W(y):=y\oplus s_2(y)$ for the bottom-antipodal step of
+$s_2$, and fix $z\in\{0,1\}^{l}$. On the $(k+l)$-cube, with vertices
+$(v_1,v_2)$, put
+\[
+  s(v_1,v_2):=\bigl(s_1(v_1),\ s_2(v_2\oplus c(v_1))\bigr),\qquad
+  c(v_1):=\begin{cases}z,&v_1\ne0,\\0,&v_1=0.\end{cases}
+\]
+This is a unique sink orientation: two vertices differing in the first
+block are separated by $s_1$, and two with the same $v_1$ share $c(v_1)$
+and are separated by the translate $y\mapsto s_2(y\oplus c)$ of $s_2$,
+which is a USO because translation is an automorphism of the cube. It is
+acyclic: an edge in a first-block coordinate is oriented by $s_1$ alone,
+whatever $v_2$ is, so a directed cycle projects to a directed closed walk
+of $s_1$, which is constant since $s_1$ is acyclic; the cycle then lies in
+a single fibre $\{v_1\}\times\{0,1\}^{l}$, where the orientation is a
+translate of the acyclic $s_2$.
+
+Now follow the bottom-antipodal walk from $(v_1,v_2)$ with $v_1$ of
+$s_1$-height $h^{\ast}(k)$. Both blocks step simultaneously. While
+$v_1\ne0$ the second block satisfies $v_2\gets v_2\oplus s_2(v_2\oplus z)$,
+that is, in the coordinates $y:=v_2\oplus z$ it performs the walk
+$y\gets W(y)$ of $s_2$. After exactly $h^{\ast}(k)$ steps the first block
+reaches $0$ and stays there, and from then on the second block performs
+the walk of $s_2$ itself from the position $y\oplus z$ it has reached.
+Choose $x^{\ast}$ of $s_2$-height $h^{\ast}(l)$, set
+$z:=W^{h^{\ast}(k)}(x^{\ast})\oplus x^{\ast}$ and start the second block at
+$v_2:=x^{\ast}\oplus z$, so that $y_0=x^{\ast}$: after the first phase the
+second block sits at $y\oplus z=W^{h^{\ast}(k)}(x^{\ast})\oplus z=x^{\ast}$
+and the second phase takes $h^{\ast}(l)$ further steps. The walk has length
+$h^{\ast}(k)+h^{\ast}(l)$. The numerical cases use $h^{\ast}(5)=12$,
+$h^{\ast}(4)=7$ and $h^{\ast}(1)=1$; we ran the construction on the
+witnesses of \Cref{prop:auso-census} and \Cref{prop:hstar-five} and
+confirmed, in each case, a unique sink orientation, acyclic, with a walk of
+the stated length.
+\end{proof}
+
+\begin{proposition}[A dimension-raising operation of quadratic height]\label{prop:D-quadratic}
+For an AUSO $s_A$ of the $m$-cube with bottom-antipodal heights $h_A$, let
+$D(s_A)$ be the outmap on the $(m+2)$-cube with vertices $(\alpha,\beta,v)$
+whose inner part is $s_A(v\oplus\bar1)$ on the layer $(\alpha,\beta)=(0,0)$
+and $s_A(v)$ on the other three layers, and whose outer part is
+$\emptyset$ on $(0,0)$; $\{\alpha,\beta\}$ if $h_A(v)$ is even and
+$\{\alpha\}$ if odd, on $(1,0)$; $\{\beta\}$ if even and $\{\alpha,\beta\}$
+if odd, on $(0,1)$; and $\{\alpha\}$ if even and $\{\beta\}$ if odd, on
+$(1,1)$. Starting from the $1$-cube, four iterations of $D$ give acyclic
+unique sink orientations of the cubes of dimensions $3,5,7,9$ with
+bottom-antipodal heights
+\[
+  4,\qquad 9,\qquad 16,\qquad 25,
+\]
+every bottom-antipodal trace of every start obeying \Cref{cor:no-return}
+and \Cref{cor:law-b}. The orientation of dimension $3$ is Holt--Klee; those
+of dimensions $5$ and $7$ are not, a $3$-face of each carrying only two
+internally vertex-disjoint source-to-sink paths.
+\end{proposition}
+
+\begin{proof}
+A computation, which we performed from the definition above and not from
+the code of the search that produced it: for each of the four iterates we
+checked the Szab\'o--Welzl condition $(s(u)\oplus s(v))\cap(u\oplus v)\ne
+\emptyset$ on every pair, acyclicity by depth-first search, the two laws on
+all $2^{m}$ traces, and the heights; the Holt--Klee test is a unit
+vertex-capacity maximum flow on every face of dimension at least two,
+validated on the twelve orientations of the $2$-cube, on the $656$
+Holt--Klee orientations of the $3$-cube of \Cref{prop:auso-census}, and on
+the non-Holt--Klee orientation of \Cref{prop:auso-seven}. The heights
+$4,9,16,25$ are $(k+1)^{2}$ at the $k$-th iterate; whether that law
+persists is not proved, and we do not use it.
+\end{proof}
+
+\begin{remark}\label{rem:D-quadratic}
+The operation was found by a search for a rule of the Schurr--Szab\'o shape
+--- outer outmap a function of the layer and of the inner height modulo a
+small integer --- that would double the height; no rule of that shape does,
+and $D$ is the best of them. It is weaker than the Schurr--Szab\'o blow-up
+itself, which at least doubles the height per two dimensions and gives
+$h^{\ast}(9)\ge48$ from the seed $h^{\ast}(5)=12$, and weaker than
+\Cref{lem:hstar-super} beyond dimension $9$. Its interest is the other
+clause: from dimension $5$ on its products violate Holt--Klee, so by
+\Cref{prop:oneplayer-lp} no nondegenerate one-player game realises them,
+and any realisation --- which is the open question of \Cref{prop:auso-size}
+for this family as for every other --- must use both players, as
+\Cref{prop:auso-seven} does at dimension $4$.
 \end{remark}
 
 \subsection{A rule that needs exponentially many switches}
