@@ -42,7 +42,7 @@ We give a self-contained, fully proved development of the theory
 surrounding the decision problem \textsc{SSG-Value}: given a simple
 stochastic game and a start vertex $v_0$, decide whether
 $\val(v_0)\ge\tfrac12$. Everything asserted below is proved from first
-principles --- with two imported exceptions, named where they occur: the
+principles --- with four imported facts, named where they occur: the
 classical determinacy statement of \Cref{thm:determinacy}, and Holt and
 Klee's theorem on the orientations that linear programmes induce on
 polytopes, used in \Cref{prop:oneplayer-lp}; two textbook facts used in
@@ -50,7 +50,7 @@ the algorithms of \Cref{sec:width} and in one descriptive clause of
 \Cref{sec:projection}, Legendre's theorem that a close rational
 approximant is a convergent (\Cref{lem:round-recover}) and the
 Samelson--Thrall--Wesler characterisation of $P$-matrices
-(\Cref{prop:lcp}), the latter used nowhere else; and a handful of
+(\Cref{prop:lcp}), the latter used nowhere else; and a number of
 computations recorded explicitly as measurements --- and every negative
 statement is witnessed by an explicit instance verified in exact rational
 arithmetic.
@@ -71,13 +71,16 @@ stronger than the three separate tractable cases it contains; arbitrary
 SSGs whose \emph{escape exponent} is $O(\log N)$ (\Cref{thm:few-escape}),
 which improves the average-vertex bound $\mathrm{poly}(N)2^{a}$ of
 \Cref{thm:few-avg} by $\Theta(N)$ in the exponent on an explicit family;
-games in which no cycle carries two Max vertices, and more generally
-those whose Max-reachability components are small
+games in which no two Max vertices are mutually reachable, and more
+generally those whose Max-reachability components are small
 (\Cref{thm:bounded-components}); a quantitative class incomparable with
-all of these, defined by a linear-programming certificate for the rate at
+the escape-exponent class and contained in none of the combinatorial
+ones, defined by a linear-programming certificate for the rate at
 which the two-sided value iteration contracts
 (\Cref{thm:escape-class}), with an explicit family inside it and outside
-every one of the others (\Cref{prop:escape-family}); a class keyed not to
+each of the four combinatorial classes and the denominator class
+(\Cref{prop:escape-family}; it has modulator number one, so it lies in
+the modulator class named below); a class keyed not to
 the presentation but to the \emph{answer}, namely the stopping games whose
 values share a polynomially bounded denominator $D$
 (\Cref{thm:few-denominator}), which rests on the exactness of the
@@ -89,7 +92,7 @@ stopping family with four values, $a=\Theta(N)$ and both players that lies
 outside all five of the above (\Cref{prop:fv-family}); a class keyed to a
 decomposition, the games with a bounded modulator number, solved by a
 fixed-point search over the frozen vertices (\Cref{thm:modulator}) with a
-family inside it and outside all the others
+family inside it and outside five of the six classes above
 (\Cref{prop:modulator-family}), stopping games of bounded treewidth
 being solved in quasipolynomial time (\Cref{thm:qp}); and, in general, a subexponential
 Las~Vegas algorithm of expected running time
@@ -137,7 +140,7 @@ for a complementary reason, to order the two successors on a seven-vertex game
 (\Cref{thm:transport-barrier}) --- though \Cref{rem:own-successor} shows that
 ordering the two successors is the wrong test, and that on that game and on
 the whole family behind it the certificate decides the vertex at once. Because those two failures are
-complementary, we couple the last two into a feedback loop
+complementary, we couple the slack calculus and the transport programme into a feedback loop
 (\Cref{sec:hybrid}): the non-convex halves of the controlled rows, which
 a linear programme must drop, are exactly what the slack clauses supply,
 and the average equalities, which the slack calculus can only reach by
@@ -183,8 +186,10 @@ $\alpha<1$, since a longer padding of the same kind blinds every such
 rule at once (\Cref{thm:window-barrier}); and no submodular
 minimisation argument, in any orientation of either strategy cube
 (\Cref{prop:no-submodular}). For the all-switches rule
-itself we prove three monotonicity laws, all consequences of
-\Cref{thm:peak-law} (\Cref{cor:no-return,cor:law-b,cor:law-u}, with
+itself we prove three monotonicity laws
+(\Cref{cor:no-return,cor:law-b,cor:law-u}, the first from
+\Cref{lem:monotone-law}, the second from \Cref{thm:peak-law}, the third
+from the orientation of \Cref{cor:ceiling-general}, with
 \Cref{cor:antichain} between them), and an unconditional bound in terms of
 the reachability structure of $\Vmax$ (\Cref{thm:component-bound}), and we
 locate the exact ceiling the first two laws impose: it is $1,2,4,7,13$
@@ -194,10 +199,11 @@ all-switches run of every stopping game is, degenerate or not --- is
 $1,2,4,7,12$ (\Cref{prop:auso-census,prop:hstar-five}) and grows
 exponentially: $h^{\ast}(m+2)\ge2h^{\ast}(m)+2$ by a height-doubling
 blow-up of the kind Schurr and Szab\'o introduced, proved here from
-scratch and machine-checked in Lean (\Cref{thm:blowup}). So those two
+scratch, its unique-sink, acyclicity and walk clauses machine-checked in
+Lean (\Cref{thm:blowup}). So those two
 laws are strictly weaker than the axioms they come from; with the third
-law added the ceiling is reported to drop to $12$ at $m=5$, a computation
-recorded as a measurement (\Cref{rem:flat}). The tallest orientation the
+law added the ceiling drops to $12$ at $m=5$ (reproduced here) and is
+reported as $21$ at $m=6$, a measurement (\Cref{rem:flat}). The tallest orientation the
 census admits at $m=4$ is realised, by a nondegenerate two-player stopping
 game on $97$ vertices (\Cref{prop:auso-seven}), and it needs two players:
 nondegenerate one-player improvement orientations are linear-programming
@@ -219,7 +225,8 @@ stopping game is a unique sink orientation, proved here from scratch,
 with the Max cube as its sink projection
 (\Cref{thm:profile-uso,prop:projection}); it can be cyclic while the
 projection cannot, and Holt--Klee constrains the projection not at all
-at $m\le5$ (\Cref{sec:projection}).
+wherever this was checked --- every orientation at $m\le3$, the extremal
+orbit at $m=4$, $B^{2}$ at $m=5$ (\Cref{sec:projection}).
 
 We emphasise at the outset what this document does \emph{not} contain: it
 does not contain a polynomial-time algorithm for \textsc{SSG-Value}, and
@@ -289,8 +296,12 @@ Given an SSG $G$ and a start vertex $v_0$, decide whether
 $\val(v_0)\ge\tfrac12$.
 \end{problem}
 
-The only external fact we import is the following classical determinacy
-statement; everything else in this document is proved from scratch.
+The first of the four external facts we import is the following
+classical determinacy statement; the other three are Holt and Klee's
+theorem (\Cref{prop:oneplayer-lp}), Legendre's theorem on convergents
+(\Cref{lem:round-recover}) and the Samelson--Thrall--Wesler
+characterisation of $P$-matrices (\Cref{prop:lcp}), and everything else
+in this document is proved from scratch.
 
 \begin{theorem}[Positional determinacy; Shapley, Condon]\label{thm:determinacy}
 For every SSG and every vertex $u$,
@@ -340,9 +351,11 @@ exactly. The logical skeleton is:
   any \emph{one} of the three colours to be absent from every cycle
   (\Cref{thm:kacyclic,prop:kacyclic-strict}); the escape class, defined by
   a linear-programming certificate for the contraction rate
-  (\Cref{thm:escape-class}); and the value alphabet, with the class of
+  (\Cref{thm:escape-class}); the value alphabet, with the class of
   stopping games whose values share a small denominator
-  (\Cref{sec:alphabet}, \Cref{thm:few-denominator}).
+  (\Cref{sec:alphabet}, \Cref{thm:few-denominator}); and the width
+  classes, the modulator class in polynomial time and bounded treewidth
+  in quasipolynomial time (\Cref{sec:width}, \Cref{thm:modulator,thm:qp}).
 \item \Cref{sec:structure}: the structure of the optimal set.
   \Cref{thm:opt-subcube} identifies $\Opt$ with a subcube;
   \Cref{thm:short-path} shows every strategy is joined to $\Opt$ by an
@@ -366,7 +379,8 @@ exactly. The logical skeleton is:
   not polynomial.
 \item \Cref{sec:allsw-laws}: three monotonicity laws obeyed by every
   all-switches run (\Cref{cor:no-return,cor:law-b,cor:law-u}, from
-  \Cref{thm:peak-law}), an unconditional bound on its length in terms of
+  \Cref{lem:monotone-law}, \Cref{thm:peak-law} and
+  \Cref{cor:ceiling-general}), an unconditional bound on its length in terms of
   the reachability structure of $\Vmax$ (\Cref{thm:component-bound}), and
   the polynomial class that bound defines (\Cref{thm:bounded-components}),
   which \Cref{prop:k1-family} shows meets none of the four combinatorial
@@ -13604,7 +13618,8 @@ $|\Vavg|$ (\Cref{lem:absorption}), the resulting contraction and
 uniqueness of fixed points (\Cref{thm:contraction}), and determinacy
 together with the identification of those fixed points with the game
 values (\Cref{thm:stopping-determinacy}) --- so that outside
-\Cref{thm:determinacy} nothing classical is imported. A denominator bound
+\Cref{thm:determinacy} and the three imports named in the abstract
+nothing classical is imported. A denominator bound
 $8^{r/2}$ depending only on the number $r$ of average vertices
 (\Cref{lem:denominator}), sharpened to $2^{r}$ and shown attained
 (\Cref{lem:denominator-sharp}), and an explicit reduction to the stopping
@@ -13629,10 +13644,11 @@ an explicit linear program (\Cref{thm:one-player}); all three being
 instances of one theorem that is strictly stronger than the three
 together, namely that it suffices for \emph{some single colour} to be
 absent from every cycle (\Cref{thm:kacyclic,prop:kacyclic-strict});
-games in which no cycle carries two Max vertices, and more generally in
-which the components of the Max-reachability digraph have size
-$O(\log N)$ (\Cref{thm:bounded-components}), a class that
-\Cref{prop:k1-family} shows meets none of the four preceding it; a quantitative
+games in which no two Max vertices are mutually reachable, and more
+generally in which the components of the Max-reachability digraph have
+size $O(\log N)$ (\Cref{thm:bounded-components}), a class that
+\Cref{prop:k1-family} shows meets none of the four combinatorial classes
+preceding it (its witness does carry an escape certificate); a quantitative
 class defined by a linear-programming certificate for the rate at which
 two-sided value iteration contracts (\Cref{thm:escape-class}), with a
 family inside it and outside all four combinatorial ones
@@ -13643,7 +13659,7 @@ off the answer and not the presentation, which \Cref{prop:fv-family}
 shows lies inside none of the five; the games with a bounded
 modulator number, solved in $N^{O(\mu)}$ by a fixed-point search over a
 frozen set of $\mu$ vertices, with $M_n$ a family inside that class and
-outside every other (\Cref{thm:modulator,prop:modulator-family}), and the
+outside five of the six others (\Cref{thm:modulator,prop:modulator-family}), and the
 stopping games of bounded treewidth, solved in quasipolynomial time
 (\Cref{thm:qp}); and, in general, a
 Las~Vegas algorithm of expected time $e^{2\sqrt n}\,\mathrm{poly}(N)$
@@ -13665,7 +13681,8 @@ switches. That selection problem is exactly the original problem:
 values, $n$ non-adaptive comparisons determine an optimal strategy
 (\Cref{thm:compare-equivalence}), and deciding whether one given vertex
 is badly chosen is again equivalent to the whole problem
-(\Cref{cor:wrong-equivalence}). The information content is smaller than the
+(\Cref{cor:wrong-equivalence}), as is naming the average vertex of
+largest value (\Cref{thm:top}). The information content is smaller than the
 first count suggests --- the order of the average values already determines
 everything (\Cref{thm:order-determines}) --- but not the difficulty, since
 each comparison is again an instance of the problem.
@@ -13687,7 +13704,7 @@ the wrong vertices can be a $1/|\Vmax|$ fraction of the switchable ones
 (\Cref{prop:needle}); the exact gain of a switch is a bounded transfer
 impedance divided by an escape probability that can be $2^{-\Theta(N)}$,
 so no potential of polynomial range can work (\Cref{thm:impedance});
-values live on a grid of mesh $2^{-a}$, which caps every single-switch
+each $\val_\sigma$ lies on a grid of mesh at least $2^{-a}$, which caps every single-switch
 improving rule at $N2^{a}$ switches, every multi-switch one at $N4^{a}$,
 and is essentially attained by the ladder
 (\Cref{thm:switch-count}), so counting arguments of that shape are
@@ -13722,15 +13739,17 @@ of an acyclic unique sink orientation of the Max cube
 length is at most $h^{\ast}(m)=1,2,4,7,12$ for $m\le5$
 (\Cref{prop:auso-census,prop:hstar-five}); conversely
 $h^{\ast}(m+2)\ge2h^{\ast}(m)+2$ by a height-doubling blow-up proved here
-and machine-checked (\Cref{thm:blowup}), so the ceiling is exponential
+and, in its combinatorial clauses, machine-checked (\Cref{thm:blowup}), so the ceiling is exponential
 and the question is realisability at polynomial size
 (\Cref{prop:auso-size}). The height-seven orbit is realised by a
 two-player game on $97$ vertices (\Cref{prop:auso-seven}) and by no
 nondegenerate one-player game --- one-player orientations are
 Holt--Klee, \Cref{prop:oneplayer-lp,cor:seven-two-player} --- and no
 one-player game has a run realising it, with or without ties
-(\Cref{thm:no-seven}); ties buy a one-player run at most one round per
-Max vertex (\Cref{thm:zero-timer}); the first blow-up level and a layer
+(\Cref{thm:no-seven}); a zero-tie timer wakes within $|\Vmax|$ rounds,
+so one-shot zero-tie gating buys at most one round per Max vertex
+(\Cref{thm:zero-timer,cor:gate}; whether every degenerate one-player run
+obeys $L\le h^{\ast}_{\mathrm{HK}}$ is open); the first blow-up level and a layer
 translated by a single coordinate are realised by one-player games and the
 second level by a two-player game on $138$ vertices
 (\Cref{rem:blowup-measured,prop:b2-realised}), so the third level is the
@@ -13745,7 +13764,8 @@ one player buying affine readouts and the second concavity
 (\Cref{thm:readout-realise,thm:min-count}); and the profile cube is a
 unique sink orientation with the Max cube as its sink projection
 (\Cref{thm:profile-uso,prop:projection}), Holt--Klee constraining that
-projection not at all at $m\le5$. Bidirectional improvement and its
+projection not at all wherever checked ($m\le3$, the height-$7$ orbit,
+$B^{2}$). Bidirectional improvement and its
 one-sided form, best-response restart, are covered by no barrier here and
 have no known superpolynomial family
 (\Cref{def:bsi,thm:bsi-nostall,prop:bsi-br}), though both take
@@ -13773,11 +13793,15 @@ every bounded radius; it fails on branch compensation, and
 fooling pair. The slack calculus (\Cref{sec:slack}) repairs exactly that
 and is cheap in precision, but on non-interacting parts it is two-sided
 value iteration (\Cref{thm:slack-barrier}), hence exponential on an
-explicit family --- for its own clauses only: adding transitivity, whose
+explicit family for the pair test, the own-successor test's stall there
+being measured only (\Cref{cor:slack-stalls}) --- for its own clauses
+only: adding transitivity, whose
 premises leave the separated region, turns that family from
 $2^{\Omega(N)}$ rounds into $4m-3$ for $m\le9$ (\Cref{prop:trans-Hm}), and no
-stall on a stopping game is permanent at all, since the calculus computes
-$w^\ast$ exactly in the limit (\Cref{thm:trans-complete}). Permanent
+stall at a value-distinguishing vertex of a stopping game is permanent,
+since the calculus computes $w^\ast$ exactly in the limit
+(\Cref{thm:trans-complete}; at vertices whose successors have equal value
+the calculi may stay silent for ever, harmlessly, \Cref{prop:fv-stall}). Permanent
 blindness exists only where $T$ has a second fixed point, hence never on
 a stopping game (\Cref{lem:phi-certificate,prop:trans-stall}), and that
 is not an accident: a certificate of the form $\varphi(x)-\psi(y)$ that
@@ -13798,9 +13822,9 @@ Perron--Frobenius route that motivates the multiplicative reading is
 closed separately: after homogenisation the cone spectral radius is
 identically $1$, and the Collatz--Wielandt bracket can be $[1,2]$ while
 the vector it brackets is off by $2^{N-3}$ (\Cref{prop:cw}). Seeding it from an evaluated bracket
-(\Cref{sec:seeded}) strictly dominates both, and decides every stalling
-instance in this document --- including a vertex that
-\Cref{prop:bracket}(a) forbids any bracket from deciding --- while
+(\Cref{sec:seeded}) strictly dominates the additive calculus, and its
+one-round variant decides every stalling instance in this document, the
+wedge included (\Cref{prop:seeded-decides}, \Cref{rem:wedge}) --- while
 \Cref{thm:seeded-barrier} shows the geometry, not the initialisation, was
 always the obstruction. The transport mechanism does not propagate at all:
 the linear program of \Cref{sec:transport} optimises over the monotonicity
