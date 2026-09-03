@@ -1,0 +1,391 @@
+%% Route bsi-counter, round 16.  Paste-ready; amsthm style of frontier.tex.
+%% Labels prefixed bsc:.  Everything below is PROVED unless marked GAP.
+%% Full file: /tmp/claude-1000/-data-ssg-proof/d1fe2115-9b72-4784-bb94-87421ac1106c/scratchpad/bsi-counter/bsc.tex
+
+\subsection{Best-response restart: what its rounds are made of}
+
+The rule $R_{\mathrm{BR}}$ of \Cref{prop:bsi-br} is stated through a veto, and
+the veto is opaque.  It has a transparent form.  For Max strategies
+$\sigma,\sigma'$ write $\mathrm{Dis}(\sigma,\sigma'):=\{v\in\Vmax:\sigma(v)\ne\sigma'(v)\}$,
+and for a Min strategy $\tau$ let
+$\mathrm{BR}(\tau):=\{\sigma':\val_{\sigma',\tau}=\val^{\tau}\}$ be the set of
+Max best responses to $\tau$.
+
+\begin{lemma}[$R_{\mathrm{BR}}$ moves towards the double best response]\label{bsc:double-br}
+Let $G$ be stopping, $\tau$ a Min strategy and $U:=\val^{\tau}$.
+\begin{enumerate}
+\item[(a)] $\sigma'\in\mathrm{BR}(\tau)$ if and only if $\sigma'$ is
+  \emph{$U$-greedy}: $U(\sigma'(v))=\max_iU(v^{(i)})$ for every $v\in\Vmax$.
+\item[(b)] For every Max strategy $\sigma$ and every $v\in\Vmax$,
+\[
+  U(\bar\sigma(v))>U(\sigma(v))\iff \sigma'(v)\ne\sigma(v)\ \text{for all }
+  \sigma'\in\mathrm{BR}(\tau),\qquad
+  U(\bar\sigma(v))\ge U(\sigma(v))\iff \sigma'(v)=\bar\sigma(v)\ \text{for some }
+  \sigma'\in\mathrm{BR}(\tau).
+\]
+\end{enumerate}
+Consequently, if $\tau$ is a Min best response to $\sigma$, the two variants of
+\Cref{prop:bsi-br} switch
+\[
+  C^{>}_{\max}=S_\sigma\cap\!\!\bigcap_{\sigma'\in\mathrm{BR}(\tau)}\!\!\mathrm{Dis}(\sigma,\sigma'),
+  \qquad
+  C^{\ge}_{\max}=S_\sigma\cap\!\!\bigcup_{\sigma'\in\mathrm{BR}(\tau)}\!\!\mathrm{Dis}(\sigma,\sigma'),
+\]
+and when the Max best response $\sigma^{\ast}$ to $\tau$ is unique both are
+$S_\sigma\cap\mathrm{Dis}(\sigma,\sigma^{\ast})$: one round of $R_{\mathrm{BR}}$
+switches exactly those improving Max vertices at which $\sigma$ disagrees with
+a best response to a best response to $\sigma$.
+\end{lemma}
+
+\begin{proof}
+(a) $U=\val^{\tau}$ is the unique fixed point of $T^{\tau}$
+(\Cref{thm:contraction}, $G$ stopping), so $U(v)=\max_iU(v^{(i)})$ at
+$v\in\Vmax$, $U(v)=U(\tau(v))$ at $v\in\Vmin$ and $U$ is the mean of its
+successors at average vertices.  If $\sigma'$ is $U$-greedy then $U$ satisfies
+all the equations of the profile $(\sigma',\tau)$, and by uniqueness of that
+fixed point $U=\val_{\sigma',\tau}$.  Conversely if $\val_{\sigma',\tau}=U$
+then $U(v)=U(\sigma'(v))$ at every $v\in\Vmax$, so $\sigma'(v)$ attains
+$\max_iU(v^{(i)})$.  (b) is immediate from
+$U(v)=\max\{U(v^{(0)}),U(v^{(1)})\}$ and (a).
+\end{proof}
+
+\begin{remark}\label{bsc:double-br-rem}
+\Cref{bsc:double-br} makes \Cref{prop:bsi-br} a statement about best-response
+dynamics: $R_{\mathrm{BR}}$ is the map
+$\sigma\mapsto\sigma[S_\sigma\cap\mathrm{Dis}(\sigma,\sigma^{\ast\ast})]$ with
+$\sigma^{\ast\ast}$ a best response to a best response to $\sigma$, the
+intersection with $S_\sigma$ being what makes it a switching rule
+(\Cref{def:rule}) rather than an unguarded double best response, which does
+not converge.  It also explains \Cref{thm:readout}: on $\mathrm{RD}(n)$ the
+double best response to $\sigma_t$ disagrees with $\sigma_t$ at
+$v_{t+1}$ only.
+\end{remark}
+
+\begin{lemma}[A constant option is taken at most twice]\label{bsc:const}
+Let $G$ be stopping and let $\sigma_0,\sigma_1,\dots$ be produced by any
+switching rule (\Cref{def:rule}), so $\sigma_{t+1}=\sigma_t[S_t]$ with
+$\emptyset\ne S_t\subseteq S_{\sigma_t}$.  Let $v\in\Vmax$ have successors
+$p,q$ with $\val_{\sigma}(q)=c$ for every Max strategy $\sigma$ --- for
+instance $q$ a vertex from which no controlled vertex is reachable.  Then $v$
+is switched at most twice along the whole run: at most once from $p$ to $q$,
+at most once from $q$ to $p$, and in that order.  Dually for a Min vertex with
+a constant successor along the Min track of \Cref{def:bsi}.
+\end{lemma}
+
+\begin{proof}
+By \Cref{lem:switch} the vector $\val_{\sigma_t}$ is pointwise nondecreasing in
+$t$, so $\varphi(t):=\val_{\sigma_t}(p)-c$ is nondecreasing.  If
+$\sigma_t(v)=p$ then $v\in S_{\sigma_t}$ iff $\varphi(t)<0$; if
+$\sigma_t(v)=q$ then $v\in S_{\sigma_t}$ iff $\varphi(t)>0$.  Since $\varphi$
+is nondecreasing, $\{t:\varphi(t)<0\}$ is an initial segment and
+$\{t:\varphi(t)>0\}$ a final segment of the run, and they are disjoint.  Every
+$p\to q$ switch occurs in the first set and every $q\to p$ switch in the
+second, so all $p\to q$ switches precede all $q\to p$ switches; two $p\to q$
+switches would need a $q\to p$ switch between them, which is impossible.
+\end{proof}
+
+\begin{corollary}\label{bsc:const-cor}
+If every $v\in\Vmax$ has a constant successor then every switching rule halts
+within $2|\Vmax|$ rounds on $G$; so no game of that shape is a hard instance
+for any switching rule, $R_{\mathrm{BR}}$ and all-switches included.
+\end{corollary}
+
+\begin{lemma}[Min's preference at a clamp reverses once]\label{bsc:minrev}
+Let $\sigma_0,\sigma_1,\dots$ be a run of a switching rule and let
+$u\in\Vmin$ have successors $p,q$ with $\val_\sigma(q)=c$ constant.  A Min
+best response $\tau_t$ to $\sigma_t$ has $\tau_t(u)=p$ when
+$\val_{\sigma_t}(p)<c$ and $\tau_t(u)=q$ when $\val_{\sigma_t}(p)>c$.  Hence
+if ties are broken by a fixed preference at $u$, the action $\tau_t(u)$ is a
+monotone step function of $t$ and changes at most once along the run.
+\end{lemma}
+
+\begin{proof}
+$\val_{\sigma,\tau}=\val_\sigma$ forces $\tau(u)$ to attain
+$\min_i\val_\sigma(u^{(i)})$ (dual of \Cref{bsc:double-br}(a)), and
+$t\mapsto\val_{\sigma_t}(p)-c$ is nondecreasing by \Cref{lem:switch}.
+\end{proof}
+
+\begin{theorem}[Blocks, and the reordering bound]\label{bsc:reorder}
+Consider a run of $R_{\mathrm{BR}}$, in either variant, on a stopping $G$ with
+$|\Vmax|=m$, producing $\sigma_0,\dots,\sigma_R$ with guides
+$U_t:=\val^{\tau_t}$.  Put
+\[
+  d_t:=\bigl|\{v\in\Vmax:\ U_{t-1}(\sigma_t(v))=\textstyle\max_iU_{t-1}(v^{(i)})
+   \ \text{and}\ U_t(\sigma_t(v))<\max_iU_t(v^{(i)})\}\bigr|\qquad(1\le t\le R-1),
+\]
+the number of Max vertices at which the guide's preference \emph{reverses away
+from the current action} at round $t$.  Then
+\[
+  R\ \le\ m+\sum_{t=1}^{R-1}d_t .
+\]
+In particular $d_t=0$ whenever $U_t=U_{t-1}$, so a maximal block of
+consecutive rounds sharing one guide has at most $m$ rounds and
+$R\le m\bigl(1+\#\{t:\tau_t\ne\tau_{t-1}\}\bigr)$.  For \Cref{def:bsi}, in
+either variant, the same argument gives
+\[
+  R\ \le\ m+B+\sum_{t}d_t\qquad\text{and dually}\qquad R\ \le\ k+A+\sum_{t}d'_t,
+\]
+with $A,B$ as in \Cref{thm:bsi-tracks}; since $d_t\le m$ and $d_t=0$ at a
+round with $C_{\min}=\emptyset$, this refines \Cref{thm:bsi-tracks}'s
+$R\le m+(m+1)B$.
+\end{theorem}
+
+\begin{proof}
+Put $\Phi(\sigma,U):=|\{v\in\Vmax: U(\sigma(v))=\max_iU(v^{(i)})\}|\in[0,m]$.
+Every $v\in C_{\max}$ has $U_t(\bar\sigma_t(v))\ge U_t(\sigma_t(v))$, so
+$\bar\sigma_t(v)$ is $U_t$-greedy and $\sigma_{t+1}(v)$ is $U_t$-greedy;
+unswitched vertices keep their status.  Hence
+$\Phi(\sigma_{t+1},U_t)=\Phi(\sigma_t,U_t)+a_t$, where $a_t:=|C^{>}_{\max}|$
+counts the switched vertices that were \emph{not} $U_t$-greedy.  Next,
+$\Phi(\sigma_{t+1},U_{t+1})\ge\Phi(\sigma_{t+1},U_t)-d_{t+1}$ by the
+definition of $d_{t+1}$.  Summing over $t$ and using $0\le\Phi\le m$,
+\[
+  \sum_{t=0}^{R-1}a_t\ \le\ m+\sum_{t=1}^{R-1}d_t .
+\]
+For $R_{\mathrm{BR}}$, \Cref{prop:bsi-br} in its strict reading gives
+$C^{>}_{\max}\ne\emptyset$ at every round with $S_\sigma\ne\emptyset$, so
+$a_t\ge1$ and $R\le\sum a_t$.  For \Cref{def:bsi}, $a_t\ge1$ can fail; but by
+\Cref{lem:bsi-pairloc} in its strict reading every productive round has
+$C^{>}_{\max}\ne\emptyset$ or $C^{<}_{\min}\ne\emptyset$, and the rounds of
+the second kind have $C_{\min}\ne\emptyset$ and so number at most $B$.
+\end{proof}
+
+\begin{corollary}[Clamped games are easy for $R_{\mathrm{BR}}$]\label{bsc:clamp}
+Let $G$ be stopping with $|\Vmax|=m$, $|\Vmin|=k$, and suppose every Min
+vertex has a constant successor.  Then $R_{\mathrm{BR}}$, run with any fixed
+tie-breaking preference at each Min vertex, halts within $m(k+1)$ rounds from
+every start.  Dually, if every Max vertex has a constant successor, every
+switching rule halts within $2m$ rounds (\Cref{bsc:const-cor}).
+\end{corollary}
+
+\begin{proof}
+By \Cref{bsc:minrev} each Min vertex changes its chosen action at most once,
+so $\tau_t$ changes at most $k$ times and the run splits into at most $k+1$
+blocks; each has at most $m$ rounds by \Cref{bsc:reorder}.
+\end{proof}
+
+\begin{remark}\label{bsc:clamp-rem}
+\Cref{bsc:clamp} is why every family this document carries is fast for
+$R_{\mathrm{BR}}$: $\mathrm{RD}(n)$ has all its $\Theta_j$ constant
+($m=k=n$, bound $n(n+1)$, truth $n$), $L_n$, $H_m$, $\mathrm{CC}(L,m)$,
+$\mathrm{WD}(e,j,m)$ and $\mathrm{SD}(K)$ have $k=0$, and
+\Cref{prop:bsi-oneplayer} is the case $k=0$ of the corollary.  Together with
+\Cref{bsc:const} it says what a superpolynomial family must contain:
+\emph{both} a Max vertex whose two options are non-constant and a Min vertex
+whose two options are non-constant, the Min one reversing superpolynomially
+often.  This subsumes the round-$15$ auditor's refutation of the $R_{\mathrm{BR}}$
+route's proposed counter (a Max vertex over a constant gadget) and gives its
+Min-side twin.
+\end{remark}
+
+\subsection{The ceiling of $R_{\mathrm{BR}}$ at two Max vertices}
+
+Write $h_{\mathrm{BR}}(m)$ for the greatest number of productive rounds of
+$R_{\mathrm{BR}}$ over all stopping SSGs with $|\Vmax|=m$, all starts and both
+variants --- the analogue for this rule of the four ceilings of
+\Cref{rem:four-ceilings}.  Since $\val_{\sigma}$ strictly increases at every
+productive round (\Cref{lem:switch}), no Max strategy recurs, so $R\le2^{m}-1$
+for $R_{\mathrm{BR}}$ and, for \Cref{def:bsi}, $R\le(2^{m}-1)+(2^{k}-1)$.
+Both bounds are attained at $m=2$, $k=1$.
+
+\begin{proposition}[$W_2$: three rounds with two Max vertices]\label{bsc:w2}
+Let $W_2$ be the stopping SSG whose harmonic normal form
+(\Cref{lem:normalform}) has $\Vmax=\{v_0,v_1\}$, $\Vmin=\{u\}$ and rows
+\[
+\begin{array}{r@{\ }l@{\qquad}l}
+ v_0\ (\max): & \tfrac{13}{16}\,v_1 & \tfrac1{32}v_1+\tfrac{23}{32}u+\tfrac5{32}t_1\\
+ v_1\ (\max): & \tfrac{29}{32}\,u   & \tfrac14\,t_1\\
+ u\ (\min):   & \tfrac{15}{16}\,v_0 & \tfrac1{32}\,t_1
+\end{array}
+\]
+(the missing mass leaks to $t_0$; every row is dyadic of denominator $32$, so
+\Cref{lem:dyadic-row} realises $W_2$ as a stopping SSG on $34$ vertices: $2$
+Max, $1$ Min, $29$ average and the two sinks).  Then
+$w^{\ast}=(\tfrac{13}{64},\tfrac14,\tfrac1{32})$ and:
+\begin{enumerate}
+\item[(i)] from $\sigma_0=(0,0)$, $R_{\mathrm{BR}}$ takes exactly three
+ productive rounds, $(0,0)\to(1,0)\to(1,1)\to(0,1)$, switching $v_0$, then
+ $v_1$, then $v_0$ again; the run is the same in the veto and the strict
+ variant and for \emph{every} choice of best response, and no comparison made
+ along it is a tie;
+\item[(ii)] all-switches takes at most two rounds from every start, and
+ $h^{\ast}(2)=2$ (\Cref{prop:auso-census}), so $R_{\mathrm{BR}}$ beats the
+ all-switches ceiling already at $m=2$;
+\item[(iii)] $R=3=2^{m}-1$ is the absolute maximum for $m=2$, so
+ $h_{\mathrm{BR}}(2)=3$ against $h^{\ast}(2)=2$, $h^{\ast}_{HK}(2)=2$;
+\item[(iv)] \Cref{def:bsi} from $(\sigma_0,\tau_0)=((0,0),0)$ takes exactly
+ four rounds in both variants, with switch sets
+ $(\{v_0\},\emptyset),(\emptyset,\{u\}),(\{v_1\},\emptyset),(\{v_0\},\emptyset)$,
+ and $4=(2^{m}-1)+(2^{k}-1)$ is the absolute maximum for $(m,k)=(2,1)$.  In
+ particular a BSI run can be longer than $|C|$, which the two families of
+ \Cref{rem:readout} are not.
+\end{enumerate}
+The two guides involved are
+$\val^{\tau=0}=(\tfrac{2560}{4909},\tfrac{2175}{4909},\tfrac{2400}{4909})$ with
+Max best response $(1,0)$, and $\val^{\tau=1}=w^{\ast}$ with Max best response
+$(0,1)$; the Min best response is $\tau=0$ at $\sigma_0$ and $\tau=1$ at every
+later strategy, and the value vectors along the run are
+$\val_{\sigma_0}=(0,0,0)$,
+$\val_{\sigma_1}=(\tfrac{5885}{32768},\tfrac{29}{1024},\tfrac1{32})$,
+$\val_{\sigma_2}=(\tfrac{191}{1024},\tfrac14,\tfrac1{32})$ and
+$\val_{\sigma_3}=w^{\ast}$.
+\end{proposition}
+
+\begin{proof}
+The rows all leak, so $W_2$ is stopping by \Cref{lem:trapchar}.  Everything
+else is a finite exact computation, carried out twice: in the normal form,
+with $\val_\sigma$ the componentwise minimum over both Min strategies and
+$\val^{\tau}$ the componentwise maximum over all four Max strategies; and on
+the realised $34$-vertex SSG with the independent core of the harness, whose
+$w^{\ast}$ and whose $R_{\mathrm{BR}}$ run agree.  For (iii) and the second
+half of (iv): $\val_\sigma$ strictly increases at each round with
+$C_{\max}\ne\emptyset$ and $\val^{\tau}$ strictly decreases at each round with
+$C_{\min}\ne\emptyset$ (\Cref{lem:switch} in $G$ and in $\bar G$), so no
+$\sigma$ and no $\tau$ recurs and there are at most $2^{m}-1$ rounds of the
+first kind and $2^{k}-1$ of the second, every productive round being of one
+kind or the other.
+\end{proof}
+
+\begin{remark}\label{bsc:w2-rem}
+The mechanism is worth naming, because \Cref{bsc:clamp} says every family must
+eventually break it.  The Min vertex $u$ is a \emph{clamp},
+$\val_\sigma(u)=\min(\tfrac{15}{16}\val_\sigma(v_0),\tfrac1{32})$, and it
+engages once, as soon as Max's own improvement pushes $\val_\sigma(v_0)$ past
+$\tfrac1{30}$.  Before it engages, the guide $\val^{\tau}$ is computed in a
+counterfactual world in which Min does \emph{not} clamp, so $u$ is worth
+$\tfrac{2400}{4909}$ there instead of $\tfrac1{32}$; that inflated $u$ makes
+$v_1$ prefer reading $u$ to its constant $\tfrac14$, which is the veto that
+serialises round $0$, and makes $v_0$ prefer the option that reads $u$, which
+is the switch that round $0$ performs.  After the clamp engages the guide is
+$w^{\ast}$ and the last two rounds are ordinary greedy steps.  So the veto's
+selectivity comes from the \emph{gap between the guide's world and the true
+one at a Min vertex that has not yet been forced}, and by \Cref{bsc:minrev} a
+clamp affords exactly one such gap.
+\end{remark}
+
+\subsection{How many guides a one-switch-per-round run needs}
+
+\begin{proposition}[The piercing bound]\label{bsc:pierce}
+Let a run of $R_{\mathrm{BR}}$ on a stopping $G$ with $|\Vmax|=m$ switch
+exactly one Max vertex per round and visit $\sigma_0,\dots,\sigma_R$, and let
+$f_t$ be the vertex switched at round $t$.  Then
+\begin{enumerate}
+\item[(a)] $S_{\sigma_t}=\{c:\val_{\sigma_t[c]}>\val_{\sigma_t}\}$, so if
+ $\sigma_t[c]$ is itself visited, $c\in S_{\sigma_t}$ iff it is visited later;
+\item[(b)] the double best response $\sigma^{\ast}_t$ of \Cref{bsc:double-br}
+ lies in the subcube
+ $C_t:=\{\sigma^{\ast}:\sigma^{\ast}(c)=\sigma_t(c)\ \forall c\in
+ S_{\sigma_t}\setminus\{f_t\},\ \sigma^{\ast}(f_t)\ne\sigma_t(f_t)\}$, and
+ $\sigma_R\in C_R:=\{\sigma_R\}$;
+\item[(c)] hence the number of distinct Min best responses $\tau_t$ occurring
+ along the run is at least the piercing number $p$ of the family
+ $\{C_t\}$, and $k\ge\log_2p$.
+\end{enumerate}
+For the run that visits all $2^{m}$ strategies in the reflected Gray order ---
+the order of the least-index run on the ladder $L_m$ of \Cref{def:ladder},
+verified here for $m\le4$ --- the piercing numbers are
+\[
+ m=2,3,4,5,6,7:\qquad p=2,\,4,\,6,\,\le9,\,\le14,\,\le22 ,
+\]
+the first three exact by exhaustive search and the last three by a randomised
+greedy cover; and at $m=3$ \emph{every} Hamiltonian run needs at least three
+guides (exhaustively over all $144$ Hamiltonian paths of the $3$-cube; $48$ of
+them need $3$ and $96$ need $4$).  So a $2^{m}-1$-round $R_{\mathrm{BR}}$ run
+needs $k=\Omega(m)$ Min vertices but no more --- the piercing count is
+exponentially far below $2^{m}$ and is not an obstruction.
+\end{proposition}
+
+\begin{proof}
+(a) is \Cref{lem:switch} together with its converse: if $c\notin S_\sigma$
+then $T_{\sigma[c]}\val_\sigma\le\val_\sigma$ pointwise, so
+$\val_{\sigma[c]}\le\val_\sigma$ by \Cref{cor:comparison}.  Since
+$\val_{\sigma_t}$ strictly increases along the run, a visited neighbour is
+improving iff it is visited later.  (b) is \Cref{bsc:double-br}: the round
+switches $S_{\sigma_t}\cap\mathrm{Dis}(\sigma_t,\sigma^{\ast}_t)=\{f_t\}$,
+which says exactly that $\sigma^{\ast}_t$ agrees with $\sigma_t$ on
+$S_{\sigma_t}\setminus\{f_t\}$ and differs at $f_t$; at the halt $\sigma_R$ is
+optimal and its best response $\tau_R$ is optimal too, so
+$\sigma_R\in\mathrm{BR}(\tau_R)$.  (c) A guide $\tau$ determines
+$\sigma^{\ast}$, so distinct rounds with the same guide have the same
+$\sigma^{\ast}$, and the set of $\sigma^{\ast}$'s used pierces $\{C_t\}$.  The
+numbers are computations.
+\end{proof}
+
+\subsection{What is left, stated exactly}
+
+\begin{remark}[The measurements]\label{bsc:measured}
+All in exact rational arithmetic, both variants, and (where stated) over every
+choice of best response.
+\begin{enumerate}
+\item[(i)] The inequalities of \Cref{bsc:reorder} (for $R_{\mathrm{BR}}$ and
+ for \Cref{def:bsi}), the block bound, \Cref{bsc:const} and \Cref{bsc:clamp}
+ were checked on $600$ freshly generated random normal forms with
+ $m\in\{2,3,4\}$, $k\in\{1,2,3\}$ and denominators $8,16$, from every start
+ and (for BSI) every start pair, in both variants, and on $600$ random
+ \emph{clamped} games: no violation.  The bound $R\le m+\sum d_t$ is attained.
+ The longest $R_{\mathrm{BR}}$ run met by random sampling was $4$ and the
+ longest BSI run $5$; on the random clamped games $R\le m$ always, so
+ \Cref{bsc:clamp}'s $m(k+1)$ is nowhere near met by sampling.
+\item[(ii)] $\mathrm{RD}(n)$ of \Cref{def:readout-cascade} has $R=n$ with $n$
+ blocks of one round each, $\sum d_t=n-1$ and every Min preference reversing
+ once; $L_n$ has one block; $W_2$ has $R=3$ in two blocks of $1$ and $2$
+ rounds and $\sum d_t=2$; $M_3$ has $R=4$ in two blocks of $1$ and $3$ rounds,
+ so a block that is a full cascade of $m$ single switches under one frozen
+ guide --- the first half of what \textsc{Gap 1} needs --- is realised
+ already at $m=3$, and there too the single Min preference reverses once.
+\item[(iii)] Records found by exact hill-climbing on dyadic normal forms
+ (denominator $16$), maximising the round count over all starts: $R=3$ at
+ $m=2,k=1$ (\Cref{bsc:w2}, the maximum possible), $R=4$ at $m=3,k=1$ on the
+ game $M_3$ recorded in the route's files ($52$ vertices when realised;
+ $h^{\ast}(3)=4$, so $R_{\mathrm{BR}}$ has not been separated from
+ all-switches at $m=3$ here); at $m=4$ nothing above $4$ was found in the
+ time available, and the document's own $G^{\sharp}$ already gives $5$.  A
+ five-round run at $m=3$ was looked for and not found: by \Cref{bsc:pierce}
+ eighteen of the thirty single-switch runs of length five in the $3$-cube can
+ be guided by two targets and hence by one Min vertex, and each was prescribed
+ to a float annealer (several hundred restarts, $k=1$ and $k=2$), as was a
+ hand-shaped fourteen-parameter family with two clamps; the exact hill-climb
+ and an exhaustive neighbourhood search at denominators $16$ and $64$ leave
+ $M_3$ a strict local maximum.  Failure to find is not evidence of absence,
+ and this document's own record is that every hard instance in it had to be
+ engineered rather than searched for.
+\end{enumerate}
+\end{remark}
+
+\begin{remark}[What a superpolynomial family must contain]\label{bsc:programme}
+Collecting \Cref{bsc:const,bsc:minrev,bsc:reorder,bsc:clamp}:
+\begin{enumerate}
+\item[(a)] every Max vertex switched more than twice has two non-constant
+ options, and every Min vertex whose best response reverses more than once has
+ two non-constant options: the round-$15$ auditor's refutation and its exact
+ Min-side twin;
+\item[(b)] $R\le m+\sum_td_t$, so the guide must \emph{reorder} the options at
+ Max vertices $\Omega(R)$ times in total --- changing $\tau$ is not enough,
+ the change must reverse a preference;
+\item[(c)] in the clamped class --- every Min vertex with a constant successor
+ --- $R\le m(k+1)$, which is $O(N^{2})$ and no more.  So the clamped class
+ cannot carry a superpolynomial family, and the most a clamp construction can
+ give is quadratic.
+\end{enumerate}
+Two statements would be real progress, and neither is proved here.
+
+\medskip\noindent\textsc{Gap 1 (quadratic, clamped).} \emph{There is a family
+of stopping SSGs on $O(n\log n)$ vertices with $|\Vmax|=|\Vmin|=\Theta(n)$, in
+which every Min vertex has a constant successor, on which $R_{\mathrm{BR}}$
+takes $\Theta(n^{2})$ rounds from a stated start.}  By (c) this is the
+ceiling of the clamped class; it would be the first superlinear lower bound
+for the rule, $\mathrm{RD}(n)$ giving only $\Theta(N)$.  The shape is forced
+by \Cref{bsc:reorder}: $k$ clamps engaging in succession give $k+1$ guides,
+and each block must be a cascade of $m$ single switches, so the construction
+needs a Max chain that sweeps forwards under one guide and backwards under the
+next.
+
+\medskip\noindent\textsc{Gap 2 (superpolynomial).} \emph{There is a stopping
+SSG with a Min vertex $u$, both of whose options are non-constant, along whose
+$R_{\mathrm{BR}}$ run the sign of
+$\val_{\sigma_t}(u^{(0)})-\val_{\sigma_t}(u^{(1)})$ changes superpolynomially
+often.}  By \Cref{bsc:reorder} this is necessary; by \Cref{prop:leapfrog} the
+analogous reversal at a \emph{Max} vertex is available at $O(1)$ vertices per
+reversal, but there the reversals are driven by fresh drivers that switch once
+each, and what is needed here is a leapfrog whose drivers are the run itself.
+\end{remark}

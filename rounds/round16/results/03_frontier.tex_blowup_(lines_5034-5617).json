@@ -1,0 +1,128 @@
+{
+ "target": "frontier.tex blowup (lines 5034-5617)",
+ "sound": false,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "cor:b2-min (proof), line 5442-5443",
+   "defect": "The proof asserts that the delivered game of prop:b2-realised \"has a Min best response varying on exactly the three critical faces\"; recomputed, it varies on 32 of the 80 two-faces.",
+   "evidence": "From /data/ssg-proof/scripts/blowup/B2_small_GAME.json in exact Fraction arithmetic (my minface.py): the Min best response is UNIQUE at all 32 Max strategies, with tau*(sigma)=1 exactly at sigma in {11,15,19,23,27,31}, i.e. tau* = (x AND alpha_1) AND (alpha_2 OR beta_2). Intersecting the optimal-tau sets over each of the 80 two-faces, 32 faces admit no single tau that is a best response to all four strategies; the three critical faces (0,1,8),(0,1,16),(0,1,24) are among them but are far from all of them. Deleting the word 'exactly' (and, if wanted, adding the count 32) repairs the sentence; the corollary itself is unaffected."
+  },
+  {
+   "severity": "major",
+   "result_name": "cor:parity-unreadable (second clause), lines 5446-5455",
+   "defect": "The clause \"the same holds inside any layer of a realisation of B^2 on which the four strategies with beta_1=0 share a Min best response\" is unproved, and at the face level its own proof uses it is false on the only layer where its hypothesis can hold.",
+   "evidence": "The proof's premise is that g_x is non-constant on the face {x,alpha_1} at beta_1=0. Recomputed on the printed B^2: on the layers (alpha_2,beta_2)=(0,1),(1,0),(1,1) g_x = [0,0,1,1] (non-constant), but those are precisely the three faces of cor:b2-min, where NO realisation has a shared Min best response, so the hypothesis is unsatisfiable there. On the remaining layer (0,0) g_x = [1,1,1,1] is CONSTANT, so lem:crossing(c) gives nothing; and there a Max row difference does read the parity: g_{alpha_1} = [1,0,1,0] at (x,alpha_1)=(0,0),(1,0),(0,1),(1,1) is the exact complement of the parity 0,1,0,1 of the inner B^1 height (h_{B^1}(0..3)=0,1,2,3), and g_{beta_1} = [1,1,1,0] is the exact complement of the parity 0,0,0,1 of B^2's own height (h_{B^2}=4,2,4,3 there); since Delta_c(val_sigma) = val_sigma(c^{(1)}) - val_sigma(c^{(0)}) is a difference of two entries of the value vector, -Delta_{alpha_1} and -Delta_{beta_1} are affine functionals whose sign IS the parity. The sentence at line 5459-5461 (\"This is why the outer pair of a level-two realisation cannot read the inner parity through a Max row difference\") therefore has no support; only cor:b2-min survives."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:blowup-measured, lines 5217-5218",
+   "defect": "The four height lists are inconsistent in format: the one-cube list omits the seed's own height while the other three include theirs, so \"each exactly 2h+2\" is false of the leading entries 2, 7, 12.",
+   "evidence": "Recomputed (my blow.py): from the 1-cube (h=1) the iterates have heights 4,10,22,46,94 at dimensions 3,5,7,9,11; from a height-2 2-cube they have 6,14,30,62 at dimensions 4,6,8,10; from G# (h=7) 16,34,70; from a height-11 5-cube 24,50,102. So \"2,6,14,30\", \"7,16,34,70\", \"12,26,54,110\" list seed-then-three-iterates while \"4,10,22,46,94\" lists five iterates with no seed. Writing \"1;4,10,22,46,94; 2;6,14,30,62; ...\" repairs it."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:blowup-measured, line 5234-5235",
+   "defect": "The explanatory list \"the reversed orientation's walk from the old sink has length only 4,4,5,5,6\" is misaligned by one level with the heights 4,10,16,23,30 it explains.",
+   "evidence": "Recomputed: for the seeds of levels 1..7 the reversed orientation's BA walk from the old sink has length 1,4,4,5,5,6,7, and the heights decompose as 4=1+2+1, 10=4+2+4, 16=10+2+4, 23=16+2+5, 30=23+2+5. The printed 4,4,5,5,6 are the lengths at levels 2..6, not 1..5."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:D-quadratic, lines 5119-5122",
+   "defect": "\"any realisation ... must use both players\" drops the ties escape that the manuscript itself insists on elsewhere.",
+   "evidence": "prop:oneplayer-lp (l.4752) assumes NONDEGENERATE, and rem:oneplayer-lp (l.4874) states explicitly that \"Nondegeneracy is a genuine hypothesis: this document's longest one-player all-switches runs are degenerate, and thm:flat-resolution resolves those into AUSOs that need not be Holt--Klee\". rem:blowup-measured, twelve lines further on (l.5230-5232), phrases the same inference correctly: \"any realisation needs Min vertices or ties (prop:oneplayer-lp, rem:oneplayer-lp)\"."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:blowup-realise, lines 5589-5592",
+   "defect": "\"lem:hstar-super builds tall orientations with no translated layer at all\" is wrong in both halves: the construction IS a conditional translation, and it does not build tall orientations.",
+   "evidence": "lem:hstar-super's outmap is s(v1,v2) = (s1(v1), s2(v2 XOR c(v1))) with c(v1)=z for v1 != 0 and c(0)=0 -- a translation of the second block on everything except the fibre over the sink, and it is exactly what makes the heights add: with z=0 both blocks step together and the walk length is max(h1,h2), not h1+h2 (verified: with the translation my super.py gets walk lengths 2,3,4,5,6,8,8,9,11,14 on ten seed pairs, all equal to h1+h2). And superadditivity alone gives only h*(m) >= 12*floor(m/5), linear in m, against the 2^{Theta(m)} of thm:blowup."
+  },
+  {
+   "severity": "minor",
+   "result_name": "lem:hstar-super, lines 5035-5036",
+   "defect": "The \"In particular\" numbers h*(6)>=13, h*(8)>=14, h*(9)>=19 are strictly subsumed by thm:blowup two pages later and are stated without a warning.",
+   "evidence": "thm:blowup (l.5125) gives h*(6) >= 2h*(4)+2 = 16, h*(8) >= 2h*(6)+2 >= 34 and h*(9) >= 2h*(7)+2 >= 54; rem:four-ceilings (l.6303) records h*(6) >= 16 and h*(7) >= 26. The lemma's arithmetic (12+1, 7+7, 12+7) is correct but obsolete on arrival."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:blowup-measured, lines 5217-5218 (the 5-cube list)",
+   "defect": "\"the height-12 orientation of prop:hstar-five: ... 12,26,54,110\" cannot be checked against the manuscript, because no height-12 5-cube outmap is printed anywhere in frontier.tex.",
+   "evidence": "Scanning frontier.tex for parenthesised 32-tuples finds exactly two 5-cube outmaps: line 5294 (B^2, height 10) and line 5785 (prop:hkfive's witness, height 11). prop:hstar-five (l.4956) states h*(5)=12 but prints no witness. A 900-second randomised AUSO search of mine reached height 10 only. On the printed height-11 witness I did verify B's heights are exactly 24, 50, 102 = 2h+2, so the arithmetic has the right shape; the specific list still rests on an unpublished datum, against the manuscript's stated standard that every negative/positive claim carry an explicit instance."
+  },
+  {
+   "severity": "minor",
+   "result_name": "def:reduced-rows, lines 5338-5344",
+   "defect": "The reduced row divides by 1-p^{v,a}_v with no hypothesis making it nonzero; the needed fact p^{v,a}_v < 1 holds only for stopping games and is never invoked here.",
+   "evidence": "The definition opens \"For v in C and an action a with row (p^{v,a};q^{v,a})\" with no standing stopping hypothesis; the fact that p_u<1 (else {u} plus its return paths is a trap, lem:trapchar) is proved inside lem:rise-bound's proof (l.4017-4019) and is cited here only for \"the division\", not for its nonvanishing."
+  },
+  {
+   "severity": "minor",
+   "result_name": "lem:crossing(a), line 5399-5401",
+   "defect": "\"so the |C|-2 [hyperplanes] shared by F meet in a plane Pi\" is asserted; that the intersection has dimension exactly two is not proved.",
+   "evidence": "It needs the principal submatrix of I-P on C minus {i,j} to be nonsingular, which holds because a principal submatrix of a substochastic transient matrix is again transient in a stopping game; if the intersection had dimension >2 the lines l_0, l_1 of part (b) would be higher-dimensional and the crossing argument would not run as written."
+  },
+  {
+   "severity": "minor",
+   "result_name": "lem:crossing(c), line 5413-5415",
+   "defect": "\"A square with both g's non-constant is a directed 4-cycle with two sinks\" is a garbled dichotomy: such a square is either a directed 4-cycle (no sink at all) or has two sources and two sinks, never both.",
+   "evidence": "With i-edges oppositely oriented and j-edges oppositely oriented there are exactly two cases: 00->10, 00->01, 11->01, 11->10 (two sources, two sinks) and 00->10->11->01->00 (a directed 4-cycle). The conclusion \"not a unique sink orientation\" is right in both."
+  },
+  {
+   "severity": "minor",
+   "result_name": "cor:b2-min, line 5430-5432",
+   "defect": "\"the height-7 class has one, which localises cor:seven-two-player to a single 2-face\" understates the count: the height-7 class has eight forbidden pairs on eight distinct 2-faces.",
+   "evidence": "Recomputed on the canonical height-7 representative (0,1,3,6,7,4,13,10,14,15,9,12,11,8,5,2), which my census confirms is s_{G#}: forbidden pairs are (faces {0,1} at base 4 and 12, coord 3), ({0,2} at 2 and 10, coord 3), ({1,3} at 0 and 1, coord 0), ({2,3} at 0 and 1, coord 0) -- 8 pairs, 8 distinct faces. Under the reading \"has one\" = \"has at least one\" the sentence is defensible, but \"a single 2-face\" then means \"any one of eight\"."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:xor(iii), lines 5488-5492",
+   "defect": "The displayed inequality max_{L=0}T < 21/172 < min_{L=1}T settles only the eight strategies with sigma_1=0; the \"so\" covering sigma_1=1 does not follow from what is displayed.",
+   "evidence": "At sigma_1=1, L=0 one knows from (ii) only z_1 < 21/172 and from (iii) only T < 21/172, which does not order z_1 against T; likewise at sigma_1=1, L=1. I recomputed all sixteen strategies from the printed 256ths in exact arithmetic and the conclusion is TRUE (Delta_0>0 iff sigma_1 XOR L = 0 at all 16), with max_{L=0}T = 2497696403/23623057920 and min_{L=1}T = 347482169/2787045602, so this is a gap in the stated reasoning, not a false claim."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:blowup-realise, lines 5539-5545",
+   "defect": "\"a Max vertex whose two options are mixtures of the values of two vertices of L_n with a suitable threshold ... the maximum over all pairs of vertices and all thresholds\" understates the parameter family the numbers were maximised over.",
+   "evidence": "I reproduced 3,4,4,4,7,8,8,8 (max over pairs) and 3,4,3,4,5,8,3,4 (pair (v_1,v_2)) for n=3..10 exactly, but only by maximising over full lines a*val_t(p) - b*val_t(q) = c with a,b of EITHER sign, computed by an exact direction sweep over all O(L^2) critical normals. With one option a constant the count is at most 1, since val is monotone along the run (lem:switch) -- the round-15 rbr trap. The maxima are attained at pairs such as (v_1,w_5) at n=7, so 'two vertices' must be read as including average vertices."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:blowup-realise, lines 5548-5552",
+   "defect": "\"rest is readable in the same round ... the right-hand side is the value of a Max vertex over p and q\" is asserted and conflicts with the one-round lag the manuscript records elsewhere.",
+   "evidence": "A fresh Max vertex y with successors p,q has val_sigma(y) = val_sigma(sigma(y)), which equals max(val(p),val(q)) only when y is itself at rest; rem:closed-now-or-never states exactly this (\"a Max vertex over a Max vertex simulates a third action with one round of lag\", lem:max-tree). So the rest predicate is readable with a round of lag, not in the same round."
+  },
+  {
+   "severity": "minor",
+   "result_name": "cor:b2-min, lines 5419-5422 (definition of forbidden)",
+   "defect": "\"g_c on F is exactly the split by the non-constant coordinate of F\" presupposes that F has a non-constant coordinate; a 2-face may have none.",
+   "evidence": "By lem:crossing(c) at most one of g_i,g_j is non-constant on F, but zero is possible (e.g. on B^1 four of the six 2-faces have both g's constant). The definition should read: F has exactly one non-constant coordinate c' and g_c on F is the split by sigma_{c'}."
+  },
+  {
+   "severity": "note",
+   "result_name": "rem:blowup-realise (open question) vs thm:min-count",
+   "defect": "The remark's open question never mentions thm:min-count, which is the natural obstruction to the additive regime it asks about.",
+   "evidence": "thm:min-count (l.6486) gives k >= log2 chi_HK(s) for any realisation; the additive regime (O(1) controlled vertices per level, so k = O(level)) is consistent with it only if chi_HK(B^k) <= 2^{O(k)}, which nothing in the document addresses. sec:deformed's cor:blowup-parity gives chi_HK(B^j) >= 2 for every j >= 2, so no contradiction arises -- but the remark should say so."
+  },
+  {
+   "severity": "note",
+   "result_name": "prop:b2-realised (proof), line 5320-5323",
+   "defect": "\"the Min vertex performs the layer-(0,0) translation\" is a loose description: in the delivered game the Min vertex is constant off its default exactly OFF that layer.",
+   "evidence": "Recomputed: tau*(sigma)=1 exactly at sigma in {11,15,19,23,27,31}, i.e. tau* = (x AND alpha_1) AND (alpha_2 OR beta_2); tau* = 0 throughout the translated layer (alpha_2,beta_2)=(0,0), and varies on the three layers where cor:b2-min forces it to."
+  },
+  {
+   "severity": "note",
+   "result_name": "rem:blowup-measured line 5238 vs prop:xor line 5478",
+   "defect": "The same 100-vertex game's translated layer is called \"(0,0)\" in rem:blowup-measured and \"the layer sigma_2=sigma_3=1\" in prop:xor.",
+   "evidence": "Verified from the printed 256ths: in the game's own labelling the translated layer is (x_2,x_3)=(1,1); on it the g-signs of the inner pair are (0,1),(0,1),(1,1),(1,1) against (1,0),(1,0),(0,0),(0,0) on the other three, which is translation by the single coordinate e_1, not by 1-bar. The paper's single-coordinate claim is CORRECT; the committed /data/ssg-proof/scripts/blowup/README.md still says \"whose layer 00 is the inner cube translated by 1-bar\" and is stale."
+  },
+  {
+   "severity": "note",
+   "result_name": "rem:blowup-measured line 5228 vs prop:m3-realised line 6529",
+   "defect": "The 58-vertex first-level realisation on which rem:blowup-realise's \"three further bits of precision\" comparison rests is superseded elsewhere by a 39-vertex one.",
+   "evidence": "prop:m3-realised: \"the first blow-up level B(1-cube)=(0,1,3,6,7,4,5,2) of rem:blowup-measured is realised on 39 vertices rather than 58\", with denominators in that census running up to 512. I verified B1_game.json has denominator exactly 2^6 and B2_small has 2^9, so the +3 bits is correct for the games named, but it is a comparison of two particular constructions, not of the levels."
+  }
+ ],
+ "verdict": "NOT SOUND: two major defects survive (cor:b2-min's proof claims a false verification about the delivered game; cor:parity-unreadable's second clause is vacuous on three layers and false-at-face-level on the fourth, which removes the support for the paragraph at l.5459-5466). Everything else I found is minor or presentational. Paste-ready repairs for six of the items are in /tmp/claude-1000/-data-ssg-proof/d1fe2115-9b72-4784-bb94-87421ac1106c/scratchpad/paper-audit-blowup/REPAIRS.tex.\n\nWHAT I RECOMPUTED AND CONFIRMED (all exact rational / exact integer, own code in /tmp/claude-1000/-data-ssg-proof/d1fe2115-9b72-4784-bb94-87421ac1106c/scratchpad/paper-audit-blowup, harness written from the manuscript's definitions, not from the route scripts):\n- lem:hstar-super: the construction reconstructed from the proof text and run on ten seed pairs up to dimension 8 (super.py) -- USO, acyclic, walk length exactly h*(k)+h*(l) in every case, including 4x4 -> dim 8, length 14. The proof itself is correct step by step (the translation vector z = W^{h*(k)}(x*) XOR x* and the start x* XOR z do exactly what is claimed; the walk cannot hit the sink early).\n- prop:D-quadratic: heights 4,9,16,25 at dimensions 3,5,7,9 (and 36 at 11); dim 3 Holt-Klee, dims 5 and 7 not, with 3-faces carrying flow exactly 2; cor:no-return and cor:law-b verified on every BA trace of every start at dims 3,5,7,9. D is indeed thm:blowup's B with z = 1-bar. The census figures its proof cites (12 USOs of the 2-cube all HK, 656 HK of the 3-cube, G# non-HK) all reproduce.\n- thm:blowup: full proof reconstructed; every case of the unique-sink argument, the acyclicity argument (the outer arcs at fixed v form the directed path (1,0)->(1,1)->(0,1) at even h and its reverse at odd h) and the height argument check out. Heights measured: 4,10,22,46,94 from the 1-cube; 6,14,30,62 from a 2-cube of height 2; 16,34,70 from G#; 24,50,102 from prop:hkfive's height-11 witness -- each exactly 2h+2. All numerical corollaries (3*2^{(m-1)/2}-2, 2^{m/2+1}-2, 9*2^{(m-4)/2}-2, 14*2^{(m-5)/2}-2) check.\n- rem:blowup-measured: z is beta_1 at level 2 and alpha_k from level 3 on (measured z = 1,4,8,32,128 at levels 1..5); numbers of maximal-height vertices 2,4,8,16,32; the theorem's start vertex is tops[0] at every level. D-list 4,9,16,25,36; reversal 4,10,16,23,30; partial reversal v -> s(v) XOR z is a USO and stops being acyclic at level 2. The 58-vertex B1_game.json: stopping, nondegenerate, outmap exactly (0,1,3,6,7,4,5,2), height 4, Holt-Klee, denominator 2^6. The 2-cube blow-ups: single-coordinate z gives exactly one 4-cube class, Holt-Klee, height 6, canonical outmap (0,1,3,2,7,6,4,13,15,14,12,9,11,10,8,5) as printed; z = 1-bar gives exactly one class, non-Holt-Klee. The 100-vertex game reproduces from the printed 256ths (4 Max, 94 avg, stopping, no ties, height 6, HK, same class).\n- Lean: /data/ssg-proof/lean/SSGProof/Blowup.lean compiles under Lean 4.33.1 with no imports and no sorry; #print axioms gives [propext, Classical.choice, Quot.sound] for isUSO_blow and walk_blow and [propext, Quot.sound] for isAcyclic_blow, so the manuscript's axiom claim is accurate; Basic.lean is a Mathlib smoke test only, so \"the first result of this document to be formalised\" is right.\n- prop:b2-realised: rebuilt the game from the PRINTED rows with lem:dyadic-row's pruned binary trees (my gadget gives 176 vertices, 168 average -- the lemma bounds the count by l*d per row and does not pin it at 130) and independently re-verified the committed 138-vertex game with two different solvers. Both: greatest trap empty (stopping), recomputed harmonic normal form equals the printed table entry for entry, 0 tied Max and 0 tied Min incidences, val_sigma is the componentwise minimum and is attained by a single tau at all 32 sigma, improvement outmap equal to the printed tuple, which equals B(B^1) exactly (B^1 = (0,1,3,6,7,4,5,2), u=4, z=beta_1), AUSO of height 10, Holt-Klee test fails, run from sigma=12 is 12,19,13,17,8,16,0,7,1,5,4, value vector strictly increasing along it. The second realisation B2_155_game.json: 155 vertices, 5 Max, 1 Min, 147 average, denominator exactly 2^10, same outmap.\n- def:reduced-rows: the formula Delta_i = (1-p^{i,1-sigma_i}_i)(B_i - A_i) is correct and agrees with Delta_i = V^1_i - V^0_i at val_sigma, and the three-level reading of val_sigma(x_i) is correct. prop:rows-turn is correct.\n- cor:b2-rows: for all five coordinates of B^2 there is a directed edge on which g_c passes + -> - and one on which it passes - -> +; for B^1 the seed coordinate and alpha_1 both lack the - -> + edge and only beta_1 has both. The delivered game's five Max reduced rows are pairwise incomparable, as required.\n- cor:b2-min: B^2 has exactly 4 forbidden pairs, on the faces {x,alpha_1} at beta_1=0 with (alpha_2,beta_2)=(0,1),(1,0),(1,1) and coordinates alpha_2, alpha_2/beta_2, beta_2 as printed; B^1 has none; along the tower the counts are 0,4,28,136,600 at k=1..5. Full 4-cube census re-enumerated from scratch: 5541744 USOs, 4792176 acyclic, 12640 classes, 6113 Holt-Klee, no Holt-Klee class with a forbidden pair, 4365 of the 6527 others with one and 2162 without.\n- prop:xor: all three clauses verified exactly from the printed rows (val(x_1)=21/172 at sigma_1=0; 256*Delta_1 = 7z_0-71z_1+133z_2+102z_3-21 positive exactly on L=1; Delta_0>0 iff z_1>T with T=(40z_0+121z_2-4z_3+2)/165, and Delta_0>0 exactly when sigma_1 XOR L = 0 at all 16 strategies). The layer translation is by the single coordinate x_1.\n- thm:alternation-bits: the proof is correct as written -- Delta_alpha IS a difference of two entries of val_sigma, namely the values of the two successors of alpha, so lem:denominator-sharp applies directly. Sum_{t=1}^{h-1}|Delta| <= 1 verified on the B^2 game's run for all five coordinates (largest 0.9815 at c_4). The outer coordinates of B^k alternate 1/2, 4/5, 10/11, 22/23 times at k=1..4, i.e. Theta(2^k), as claimed.\n- rem:blowup-realise: ladder flip counts 3,4,4,4,7,8,8,8 and 3,4,3,4,5,8,3,4 reproduced exactly (all-switches run of L_n from b=0 has length n); Klee-Minty (Gray-code LP orientation) has BA height exactly d for every d <= 12; the step 1 -> 2 costs +2 Max, +1 Min and 2^6 -> 2^9; the third level is dimension 7, height 22; \"the translated coordinate's incidence is (x AND alpha_1) XOR L\" verified for all 32 vertices of B^2; the O(1)-per-level regime is arithmetically consistent with prop:b2-realised and with prop:auso-size as stated.\n- rem:hk-survey: 12640 classes, heights 1..7 with multiplicities 1,754,4776,5404,1561,143,1, of which 56 of height 6 and none of height 7 are Holt-Klee -- all reproduced.\n\nWHAT I DID NOT CHECK: the search outcomes reported in rem:hk-survey (56 of 56 realised, 53 at denominator 1024, 33 non-HK failures, 60+60 random classes with five unresolved) and the provenance claims for the 58- and 100-vertex games -- these are search results I did not rerun; prop:hstar-five's h*(5)=12 (outside my range), and therefore rem:blowup-measured's \"12,26,54,110\" list, for which no witness is printed; prop:D-quadratic's law check at dimension 11 (the proposition claims only four iterations, dims 3,5,7,9, all of which I checked); and the line-by-line faithfulness of the Lean proofs beyond checking that the definitions match the theorem and that the file compiles with the stated axioms."
+}

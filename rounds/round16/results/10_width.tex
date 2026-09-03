@@ -1,0 +1,378 @@
+% Route wa: the amortisation statement of sec:width.
+% Paste-ready; all labels prefixed wa:.  Written in the amsthm style of
+% frontier.tex.  Every numerical claim below was computed in exact rational
+% arithmetic; the scripts are named in the route's result record.
+
+\subsection{The amortisation, corrected}\label{wa:sec-amortise}
+
+The paragraph after \Cref{prop:modulator-family} names as the missing step the
+statement that \emph{the $O(B^{k+1})$ payoff vectors at which a separator node
+queries its children during one search can be answered in total time
+polynomially related to the time to answer one of them}, and says that this
+would make \Cref{thm:qp} polynomial. The first observation of this route is that
+it would not: the recursion of \Cref{thm:qp} raises the per-node cost to the
+depth, and a \emph{polynomial} amortisation factor is still raised to the depth.
+
+\begin{lemma}[The separator recursion]\label{wa:recursion}
+Let $p$ be a polynomial, $n_0\ge2$, and let $T:\mathbb N\to\mathbb R_{\ge0}$ be
+nondecreasing with $T(n)\le p(n)$ for $n\le n_0$ and, for $n>n_0$,
+\[
+  T(n)\ \le\ Q(n)\sum_{i}T(n_i)+p(n),
+  \qquad \sum_i n_i\le n,\quad n_i\le n/2 .
+\]
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item If $Q(n)\le Q$ for a constant $Q\ge1$, then $T(n)=O(n^{\gamma})$ with
+      $\gamma=\max(2+\log_2Q,\ \deg p)$. In particular $T$ is polynomial, and
+      $Q=1$ gives $T(n)=O(n^{\max(2,\deg p)})$.
+\item If the recursion is tight with a single child of size $\lfloor n/2\rfloor$
+      and $Q(m)\ge m^{c}$ for a constant $c>0$, then
+      $T(n)\ge n^{\,\Omega(c\log n)}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) Induction on $n$ with the hypothesis $T(m)\le Am^{\gamma}$ for $m<n$, $A$ to
+be fixed. Since $\gamma\ge1$ and $n_i\le n/2$,
+$\sum_i n_i^{\gamma}\le(n/2)^{\gamma-1}\sum_i n_i\le 2^{1-\gamma}n^{\gamma}$, so
+$T(n)\le AQ2^{1-\gamma}n^{\gamma}+p(n)$. With $\gamma\ge2+\log_2Q$ one has
+$Q2^{1-\gamma}\le\tfrac12$, and choosing $A$ with $An^{\gamma}/2\ge p(n)$ for all
+$n$ and $A n_0^{\gamma}\ge p(n_0)$ closes the induction.
+
+(b) Unrolling $d=\lfloor\log_2(n/n_0)\rfloor$ times,
+$T(n)\ge\prod_{j<d}Q(n/2^{j})\ge\prod_{j<d}(n/2^{j})^{c}
+=2^{c(d\log_2n-d(d-1)/2)}$, and $d=\log_2 n-O(1)$ makes the exponent
+$\tfrac{c}{2}\log_2^2n-O(\log n)$.
+\end{proof}
+
+\begin{remark}[What the gap actually asks]\label{wa:gap-corrected}
+In \Cref{thm:qp} a node makes $Q(n)=2(B+2)^{k+1}=n^{\Theta(k)}$ queries, each
+costing one recursive solve in every component, so \Cref{wa:recursion} gives
+$n^{\Theta(k\log n)}$ --- the bound of \Cref{thm:qp} --- and shows it cannot be
+improved by shrinking $Q$ polynomially: \emph{any} $Q(n)=n^{\varepsilon}$ with
+$\varepsilon>0$ fixed still yields $n^{\Theta(\varepsilon\log n)}$. By
+\Cref{wa:recursion}(a) polynomiality needs $Q(n)=O(1)$, or more precisely
+$Q(n)\le f(k)$ for a function of $k$ alone. So the amortisation statement must be
+strengthened to: \emph{a separator node performs only $f(k)$ recursive child
+solves, all its remaining $O(B^{k+1})$ queries being answered in time
+$\mathrm{poly}(n)$ without recursion.} That is a statement about
+\emph{transferring} the answer at one payoff vector to another, not about
+sharing work between recursive solves.
+\end{remark}
+
+There are exactly two ways to transfer an answer: carry the child's response
+\emph{symbolically}, which costs the number of affine pieces
+(\Cref{rem:fold-width}, and \Cref{wa:fold3} below), or carry the \emph{optimal
+pair}, from which the value at a nearby payoff vector is recovered by strategy
+improvement. The second is not obstructed by anything in this document, and is
+the corrected gap.
+
+\begin{definition}[Parametric improvement]\label{wa:pi}
+Fix $k\ge1$. Say that $\mathrm{PI}_k$ holds if there is a polynomial $q$ such
+that: for every stopping payoff game $H$ with $m$ non-terminals and a tree
+decomposition of $\Gamma(H)$ of width at most $k$, every $X\subseteq V(H)$ with
+$|X|\le k+1$, all dyadic $\theta,\theta'\in[0,1]^{X}$ of bit-size at most $B$,
+and every optimal positional pair of $H[X{:=}\theta]$, an optimal positional
+pair of $H[X{:=}\theta']$ is computed in time $q(m+B)$.
+\end{definition}
+
+\begin{theorem}[The amortised search]\label{wa:amortised}
+If $\mathrm{PI}_k$ holds then $\val_G$ is computed exactly, for every stopping
+payoff game $G$ of treewidth at most $k$ given with a decomposition, in time
+polynomial in $n$ and $\log\Delta$; in particular \Cref{prob:main} restricted to
+stopping SSGs of treewidth at most $k$ is in $\mathrm P$.
+\end{theorem}
+
+\begin{proof}
+Run the recursion of \Cref{thm:qp} unchanged, with one modification at each
+node. Let $X$ be the balanced bag and $C_1,\dots,C_r$ the components of
+$\Gamma(G)-X$. Solve each $C_i$ at the corner $\theta=0$ by one recursive call;
+its returned value vector $w_i$ is certified by $T_{C_i[0]}w_i=w_i$, and a
+greedy pair for $w_i$ --- at each controlled vertex the successor attaining the
+extremum --- is an optimal positional pair, because a stopping game's operator
+has a unique fixed point (\Cref{thm:contraction}, \Cref{lem:payoff-transfer}(b)).
+Store that pair. Every later query $\theta$ of the search is answered by
+applying $\mathrm{PI}_k$ to each $C_i$ from its stored pair, replacing the store
+by the new pair, and evaluating $\val_{C_i[\theta]}$ from that pair by one exact
+linear solve (\Cref{thm:eval-stopfree}); $\mathrm{op}_x$ at each $x\in X$ then
+gives $F_X(\theta)$ exactly, as in \Cref{lem:cut}. The rounding, the
+\Cref{thm:tarski} search, the continued-fraction recovery of
+\Cref{lem:round-recover} and the final check $T_Gw=w$ are unchanged, so
+correctness is that of \Cref{thm:qp}.
+
+Cost: a node performs one recursive call per component and
+$O(B^{k+1})\cdot(q(n+B)+\mathrm{poly}(n))$ further work, with
+$B=O(a+\log n+\log\Delta)$; the bit sizes are those of \Cref{thm:qp}, namely
+$O(n^{\log_23}(n+\log\Delta))$. So $T(n)\le\sum_iT(n_i)+p(n)$ for a polynomial
+$p$, and \Cref{wa:recursion}(a) with $Q=1$ gives $T(n)=O(n^{\max(2,\deg p)})$.
+\end{proof}
+
+\begin{remark}[Where the route lands]\label{wa:pi-is-the-pivot}
+$\mathrm{PI}_k$ is a strategy-improvement statement. By \Cref{thm:short-path}
+the target pair is reachable from the given one by at most $|\Vmax|$ single
+improving switches, so what $\mathrm{PI}_k$ asks is that they be \emph{found} in
+polynomial time: it is \Cref{cor:selection}'s selection problem in parametric
+form, restricted to games of treewidth at most $k$. It is not implied by any
+barrier of \Cref{sec:gap} --- those constrain decision rules on a fixed game,
+while $\mathrm{PI}_k$ moves the game --- and it is weaker than ``strategy
+improvement is polynomial at treewidth $k$'' in one direction only: a bound on
+cold strategy improvement would give \Cref{prob:main} at treewidth $k$ directly,
+whereas $\mathrm{PI}_k$ alone gives nothing without the recursion of
+\Cref{wa:amortised}, which supplies the one cold solve per node. So the width
+route ends on the pivot, and should be recorded as ending there.
+\end{remark}
+
+\begin{proposition}[The fold does not obstruct the warm start; measured]\label{wa:warm-measured}
+Let warm-started Hoffman--Karp be the natural instantiation of $\mathrm{PI}_k$.
+On $P_D$ of \Cref{thm:fold} and on $\mathrm{FL}(D)$ of \Cref{wa:fold3} --- the
+families whose response has $2^{D}$ affine pieces, so that the queries of a
+binary search on $\theta$ land in pairwise distinct pieces --- a binary search
+of $2D+2$ queries costs at most $D-1$ Hoffman--Karp rounds per query whether
+cold or warm, and in total $5,9,13,18,24,31,39,48,58,69,81$ rounds cold and
+$1,3,6,10,15,21,28,36,45,55,66$ warm for $D=2,\dots,12$ (exact). At the top node
+of the \Cref{thm:qp} recursion on random stopping games of treewidth $2,3,4$
+with $n\le30$ ($5$ games per size, exact), the search made on average $32$ to
+$4380$ queries and the totals were: cold $41$ to $17682$ Hoffman--Karp rounds,
+warm-started $1.0$ to $138$ rounds, a saving by factors $4.5$ to $2390$; the
+warm totals do not grow with the query count. So \Cref{rem:fold-width}, which
+closes the symbolic route, says nothing against $\mathrm{PI}_k$: the piece count
+is exponential exactly where the warm start is cheap.
+\end{proposition}
+
+\begin{remark}[The recursion is real; measured]\label{wa:qp-measured}
+The algorithm of \Cref{thm:qp} was run to completion, exactly, on random
+stopping games of treewidth $2,3,4$ with $n\le40$, every answer cross-checked
+against Hoffman--Karp; with the brute-force cutoff at three vertices the
+recursion reached depth $2$ on the larger instances and the counts jump with the
+depth exactly as \Cref{wa:recursion} predicts: at treewidth $2$, $27.5$ queries
+and $189$ recursive solves on average at $n=12$ (depth $1$) against $147\,639$
+queries and $310\,323$ solves at $n=24$ (depth $2$); at treewidth $3$, $97\,627$
+queries and $107\,685$ solves at $n=36$; at treewidth $4$, $54\,476$ queries and
+$232\,486$ solves at $n=28$, and $1\,445\,217$ queries with $4\,350\,567$
+recursive solves at $n=36$ --- on a game a single Hoffman--Karp run settles in
+under a second.
+\end{remark}
+
+\subsection{The fold at pathwidth three}\label{wa:sec-fold3}
+
+\Cref{rem:fold-width} leaves open whether the response explosion occurs already
+at pathwidth three. It does. The only role of $P_D$'s shared chain
+$k_1,\dots,k_{2D-1}$ is to deliver the constant $2^{-(2d-1)}$ to level $d$;
+delivering it by a \emph{pendant} chain at each level costs $\Theta(D^{2})$
+vertices instead of $\Theta(D)$ but removes one live vertex from every bag.
+
+\begin{definition}[The pendant fold]\label{wa:def-fl}
+For $D\ge1$ let $\mathrm{FL}(D)$ be the game with non-terminals
+$X_d,Y_d\in\Vavg$, $F_d\in\Vmax$, $G_d\in\Vmin$ for $1\le d\le D$ and
+$C_{d,1},\dots,C_{d,2d-1}\in\Vavg$, and edges
+\[
+ \begin{aligned}
+  &X_d\to(t_0,F_{d-1}),\qquad Y_d\to(C_{d,1},G_{d-1}),\qquad
+   F_d\to(X_d,Y_d),\qquad G_d\to(X_d,Y_d),\\
+  &C_{d,j}\to(t_0,C_{d,j+1})\ (j<2d-1),\qquad C_{d,2d-1}\to(t_0,t_1),
+ \end{aligned}
+\]
+under the conventions $F_0:=u$, $G_0:=t_0$.
+\end{definition}
+
+\begin{theorem}[The response folds at pathwidth three]\label{wa:fold3}
+$\mathrm{FL}(D)$ is stopping, has $|V|=D^{2}+4D+3$ (counting $u,t_0,t_1$), and
+with $T(x)=|2x-1|$,
+\[
+  \val_{\mathrm{FL}(D)[u:=\theta]}(F_D)
+  =2^{-(D+1)}\bigl(\theta+1-2^{-D}+2^{-D}T^{D}(\theta)\bigr),
+\]
+the same function as in \Cref{thm:fold}; so $R_{u,F_D}$ has exactly $2^{D}$
+affine pieces, with slopes alternating between $0$ and $2^{-D}$. Moreover
+$\operatorname{tw}(\mathrm{FL}(D))=\operatorname{pw}(\mathrm{FL}(D))=3$ for
+$D\ge3$. Hence the exact response tables of a decomposition already have
+$2^{\Omega(\sqrt N)}$ pieces at pathwidth three, which answers the question left
+open in \Cref{rem:fold-width}.
+\end{theorem}
+
+\begin{proof}
+\emph{Values.} $\val(C_{d,j})=2^{-(2d-j)}$ by backward induction along the
+pendant chain, so $\val(C_{d,1})=2^{-(2d-1)}$, which is exactly $\val(k_{2D-2d+1})$
+in $P_D$. Every other edge of $\mathrm{FL}(D)$ is an edge of $P_D$, so the
+recursions of the proof of \Cref{thm:fold} apply verbatim:
+$\val(X_d)=\tfrac12f_{d-1}$, $\val(Y_d)=4^{-d}+\tfrac12g_{d-1}$,
+$f_d=\max$, $g_d=\min$, whence $\varphi_d=4^{-d}T^{d}(\theta)$ and
+$s_d=2^{-d}(\theta+1-2^{-d})$.
+
+\emph{Stopping.} Let $U$ be a trap; it contains no terminal
+(\Cref{lem:trapchar}). Each $C_{d,j}$ is average with successor $t_0\notin U$,
+so no $C_{d,j}$ lies in $U$; each $X_d$ is average with successor $t_0$, so no
+$X_d$ does; each $Y_d$ is average with successor $C_{d,1}\notin U$, so no $Y_d$
+does; and then $F_d,G_d$ have no successor in $U$. So $U=\emptyset$.
+
+\emph{Width.} $\Gamma(\mathrm{FL}(D))$ has the edges $X_dF_{d-1}$, $Y_dG_{d-1}$
+($d\ge2$), $F_dX_d$, $F_dY_d$, $G_dX_d$, $G_dY_d$, $Y_dC_{d,1}$ and
+$C_{d,j}C_{d,j+1}$. Upper bound: the path decomposition that, for
+$d=1,\dots,D$, lists
+\[
+ \{F_{d-1},G_{d-1},X_d\},\ \{G_{d-1},X_d,Y_d\},\ \{X_d,Y_d,C_{d,1}\},\
+ \{X_d,Y_d,C_{d,j},C_{d,j+1}\}_{j<2d-1},\ \{X_d,Y_d,F_d\},\
+ \{X_d,Y_d,F_d,G_d\},\ \{F_d,G_d\}
+\]
+(the first two bags replaced by $\{X_1\},\{X_1,Y_1\}$ at $d=1$) has all bags of
+size at most $4$, covers every edge, and gives every vertex a contiguous
+interval of bags; so $\operatorname{pw}\le3$. Lower bound: for $D\ge3$ the
+branch sets
+\[
+  A=\{X_1,F_1,X_2\},\quad B=\{G_1,Y_2\},\quad
+  C=\{F_2,X_3,F_3,Y_3\},\quad E=\{G_2\}
+\]
+are disjoint, each connected in $\Gamma$, and pairwise adjacent
+($X_1G_1$, $X_2F_2$, $X_2G_2$, $Y_2F_2$, $Y_2G_2$, $Y_3G_2$), so
+$\Gamma(\mathrm{FL}(D))$ has a $K_4$ minor and $\operatorname{tw}\ge3$. Since
+$\operatorname{tw}\le\operatorname{pw}$, both are $3$.
+\end{proof}
+
+\begin{remark}\label{wa:fold3-checked}
+Machine-checked in exact rational arithmetic: stopping, the closed form at
+eight rationals per $D$ ($\tfrac13,\tfrac27,\tfrac5{11},\tfrac12,\tfrac34,
+\tfrac{17}{64},\tfrac9{32},\tfrac{100}{257}$) with no mismatch, and the exact
+piece count $2^{D}$ with slope set $\{0,2^{-D}\}$, for $D\le6$ (up to $n=60$,
+$64$ pieces), by a parametric continuation that jumps from breakpoint to
+breakpoint (each piece is the region on which one positional pair keeps
+$\val_{\sigma,\tau}$ a fixed point of $T$); the path decomposition checked bag
+by bag and the $K_4$ minor checked for $D\le9$ (up to $n=117$). The continuation
+engine itself was validated on $217$ random stopping payoff games with one
+frozen parameter vertex, $10\,881$ exact value checks against brute-force
+$\max$--$\min$ over all positional pairs (for $n\le8$) and against certified
+Hoffman--Karp above, with no mismatch; and it reproduces \Cref{thm:fold}'s
+closed form and piece count on $P_D$ for $D\le7$. A variant
+$\mathrm{FW}(D)$, in which the constants come from a running chain
+$H_d\to(t_0,H'_d)$, $H'_d\to(t_0,H_{d-1})$ with $H_0\to(t_0,t_1)$ and
+$Y_d\to(H_{d-1},G_{d-1})$, $X_d\to(t_0,F_{d-1})$, has only $6D+3$ vertices and
+still $2^{D}$ pieces, hence $2^{\Omega(N)}$; its exact treewidth is $3$ and its
+exact pathwidth $4$ at $D=3$, and for $D\le12$ a min-fill elimination ordering
+certifies treewidth at most $4$. It trades width for size, and does not by
+itself improve on \Cref{rem:fold-width}, which already has $2^{\Omega(N)}$
+pieces at pathwidth four; $\mathrm{FL}$ is the family that lowers the width.
+\end{remark}
+
+\subsection{Treewidth one: two pieces, and already covered}\label{wa:sec-forest}
+
+At the other end the response is as simple as it can be, and the reason the
+symbolic route works there is not the width but a rigidity of one-dimensional
+interfaces.
+
+\begin{lemma}[Branch responses on a forest have two pieces]\label{wa:forest-response}
+Let $G$ be a payoff game with $\Gamma(G)$ a forest, root each of its trees, and
+for a non-root $v$ with parent $p$ let $A_v$ be the set of descendants of $v$,
+$v$ included. Then $A_v\cup\{p\}$ with $p$ retyped as a terminal of payoff
+$\theta$ is a payoff game $H_v[\theta]$, and
+$f_v(\theta):=\val_{H_v[\theta]}(v)$ is nondecreasing, $1$-Lipschitz, and
+piecewise affine with \emph{at most two} pieces. Explicitly, if neither
+successor of $v$ is $p$ then $f_v$ is constant; if both are, $f_v=\mathrm{id}$;
+and otherwise, with $s$ the other successor and
+$h:=f_s$ if $s$ is a child of $v$, $h:\equiv c(s)$ if $s$ is a terminal,
+$h:=\mathrm{id}$ if $s=v$, and $x^{\ast}:=\min\{x:h(x)\le x\}$,
+\[
+  f_v(\theta)=\begin{cases}
+    \max(\theta,x^{\ast}) & v\in\Vmax,\\
+    \min(\theta,x^{\ast}) & v\in\Vmin,\\
+    \psi^{-1}(\theta),\ \ \psi(x)=2x-h(x) & v\in\Vavg .
+  \end{cases}
+\]
+Moreover $\val_G(v)=f_v(\val_G(p))$ for every non-root $v$, and for a root $r$,
+$\val_G(r)$ is the least fixed point of $x\mapsto\mathrm{op}_r(h_0(x),h_1(x))$
+with $h_i$ as above for the two successors.
+\end{lemma}
+
+\begin{proof}
+$A_v\cup\{p\}$ is legitimate: in a forest the only neighbour of $A_v$ outside
+$A_v$ is $p$, so every successor of a vertex of $A_v$ lies in $A_v\cup\{p\}$ or
+is a terminal. Apply \Cref{lem:cut} inside $H_v[\theta]$ with $S=\{v\}$: with
+$x$ the frozen value of $v$, the successors of $v$ contribute $\theta$ (if the
+successor is $p$), their payoff (if a terminal), $x$ (if the successor is $v$),
+or $f_c(x)$ for a child $c$ --- the last because $A_c\cup\{v\}$ is
+successor-closed in $H_v[\theta][v{:=}x]$ (\Cref{lem:successor-closed}) and the
+game it induces is $H_c[x]$. In a forest $v$ has no other neighbours, so
+$f_v(\theta)=\lfp_x\mathrm{op}_v(g_0,g_1)$ with each $g_i\in\{\theta,\ c,\ x,\
+f_c(x)\}$. If neither $g_i$ is $\theta$ the least fixed point does not depend on
+$\theta$; if both are, $\mathrm{op}_v(\theta,\theta)=\theta$.
+
+Otherwise write $h$ for the $\theta$-free branch; $h$ is nondecreasing and
+$1$-Lipschitz by induction, so $x\mapsto h(x)-x$ is nonincreasing and
+$\{x:h(x)\le x\}=[x^{\ast},1]$ with $h(x^{\ast})=x^{\ast}$ by continuity.
+\emph{Max:} $\Phi(x)=\max(\theta,h(x))$. If $\theta\le x^{\ast}$ then
+$\Phi(x^{\ast})=x^{\ast}$ and any fixed point $x$ has $h(x)\le x$, so
+$x\ge x^{\ast}$; if $\theta>x^{\ast}$ then $h(\theta)\le\theta$ gives
+$\Phi(\theta)=\theta$ and every fixed point is $\ge\theta$. So
+$\lfp\Phi=\max(\theta,x^{\ast})$.
+\emph{Min:} $\Phi(x)=\min(\theta,h(x))$; a fixed point is either $\theta$ with
+$h(\theta)\ge\theta$ or a fixed point of $h$ that is $\le\theta$. If
+$\theta<x^{\ast}$ then $h(\theta)>\theta$, $\theta$ is a fixed point, and $h$
+has none below $x^{\ast}$; if $\theta\ge x^{\ast}$ then $x^{\ast}$ is a fixed
+point and nothing smaller is. So $\lfp\Phi=\min(\theta,x^{\ast})$.
+\emph{Average:} $x=\tfrac12(\theta+h(x))$ reads $\psi(x)=\theta$ with
+$\psi(x)=2x-h(x)$ of slope in $[1,2]$, hence strictly increasing, with
+$\psi(0)\le0\le1\le\psi(1)$; so the fixed point is unique and equals
+$\psi^{-1}(\theta)$, whose piece count equals that of $h$.
+In the first three cases the piece count is at most $2$ outright, and in the
+average case it equals that of $h$, which is at most $2$ by induction (the
+induction is on the tree, and at a leaf $h$ is a constant or the identity). All
+five forms are nondecreasing and $1$-Lipschitz. The last two assertions are
+\Cref{lem:successor-closed} and \Cref{lem:cut} at $S=\{r\}$.
+\end{proof}
+
+\begin{theorem}[Treewidth one in linear time]\label{wa:forest-poly}
+The value of a payoff game whose interaction graph is a forest is computed
+exactly with $O(n)$ arithmetic operations on rationals of $O(a+\log\Delta)$
+bits, by computing the $f_v$ bottom-up and evaluating top-down. No stopping
+hypothesis is needed: the algorithm computes least fixed points throughout.
+\end{theorem}
+
+\begin{proof}
+\Cref{wa:forest-response} gives the recursion, each step being $O(1)$ rational
+operations on a representation with one breakpoint. On each of its pieces $f_v$
+is the value function of a fixed positional pair of $H_v$, hence affine with
+coefficients whose denominators divide an integer at most $2\Delta2^{a}$
+(\Cref{lem:payoff-transfer}(d)); $x^{\ast}$ is the solution of an equation
+between two such affine functions, so all numbers have $O(a+\log\Delta)$ bits.
+\end{proof}
+
+\begin{proposition}[Treewidth one is inside $\mathcal K_1$]\label{wa:forest-k1}
+Let $G$ be a \emph{stopping} payoff game whose interaction graph is a forest.
+Then no two distinct controlled vertices of $G$ are mutually reachable. Hence
+every strongly connected component of $H(G)$ is a singleton,
+$G\in\mathcal K_1$ of \Cref{thm:bounded-components}, all-switches halts within
+$|\Vmax|$ rounds, and treewidth one is \emph{not} a new polynomial class. The
+statement is sharp: the stopping game on the $4$-cycle
+$x\to(m,t_0)$ ($x\in\Vmax$), $m\to(y,t_1)$, $y\to(q,t_0)$ ($y\in\Vmax$),
+$q\to(x,t_0)$ ($m,q\in\Vavg$), of treewidth two and value
+$(\tfrac23,\tfrac23,\tfrac13,\tfrac13)$, has $x$ and $y$ mutually reachable.
+\end{proposition}
+
+\begin{proof}
+Let $u\ne w$ be controlled and mutually reachable, and let
+$u=z_0,z_1,\dots,z_l=w$ be the unique path between them in the forest
+$\Gamma(G)$ (it exists because a directed path in $G$ projects to a walk in
+$\Gamma(G)$). Deleting the edge $\{z_i,z_{i+1}\}$ from $\Gamma(G)$ separates $u$
+from $w$, and it is the only $\Gamma$-edge between the two sides; so a directed
+path from $u$ to $w$ must use the arc $z_i\to z_{i+1}$, and one from $w$ to $u$
+the arc $z_{i+1}\to z_i$, for every $i$. Put $U:=\{z_0,\dots,z_l\}$. Each
+internal $z_i$ has both $z_{i-1}$ and $z_{i+1}$ as successors, so its
+out-degree two is exhausted and \emph{both} its successors lie in $U$; and
+$z_0=u$, $z_l=w$ are controlled with the successors $z_1$, $z_{l-1}$ in $U$. So
+$U$ is a nonempty trap and $G$ is not stopping (\Cref{lem:trapchar}), a
+contradiction. The witness is an exact computation.
+\end{proof}
+
+\begin{remark}[The dividing line]\label{wa:dividing}
+\Cref{wa:forest-response} and \Cref{wa:fold3} bracket the symbolic route: at
+treewidth one every branch response has at most two affine pieces, and at
+pathwidth three there are $2^{\Omega(\sqrt N)}$ of them. Treewidth two is open;
+on $243$ random stopping games of treewidth at most $2$ with $n\le30$ the
+response to one frozen vertex never had more than two pieces (and on $332$ of
+treewidth at most $3$, never more than three), but random sampling has never
+found a hard instance in this project and this is not evidence. What the two
+ends suggest is where to look: the mechanism of \Cref{rem:fold} --- one Max and
+one Min vertex sharing a successor pair, fed by two tracks and a chain of
+constants decaying twice as fast --- forces its two tracks to run forward and
+backward across every level, and the ladder this produces carries the $K_4$
+minor of \Cref{wa:fold3}; whether \emph{some} mechanism folds inside a
+$K_4$-minor-free interaction graph, that is at treewidth two, is the question
+left open here.
+\end{remark}

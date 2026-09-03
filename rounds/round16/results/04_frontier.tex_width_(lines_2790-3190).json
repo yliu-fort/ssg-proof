@@ -1,0 +1,146 @@
+{
+ "target": "frontier.tex width (lines 2790-3190)",
+ "sound": false,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "thm:modulator (l.3012-3040), statement",
+   "defect": "The stopping hypothesis on H is used at four places in the proof but never stated, and as written the theorem is false.",
+   "evidence": "The statement quantifies over an arbitrary payoff game H (val_H := lfp(T_H), def:payoff) and says only \"so for a stopping SSG in time N^{O(mu)}p(N,O(N))\"; the proof invokes lem:round-recover, lem:cut-sign and lem:payoff-transfer(d), all of which require H stopping, and ends \"a stopping game's operator has a unique fixed point (thm:contraction), so the final check certifies\". Counterexample verified in exact arithmetic (audit/nonstop.py): H = one average non-terminal v with both edges to v; is_stopping = False; lfp(T_H)(v) = 0 (200 iterations of T from 0 stay at 0); mu_P(H) = 1 with X = {v} and P = the acyclic payoff games (H[v:=theta] has no non-terminal at all); F_X(theta) = mean(theta,theta) = theta, so every grid point is a fixed point of the rounded cut map and thm:tarski returns the grid midpoint; T_H w = w holds at w(v) = 0, 1/2 and 1 alike, so the certification passes at a wrong vector. The theorem's own prose (\"on a non-stopping game the same check can pass at a wrong vector, as its auditor exhibited, so the stopping hypothesis is not decorative\") shows the hypothesis was known and dropped in transcription."
+  },
+  {
+   "severity": "major",
+   "result_name": "the amortisation paragraph, l.3186-3188",
+   "defect": "\"the class of thm:modulator contains no instance that is hard for a mechanism of sec:gap\" is false, and is refuted by the manuscript's own strongest negative families.",
+   "evidence": "Exact recomputation (audit/wd2.py, audit/mu_fams.log): WD(e,j,m) is stopping with Vmax = {v_1,v_2}, Vmin empty, and both mu_max = 2 and directed feedback vertex number = 2, witnessed by X = {v_1,v_2}, at (e,j,m) = (3,2,5),(4,3,6),(5,4,8),(6,5,9),(2,5,9); CC(L,m) likewise has mu_max = dFVS = 2 at (2,2),(3,3),(4,4); H_m is max-acyclic, i.e. mu_max = 0, with dFVS = 1, at m = 3,4,5,6. So WD lies in the modulator class at mu = 2 (indeed in the acyclic-modulator = feedback-vertex-set class at 2), CC at mu = 2, and H_m already inside thm:kacyclic at mu_max = 0. But WD is thm:wedge-proved/cor:wedge-count's family, silent for the Z-seeded own-successor hybrid for K = 1,6,15,33,68,138,279,560 rounds, i.e. 2^{Omega(N)}, and defeats M2, M2T, M4, M5, M6 (rem:wedge); CC is thm:hybrid-lower's 2^{Omega(N)} family; H_m is cor:slack-stalls' 2^{Omega(N)} pair-test stall. Unlike rem:escape-class, whose parallel claim is PROVED from the certified rate (thm:slack-vi-upper turns lambda^{k-1}kappa into a firing round), the modulator class carries no rate, so no such argument exists. The reason offered -- \"the families of this document are all of width at most four and were never hard to solve\" -- is a non sequitur that contradicts the paragraph 65 lines above (l.3118-3122): \"they were never hard to solve; they are hard for mechanisms (sec:gap), on which a width bound is silent\"."
+  },
+  {
+   "severity": "major",
+   "result_name": "prop:modulator-family (l.3155-3174) and its proof",
+   "defect": "The title claims M_n is \"in none of the six\" (echoed as \"outside all the others\" in the abstract l.92 and \"outside every other\" in the summary l.13480), but the body argues only three exclusions and the proof is one sentence.",
+   "evidence": "The body gives thm:few-avg (a = 3(N-3)/5), thm:kacyclic (the cycle carrying all three kinds) and thm:bounded-components (H(M_n) one SCC), plus a feedback-vertex-number comparison with Auger-Coucheney-Strozecki. Nothing at all is said about thm:few-escape, thm:few-denominator, or whichever of thm:escape-class / thm:subexp completes the six that prop:escape-family's \"none of the six\" enumerates as (ii)-(vii). The proof reads in full \"Inspection of the edges, and exact computation for the value\", and the parenthetical certifies only four clauses (\"Stopping, reachability, val(h) and the Max-cycle claim re-verified here for n<=5\"). I recomputed the missing exclusions exactly (audit/escape_audit.py, audit/mn_audit.py): d(M_n) = 4,5,6,7 at n = 3,4,5,6, i.e. d = n+1 = Theta(N), so thm:few-escape gives 2^{Theta(N)}; Lambda(M_n) has k = n+3 letters with D(M_n) = 2^{n+1} (16,32,64,128 at n = 3,4,5,6), so thm:few-denominator gives 2^{Theta(N)}; |Vmax| = n+1 so thm:subexp gives e^{2 sqrt(n)}. The claims are true, but they are asserted, not proved and not verified."
+  },
+  {
+   "severity": "minor",
+   "result_name": "the amortisation paragraph, l.3188",
+   "defect": "\"the families of this document are all of width at most four\" is false.",
+   "evidence": "Exact treewidth/pathwidth by the subset DP of Bodlaender-Fomin-Koster-Kratsch-Thilikos, validated against K_4 (3), C_4 (2), P_5 (1), Petersen (tw 4, pw 5), the 4x4 grid (4) and the 5x5 grid (5): FV(5) of prop:fv-family has tw(Gamma) = pw(Gamma) = 6 and FV_2(5) has tw = pw = 6; FV(4) has tw 4 but pw 5, FV_2(4) tw 4 pw 5. FV and FV_2 are families of this document, introduced 400 lines earlier and cited in prop:fv-stall inside this very range. The narrower claim of l.3118-3121 -- L_n, H_m, G_m, WD, CC all of width at most four -- I confirm: tw = pw = 3 (L_n, n>=4), 2 (G_m, m>=4), 2 (H_m, m>=4), 3 (WD(3,2,5), WD(4,3,6), WD(3,3,7)), 3 (CC(2,2), CC(3,3), CC(2,4)); M_n itself has pw = 4."
+  },
+  {
+   "severity": "minor",
+   "result_name": "def:width, l.2894-2896",
+   "defect": "\"Terminals are absorbing and never need separating; counting them raises either parameter by at most two\" is false for a payoff game, which def:payoff allows to have arbitrarily many terminals.",
+   "evidence": "The bound \"at most two\" is the SSG statement (two sinks, each a single added vertex, each raising tw and pw by at most one). For a general payoff game, T terminals of unbounded in-degree can raise the treewidth by Theta(T): take non-terminals u_{ij} (1<=i,j<=k), each with out-degree two, u_{ij} -> (z_i, w_j) with z_i, w_j terminals; Gamma on the non-terminals is edgeless (tw 0) while the graph including the 2k terminals contains a k x k grid minor. Nothing in the subsection depends on the sentence, since Gamma is defined on the non-terminals."
+  },
+  {
+   "severity": "minor",
+   "result_name": "lem:payoff-transfer(d), proof at l.2932-2937",
+   "defect": "Cramer's rule is applied to the non-integral matrix I-P with the false-flavoured bound det(I-P) <= 2^a; the argument as written does not establish the stated denominator bound.",
+   "evidence": "For a positional pair, I-P has rows (1,-1) at controlled vertices and (1,-1/2,-1/2) at average vertices; it is not integral and in fact det(I-P) <= 1 by lem:watched, so \"det(I-P) <= 2^a (lem:denominator-sharp)\" is not what makes Cramer's rule give an integer determinant. The correct route is lem:denominator's: scale only the average rows by 2 to get an integral B with det B = 2^{a'} det(I-P) <= 2^a, whence the denominator divides Delta*det B <= Delta*2^a <= 2*Delta*2^a. The conclusion (d) is true; the one-line proof does not prove it."
+  },
+  {
+   "severity": "minor",
+   "result_name": "lem:payoff-transfer(b), proof at l.2925-2928",
+   "defect": "lem:gadget is cited for \"the dyadic case\" of realising a terminal payoff p by a chain of fair coins, but lem:gadget realises only the single leak beta = 2^{-m} on an edge.",
+   "evidence": "def:damping / lem:gadget (l.955-980) replaces an edge u->w by a chain reaching w with probability 1-2^{-m} and t_0 with probability 2^{-m}; it does not realise an arbitrary dyadic payoff. The result that does is lem:dyadic-row (l.980), stated in this manuscript two subsections earlier: \"an arbitrary substochastic dyadic row of denominator 2^D over a target set is realised by a chain of at most D average vertices per row\". The citation points at the wrong lemma."
+  },
+  {
+   "severity": "minor",
+   "result_name": "lem:payoff-transfer(c), proof at l.2930",
+   "defect": "\"The proof of cor:comparison uses monotonicity of T_H and (b) only\" is wrong: it also uses part (a).",
+   "evidence": "cor:comparison's proof (l.911-920) reads \"By thm:contraction and thm:stopping-determinacy, val_sigma is the unique fixed point of T_sigma and every orbit of T_sigma converges to it\", and then argues that the monotone sequence T^k x converges to that limit. Convergence of every orbit is exactly part (a) of lem:payoff-transfer, not part (b)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "thm:tarski, l.2953-2960",
+   "defect": "The evaluation bound 2(ceil(log_2 M)+1)^d fails in the degenerate case M = 1.",
+   "evidence": "The recurrence given in the proof, Q(d) <= (ceil(log_2 M)+1)(Q(d-1)+1) with Q(0) = 0, sums to c(c^d-1)/(c-1) <= 2c^d only for c = ceil(log_2 M)+1 >= 2. At M = 1 one has c = 1, the recursion as described still makes one evaluation of F per level, so Q(d) = d, and the stated bound is 2 < d for d >= 3. (Harmless: the grid used in thm:modulator and thm:qp has M = 2^B+1 >= 2.)"
+  },
+  {
+   "severity": "minor",
+   "result_name": "thm:qp, l.3073-3078 (operation count)",
+   "defect": "The count 2^{O(k log^2 n)} = n^{O(k log n)} is stated for arbitrary common denominator Delta, but the number of evaluations per node grows with log Delta.",
+   "evidence": "By the proof's own display a node makes 2(B+2)^{k+1} evaluations with B = O(a + log Delta + log n), so unrolling gives 2^{O(k log n (log n + log log Delta))}, which is 2^{O(k log^2 n)} only when log Delta = n^{O(1)}. The bit-size half of the same sentence does carry log Delta (\"O(n^{1+log_2 3} + n^{log_2 3} log Delta)\"), so the omission is in the operation count alone. The headline application (prob:main on stopping SSGs, Delta = 1) is unaffected."
+  },
+  {
+   "severity": "minor",
+   "result_name": "the paragraph after thm:modulator, l.3064-3072",
+   "defect": "The recipe \"retype each kind-k vertex on a cycle as an average vertex with both edges to one chosen successor ... and take the extremum over the 2^{f_k} choices\" is unsound for k = avg, and \"this is thm:bounded-components without stopping\" claims a containment that holds in neither direction.",
+   "evidence": "k = avg: take u, w both average with u -> (t_1, w) and w -> (t_0, u); the single cycle carries both, f_avg = 2, and val(u) = 2/3, val(w) = 1/3. The four frozen games give val(u) = 1 (u->(t_1,t_1)), 1 (u->(t_1,t_1), w->(u,u)), 0 and 0, so max = 1 and min = 0; neither extremum is 2/3, and \"positional determinacy (thm:determinacy)\" says nothing about average vertices. Incomparability: on K_n of prop:k1-family every component of H(K_n) is a singleton so thm:bounded-components gives poly(N)*2, while every x_i lies on the cycle x_i -> c_i -> m_i -> x_i so f_max = n and the new bound is poly(N)2^n; conversely on def:maxreach's own example (u->(c,t_0), v->(d,t_0), c->(a,t_0), d->(a,t_0), a->(u,v)) no cycle passes through a Max vertex, f_max = 0, while H(G) has a component of size 2."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:alphabet-equivalence, l.2856-2858",
+   "defect": "thm:decide-one-bit is said to sit \"in sec:selection\" but it does not.",
+   "evidence": "sec:selection is l.9040-9495 (sec:randomfacet starts at l.9496); thm:compare-equivalence is at l.9086 and thm:order-determines at l.9184, both inside it, but thm:decide-one-bit is at l.9943, inside sec:gap (l.9852-)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:alphabet-equivalence, l.2870",
+   "defect": "\"a measurement on nine families\" does not match the list it points at.",
+   "evidence": "rem:alphabet-compare (l.2664-2670) names L_n (n=3,5,7), H_m and G_m (m=2,3,4), WD(3,2,5), WD(4,3,6), WD(3,3,7), CC(2,2) and CC(3,3): eight named items, five distinct families, fourteen instances. None of these numbers is nine."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:alphabet-equivalence, l.2853-2855",
+   "defect": "The forward half of a stated \"if and only if\" is discharged by an appeal to \"the standard search-to-decision reduction\", with no proof, no internal label and no attribution.",
+   "evidence": "The only occurrence of \"search-to-decision\" in the whole file is this line (grep). prob:main is the single-threshold decision \"val(v_0) >= 1/2\"; getting the exact value vector needs a threshold-shifting gadget plus binary search over denominators up to 2^a. Both ingredients are in the manuscript (lem:dyadic-row, thm:compare-equivalence) and neither is cited. In a document whose declared standard is that every claim is proved from first principles, this is the one unproved half of an equivalence."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:fv-stall, proof at l.2809-2829",
+   "defect": "The proof schema covers only the two slack calculi; the one-shot transport test of def:transport, which the statement includes, is nowhere addressed, and the breakpoint bound the induction rests on does not hold for it.",
+   "evidence": "The proof's key step is \"Each entry of F(D) is a minimum of finitely many expressions, each a constant or a maximum, minimum, mean or min-plus path sum of entries of D\", from which \"no breakpoint lies in (0,1/(6N))\" is deduced (means of values in {0,1/3,2/3,1} lie in (1/6)Z and Psi-combinations lie in (1/2)Z with magnitude at most N). An entry produced by the transport LP is a minimum over bases of dual-multiplier combinations of the D-entries, whose coefficients are ratios of determinants of the constraint matrix and can have magnitude 2^{Theta(N)}; the bound 1/(6N) does not follow. Also the closing sentence \"every entry the test reads either lies in S with W = 0 or has W >= 0\" does not state the check the argument actually needs, namely that every direction-(i) entry (v, v^{(i)}) lies in S -- without it a direction-(i) entry outside S would have Delta = W = 0 and would fire."
+  },
+  {
+   "severity": "note",
+   "result_name": "prop:fv-stall, l.2798-2831 (numbers)",
+   "defect": "The proposition's numbers are correct: I reproduced the silence independently, but the manuscript attributes the verification to the route and its auditor rather than to itself, and \"both variants\" is not said of what.",
+   "evidence": "audit/fv_check.py, audit/fv_stall2.py, audit/fv_tp.py, exact rationals. FV(n): N = 4n+2, a = 2n, stopping, Lambda = {0,1/3,2/3,1}, k = 4, D = 3; FV_2(n): N = 5n+2, a = 3n, same alphabet; every controlled vertex non-distinguishing, val_sigma = w* and S_sigma = empty for all 2^n sigma (n = 2,3,4,5). Silence for n = 3,4,5 on both families: the Z_0/Z_1-seeded slack calculus of def:slack and its min-plus closure of def:trans-slack, run 20 rounds, never fire in either direction of rem:own-successor at any of the 2n controlled vertices (the least direction-(i) entry is 1, 1, 1/2, 1/2, ... halving to 1/1024 at round 20, exactly the geometric floor the proof's induction predicts); the one-shot Z-seeded transport separator of def:transport fires in neither direction. Manuscript text: \"(Exact for n = 3,4,5 and both variants, by the round-15 verification route, confirmed by its auditor.)\""
+  },
+  {
+   "severity": "note",
+   "result_name": "rem:fold-width, l.3140-3153 (numbers)",
+   "defect": "Every number checks out, but the \"explicit path decomposition\" asserted for pw(P_D) <= 4 at every D is not exhibited.",
+   "evidence": "audit/pd_graph.py, audit/pd_pieces.py, audit/pw_le.py, audit/pd_order.py. Exactly: tw(P_D) = pw(P_D) = 2,3,3,4 for D = 1,2,3,4; pw(P_D) = 4 and pw(P_D) > 3 for 4 <= D <= 8 (pruned exact search, n up to 48); |V(P_D)| = 6D+2. The response at F_D has exactly 2^D affine pieces with slope set {0, 2^{-D}} and the 2^D optimal pairs pairwise distinct, D = 1..8, and the tent-map formula of thm:fold agrees at all 2^D interval midpoints. A witness for the missing decomposition: the vertex order u, then for d = 1..D the block X_d, k_{2D-2d+2}, k_{2D-2d+1}, Y_d, F_d, G_d, has vertex separation exactly 4 for every D <= 40 (checked), so pw(P_D) <= 4 for those D. Minor notation slip: rem:fold-width calls the free parameter varphi_u where thm:fold calls it theta and reserves varphi_d for f_d - g_d."
+  },
+  {
+   "severity": "note",
+   "result_name": "prop:modulator-family, l.3155-3174 (numbers)",
+   "defect": "Everything the proposition does state is exactly right, checked well past the n <= 5 the manuscript records.",
+   "evidence": "audit/mn_audit.py (brute force over all positional pairs, n = 3,4,5,6) and audit/mn_big.py (n = 7,8,9, certifying the claimed vector as the unique fixed point of a stopping game rather than by brute force): N = 5n+3, a = 3n = 3(N-3)/5, stopping, every vertex reachable from h, val(h) = 9/16, 17/32, 33/64, 65/128, 129/256, 257/512, 513/1024 = 1/2 + 2^{-(n+1)}, mu_max = 1 with X = {h}, minimum directed feedback vertex set exactly n+1 at n = 3 and 4 (so \"at least n+1\" is tight), H(M_n) a single strongly connected component on all n+1 Max vertices, and pw(Gamma(M_n)) = 4 (tw = 4 at n = 3,4)."
+  },
+  {
+   "severity": "note",
+   "result_name": "thm:modulator, l.3018-3020 and l.3034-3036",
+   "defect": "Three small statement-level slips: the quantifier on class membership, an undeclared Delta, and n/N notation.",
+   "evidence": "(a) \"a bound that survives finding X by trying all N^mu candidate sets when membership of P is decidable in polynomial time\" -- what has to be decided is \"H[X:=theta] in P for every theta\", which coincides with one membership test only because every P named is theta-independent; that is not said. (b) Delta appears in B = O(a + log N + log Delta) but is introduced only in lem:payoff-transfer. (c) the subsection preamble declares \"n its number of non-terminals\" and the theorem then writes p(n,O(B)) alongside log N, N^mu and N^{O(mu)}p(N,O(N))."
+  },
+  {
+   "severity": "note",
+   "result_name": "lem:cut-sign, proof at l.2946",
+   "defect": "lem:trapchar is used for payoff games with many terminals, which rem:terminals does not license.",
+   "evidence": "lem:trapchar (l.7055) is stated for an SSG with U contained in V minus {t_0,t_1}; rem:terminals (l.925-940) extends only lem:absorption, thm:contraction, thm:stopping-determinacy, cor:comparison, lem:local-global and thm:opt-subcube to games with extra constant-payoff terminals, and does not name lem:trapchar. The extension is immediate (the successor structure off the frozen set is unchanged), but it is used unstated, and across a 4000-line forward reference."
+  },
+  {
+   "severity": "note",
+   "result_name": "lem:round-recover, l.2992-2995",
+   "defect": "Uniqueness of the rational recovered needs a strict inequality; \"known to within 1/(2Q^2)\" admits two candidates.",
+   "evidence": "An interval of length 2*(1/(2Q^2)) = 1/Q^2 can contain two distinct rationals of denominator Q at its endpoints, which differ by exactly 1/Q^2; Legendre's theorem needs |x - p/q| < 1/(2q^2) strictly. Nothing depends on it: thm:modulator's proof takes epsilon = 1/(4N 2^a Q^2), giving error 1/(4Q^2)."
+  },
+  {
+   "severity": "note",
+   "result_name": "l.3055-3059 and l.2934-2936, provenance of verifications",
+   "defect": "Two verifications are recorded without a count or a statement of what was varied, and one is attributed to a route's auditor rather than to the manuscript.",
+   "evidence": "\"The grid search, rounding and recovery were implemented here and returned the exact values on random stopping games with a frozen feedback set, alongside the route's own implementation of the modulator and treewidth algorithms\" gives no number of instances and no parameter range; \"its auditor verified the four consequences numerically and asked that they be stated\" attributes lem:payoff-transfer's check to the route's auditor. Contrast prop:modulator-family, which does say \"re-verified here for n<=5\"."
+  },
+  {
+   "severity": "note",
+   "result_name": "the Auger-Coucheney-Strozecki paragraph, l.3057-3063",
+   "defect": "The claim that \"the parameter is smaller\" than theirs may be an artefact of comparing against the wrong parameter; flagged because my own source is memory.",
+   "evidence": "From memory and unchecked against the source: Auger, Coucheney and Strozecki's \"almost acyclic\" simple stochastic games are parametrised by the MAX vertices whose deletion makes the game acyclic, not by the full feedback vertex number. If that is right, their parameter is within a constant of mu_max and not of the feedback vertex number, and the comparison \"prop:modulator-family has mu_max = 1 where the feedback vertex number is Theta(N)\" flatters the new bound. The manuscript already flags the source as unchecked, so this is a caution rather than a defect."
+  }
+ ],
+ "verdict": "NOT SOUND: three major defects survive. (1) thm:modulator (l.3012) is false as stated -- the stopping hypothesis on H is used four times in its proof and in its own closing sentence but never appears in the statement; explicit counterexample verified in exact arithmetic. (2) The subsection's concluding claim (l.3186) that the modulator class \"contains no instance that is hard for a mechanism of sec:gap\" is refuted by the manuscript's own headline negative families: WD(e,j,m) and CC(L,m) have mu_max = 2 and directed feedback vertex number 2 (X = {v_1,v_2}), and H_m is max-acyclic (mu_max = 0), all recomputed exactly at several parameter values; the reason offered contradicts the paragraph 65 lines above. (3) prop:modulator-family claims exclusion from six classes (amplified in the abstract l.92 and summary l.13480) and argues three; the missing three are true -- I computed d(M_n) = n+1, D(M_n) = 2^{n+1}, |Vmax| = n+1 -- but unproved and unverified.\n\nWHAT I RECOMPUTED, all in python3 fractions.Fraction, in /tmp/claude-1000/-data-ssg-proof/d1fe2115-9b72-4784-bb94-87421ac1106c/scratchpad/paper-audit-width/audit/ (mn_audit.py, mn_big.py, escape_audit.py, pd_graph.py, pd_pieces.py, pd_order.py, pd_bags.py, pw_le.py, width.c, fam_width.py, mu_fams.py, wd2.py, fv_check.py, fv_stall2.py, fv_tp.py, nonstop.py; logs beside them):\n- prop:modulator-family, every clause, at n = 3..6 by brute force over all 2^{n+1} x 2^n positional pairs and at n = 7,8,9 by uniqueness of the fixed point: all confirmed, including the tight FVS = n+1.\n- The three exclusions the proposition omits: d(M_n) = 4,5,6,7 at n = 3,4,5,6 (def:escape implemented from the definition, minimised over all optimal sigma); D(M_n) = 2^{n+1} with k = n+3; |Vmax| = n+1.\n- rem:fold-width in full: tw = pw = 2,3,3,4 at D = 1..4, pw = 4 and pw > 3 at D = 4..8, 2^D affine pieces with slopes {0,2^{-D}} and 2^D pairwise distinct optimal pairs at D <= 8, plus an explicit width-4 path decomposition for every D <= 40. Treewidth solver validated on K_4, C_4, P_5, Petersen, and the 4x4 and 5x5 grids.\n- The width claim for L_n, H_m, G_m, WD, CC (true: 3,2,2,3,3) and its overreach to \"the families of this document\" (false: FV(5), FV_2(5) have tw = pw = 6).\n- prop:fv-stall's premises and silence for n = 3,4,5 on FV and FV_2, both directions of rem:own-successor, Z_0/Z_1-seeded, 20 rounds of def:slack and def:trans-slack plus the one-shot def:transport separator.\n- Modulator numbers and stopping for WD (five parameter triples), CC (three), H_m (four), L_n, G_m, P_D.\n\nWHAT I DID NOT CHECK: the finite checks F(W) >= W, Theta >= Psi/2, D_K >= W + t*Psi at K = 14 that prop:fv-stall's induction rests on (I verified the conclusion, silence, not the three intermediate certificates); the round-15 route's own implementations of the modulator and treewidth algorithms; the internal proofs of thm:kacyclic, thm:bounded-components, thm:escape-class, thm:few-denominator, thm:fold and thm:vi-lower, which I read only for their statements; the exact treewidth of FV(n) for n >= 6 (the job was still running and was killed).\n\nPASTE-READY LATEX for what I proved.\n\n\\begin{lemma}[Width audit: the wedge is in the modulator class]\\label{lem:pawidth-wedge-modulator}\nFor every admissible $(e,j,m)$ the game $\\mathrm{WD}(e,j,m)$ of \\Cref{sec:wedge} is stopping and satisfies $\\mu_{\\max}(\\mathrm{WD}(e,j,m))=2$, with modulator $X=\\{v_1,v_2\\}$; indeed its directed feedback vertex number is $2$, so $\\mu_{\\mathcal P}=2$ already for $\\mathcal P$ the acyclic games. The same holds for $\\mathrm{CC}(L,m)$ of \\Cref{thm:hybrid-lower}. The family $H_m$ of \\Cref{cor:slack-stalls} is $\\max$-acyclic, so $\\mu_{\\max}(H_m)=0$ and \\Cref{thm:kacyclic} applies to it outright.\n\\end{lemma}\n\\begin{proof}\nDeleting $v_1,v_2$ from $\\mathrm{WD}$ leaves the $a$-, $b$-, $c$- and $w$-chains and $H$, on which every edge increases the chain index or leaves for a sink, so the residue is acyclic; and $v_1\\to a_{1,1}\\to\\dots\\to a_{1,e}$ returns to $v_1$, so no single vertex meets every cycle through a Max vertex. The same two deletions work on $\\mathrm{CC}$. In $H_m$ the only Max vertex $v\\to(c_1,h)$ has no in-edges, so no cycle meets it. Verified in exact arithmetic at $(e,j,m)=(3,2,5),(4,3,6),(5,4,8),(6,5,9),(2,5,9)$, at $(L,m)=(2,2),(3,3),(4,4)$ and at $m=3,\\dots,6$.\n\\end{proof}\n\n\\begin{remark}[The modulator class does reach the mechanisms]\\label{rem:pawidth-modulator-hard}\nConsequently the analogue of \\Cref{rem:escape-class} fails for \\Cref{thm:modulator}: $\\mathrm{WD}$ keeps the $Z$-seeded own-successor hybrid silent for $2^{\\Omega(N)}$ rounds (\\Cref{thm:wedge-proved}, \\Cref{cor:wedge-count}) and lies in the class at $\\mu=2$; $\\mathrm{CC}$ and $H_m$ do the same at $\\mu=2$ and $\\mu=0$. The escape class is excluded from the stalls by a \\emph{rate} (\\Cref{thm:slack-vi-upper}), and the modulator class carries none.\n\\end{remark}\n\n\\begin{proposition}[Width audit: a path decomposition of $P_D$]\\label{prop:pawidth-pd}\nFor every $D\\ge1$ the vertex order\n\\[\n u,\\;\\bigl(X_d,\\;k_{2D-2d+2},\\;k_{2D-2d+1},\\;Y_d,\\;F_d,\\;G_d\\bigr)_{d=1}^{D}\n\\]\n(omitting indices outside $1..2D-1$) has vertex separation $4$ in $\\Gamma(P_D)$, so $\\operatorname{pw}(P_D)\\le4$; and $\\operatorname{tw}(P_D)=\\operatorname{pw}(P_D)=2,3,3,4$ for $D=1,2,3,4$ with $\\operatorname{pw}(P_D)=4$ for $4\\le D\\le8$.\n\\end{proposition}\n\n\\begin{proposition}[Width audit: not every family here has small width]\\label{prop:pawidth-fv}\n$\\mathrm{FV}(5)$ and $\\mathrm{FV}_2(5)$ of \\Cref{prop:fv-family} satisfy $\\operatorname{tw}=\\operatorname{pw}=6$, and $\\operatorname{pw}(\\mathrm{FV}(4))=\\operatorname{pw}(\\mathrm{FV}_2(4))=5$, so the width of the families of this document is not bounded by four; the \\emph{hard} families $L_n,H_m,G_m,\\mathrm{WD},\\mathrm{CC}$ have width $3,2,2,3,3$.\n\\end{proposition}\n\n\\begin{remark}[Width audit: \\Cref{thm:modulator} needs the stopping hypothesis]\\label{rem:pawidth-stopping}\nLet $H$ be the payoff game with the single average non-terminal $v$ and both edges $v\\to v$. Then $\\val_H=\\lfp(T_H)=0$, while $\\mu_{\\mathcal P}(H)=1$ with $X=\\{v\\}$ and $\\mathcal P$ the acyclic payoff games, $F_X(\\theta)=\\theta$ for every $\\theta$, so every grid point is a fixed point of the rounded cut map, \\Cref{thm:tarski} returns the midpoint of the grid, and the final check $T_Hw=w$ passes there. The word \\emph{stopping} must appear in the hypothesis of \\Cref{thm:modulator}, not only in its consequences.\n\\end{remark}"
+}

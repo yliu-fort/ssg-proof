@@ -1,0 +1,122 @@
+{
+ "target": "frontier.tex front (lines 1-392 together with 13432-13710)",
+ "sound": false,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "Introduction, l.292 (and summary l.13440-13441)",
+   "defect": "The introduction states that determinacy is the ONLY imported fact, contradicting the abstract's own list of four imports and three explicit \"imported here\" flags in the body.",
+   "evidence": "l.292: \"The only external fact we import is the following classical determinacy statement; everything else in this document is proved from scratch.\" But the abstract (l.44-53) names three more: Holt-Klee, Legendre, Samelson-Thrall-Wesler; and the body flags them at l.3007-3008 (\"Legendre's theorem, a textbook fact imported here\"), l.6674-6676 (\"the theorem of Samelson, Thrall and Wesler --- a textbook fact imported here, from memory, and used nowhere else\") and l.4812-4813 / l.5678-5679 (\"Holt--Klee's theorem applies to X(G)\" / \"satisfies Holt--Klee on every face by Holt and Klee's theorem\"). The summary repeats the error at l.13440-13441: \"so that outside \\Cref{thm:determinacy} nothing classical is imported\". Separately, the abstract localises the Holt-Klee import to prop:oneplayer-lp, but lem:tie-perturb (l.5678-5679) invokes it directly, and thm:b2-walk says so at l.5872-5873 (\"it rests, through \\Cref{lem:tie-perturb}, on Holt and Klee's theorem\")."
+  },
+  {
+   "severity": "major",
+   "result_name": "abstract l.74-76 and summary l.13466-13468, citing thm:bounded-components",
+   "defect": "\"games in which no cycle carries two Max vertices\" is offered as the k=1 case of thm:bounded-components, but the theorem's class K_1 is \"no two Max vertices mutually reachable\", which is strictly smaller; the body itself warns against exactly this confusion.",
+   "evidence": "def:maxreach, l.4085-4089: \"Two distinct Max vertices lie in the same strongly connected component of H(G) exactly when each is reachable from the other in G --- a weaker condition than lying on a common cycle: with u->(c,t_0), v->(d,t_0), c->(a,t_0), d->(a,t_0) and a->(u,v) the Max vertices u,v are mutually reachable, yet no cycle passes through both.\" I built an asymptotic witness (paper-audit-front/k1gap.py): Max u_1..u_n, avg c_1..c_n with u_i->(c_i,t_0), c_i->(T_1,t_0), and a perfect binary tree of average vertices from T_1 to u_1..u_n. N = 4n+1; the greatest trap is empty (stopping); exhaustive search over simple directed cycles finds NONE containing two distinct Max vertices (verified n = 2,4,8); yet all n Max vertices are mutually reachable, so H(G) is a single SCC of size n = (N-1)/4 and thm:bounded-components gives only 2^{Theta(N)}. So the abstract and summary name a class on which the cited theorem yields nothing."
+  },
+  {
+   "severity": "major",
+   "result_name": "abstract l.79-80, citing prop:escape-family",
+   "defect": "\"an explicit family inside it and outside every one of the others\" overstates prop:escape-family, which proves \"contained in none of the six\"; Z_D is in the modulator class named two clauses later in the same abstract sentence.",
+   "evidence": "prop:escape-family, l.1785-1787: \"by (ii)--(vii) it is contained in none of the six\" -- the six being thm:few-avg, thm:few-escape, thm:kacyclic, thm:bounded-components, thm:subexp, thm:few-denominator. thm:modulator is not addressed. Recomputed (paper-audit-front/zd.py): the digraph of Z_D on its 2D non-sinks has exactly one directed cycle, W -> s_D -> M_D -> s_{D-1} -> ... -> s_1 -> W, and deleting W leaves an acyclic digraph (checked D = 3,4,5,8). So the feedback vertex number of Z_D is exactly 1, i.e. mu_P(Z_D) = 1 for P = the acyclic games (freezing-closed, polynomial by thm:kacyclic), and thm:modulator (l.3012-3040) solves Z_D in N^{O(1)}."
+  },
+  {
+   "severity": "major",
+   "result_name": "abstract l.91-93 and summary l.13478-13480, citing prop:modulator-family",
+   "defect": "\"a family inside it and outside all the others\" / \"a family inside that class and outside every other\" claims separations prop:modulator-family never establishes.",
+   "evidence": "prop:modulator-family, l.3168-3178, checks exactly three: \"a = 3(N-3)/5, so \\Cref{thm:few-avg} gives only 2^{Omega(N)}; the cycle ... carries all three kinds, so \\Cref{thm:kacyclic} does not apply; and H(M_n) is one strongly connected component on all n+1 Max vertices, so \\Cref{thm:bounded-components} gives only 2^{Omega(N)}\". Nothing is said about thm:few-escape (d(M_n) is never computed), thm:escape-class (no escape certificate is excluded), thm:few-denominator or thm:subexp. Its own title says only \"in none of the six\", and the abstract lists eight classes."
+  },
+  {
+   "severity": "major",
+   "result_name": "abstract l.221-222 and summary l.13581-13582, citing sec:projection",
+   "defect": "\"Holt--Klee constrains the projection not at all at m<=5\" asserts a statement quantified over all orientations at m=4 and m=5 that the body establishes only at m<=3, plus one witness at each of m=4 and m=5.",
+   "evidence": "The body (l.6737-6752) says: \"At m<=3 every unique sink orientation of the m-cube is the sink projection along one coordinate of a Holt--Klee one ... at m=4 the extremal orbit is one by \\Cref{prop:seven-k1}; and at m=5 the second blow-up level B^2 is one by \\Cref{prop:b2-realised}'s own profile cube\", and hedges the conclusion as \"So Holt--Klee is discharged by one extra coordinate wherever we can check.\" I verified both witnesses (paper-audit-front/proj.py, profcube.py): the printed 5-cube outmap of prop:seven-k1 is an HK AUSO of height 7 whose sink projection along coordinate 4 is exactly s_{G#}; and the 6-cube profile cube of the committed 138-vertex game is profile-nondegenerate, an acyclic HK USO of height 9 projecting to B^2. That is 1 of 12640 acyclic classes at m=4 and 1 orientation at m=5, not \"not at all at m<=5\"."
+  },
+  {
+   "severity": "major",
+   "result_name": "summary l.13566-13567, citing thm:zero-timer",
+   "defect": "\"ties buy a one-player run at most one round per Max vertex\" is a general statement about ties that thm:zero-timer does not make; the body's own general form is scoped to zero-tie gating with two extra hypotheses, and the corresponding general question is stated open.",
+   "evidence": "thm:zero-timer, l.5955-5961, bounds only the wake time of a zero-tie timer: \"let u be a vertex with val_{sigma_0}(u)=0 and val_{sigma_T}(u)>0, T least ... In particular T <= m.\" The general conclusion is at l.6041-6044 and is explicitly restricted: \"So ties buy sequencing, one round per Max vertex, and never more; a one-player family beating h*_HK must not be built from zero-tie gating\", resting on cor:gate (l.6014-6022), which assumes \"a block's vertices never switch while dead, and that no vertex of B_1,...,B_{r-1} switches after the round at which B_r wakes\". prop:no-linear-tiebreak states the general question open at l.5947-5949: \"Whether every one-player stopping game satisfies L <= h*_HK(|Vmax|) remains open.\""
+  },
+  {
+   "severity": "major",
+   "result_name": "summary l.13607-13610, citing thm:slack-barrier / cor:slack-stalls",
+   "defect": "\"hence exponential on an explicit family\" drops the pair-test scope that cor:slack-stalls carries, in a paragraph that applies the rem:own-successor correction to the transport programme and to the hybrid but not to the slack calculus.",
+   "evidence": "cor:slack-stalls, l.10469-10477: \"The pair test at v therefore stalls on H_m for 2^{Omega(N)} rounds. The own-successor test of \\Cref{rem:own-successor} ... is NOT covered by \\Cref{thm:slack-barrier} ... Measured in exact arithmetic it first fires at rounds 15,39,101,250 for m=3,...,6, one round after the pair entries first decide; we have no proof of a bound for it, and the exponential stall of the slack calculus as a DECISION RULE is, on this family, a measurement.\" The summary states the decision-rule form flatly, while at l.13648-13652 and l.13684-13691 it explicitly makes the same correction for prop:transport-stalls, thm:transport-barrier and thm:hybrid-lower."
+  },
+  {
+   "severity": "minor",
+   "result_name": "abstract l.140-141, citing sec:hybrid",
+   "defect": "\"we couple the last two into a feedback loop\" misnames the coupled pair: the hybrid couples the SLACK calculus with the transport programme, and \"the last two\" in the abstract's own enumeration are the bracket-seeded variant (l.131) and the transport certificate (l.132).",
+   "evidence": "The very next clause names the right pair -- \"the non-convex halves of the controlled rows, which a linear programme must drop, are exactly what the slack clauses supply\" (l.142-144) -- and the summary says it correctly at l.13655-13660."
+  },
+  {
+   "severity": "minor",
+   "result_name": "abstract l.186-188 and introduction item (viii), l.368-369, citing thm:peak-law",
+   "defect": "\"three monotonicity laws, all consequences of \\Cref{thm:peak-law}\" is a false provenance for two of the three.",
+   "evidence": "cor:no-return (l.4028-4041) is proved from lem:monotone-law, which is stated at l.3759-3765 under a DIFFERENT hypothesis (val_{sigma'} not <= val_sigma, against thm:peak-law's val_{sigma'} >= val_sigma) and proved at l.3767-3778, before thm:peak-law appears at l.3917. cor:law-u (l.4544-4559) is proved from \"the AUSO supplied by \\Cref{cor:ceiling-general}\", i.e. from thm:flat-resolution (l.4487-4523), which nowhere uses thm:peak-law; rem:flat treats it as an addition to the two peak-law consequences (l.4571-4574). Only cor:law-b (and cor:antichain via cor:no-return) come from the peak law."
+  },
+  {
+   "severity": "minor",
+   "result_name": "summary l.13635, citing sec:seeded / thm:seeded-sound",
+   "defect": "\"strictly dominates both\" claims domination of the seeded calculus over the ratio calculus as well as over the additive one; only the latter is proved.",
+   "evidence": "thm:seeded-sound, l.11615-11618: \"it is monotone in the seed, so Delta^{L,U}_k <= Delta^{0,1}_k pointwise and the seeded calculus dominates \\Cref{def:slack} round by round\". No statement anywhere compares def:seeded with def:ratio, and prop:ratio-incomparable (l.11225-11241) shows def:ratio and def:slack are incomparable pair by pair (on W the ratio calculus decides (0,2) at round 2 where Delta_2(0,2)=0 does not), so domination of the ratio calculus does not follow from domination of the additive one."
+  },
+  {
+   "severity": "minor",
+   "result_name": "summary l.13635-13637, citing prop:seeded-decides and prop:bracket(a)",
+   "defect": "Two overstatements in one clause: the seeded calculus does not decide every stalling instance at M(0,0), and prop:bracket(a) does not forbid \"any bracket\" from deciding the vertex in question.",
+   "evidence": "(i) The proof of thm:seed-dichotomy, l.11669-11681, shows M(0,0) STALLS on WD(4,2,6) from the profile v_i -> b_i (\"Delta_0(v_1,a_{1,1}) = 15/256, Delta_0(a_{1,1},v_1) = 1/16, Delta_0(v_1,b_1) = 1/16 and Delta_0(b_1,v_1) = 3/64 are all positive ... and M(0,0) decides neither Max vertex\"); rem:wedge (l.13389-13394) says only M(1,0) decides it, and prop:seeded-decides (l.11686-11702) does not list WD at all. (ii) prop:bracket(b), l.9456-9457, says \"(w*,w*) is a bracket, and it decides (p,q) whenever w*(p) > w*(q)\", so some bracket does decide vertex 0 of prop:pdc-separation; what l.10147-10150 actually shows is that \"no sound upper bound whatever would decide 0 from THIS L\"."
+  },
+  {
+   "severity": "minor",
+   "result_name": "abstract l.76-79, citing thm:escape-class / prop:escape-family",
+   "defect": "\"a quantitative class incomparable with all of these\" claims two-sided incomparability where only one direction is proved against three of the four.",
+   "evidence": "prop:escape-family, l.1782-1786: \"Conversely F_k of \\Cref{prop:fk-family} carries no escape certificate for any lambda<1, being non-stopping ..., while d(F_k)=2. So the escape class is incomparable with the class of \\Cref{thm:few-escape}, and by (ii)--(vii) it is contained in none of the six; whether it contains the class of \\Cref{thm:few-avg} we have not determined.\" Incomparability is asserted for thm:few-escape only."
+  },
+  {
+   "severity": "minor",
+   "result_name": "abstract l.196-197 and summary l.13558-13559, citing thm:blowup",
+   "defect": "\"proved here from scratch and machine-checked in Lean\" / \"proved here and machine-checked\" suggests the whole theorem is formalised; two of its clauses are not.",
+   "evidence": "rem:blowup-measured, l.5290-5292: \"Not formalised are the identification of (0,0,u) as the sink and the numerical corollaries.\" The Lean file proves isUSO_blow, isAcyclic_blow and walk_blow only (l.5283-5290)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "abstract l.198-200, citing rem:flat",
+   "defect": "The abstract downgrades the third-law ceiling at m=5 to a measurement, where rem:flat says the m=5 entries were reproduced and only the m=6 entries are measurements.",
+   "evidence": "Abstract: \"with the third law added the ceiling is reported to drop to 12 at m=5, a computation recorded as a measurement (\\Cref{rem:flat})\". rem:flat, l.4575-4577: \"The m=5 entries were reproduced here; the two m=6 entries are recorded as measurements --- f(6)=25 is the repository's exhaustive count, and 21 was obtained by two independent exhaustive searches\"."
+  },
+  {
+   "severity": "minor",
+   "result_name": "Introduction, logical skeleton item (iii), l.329-346",
+   "defect": "The roadmap of sec:special lists five of its classes and omits the two round-15 ones that live in the same section.",
+   "evidence": "sec:width (thm:modulator l.3012, thm:qp l.3073, rem:fold-width l.3145, prop:modulator-family l.3155) begins at l.2874 and lies inside sec:special (l.1223-3190), but item (iii) names only thm:few-avg, thm:few-escape, thm:avg-acyclic, thm:player-free, thm:one-player, thm:kacyclic, thm:escape-class and sec:alphabet. The abstract does name both, so the skeleton and the abstract disagree about what sec:special contains."
+  },
+  {
+   "severity": "note",
+   "result_name": "summary l.13613-13615, and the omission of prop:fv-stall",
+   "defect": "\"no stall on a stopping game is permanent at all\" reads as refuted by prop:fv-stall, a round-15 result the summary never names; it survives only under the value-distinguishing reading of \"stall\" that prop:fv-stall itself supplies.",
+   "evidence": "prop:fv-stall, l.2798-2806: \"The families FV(n) and FV_2(n) ... for n=3,4,5, seeded with Z_0,Z_1 and read in both directions of \\Cref{rem:own-successor} at every controlled vertex, the slack calculus of \\Cref{def:slack}, its min-plus closure of \\Cref{def:trans-slack} and the one-shot transport test of \\Cref{def:transport} never fire on them, at any round.\" FV(n) is stopping (prop:fv-family, l.2745-2752). The reconciliation -- \"every controlled vertex ... has two successors of EQUAL value, so no controlled vertex is value-distinguishing\" (l.2786-2790) -- appears nowhere in the summary."
+  },
+  {
+   "severity": "note",
+   "result_name": "Round-15 results the summary does not name",
+   "defect": "Several round-15 integrations are absent from the abstract and summary, including one target-equivalence and the two results that fix thm:qp's status.",
+   "evidence": "thm:top (l.9390: finding the average vertex of largest value is target-equivalent) is missing from the summary's reformulation list at l.13498-13506, which names thm:compare-equivalence, thm:order-determines, cor:wrong-equivalence, thm:decide-one-bit and thm:gap-equivalence. thm:fold / rem:fold-width (l.3145-3159) and the amortisation statement at l.3180-3184 -- the reason thm:qp is quasipolynomial and the one sentence that would make it polynomial -- are named in neither the abstract (l.93-95) nor the summary (l.13481-13483). Also unnamed: lem:dyadic-row (l.980), sec:deformed / thm:deformed-flat (l.6092), lem:rise-bound and rem:impedance's round-15 correction (l.3654-3670), prop:leapfrog, prop:q16, lem:same-successor."
+  },
+  {
+   "severity": "note",
+   "result_name": "Prior art in the front matter",
+   "defect": "Attributions carried in the body are dropped in the introduction and summary for three results, although the abstract does carry others (Gimbert-Horn, Ludwig, Condon, Holt-Klee, Schurr-Szabo, Kalai/MSW).",
+   "evidence": "rem:ladder, l.6838-6845: \"this is an attribution the theorem owes: the pair 'exponential for the least-index rule, linear for all-switches, on a two-action instance' is Melekopoglou and Condon's\". Neither the intro's item (v) (l.352-358) nor the summary (l.13512-13515) says so. rem:impedance, l.3623: \"The identity is classical\" -- flagged in the abstract at l.170-171 but not in the summary at l.13522-13526. cor:selection, l.3472-3476: \"The path statement itself is standard\" -- unflagged in both the abstract (l.101-105) and the summary (l.13493-13497)."
+  },
+  {
+   "severity": "note",
+   "result_name": "abstract l.53-54 and l.190-194",
+   "defect": "Two loose formulations: \"a handful of computations recorded explicitly as measurements\" understates, and \"the largest bottom-antipodal height of an acyclic unique sink orientation --- which ... every all-switches run of every stopping game IS\" misstates the relation; also m is never defined in the abstract.",
+   "evidence": "\"measur*\" occurs 60 times in the file; measured items include rem:flat's m=6 entries, prop:oneplayer-runs' lower bounds, rem:hk-survey, prop:fv-stall (n=3,4,5), cor:slack-stalls' own-successor rounds, prop:trans-Hm, rem:wedge's ratio rounds, prop:km-measured, prop:m3-realised, prop:q16, thm:qp's implementation. cor:ceiling-general (l.4526-4530) says a run is the bottom-antipodal WALK of an AUSO, not that it is one. def:ssg (l.245-246) sets n := |Vmax|; the symbol m used at l.191, 202, 213, 217 and 222 is introduced only in the body."
+  }
+ ],
+ "verdict": "NOT SOUND: seven major defects survive, all of them scope or strength mismatches between the front matter and the results it cites, plus eight minor and four notes.\n\nWHAT I RECOMPUTED (exact rational / exact integer arithmetic, my own code in /tmp/claude-1000/-data-ssg-proof/d1fe2115-9b72-4784-bb94-87421ac1106c/scratchpad/paper-audit-front/), all MATCHING the manuscript:\n- prop:auso-census (census.c, cen4.c): m=2,3,4 give 12 / 744 / 5541744 USOs, 12 / 728 / 4792176 acyclic, 2 / 18 classes and 12 / 656 acyclic Holt-Klee in 2 / 16 classes at m<=3, h*=1,2,4,7 and h*_HK=1,2,4,6; at m=4 exactly 384 outmaps of height 7 (one free orbit) and NONE of them Holt-Klee, while 21504 of the 54912 height-6 acyclic USOs are. This underwrites the abstract's h*(4)=7, h*_HK(4)=6, \"sixteen Holt-Klee classes at m=3\", and cor:seven-two-player.\n- prop:auso-seven (gsharp.py): from the printed 12-row normal form over 1/128, the outmap is (0,1,3,6,7,4,13,10,14,15,9,12,11,8,5,2), no incidence tied, acyclic USO, height 7, NOT Holt-Klee, walk 8,6,11,7,13,5,1,0, the sixteen lengths 0,1,2,3,4,2,6,4,7,7,4,5,5,3,6,4, every row sum <= 127. 97 = 4+2+89+2.\n- prop:b2-realised (b2.py, b2game.py): verified twice -- from the printed normal form, and independently from the committed game /data/ssg-proof/scripts/blowup/B2_small_GAME.json (5 Max, 1 Min, 130 average, 2 sinks = 138; greatest trap empty; first-passage laws recomputed and equal to the printed table over 1/512). Outmap = the printed B^2, no ties, acyclic USO, height 10, not Holt-Klee, run from 12 = 12,19,13,17,8,16,0,7,1,5,4; four starts (12,14,28,30) give length 10, as thm:b2-walk says; and the printed outmap IS B(B(1-cube)) for the seed u=4 of the first level.\n- rem:blowup-measured: B(1-cube) = (0,1,3,6,7,4,5,2), height 4, Holt-Klee, realised by B1_game.json on 58 vertices (3 Max, 53 avg, 2 sinks), stopping and nondegenerate; the translated-layer class (0,1,3,2,7,6,4,13,15,14,12,9,11,10,8,5) is an HK AUSO of height 6, realised by AP_m4_k0_den256_s200_game.json on 100 vertices (4 Max, 94 avg, 2 sinks), whose outmap is that class translated by the all-ones vector.\n- rem:four-ceilings, all lower bounds (checks5.py, oneplayer.py, super.py, tower.py): prop:hstar-five's height-12 outmap is an AUSO of height 12; prop:hkfive's height-11 outmap is an HK AUSO of height 11 with the printed walk; prop:oneplayer-runs' m=5 game gives the printed HK outmap, height 9, run 12,27,0,11,2,3,21,1,5,7, and its m=6 game gives the printed run of length 12, both nondegenerate and Holt-Klee (vertex bounds 2m(m+1)log2 D = 720 and 1008 check out); h*(6)>=16 and h*(7)>=26 by blowing up G# and the height-12 5-cube; h*_HK(6)>=12 and h*_HK(7)>=13 by lem:hstar-super with the height-11 witness as FIRST block and z=1, both Holt-Klee, while the reverse block order gives height 12 and fails Holt-Klee -- exactly as rem:four-ceilings' parenthetical says.\n- thm:ladder / rem:ladder / lem:denominator-sharp (ladder.py): least-index and smallest-gap each take exactly 2^n-1 = 2^{(N-2)/2}-1 switches through all 2^n strategies, all-switches takes n, for n=1..12; w*(w_1) has denominator exactly 2^n.\n- prop:seven-k1 and the B^2 profile cube (proj.py, profcube.py), as quoted in the findings.\n- Counts checked by reading: prop:own-stall's R is on 10 vertices with five controlled (Vmin={0,1,6,7}, Vmax={4}); prop:transport-stalls' S has 7; prop:no-submodular's witness has 5; prop:rules-fail lists exactly seven rules; cor:hybrid-sink's 4N; lem:normalform's 4|C| <= 4N; prop:needle's 1/k; prop:cw's 2^{N-3}; cor:wedge-count's K = 1,6,15,33,68,138,279,560 with K >= 2^{j-1} = 2^{(N-15)/6}; prop:trans-Hm's 4m-3 at m=3..9 (and 38 != 37 at m=10, correctly excluded by the \"m<=9\" in both abstract and summary).\n\nWHAT I DID NOT CHECK: the exhaustive upper bounds f(5)=13, h*(5)=12 (prop:hstar-five's 22320 sequences and their completions) and h*_HK(5)=11 (prop:hkfive's 347640 completions); rem:flat's m=6 entries; prop:auso-census's isomorphism-class counts at m=4 (12640, 6113); every mechanism computation (def:slack, def:trans-slack, def:transport, def:hybrid, def:ratio, def:seeded firing rounds on G_8, H_m, S, S_r, R, CC, WD, FV); the wedge chain and thm:wedge-proved; the random-facet analysis; the Lean file; sec:alphabet; thm:no-seven's and thm:b2-walk's completion enumerations; and the 97-vertex G# game itself, which is not printed in the manuscript (only its normal form, which I did verify)."
+}

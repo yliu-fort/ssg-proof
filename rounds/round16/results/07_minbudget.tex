@@ -1,0 +1,428 @@
+% ---------------------------------------------------------------------------
+% Route: the Min-budget hierarchy.  Labels prefixed mb:.
+% ---------------------------------------------------------------------------
+
+\begin{definition}[The Min budget]\label{mb:budget}
+For $m\ge1$ and $k\ge0$ let $h^{\ast}_{[k]}(m)$ be the greatest
+bottom-antipodal height of the improvement orientation
+(\Cref{def:improvement-uso}) of a nondegenerate stopping SSG with
+$|\Vmax|=m$ and $|\Vmin|\le k$. Thus $h^{\ast}_{[0]}$ is the one-player
+ceiling $h^{\ast}_{1}$ of \Cref{cor:hstar-one} --- the subscript there
+counts players, here Min vertices --- $h^{\ast}_{[k]}\le h^{\ast}$, and
+$h^{\ast}_{[k]}(m)$ is nondecreasing in $k$ and in $m$. Known values:
+$h^{\ast}_{[0]}(m)=1,2,4,6,\ge9,\ge12$ for $m\le6$
+(\Cref{cor:hstar-one,prop:oneplayer-runs}), $h^{\ast}_{[1]}(5)\ge10$
+(\Cref{prop:b2-realised}) and $h^{\ast}_{[2]}(4)=7=h^{\ast}(4)$
+(\Cref{prop:auso-seven,prop:auso-census}).
+\end{definition}
+
+\begin{lemma}[The best responses form a box]\label{mb:greedy-box}
+Let $G$ be stopping in harmonic normal form with
+$\Vmin=\{u_1,\dots,u_k\}$ and let $\sigma$ be a Max strategy. A Min
+strategy $\tau$ is a best response to $\sigma$ if and only if
+\[
+  f_{u_j,\tau_j}\bigl(\val_\sigma|_C\bigr)
+  =\min_{a\in\{0,1\}}f_{u_j,a}\bigl(\val_\sigma|_C\bigr)
+  \qquad\text{for every }j .
+\]
+Hence the set $T(\sigma)$ of best responses is the box
+$\prod_jT_j(\sigma)$, $T_j(\sigma)$ the set of minimising actions at
+$u_j$, and $\val_\sigma(u_j)=\min_af_{u_j,a}(\val_\sigma|_C)$.
+\end{lemma}
+
+\begin{proof}
+By \Cref{prop:projection}(a) the best responses are exactly the profiles
+$\pi\in F_\sigma$ with $s_C(\pi)\cap\Vmin=\emptyset$, and they all carry
+$y_\pi=\val_\sigma|_C$; for such a $\pi$ the condition at $u_j$ reads
+$f_{u_j,\bar\pi(u_j)}(y_\pi)\ge y_\pi(u_j)=f_{u_j,\pi(u_j)}(y_\pi)$,
+which is the display. Conversely let $\tau$ satisfy the display and put
+$y:=\val_\sigma|_C$. Then $y_v=f_{v,\sigma_v}(y)$ at every Max vertex
+because $\val_\sigma$ is the harmonic extension of its restriction, and
+$y_{u_j}=\min_af_{u_j,a}(y)=f_{u_j,\tau_j}(y)$ because $\val_\sigma$ is
+the value of the one-player game with Max frozen at $\sigma$. So $y$ is a
+fixed point of the operator of the profile $(\sigma,\tau)$, hence
+$y=y_{(\sigma,\tau)}$ (\Cref{thm:contraction}), and the display makes
+$s_C(\sigma,\tau)\cap\Vmin=\emptyset$.
+\end{proof}
+
+\begin{theorem}[The best-response pieces are cells of a hyperplane
+arrangement in value space]\label{mb:pieces}
+Let $G$ be stopping with $\Vmin=\{u_1,\dots,u_k\}$ and put
+\[
+  \delta_j(y):=f_{u_j,1}(y)-f_{u_j,0}(y)
+  =(p^{u_j,1}-p^{u_j,0})\cdot y+(q^{u_j,1}-q^{u_j,0}),
+  \qquad y\in\mathbb R^{C},
+\]
+an affine functional. For $\tau\in\{0,1\}^{k}$ let
+$S_\tau:=\{\sigma:\tau\in T(\sigma)\}$. Then
+\[
+  S_\tau=\bigl\{\sigma:\ (-1)^{\tau_j}\delta_j(\val_\sigma|_C)\ge0
+  \ \text{ for every }j\bigr\}:
+\]
+the pieces are the preimages, under the map $\sigma\mapsto\val_\sigma|_C$,
+of the closed cells of the arrangement of the $k$ hyperplanes
+$\{\delta_j=0\}$ in $\mathbb R^{C}$. They cover the Max cube, at most
+$2^{k}$ are nonempty, two of them meet only where some $\delta_j$
+vanishes, and $s_G=t_\tau$ on $S_\tau$, where $t_\tau$ is the improvement
+outmap of the one-player game $G_\tau$ obtained by freezing Min at $\tau$.
+\end{theorem}
+
+\begin{proof}
+\Cref{mb:greedy-box} read through $\delta_j$: $\tau_j=1$ is minimising iff
+$\delta_j\le0$ and $\tau_j=0$ iff $\delta_j\ge0$, both at
+$\val_\sigma|_C$. The last clause is \Cref{prop:projection}(b): at a best
+response the Max out-set of the profile orientation is $S_\sigma$, and
+freezing Min at $\tau$ leaves $\val_\sigma$ unchanged on $S_\tau$.
+\end{proof}
+
+\begin{definition}[Monotone Min vertices]\label{mb:monotone}
+Call $u_j$ \emph{monotone} when $p^{u_j,1}\ge p^{u_j,0}$ coordinatewise or
+$p^{u_j,1}\le p^{u_j,0}$; for instance when one of its two actions has an
+average part absorbed in the sinks, so that its successor has a value
+independent of the controlled vertices.
+\end{definition}
+
+\begin{corollary}[A monotone Min vertex turns at most once]\label{mb:updown}
+Let $\preceq$ be the reachability preorder of the improvement
+orientation, along which $\val$ is nondecreasing (\Cref{lem:switch}). If
+$u_j$ is monotone then $\{\sigma:0\in T_j(\sigma)\}$ is $\preceq$-up-closed
+or $\preceq$-down-closed. In particular, along every all-switches run
+$\sigma_0,\dots,\sigma_L$ the sequence $\delta_j(\val_{\sigma_t})$ is
+monotone in $t$, so it changes sign at most once.
+\end{corollary}
+
+\begin{proof}
+$\delta_j$ is affine with gradient $p^{u_j,1}-p^{u_j,0}$ of one sign, so
+it is monotone for the coordinatewise order on $\mathbb R^{C}$, and
+$\val_\sigma\le\val_{\sigma'}$ whenever $\sigma\preceq\sigma'$. This is
+\Cref{prop:rows-turn} read at a Min vertex, with unreduced rows: the
+reduction of \Cref{def:reduced-rows} is unnecessary here because the
+coordinate $u_j$ of $\val_{\sigma_t}$ is itself nondecreasing along a run.
+\end{proof}
+
+\begin{theorem}[The block bound]\label{mb:blocks}
+Let $G$ be a nondegenerate stopping SSG with $|\Vmax|=m$, $|\Vmin|=k$, and
+let $\sigma_0,\dots,\sigma_L$ be an all-switches run. Choose
+$\tau_t\in T(\sigma_t)$ for $0\le t<L$ and let the \emph{blocks} be the
+maximal intervals of $\{0,\dots,L-1\}$ on which $t\mapsto\tau_t$ is
+constant, say $\beta$ of them, the $r$-th being $[a_r,b_r]$ with value
+$\vartheta_r$. Then for every Min strategy $\vartheta$ there is a
+Holt--Klee acyclic unique sink orientation $t_\vartheta$ of the $m$-cube
+with $t_\vartheta=s_G$ on $S_\vartheta$, and
+\[
+  L=\sum_{r=1}^{\beta}(b_r-a_r+1)
+   \le\sum_{r=1}^{\beta}h_{t_{\vartheta_r}}(\sigma_{a_r})
+   \le\beta\,h^{\ast}_{\mathrm{HK}}(m).
+\]
+Consequently $h^{\ast}_{[k]}(m)\le\beta_{\max}(k)\,h^{\ast}_{\mathrm{HK}}(m)$
+whenever $\beta_{\max}(k)$ bounds the number of blocks of some
+best-response schedule of every run of every such game.
+\end{theorem}
+
+\begin{proof}
+The orientation $t_\vartheta$ is the one produced in the proof of
+\Cref{thm:min-count}: freezing Min at $\vartheta$ leaves a one-player
+stopping game $G_\vartheta$ (\Cref{lem:trapchar}) whose values agree with
+those of $G$ exactly on $S_\vartheta$, hence whose improvement outmap
+agrees with $s_G$ there, and a lexicographic perturbation of the objective
+of its occupancy polytope (\Cref{prop:oneplayer-lp}, \Cref{lem:tie-perturb})
+turns it into an LP --- hence Holt--Klee --- orientation still agreeing
+with $s_G$ at every $\sigma\in S_\vartheta$, where nondegeneracy of $G$
+makes every margin strict.
+Fix a block $[a,b]$ with value $\vartheta$. For $a\le t\le b$ we have
+$\sigma_t\in S_\vartheta$, so
+$\sigma_{t+1}=\sigma_t\oplus s_G(\sigma_t)=\sigma_t\oplus t_\vartheta(\sigma_t)$,
+and $s_G(\sigma_t)\ne\emptyset$; hence
+$\sigma_a,\sigma_{a+1},\dots,\sigma_{b+1}$ is an initial segment of the
+bottom-antipodal walk of $t_\vartheta$ from $\sigma_a$, which terminates
+after exactly $h_{t_\vartheta}(\sigma_a)$ steps because $t_\vartheta$ is
+acyclic. So $b-a+1\le h_{t_\vartheta}(\sigma_a)\le h(t_\vartheta)\le
+h^{\ast}_{\mathrm{HK}}(m)$. Summing over blocks gives the display.
+\end{proof}
+
+\begin{corollary}[Monotone Min vertices buy at most a factor
+$k+1$]\label{mb:monotone-up}
+If every Min vertex of a nondegenerate stopping $G$ is monotone then every
+all-switches run of $G$ has length at most
+$(k+1)h^{\ast}_{\mathrm{HK}}(m)$. In particular this holds when every Min
+vertex has an action whose successor has a value independent of the
+controlled vertices, and at $k=0$ it is the bound
+$h^{\ast}_{[0]}\le h^{\ast}_{\mathrm{HK}}$ of \Cref{prop:oneplayer-lp}.
+\end{corollary}
+
+\begin{proof}
+Put $\tau_{t,j}:=1$ if $\delta_j(\val_{\sigma_t})\le0$ and $0$ otherwise;
+by \Cref{mb:pieces} this is a best response at $\sigma_t$, and by
+\Cref{mb:updown} each coordinate $t\mapsto\tau_{t,j}$ changes value at most
+once. So the schedule has at most $k+1$ blocks, and \Cref{mb:blocks}
+applies.
+\end{proof}
+
+\begin{proposition}[What the two realisations do]\label{mb:measured}
+All statements exact, recomputed here from the printed normal forms.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $G^{\sharp}$ (\Cref{prop:auso-seven}; $m=4$, $k=2$). Index Min
+      strategies by $\tau=\tau_{c_5}+2\tau_{c_6}$. The four frozen
+      orientations are
+      $t_{0}=(0,1,3,6,5,4,7,10,15,14,9,12,11,8,13,2)$,
+      $t_{1}=(1,4,3,6,5,0,7,10,14,15,9,12,11,8,13,2)$,
+      $t_{2}=(0,1,2,3,7,4,13,6,15,14,9,12,11,8,5,10)$,
+      $t_{3}=(1,0,3,2,7,4,13,6,14,15,9,12,11,8,5,10)$,
+      all four nondegenerate acyclic unique sink orientations, all four
+      Holt--Klee, of heights $5,3,4,4$. The pieces are
+      $S_{0}=\{0,1,7,13,15\}$, $S_{1}=\{2,3,8,9,12\}$,
+      $S_{2}=\{5\}$, $S_{3}=\{4,6,10,11,14\}$. Along the
+      height-$7$ run $8,6,11,7,13,5,1,0$ the best responses are
+      $1,3,3,0,0,2,0$, so the schedule has $\beta=5$ blocks --- more than
+      the $2^{k}=4$ available responses: a response recurs.
+\item $B^{2}$ (\Cref{prop:b2-realised}; $m=5$, $k=1$). The two frozen
+      orientations are nondegenerate Holt--Klee acyclic unique sink
+      orientations of heights $8$ and $4$; the pieces are
+      $S_1=\{11,15,19,23,27,31\}$ and $S_0$ its complement; along the run
+      $12,19,13,17,8,16,0,7,1,5,4$ the best response is $0$ except at
+      $\sigma=19$, so $\beta=3$ and the single Min vertex turns twice. Its
+      row difference $p^{c_6,1}-p^{c_6,0}$ has mixed signs, so it is not
+      monotone in the sense of \Cref{mb:monotone}; $\beta\le k+1$ is
+      therefore false without that hypothesis. The run takes $9$ of its
+      $10$ steps under $t_0$, more than $h(t_0)=8$, so the per-piece
+      refinement ``the steps taken under $\vartheta$ number at most
+      $h(t_\vartheta)$'' of \Cref{mb:blocks} is false; the one step under
+      $t_1$ carries the walk from a point of $t_0$-height $3$ to one of
+      $t_0$-height $8$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proposition}[Selection from Holt--Klee pieces carries no height
+information]\label{mb:nosum}
+Let
+\[
+  t_1=(0,1,2,3,15,4,13,6,8,9,10,11,7,12,5,14),\qquad
+  t_2=(1,4,3,6,7,0,5,10,14,15,9,12,11,8,13,2).
+\]
+Both are Holt--Klee acyclic unique sink orientations of the $4$-cube, of
+bottom-antipodal heights $2$ and $3$, and
+$s_{G^{\sharp}}(\sigma)\in\{t_1(\sigma),t_2(\sigma)\}$ for every $\sigma$,
+while $h(s_{G^{\sharp}})=7=h^{\ast}(4)$. Sharper in ratio: the acyclic
+unique sink orientation
+$s=(2,7,8,5,12,11,14,9,10,15,4,13,6,3,1,0)$ of the $4$-cube, of height
+$6$, is the pointwise selection from
+$t'_1=(2,7,12,5,14,3,8,1,10,15,4,13,6,11,0,9)$ on
+$\{0,1,3,8,9,10,11,12\}$ and
+$t'_2=(10,15,8,13,12,11,14,9,7,6,5,4,2,3,1,0)$ on the complementary eight
+vertices, both Holt--Klee acyclic unique sink orientations of height
+$2$: a selection from two pieces of height $2$ has height $6$.
+Moreover, over all pairs of
+Holt--Klee acyclic unique sink orientations covering $s_{G^{\sharp}}$ the
+least sum of heights is $5$, and over all pairs of acyclic unique sink
+orientations it is $4$. Hence no inequality
+$h(s)\le F\bigl(h(t_1),\dots,h(t_R)\bigr)$ holds for pointwise selections,
+and the natural bound $h^{\ast}_{[k]}(m)\le2^{k}h^{\ast}_{\mathrm{HK}}(m)$,
+if true, cannot be proved from \Cref{thm:min-count} alone: the piece
+decomposition must be used together with the geometry of
+\Cref{mb:pieces}, not through the heights of the pieces.
+\end{proposition}
+
+\begin{proof}
+Exhaustive: the $4\,792\,176$ acyclic unique sink orientations of the
+$4$-cube were enumerated (\Cref{prop:auso-census}), the $2\,322\,704$
+Holt--Klee ones marked, each one's agreement set with $s_{G^{\sharp}}$ and
+its height recorded, the minimum height over each agreement set closed
+downwards, and the minimum of $h_1+h_2$ over complementary agreement sets
+taken. The displayed pair attains $2+3$; all four assertions about
+$t_1,t_2$ were re-verified independently.
+\end{proof}
+
+\begin{proposition}[Two Holt--Klee pieces reach the ceiling at $m\le5$]\label{mb:chi-two}
+Let $H(R,m)$ be the greatest bottom-antipodal height of an acyclic unique
+sink orientation $s$ of the $m$-cube with $\chi_{\mathrm{HK}}(s)\le R$, so
+that $h^{\ast}_{[k]}(m)\le H(2^{k},m)$ by \Cref{thm:min-count}. Then
+$H(2,m)=h^{\ast}(m)$ for $m\le5$: $\chi_{\mathrm{HK}}(s_{G^{\sharp}})=2$
+at $m=4$, and at $m=5$ the height-$12$ orientation $s_{12}$ of
+\Cref{prop:hstar-five} has $\chi_{\mathrm{HK}}(s_{12})=2$, witnessed by
+the Holt--Klee acyclic unique sink orientations
+\[
+\begin{aligned}
+ t_1=(&15,0,1,2,27,14,12,29,19,10,8,25,22,21,20,23,\\
+      &31,18,16,17,11,30,28,5,7,26,24,13,3,6,4,9),\\
+ t_2=(&7,18,0,1,19,30,4,5,15,26,8,13,27,22,12,25,\\
+      &23,2,28,21,3,6,24,17,31,14,16,29,10,9,20,11),
+\end{aligned}
+\]
+of heights $8$ and $4$, which agree with $s_{12}$ on
+$\{0,1,2,3,4,6,7,8,10,11,12,13,14,15,16,17,19,23,24,27,30\}$ and on
+$\{5,9,10,18,20,21,22,25,26,28,29,31\}$ respectively. So
+\Cref{thm:min-count} never forces $k\ge2$ at $m\le5$, and the Min-count
+invariant separates $h^{\ast}_{[k]}$ from $h^{\ast}$ nowhere we can
+compute.
+\end{proposition}
+
+\begin{proof}
+$\chi_{\mathrm{HK}}\ge2$ in both cases because neither orientation is
+Holt--Klee (\Cref{cor:seven-two-player}; for $s_{12}$ the
+unit-vertex-capacity flow test fails, verified here). At $m=4$ the value
+$2$ comes from the exhaustive computation of \Cref{mb:nosum}. At $m=5$ the
+two displayed orientations were found by a depth-first search over
+completions of $s_{12}$ on a prescribed agreement set and verified
+independently: each is a bijective outmap satisfying the Szab\'o--Welzl
+condition, acyclic, and Holt--Klee on all faces of dimension
+$\ge3$ by the unit-vertex-capacity flow test; their agreement sets are
+complementary.
+\end{proof}
+
+\begin{theorem}[Min contributes exactly $k$ common concave features]\label{mb:features}
+Let $G$ be stopping with $\Vmax=\{x_1,\dots,x_m\}$ and
+$\Vmin=\{u_1,\dots,u_k\}$, in harmonic normal form. Define
+$\Theta=(\Theta_1,\dots,\Theta_k):[0,1]^{\Vmax}\to[0,1]^{k}$ by
+$\Theta_j(y):=\val_{G[y]}(u_j)$, the value at $u_j$ when every Max vertex
+is pinned at $y$ (\Cref{def:readout}). Then $\Theta$ is nondecreasing,
+concave and piecewise affine with at most $2^{k}$ pieces --- one per Min
+strategy, the piece of $\tau$ being the cell of \Cref{mb:pieces} --- and
+for every Max strategy $\sigma$, writing $y:=\val_\sigma|_{\Vmax}$,
+\[
+  \val_\sigma|_{\Vmin}=\Theta(y),\qquad
+  \val_\sigma\bigl(x_i^{(a)}\bigr)
+   =q^{i,a}+p^{i,a}|_{\Vmax}\cdot y+p^{i,a}|_{\Vmin}\cdot\Theta(y)
+   \quad(i\le m,\ a\in\{0,1\}).
+\]
+So every readout of the game is an affine function, with nonnegative
+coefficients, of $y$ and of the \emph{same} $k$ concave features
+$\Theta_1,\dots,\Theta_k$: at $k=0$ the readouts are affine, which is
+\Cref{prop:oneplayer-lp}; at $k=1$ they are all bent along the single
+hyperplane $\{\gamma=0\}$, $\gamma:=L_1-L_0$ with
+$L_a(y):=\hat q^{u,a}+\hat p^{u,a}\cdot y$ the reduced rows
+(\Cref{def:reduced-rows}) of the Min vertex, the bending coefficient of the
+readout $(i,a)$ being $p^{i,a}_{u}\ge0$; and the improvement margin of the
+coordinate $i$ is an affine functional on each side of that one hyperplane,
+the two sides differing by $(p^{i,1}_{u}-p^{i,0}_{u})\gamma$.
+\end{theorem}
+
+\begin{proof}
+$\Theta_j=\min_\tau(q^{j,\tau}+p^{j,\tau}\cdot y)$ over positional Min
+strategies, each piece the first-passage law from $u_j$ onto $\Vmax$ and
+$t_1$ under $\tau$: this is \Cref{lem:readout}(a) applied to the vertex
+$u_j$ in place of a successor $v^{(a)}$, the game $G[y]$ having no Max
+vertices. Hence $\Theta$ is a minimum of substochastic affine maps,
+nondecreasing and concave, and $\tau$ attains it exactly on
+$\{y:\tau\text{ optimal in }G[y]\}$, which at $y=\val_\sigma|_{\Vmax}$ is
+$S_\tau$ by \Cref{mb:greedy-box}. By \Cref{lem:readout}(b),
+$\val_{G[y]}=\val_\sigma$ off the chains when $y=\val_\sigma|_{\Vmax}$,
+which gives both displays, the second by expanding
+$f_{i,a}(\val_\sigma|_C)$. For $k=1$, $\Theta=\min(L_0,L_1)$ is
+\Cref{lem:readout-reduce} at $u$, and the last two clauses are that
+substitution.
+\end{proof}
+
+\begin{proposition}[At $m\le4$ the Min-count bound never asks for a second
+Min vertex]\label{mb:chi-four}
+Every acyclic unique sink orientation of the $4$-cube satisfies
+$\chi_{\mathrm{HK}}\le2$: of the $12640$ isomorphism classes
+(\Cref{prop:auso-census}) $6113$ are Holt--Klee and the other $6527$ are
+pointwise selections from two Holt--Klee acyclic unique sink orientations.
+Moreover the least sum $\Sigma^{\ast}_{\mathrm{HK}}$ of the two piece
+heights over such covers takes the values $2,3,4,5$ on
+$46,5367,7130,97$ classes, and $h-\Sigma^{\ast}_{\mathrm{HK}}$ is at most
+$2$, attained by the height-$7$ class. So at $m\le4$ \Cref{thm:min-count}
+gives $k\ge1$ at best, and by \Cref{mb:chi-two} the same holds at the top
+of $m=5$.
+\end{proposition}
+
+\begin{proof}
+Exhaustive over the $4\,792\,176$ acyclic unique sink orientations and the
+$2\,322\,704$ Holt--Klee ones, one class representative at a time
+(lexicographically least under the $384$ cube automorphisms): for each
+target the agreement set and height of every Holt--Klee orientation were
+recorded, the agreement family closed downwards, and covers by two members
+searched for.
+\end{proof}
+
+\begin{proposition}[The Min-count bound is attained at $m=3$]\label{mb:m3-one-min}
+Each of the two non-Holt--Klee classes of the $3$-cube is the improvement
+orientation of a nondegenerate stopping SSG with three Max vertices and
+\emph{one} Min vertex, so \Cref{thm:min-count}'s bound
+$k\ge\log_2\chi_{\mathrm{HK}}=1$ is attained there and the six Min vertices
+of \Cref{prop:m3-realised} are not needed. The harmonic normal forms, as
+multiples of $\tfrac1{D}$ over the targets $(c_1,c_2,c_3,c_4,t_1)$ with
+$c_4$ the Min vertex and the remaining mass going to $t_0$, are
+\[
+ \begin{array}{r@{\quad}l@{\qquad}l}
+  \multicolumn{3}{l}{\text{(a) } s=(0,1,3,2,5,4,6,7),\ h=2,\ D=4096:}\\
+  c_1: & (5,298,1722,0;\,2050)   & (0,0,1850,596;\,1643)\\
+  c_2: & (0,188,3900,0;\,0)      & (176,176,2148,176;\,176)\\
+  c_3: & (27,0,0,2682;\,1379)    & (0,582,0,2649;\,822)\\
+  c_4: & (0,0,0,0;\,3959)        & (0,534,2800,75;\,679)\\[2pt]
+  \multicolumn{3}{l}{\text{(b) } s=(0,1,3,2,6,7,5,4),\ h=3,\ D=256:}\\
+  c_1: & (219,7,0,0;\,1)         & (201,8,0,46;\,0)\\
+  c_2: & (0,0,153,0;\,86)        & (12,12,0,12;\,112)\\
+  c_3: & (0,0,0,0;\,255)         & (0,0,0,194;\,0)\\
+  c_4: & (0,0,0,0;\,15)          & (56,15,0,28;\,0).
+ \end{array}
+\]
+Both were built into explicit fair-coin games by \Cref{lem:dyadic-row} ---
+$145$ and $86$ vertices, three Max, one Min, $139$ resp.\ $80$ average and
+the two sinks --- and verified from the game: greatest trap empty, the
+eight $\val_\sigma$ taken as the componentwise minimum over both Min
+strategies of exact profile values, no tied incidence, the outmap as
+displayed, acyclic unique sink orientations of heights $2$ and $3$, not
+Holt--Klee. In (a) the pieces are $S_0=\{0,1\}$, $S_1=\{2,\dots,7\}$ and
+both frozen orientations are Holt--Klee of height $2$; in (b) they are
+$S_0=\{0,1,2,3,6,7\}$, $S_1=\{4,5\}$ with frozen orientations
+$(0,1,3,2,7,6,5,4)$ and $(1,0,3,2,6,7,5,4)$, Holt--Klee of heights $3$ and
+$2$, and the longest run $4,2,1,0$ has $\beta=2$ blocks.
+\end{proposition}
+
+\begin{remark}[What the Min budget costs at $m=4$: a search, not a theorem]\label{mb:m4-search}
+Whether $h^{\ast}_{[1]}(4)=6$ or $7$ --- whether one Min vertex reaches the
+absolute ceiling $h^{\ast}(4)=7$ --- is left open here. By
+\Cref{prop:auso-census} a run of length $7$ forces the orientation into the
+single height-$7$ orbit, so one may take $s=s_{G^{\sharp}}$; by
+\Cref{mb:pieces} the design data are a partition of the $16$ Max strategies
+into two best-response pieces, and by \Cref{thm:min-count} each piece must
+be an agreement set of a Holt--Klee acyclic unique sink orientation, which
+leaves $1252$ partitions up to swapping Min's two actions (computed here
+from the census). A sequential-LP realiser over harmonic normal forms with
+five controlled vertices, run on $348$ of those partitions at
+$25$ seconds each, found none. The evidence is weak, for the reason that
+the same realiser found no $k=1$ realisation of \emph{any} non-Holt--Klee
+class of the $4$-cube it was pointed at --- a height-$3$ one over $19$
+partitions and the height-$6$ one of \Cref{mb:nosum} over $60$ --- although
+it reproduces a $k=2$ realisation of $s_{G^{\sharp}}$ from the true
+response map of $G^{\sharp}$ in $30$ seconds, realises a Holt--Klee
+height-$6$ class of the $4$-cube with an inert Min vertex in one minute,
+and realises both non-Holt--Klee classes of the $3$-cube with one Min
+vertex in seconds (\Cref{mb:m3-one-min}). Whether one Min vertex realises
+any non-Holt--Klee orientation at $m=4$ is therefore itself open here. On the
+partition singled out by \Cref{prop:seven-k1} --- the sink projection there
+has $S_1=\{0,1,6,14\}$, so that $S_0$ has the maximal size $12$ a single
+Holt--Klee orientation can match --- the realiser converges to the boundary
+at which Min is \emph{indifferent} at $\sigma=6$ and $\sigma=14$; that
+boundary is excluded, because indifference would put those two strategies
+in both pieces and give a Holt--Klee orientation agreeing with
+$s_{G^{\sharp}}$ at $14$ vertices, against the maximum $12$ computed in
+\Cref{mb:nosum}. This is evidence, not a proof.
+\end{remark}
+
+\begin{remark}[The gap]\label{mb:gap}
+\Cref{mb:blocks} reduces an upper bound of the shape
+$h^{\ast}_{[k]}(m)\le F(k)\,h^{\ast}_{\mathrm{HK}}(m)$ to one statement,
+which is what this route leaves open:
+
+\emph{there is a function $F$ such that every all-switches run of every
+nondegenerate stopping SSG with $k$ Min vertices admits a best-response
+schedule $t\mapsto\tau_t\in T(\sigma_t)$ with at most $F(k)$ maximal
+constant blocks.}
+
+What is known about it: $F(k)\le k+1$ when every Min vertex is monotone
+(\Cref{mb:monotone-up}); $F(1)\ge3$ and $F(2)\ge5$ from
+\Cref{mb:measured}, the second exceeding the number $2^{k}=4$ of Min
+strategies; $\beta=3$ at $k=1$ also occurs on random normal forms at
+$m=3$ and $m=4$ (2300 nondegenerate instances screened, exact), and no
+larger $\beta$ was seen there; and no upper bound at all in general, since
+\Cref{mb:pieces} makes the block
+boundaries the sign changes of $k$ affine functionals along the increasing
+sequence $\val_{\sigma_0}\le\cdots\le\val_{\sigma_L}$, and an affine
+functional with a gradient of mixed sign may change sign arbitrarily often
+along an increasing sequence. \Cref{mb:nosum,mb:chi-two,mb:chi-four} say
+that the alternative route --- bounding the height of a selection by the
+heights of its Holt--Klee pieces, i.e.\ by $\chi_{\mathrm{HK}}$ alone ---
+is closed.
+\end{remark}

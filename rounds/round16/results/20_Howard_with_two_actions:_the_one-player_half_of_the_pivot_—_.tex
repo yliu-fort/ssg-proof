@@ -1,0 +1,376 @@
+% Route: one-player-howard.  Paste-ready LaTeX in the amsthm style of frontier.tex.
+% Labels prefixed oph:.  Full file: <code_dir>/oph.tex
+
+\subsection{Howard's rule with two actions: the dictionary, a class where it is
+linear, and a family where it is not}\label{sec:oph}
+
+\begin{proposition}[The one-player dictionary]\label{oph:dictionary}
+Let $G$ be a stopping SSG with $\Vmin=\emptyset$ and $\Vmax=\{x_1,\dots,x_m\}$. For
+$v\in V$ let $p^{v}$ be the law of the first visit to $\Vmax\cup\{t_0,t_1\}$ of the
+token started at $v$, a datum of the graph, since only average vertices lie strictly
+between controlled vertices. Then the transient Markov decision process
+$M(G)$ with state set $\Vmax$, two actions per state, transition row
+$p^{x_i^{(c)}}|_{\Vmax}$ and reward $q_{i,c}:=p^{x_i^{(c)}}(t_1)$ satisfies:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item every row is substochastic and $\lim_kP_\sigma^k=0$ for every policy $\sigma$;
+\item $\val_\sigma$ restricted to $\Vmax$ is the value of the policy $\sigma$ in
+      $M(G)$, for every $\sigma$;
+\item the strictly switchable set of $\sigma$ in $G$ is the set of states at which
+      the other action has strictly larger $Q$-value in $M(G)$; hence the
+      all-switches rule on $G$ is exactly Howard's policy-improvement rule
+      (\emph{switch every improvable state}) on $M(G)$, step for step and from every
+      start.
+\end{enumerate}
+Conversely, let $M$ be a transient MDP with $m$ states, two actions per state,
+substochastic \emph{dyadic} rows of denominator $2^{d}$ and dyadic rewards, every
+row leaking. Then \Cref{lem:dyadic-row} produces a stopping SSG $G(M)$ with
+$\Vmin=\emptyset$, $|\Vmax|=m$ and $O(m^{2}d)$ average vertices with
+$M(G(M))=M$; so Howard's runs on $M$ are the all-switches runs of $G(M)$.
+\end{proposition}
+
+\begin{proof}
+Every value vector of a positional pair is harmonic at average vertices and pinned at
+the sinks, so for any $\sigma$ and any $v$, $\val_\sigma(v)=\sum_{w\in\Vmax}
+p^{v}_w\val_\sigma(w)+p^{v}(t_1)$: condition on the first visit to
+$\Vmax\cup\{t_0,t_1\}$, which occurs almost surely because $G$ is stopping. Applying
+this at $v=x_i^{(\sigma(i))}$ and using $\val_\sigma(x_i)=\val_\sigma(x_i^{(\sigma(i))})$
+gives exactly the policy-evaluation equations of $M(G)$, whose solution is unique
+because $I-P_\sigma$ is invertible: a $\sigma$-trap of $G$ would be a trap
+(\Cref{lem:trapchar}) and $G$ is stopping. That is (a) and (b). For (c), $x_i$ is
+strictly switchable at $\sigma$ iff
+$\val_\sigma(x_i^{(1-\sigma(i))})>\val_\sigma(x_i^{(\sigma(i))})$, which by the same
+display is the $Q$-value comparison in $M(G)$. The converse is
+\Cref{lem:dyadic-row} applied to each of the $2m$ rows; the leak makes the game
+stopping, and the first-passage law of the entry of the gadget for $(i,c)$ is the
+prescribed row, so $M(G(M))=M$.
+\end{proof}
+
+\begin{remark}\label{oph:v3}
+\Cref{oph:dictionary} is the formal version of the round-13 claim (v3) and settles it
+in both directions; the ``uniform leak'' the claim asked for is the leak of
+\Cref{lem:dyadic-row}. In particular the one-player half of the pivot of
+\Cref{sec:refutations} \emph{is} Melekopoglou and Condon's question, with $|\Vmax|$
+playing the role of the number of states; the number $N$ of vertices of the SSG is
+the encoding length $O(m^{2}d)$ of the MDP, not its number of states.
+\end{remark}
+
+\begin{definition}[Sign-definite games]\label{oph:def-signdef}
+Let $G$ be a stopping SSG and, for $v\in V$, let $p^{v}$ be the law of the first visit
+to $C\cup\{t_0,t_1\}$ from $v$. Call $G$ \emph{sign-definite} if for every
+$v\in\Vmax$ the vector $d^{v}:=\bigl(p^{v^{(1)}}-p^{v^{(0)}}\bigr)\big|_{C}$ is
+sign-definite: either $d^{v}\ge0$ or $d^{v}\le0$ componentwise.
+\end{definition}
+
+\begin{theorem}[All-switches is linear on sign-definite games]\label{oph:signdef}
+Let $G$ be a sign-definite stopping SSG, and let $\sigma_0,\sigma_1,\dots$ be any run
+of improving switches (all-switches included). Then every $v\in\Vmax$ switches at most
+twice, so the run has length at most $2|\Vmax|$; \Cref{prob:main} restricted to the
+sign-definite games is decidable in polynomial time, and membership is decidable in
+polynomial time.
+\end{theorem}
+
+\begin{proof}
+As in \Cref{oph:dictionary}, for every Max strategy $\rho$ and every $v$,
+$\val_\rho(v)=\sum_{w\in C}p^{v}_w\val_\rho(w)+p^{v}(t_1)$, this time with $C$ in
+place of $\Vmax$ and $\val_\rho$ the value against a Min best response. Hence
+\[
+  \phi_v(t)\;:=\;\val_{\sigma_t}(v^{(1)})-\val_{\sigma_t}(v^{(0)})
+  \;=\;\sum_{w\in C}d^{v}_w\,\val_{\sigma_t}(w)+e_v ,
+\]
+with $e_v$ independent of $t$. By \Cref{lem:switch} the vector $\val_{\sigma_t}$ is
+nondecreasing in $t$, so if $d^{v}\ge0$ then $\phi_v$ is nondecreasing, and if
+$d^{v}\le0$ it is nonincreasing. A vertex switches at $t$ exactly when $\phi_v(t)$ is
+nonzero and its sign disagrees with the current choice; after such a switch the choice
+agrees with the sign of $\phi_v$, and a monotone real sequence changes sign at most
+once, so at most one further switch can occur. Hence $n_v\le2$ and, since each round
+switches at least one vertex, $L\le2|\Vmax|$. The run ends at an optimal strategy
+(\Cref{lem:local-global}), each round costs one Min best response and one evaluation
+(\Cref{thm:eval-stopfree}), and each $p^{v}$ is one rational linear solve on the
+average vertices, so both the algorithm and the membership test are polynomial.
+\end{proof}
+
+\begin{remark}\label{oph:signdef-scope}
+The class is genuinely two-player and contains games with cycles and with
+$a=\Theta(N)$; it is closed under \Cref{def:damping}, which multiplies every $d^{v}$
+by a positive scalar, so the reduction of \Cref{thm:stopping-transform} keeps the
+hypothesis. It is also easy: the content of \Cref{oph:signdef} is the contrapositive,
+which is a design constraint on every attempt at a long run --- \emph{a run longer than
+$2|\Vmax|$ needs a Max vertex whose two successors have first-passage laws whose
+difference changes sign on $C$}, i.e.\ a vertex that genuinely trades one controlled
+vertex off against another rather than trading a bundle against a constant. The
+ladder $L_n$ of \Cref{def:ladder} is not sign-definite; the chain $\mathrm{RC}(k)$ of
+\Cref{rem:grid-per-vertex} is. In two independent samples of random stopping SSGs
+($882$ on $6$--$10$ non-sink vertices, of which $668$ are sign-definite, and $1009$ on
+$8$--$13$, of which $445$ are) the longest run inside the class was $3$ and the
+maximum number of switches at a single vertex was exactly $2$: the bound $n_v\le2$ is
+attained.
+\end{remark}
+
+We now build a family of one-player games whose runs are longer than
+$|\Vmax|$ by a constant factor. The mechanism is a \emph{freezing bias}: a copy of a
+fixed block is held at its initial strategy by a bias whose size is controlled by a
+single value of the previous copy, and that value crosses a threshold exactly at the
+round at which the previous copy stops.
+
+\begin{definition}[Balanced normal form]\label{oph:balanced}
+A one-player normal form on states $B$, given by substochastic rows $p^{b,c}$ over
+$B$ and rewards $q_{b,c}\ge0$, is \emph{balanced with mass $\rho$} if
+$\sum_{b'}p^{b,c}_{b'}=\rho<1$ for every $b\in B$ and $c\in\{0,1\}$.
+\end{definition}
+
+\begin{lemma}[Balancing costs one state]\label{oph:balance}
+Let $G_0$ be a nondegenerate one-player normal form on $m_0$ states with
+$\rho:=\max_{b,c}\sum_{b'}p^{b,c}_{b'}<1$, all-switches run of length $h_0$ from
+$\sigma^{0}$, and gaps
+$g_{\min}:=\min_{\sigma,b}\bigl|A_{b,1}(y_\sigma)-A_{b,0}(y_\sigma)\bigr|>0$,
+$g_{\max}$ the corresponding maximum. For every $\mu>0$ with
+$\rho+\mu\max q_{b,c}<1$ and every dyadic $\varsigma$ with
+$0<\varsigma<(1-\rho)\mu g_{\min}/2$ there is a \emph{balanced} nondegenerate
+one-player normal form $\widehat G_0(\mu,\varsigma)$ on $m_0+1$ states with mass
+$\rho$, namely: scale every reward by $\mu$; add a state $\omega$ with
+$p^{\omega,c}_\omega=\rho$ and rewards $0,\varsigma$; and pad the row of $(b,c)$ with
+$\rho-\sum_{b'}p^{b,c}_{b'}$ on $\omega$. Its values are
+$\mu\,y_\sigma+\pi_{\sigma}\varsigma/(1-\rho)$ on the old states with
+$\pi_\sigma\in[0,1]$ the pad of the chosen row, $\omega$ is never strictly switchable
+at its action $1$, and the all-switches run from $(\sigma^{0},1)$ is the run of $G_0$,
+of length $h_0$.
+\end{lemma}
+
+\begin{proof}
+Scaling every reward by $\mu$ scales every value by $\mu$ and every action value by
+$\mu$, so it changes no comparison. The added state satisfies
+$x_\omega=\rho x_\omega+r_c$, i.e.\ $x_\omega=r_c/(1-\rho)$, so its action $1$ is
+strictly better and it never switches from there; and the pad contributes
+$\pi_{b,c}x_\omega\le\varsigma/(1-\rho)$ to an action value, so it perturbs each
+comparison by at most $\varsigma/(1-\rho)<\mu g_{\min}/2$, less than half the smallest
+gap. Hence every comparison keeps its sign and the improvement orientation on the old
+coordinates is unchanged.
+\end{proof}
+
+\begin{theorem}[Stacking: the run adds up]\label{oph:stack}
+Let $\widehat G$ be a balanced nondegenerate one-player normal form on $m_0$ states
+with mass $\rho$, gaps in $[g_{\min},g_{\max}]$, and an all-switches run of length
+$h_0$ from $\sigma^{0}$. For $k\ge1$ let $\mathrm{ST}(k)$ be the one-player normal form
+on $k\,m_0$ states built from $k$ disjoint copies $B_1,\dots,B_k$ of $\widehat G$ by
+\begin{itemize}[leftmargin=1.4em]
+\item scaling the rewards of copy $j$ by $\mu_j>0$;
+\item giving every state $b$ of copy $j\ge2$ the extra mass $\nu$ on a constant
+      gadget of value $\Theta_j$ on the action $\sigma^{0}(b)$, and the extra mass
+      $\nu$ on the state $v_{j-1}$ of copy $j-1$ on the other action, where $v_{j-1}$
+      is a state that copy $j-1$ switches at the last round of its run --- the
+      within-copy rows being re-padded so that the within-copy mass stays $\rho$ for
+      both actions.
+\end{itemize}
+Let $x^{-}_j<x^{+}_j$ be the values of $v_{j-1}$ in $\mathrm{ST}(j-1)$ at the last two
+strategies of its run, put $\Gamma_j:=x^{+}_j-x^{-}_j>0$, and choose
+\[
+  0<\epsilon<\frac{(1-\rho)g_{\min}}{(1-\rho)g_{\min}+g_{\max}},\qquad
+  \Theta_j:=x^{+}_j-\epsilon\Gamma_j,\qquad
+  \frac{\nu\epsilon\Gamma_j}{(1-\rho)g_{\min}}<\mu_j<\frac{\nu(1-\epsilon)\Gamma_j}{g_{\max}} .
+\]
+Then the all-switches run of $\mathrm{ST}(k)$ from the strategy that puts every copy at
+$\sigma^{0}$ has length exactly $k\,h_0$: copy $j$ is frozen at $\sigma^{0}$ for the
+first $(j-1)h_0$ rounds and performs $\widehat G$'s run during rounds
+$(j-1)h_0,\dots,jh_0-1$.
+\end{theorem}
+
+\begin{proof}
+Copies read only themselves and the single state $v_{j-1}$ of the previous copy, so
+the transition matrix is block lower triangular and the values of copies
+$1,\dots,j$ do not depend on copies $>j$; in particular $\mathrm{ST}(j-1)$'s values are
+the restriction of $\mathrm{ST}(k)$'s, and the recursion defining $\Theta_j,\mu_j$ is
+well founded.
+
+Fix $j$ and a Max strategy $\sigma$ of $\mathrm{ST}(k)$, and write $x$ for the value
+vector, $P_\sigma$ for the within-copy transition matrix of copy $j$ and
+$y_\sigma$ for the value of $\sigma|_{B_j}$ in $\widehat G$. The equations of copy $j$
+read $x_b=(P_\sigma x)_b+\mu_jq_{b,\sigma(b)}+\beta_b$ with
+$\beta_b=\nu\Theta_j$ if $\sigma(b)=\sigma^{0}(b)$ and $\beta_b=\nu x_{v_{j-1}}$
+otherwise. With $\delta:=x_{v_{j-1}}-\Theta_j$ and
+$\chi_\sigma(b):=\mathbf 1[\sigma(b)\ne\sigma^{0}(b)]$ this is
+$\beta=\nu\Theta_j\mathbf 1+\nu\delta\chi_\sigma$, and since every row of $P_\sigma$
+has mass exactly $\rho$ we have $(I-P_\sigma)^{-1}\mathbf 1=(1-\rho)^{-1}\mathbf 1$,
+whence
+\[
+  x|_{B_j}\;=\;\mu_j\,y_\sigma\;+\;\frac{\nu\Theta_j}{1-\rho}\mathbf 1
+  \;+\;\nu\delta\,u_\sigma,\qquad u_\sigma:=(I-P_\sigma)^{-1}\chi_\sigma\in\Bigl[0,\tfrac1{1-\rho}\Bigr]^{B_j}.
+\]
+Because both rows at $b$ have the same mass $\rho$, $(p^{b,1}-p^{b,0})\cdot\mathbf 1=0$
+and $(p^{b,1}-p^{b,0})\cdot u\le\rho\,\mathrm{osc}(u)$; so the comparison
+$C_b:=(\text{value of action }1)-(\text{value of action }0)$ at $b$ is
+\[
+  C_b\;=\;\mu_j\,\Delta_b(y_\sigma)\;-\;s_b\,\nu\delta\;+\;\nu\delta\,\eta_b,
+  \qquad |\eta_b|\le\frac{\rho}{1-\rho},
+\]
+where $\Delta_b(y):=A_{b,1}(y)-A_{b,0}(y)$ is $\widehat G$'s own difference and
+$s_b=+1$ if $\sigma^{0}(b)=1$, $s_b=-1$ if $\sigma^{0}(b)=0$.
+
+\emph{Freezing.} Suppose $\sigma|_{B_j}=\sigma^{0}$ and $x_{v_{j-1}}\le x^{-}_j$. Then
+$\chi_\sigma=0$, so $\eta_b=0$ \emph{exactly}, and
+$\delta\le x^{-}_j-\Theta_j=-(1-\epsilon)\Gamma_j<0$. Hence
+$C_b=\mu_j\Delta_b(y_{\sigma^{0}})-s_b\nu\delta$ has the sign of $-s_b\nu\delta$,
+i.e.\ the sign that keeps $\sigma^{0}(b)$, as soon as
+$\nu(1-\epsilon)\Gamma_j>\mu_jg_{\max}$ --- the right-hand inequality of the display in
+the statement. So no state of copy $j$ is strictly switchable.
+
+\emph{Running.} Suppose $x_{v_{j-1}}=x^{+}_j$, so $\delta=\epsilon\Gamma_j$. Then
+$|C_b-\mu_j\Delta_b(y_\sigma)|\le\nu\epsilon\Gamma_j(1+\rho/(1-\rho))
+=\nu\epsilon\Gamma_j/(1-\rho)<\mu_jg_{\min}\le\mu_j|\Delta_b(y_\sigma)|$ by the
+left-hand inequality; so $C_b$ and $\Delta_b(y_\sigma)$ have the same sign for every
+$\sigma$ and every $b$. The improvement orientation of copy $j$ is therefore
+$\widehat G$'s, and its all-switches trajectory from $\sigma^{0}$ is $\widehat G$'s run.
+
+\emph{The induction.} By induction on $j$, copy $j$ is at $\sigma^{0}$ and frozen while
+$x_{v_{j-1}}\le x^{-}_j$, which by \Cref{lem:switch} (values are nondecreasing along the
+run, and $v_{j-1}$ takes the value $x^{-}_j$ at round $(j-1)h_0-1$ and $x^{+}_j$ at
+round $(j-1)h_0$) is exactly the first $(j-1)h_0$ rounds; from round $(j-1)h_0$ on,
+$x_{v_{j-1}}=x^{+}_j$ is constant, because copies $\le j-1$ are unaffected by copies
+$\ge j$ and copy $j-1$ has reached its optimum. Copy $j$ then runs for $h_0$ rounds.
+The copies therefore run one after another and the total is $k\,h_0$. Finally
+$\epsilon<(1-\rho)g_{\min}/((1-\rho)g_{\min}+g_{\max})$ is exactly the condition that
+the interval for $\mu_j$ is nonempty.
+\end{proof}
+
+\begin{corollary}[A one-player family with slope $12/7$]\label{oph:family}
+Let $G_0$ be the $m=6$ one-player normal form behind the entry
+$h^{\ast}_{1}(6)\ge12$ of \Cref{rem:four-ceilings} (round-$15$ howard-cube route; its
+rows have denominator $2^{12}$ and its all-switches run from $\sigma=25$ has length
+$12$), and let $\widehat G:=\widehat G_0(\mu,\varsigma)$ be its balanced form on $7$
+states (\Cref{oph:balance}). Then for every $k$ there is a nondegenerate one-player
+stopping SSG with $7k$ Max vertices, dyadic data of $O(k)$ bits and $O(k^{3})$ average
+vertices, whose all-switches run has length $12k$. Hence
+\[
+  h^{\ast}_{1}(m)\;\ge\;\tfrac{12}{7}\,m\qquad\text{for } m\equiv0 \pmod 7 ,
+\]
+and more generally $h^{\ast}_{1}(m_1+k(m_0+1))\ge h_1+k\,h_0$ whenever a one-player
+normal form on $m_1$ (resp.\ $m_0$) states has a run of length $h_1$ (resp.\ $h_0$);
+in particular $h^{\ast}_{1}$ is superadditive up to one state,
+$h^{\ast}_{1}(m_1+m_2+1)\ge h^{\ast}_{1}(m_1)+h^{\ast}_{1}(m_2)$.
+\end{corollary}
+
+\begin{proof}
+\Cref{oph:balance} and \Cref{oph:stack}; the parameters are
+$\rho=4095/4096$, $\nu=2^{-20}$, $\mu_1=2^{-12}$,
+$\epsilon=g_{\min}/(2^{24}g_{\max})$, $\mu_{j+1}=2^{-31}\mu_j$ and $\Theta_{j+1}$ the
+dyadic truncation of $x^{+}_{j+1}-\epsilon\Gamma_{j+1}$; each $\Theta_j$ and $\mu_j$
+needs $O(j)$ bits, so \Cref{lem:dyadic-row} gives $O((7k)^2\cdot O(k))=O(k^{3})$
+average vertices. For the last clause take copy $1$ to be the unpadded first game (no
+bias is attached to copy $1$, so it needs no balancing) and copies $2,\dots$ to be
+balanced copies of the second.
+\end{proof}
+
+\begin{remark}[What was computed]\label{oph:measured}
+The family of \Cref{oph:family} was built and its run verified in exact rational
+arithmetic for $k=1,\dots,10$, giving
+$(m,L)=(7,12),(14,24),(21,36),(28,48),(35,60),(42,72),(49,84),(56,96),(63,108),(70,120)$;
+the value vector increases pointwise at every round of every run. The raw SSGs were
+also built through \Cref{lem:dyadic-row} and the runs recomputed \emph{from the games}
+by a second, independent evaluator: $\mathrm{ST}(1)$ is a stopping one-player SSG on
+$N=734$ vertices ($7$ Max) with a run of length $12$, and $\mathrm{ST}(2)$ one on
+$N=2199$ vertices ($14$ Max) with a run of length $24$. The construction is the first
+family of one-player stopping SSGs whose all-switches run exceeds $|\Vmax|$ by a
+constant factor: the previous record families, $\mathrm{RC}(k)$ and the ladder, both
+have $L=|\Vmax|$, and \Cref{cor:gate}'s attained example has $L=|\Vmax|+2$.
+\end{remark}
+
+\begin{proposition}[$h^{\ast}_{1}(5)\ge10$]\label{oph:h5}
+Freezing the fifth Max vertex of the $m=6$ one-player game of \Cref{oph:family} at its
+first action and retyping it as an average vertex (\Cref{def:subcube}) gives a
+nondegenerate one-player stopping SSG on $346$ vertices with $5$ Max vertices whose
+all-switches run from the strategy $01010$ has length $10$, with switched sets
+\[
+ \{0,1,3,4\},\{0,1,2,4\},\{0,1,4\},\{0,1,3\},\{0,1\},\{0\},\{2,3,4\},\{3,4\},\{4\},\{2\}.
+\]
+Its improvement orientation is an acyclic Holt--Klee unique sink orientation of the
+$5$-cube of bottom-antipodal height $10$. Hence $h^{\ast}_{1}(5)\ge10$ and
+$h^{\ast}_{\mathrm{LP}}(5)\ge10$, improving the entries $\ge9$ of
+\Cref{rem:four-ceilings}; the Holt--Klee ceiling $h^{\ast}_{\mathrm{HK}}(5)=11$ of
+\Cref{prop:hkfive} is now within one.
+\end{proposition}
+
+\begin{proof}
+A finite exact computation, done twice: once on the normal form obtained by
+eliminating the frozen state (stochastic complementation), and once on the explicit
+SSG, by an evaluator that resolves the average part of the graph in topological order
+and solves the resulting $6\times6$ rational system. All $32$ starting strategies were
+tried; $10$ is the maximum, and the other eleven facets of the $m=6$ record give
+$5,6,6,6,6,6,6,7,8,8,6$. The orientation was checked to be a USO, acyclic, tie-free
+and Holt--Klee (the max-flow test of \Cref{prop:hkfive}).
+\end{proof}
+
+\begin{proposition}[$h^{\ast}_{1}(7)\ge12$ and $h^{\ast}_{1}(8)\ge13$ by explicit
+games]\label{oph:h78}
+$\mathrm{ST}(1)$ of \Cref{oph:family} is a nondegenerate one-player stopping SSG with
+$7$ Max vertices ($N=734$) whose all-switches run has length $12$, so
+$h^{\ast}_{1}(7)\ge12$ is attained by a game with seven Max vertices rather than by
+monotonicity in $m$. A one-player normal form on $8$ states with denominator $2^{44}$,
+found by annealing and verified exactly (tie-free, USO, acyclic, Holt--Klee),
+has bottom-antipodal height $13$: its run from $\sigma=10011000$ switches
+\[
+\{0,1,2,4,6,7\},\{0,1,2,3,5\},\{0,1,2,5\},\{0,1,5\},\{0,1,3\},\{0,1\},\{0\},
+\{2,3,4,5,6\},\{3,5\},\{5\},\{2\},\{4\},\{6\}.
+\]
+So $h^{\ast}_{1}(8)\ge13$ and $h^{\ast}_{\mathrm{LP}}(8)\ge13$. With
+\Cref{oph:h5} the one-player row of \Cref{rem:four-ceilings} becomes
+\[
+  h^{\ast}_{1}(m)\;=\;1,\;2,\;4,\;6,\;\ge10,\;\ge12,\;\ge12,\;\ge13\qquad(m=1,\dots,8),
+\]
+and \Cref{oph:family} adds $h^{\ast}_{1}(7k)\ge12k$ for every $k$.
+\end{proposition}
+
+\begin{proposition}[Exhaustive census at $N\le8$]\label{oph:exhaustive}
+Over \emph{all} one-player stopping SSGs whose non-sink vertices number
+$n\le 6$ --- all $\binom{n+2}{2}^{\,n}$ assignments of an unordered pair of
+\emph{distinct} targets to each vertex, for every split of $n$ into $|\Vmax|=m$ and
+$a=n-m$; a vertex whose two successors coincide may be contracted, which lowers $n$
+and does not raise $m$, so this is no loss --- the longest all-switches run over all
+$2^{m}$ starting strategies is exactly $m$, for every $(m,a)$ with $3\le m\le n$
+(for $m\le2$ the same bound is the known $h^{\ast}_{1}(1)=1$, $h^{\ast}_{1}(2)=2$, and
+for $a=0$ it is \Cref{rem:grid-per-vertex}). In particular $L\le N-2$ on all of them,
+with equality only at $a=0$, where the chain $\mathrm{RC}(m)$ attains it; average
+vertices never lengthen a run at these sizes, so the smallest one-player game with
+$L>|\Vmax|$ --- one exists, since $h^{\ast}_{1}(3)=4$ --- has at least $7$ non-sink
+vertices. The computation is exact (integer Bareiss elimination, values compared as
+numerators over the common determinant) and covers $1.5\times10^{9}$ games.
+\end{proposition}
+
+\begin{remark}[Two negative measurements]\label{oph:negative}
+(i) \emph{Local translation-invariant averaging networks do not beat $m$.} Consider
+one-player games in which every Max action goes to a single average vertex whose two
+successors are given by a fixed local rule (one of $i-2,i-1,i,i+1,i+2$, the first or
+the last state, $t_0$, $t_1$) evaluated at the state index, with one of five boundary
+conventions (wrap, $t_0$, $t_1$, and the two mixed ones), and every edge damped by
+$1-2^{-8}$. All $32040$ such families were evaluated at $m=4,5,6,7,8$: none has a run
+longer than $m$ at $m=7$ or $m=8$. This is what \Cref{prop:serialiser} predicts for
+travelling waves: a wave whose switched sets are singletons is forbidden
+(\Cref{cor:isolated}), and exact cyclic symmetry forbids the switched set from
+advancing by a rotation, since a rotation has finite order while the value vector
+increases strictly.
+(ii) \emph{Weakly coupled coprime lanes reach only $\approx1.5\,m$.} For the family in
+which state $i$ of a cyclic lane has actions $\alpha x_{i-1}+a_i$ and
+$\beta x_{i+1}+b_i$, and for the two-lane version in which the second action of a lane
+reads a freely chosen state of the other lane, annealing over the offsets
+$a_i,b_i$ (and the cross-targets) gives longest runs $8,10,11,13,13$ at
+$m=5,\dots,9$ for one lane and $8,11,13,13,15$ at $m=5,7,8,9,11$ for two lanes ---
+above $m$, but below the $12m/7$ of \Cref{oph:family} and far below the $pq$ that the
+coprime-lane heuristic hopes for.
+\end{remark}
+
+\begin{remark}[The gap]\label{oph:gap}
+\Cref{oph:family} is linear. The exact statement that would make it superlinear is:
+\emph{there are one-player normal forms $G_0^{(1)},G_0^{(2)},\dots$ with
+$m_0(t)\to\infty$ and $h_0(t)/m_0(t)\to\infty$} --- equivalently, by
+\Cref{oph:stack}, $h^{\ast}_{1}(m)=\omega(m)$. Every value of $h^{\ast}_{1}$ known
+here, $1,2,4,6,\ge10,\ge12$ for $m=1,\dots,6$, agrees with $\lfloor(m+1)^{2}/4\rfloor$
+at $m\le4$ and exceeds it at $m=5$; the smallest open instance is $h^{\ast}_{1}(7)$,
+where $\ge12$ is what \Cref{oph:family} gives and $16$ is what a quadratic law would
+predict. What \Cref{oph:stack} shows is that the \emph{scheduling} half of a
+superlinear construction is solved: because $\val(\Pi)$ increases strictly along every
+run for every average mixture $\Pi$ of the states, a freezing bias controlled by one
+value of the previous stage releases a block exactly at a prescribed round, at a cost
+of one state per block and $O(1)$ bits of precision per block. What is missing is a
+block whose own run is superlinear in its own state count, or a way of \emph{re-using}
+a block --- running the same states through $\Omega(m)$ different sub-runs under
+successively changed biases --- which \Cref{cor:isolated} permits only if no two of the
+sub-runs repeat a switched set.
+\end{remark}

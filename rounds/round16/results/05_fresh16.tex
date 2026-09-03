@@ -1,0 +1,658 @@
+%% Route fresh-16.  Paste-ready; amsthm style of frontier.tex.
+%% Everything below is PROVED.  Machine checks are named in \Cref{rem:fs16-checks}.
+%% The full file, identical to this text, is at
+%%   /tmp/claude-1000/-data-ssg-proof/d1fe2115-9b72-4784-bb94-87421ac1106c/scratchpad/fresh-16/fs16.tex
+
+\subsection{The two qualitative sets, and why they cannot be made to answer the
+threshold}\label{sec:fs16}
+
+\Cref{def:simorder} uses the two sets $Z_0=\{w^\ast=0\}$ and
+$Z_1=\{w^\ast=1\}$ and computes them by ``the standard qualitative algorithm,
+from memory, unchecked''. We prove both here, inside the model, with no
+arithmetic at all; the proofs are short and the algorithms are the ones the
+rest of this subsection needs.
+
+\begin{lemma}[Positive reachability]\label{lem:fs16-positive}
+Let $G$ be an arbitrary SSG. Let $\mathrm{Pos}(G)$ be the least fixed point of
+\[
+  Y\;\longmapsto\;\{t_1\}\cup\{v\in\Vmax\cup\Vavg:\ \text{some successor in }Y\}
+                    \cup\{v\in\Vmin:\ \text{both successors in }Y\}.
+\]
+Then $\mathrm{Pos}(G)=\{v:\val(v)>0\}$, and it is computed in time $O(N^2)$
+without looking at a single probability.
+\end{lemma}
+
+\begin{proof}
+Write $Y_0\subseteq Y_1\subseteq\cdots$ for the iterates and
+$\mathrm{rk}(v)$ for the least $i$ with $v\in Y_i$.
+
+($\supseteq$, i.e.\ $v\in\mathrm{Pos}\Rightarrow\val(v)>0$.)
+Define $\sigma$ on $\Vmax\cap\mathrm{Pos}$ by letting $\sigma(v)$ be a
+successor of strictly smaller rank; such a successor exists by the definition
+of the iteration. Fix any $\tau$. From $v$ with $\mathrm{rk}(v)=i$ the token
+moves to a vertex of rank $<i$ with probability $\ge\tfrac12$: at a Max vertex
+$\sigma$ does it with probability $1$; at an average vertex one of the two
+successors has smaller rank, so probability $\ge\tfrac12$; at a Min vertex
+\emph{both} successors have smaller rank, so probability $1$. Hence
+$t_1$ is reached within $N$ steps with probability at least $2^{-N}>0$.
+
+($\subseteq$.) Let $U:=V\setminus\mathrm{Pos}$. Since $\mathrm{Pos}$ is a fixed
+point, every $v\in U\cap(\Vmax\cup\Vavg)$ has \emph{both} successors in $U$ and
+every $v\in U\cap\Vmin$ has \emph{some} successor in $U$; and $t_1\notin U$.
+Let $\tau$ pick, at every Min vertex of $U$, a successor in $U$. Under
+$(\sigma,\tau)$, for any $\sigma$, the token started in $U$ never leaves $U$,
+so it never reaches $t_1$ and $\val^{\tau}(v)=0$.
+\end{proof}
+
+\begin{theorem}[Almost-sure reachability]\label{thm:fs16-assure}
+Let $G$ be an arbitrary SSG. For $W\subseteq V$ let $Y(W)$ be the least fixed
+point of
+\[
+  Y\;\longmapsto\;\{t_1\}\ \cup\
+  \{v\in W\cap\Vmax: \text{some successor in }Y\}\ \cup\
+  \{v\in W\cap\Vmin: \text{both successors in }Y\}
+\]
+\[
+  \cup\ \{v\in W\cap\Vavg: \text{both successors in }W\ \text{and some successor in }Y\},
+\]
+and let $\mathrm{One}(G)$ be the greatest fixed point of the monotone map
+$W\mapsto Y(W)$, computed by $W_0:=V$, $W_{i+1}:=Y(W_i)$; the sink $t_0$
+matches no clause, so it leaves at the first step. Then
+$\mathrm{One}(G)=\{v:\val(v)=1\}$, and it is computed in time $O(N^3)$ without
+looking at a single probability.
+\end{theorem}
+
+\begin{proof}
+Termination is clear: $Y$ is monotone in $W$ and $Y(W)\subseteq W$, so the
+sequence $W_i$ decreases and stabilises within $N$ steps at the greatest fixed
+point $W:=\mathrm{One}(G)$.
+
+($\subseteq$ of the claim, i.e.\ $v\in W\Rightarrow\val(v)=1$.)
+Since $W=Y(W)$, every $v\in W$ has a rank $\mathrm{rk}(v)$ in the least fixed
+point computing $Y(W)$. Define $\sigma(v)$, for $v\in W\cap\Vmax$, to be a
+successor of strictly smaller rank; it lies in $W$. Fix $\tau$. From $v\in W$
+the token stays in $W$: at Min and average vertices of $W$ both successors are
+in $W$ (at Min, because both are in $Y(W)=W$; at average, by the clause), and
+at Max vertices $\sigma(v)\in W$. Moreover from every $u\in W$ the rank drops
+with probability at least $\tfrac12$ in one step, as in
+\Cref{lem:fs16-positive}. Hence, from every $u\in W$ and under every $\tau$,
+$t_1$ is reached within $N$ steps with probability at least $2^{-N}$; by the
+Markov property the probability of never reaching $t_1$ is $0$, so
+$\min_\tau\Pr_{\sigma,\tau}[t_1]=1$ and $\val(v)=1$.
+
+($\supseteq$.) Put $A:=\{v:\val(v)=1\}$. By Knaster--Tarski the greatest fixed
+point of $W\mapsto Y(W)$ contains every $W$ with $W\subseteq Y(W)$, so it
+suffices to prove $A\subseteq Y(A)$. Suppose not, and put
+$B:=A\setminus Y(A)\ne\emptyset$; note $t_1\in Y(A)$, so $t_1\notin B$. We
+record what membership in $B$ forces. If $v\in B\cap\Vavg$ then
+$\tfrac12(w^\ast(v^{(0)})+w^\ast(v^{(1)}))=1$ forces both successors into $A$,
+so the clause ``both successors in $A$'' holds and therefore \emph{neither}
+successor is in $Y(A)$; both are in $B$. If $v\in B\cap\Vmin$ then both
+successors are in $A$ and they cannot both be in $Y(A)$, so some successor is
+in $B$. If $v\in B\cap\Vmax$ then every successor lying in $A$ lies in $B$ (a
+successor in $A\cap Y(A)$ would put $v$ in $Y(A)$), and at least one successor
+lies in $A$.
+
+Let $c:=\max\{\val(u):u\notin A\}$, with $c:=0$ if $A=V$; then $c<1$. Fix any
+Max strategy $\sigma$ and let Min play as follows: while the token is in $B$,
+at a Min vertex move to a successor in $B$; as soon as the token leaves $B$,
+switch to a strategy optimal at the vertex reached. Starting at $v\in B$, the
+token can leave $B$ only at a Max vertex, and only into a successor not in $A$,
+hence into a vertex of value at most $c$. Therefore
+$\val(v)\le 0\cdot\Pr[\text{stay in }B\text{ forever}]+c\cdot\Pr[\text{leave}]\le c<1$,
+contradicting $v\in A$.
+\end{proof}
+
+\begin{corollary}[The qualitative sets do not see the coins]\label{cor:fs16-bias}
+Let $G$ be an SSG and let $G[b]$, for $b\in(0,1)^{\Vavg}$, be the stochastic
+game obtained by letting the average vertex $v$ take $v^{(1)}$ with probability
+$b_v$ and $v^{(0)}$ with probability $1-b_v$. Then
+$\{v:\val_{G[b]}(v)=1\}$ and $\{v:\val_{G[b]}(v)>0\}$ are independent of $b$.
+The same holds if a vertex is replaced by a controlled vertex all of whose
+actions have the same two-element support.
+\end{corollary}
+
+\begin{proof}
+The proofs of \Cref{lem:fs16-positive,thm:fs16-assure} use only the
+\emph{supports} of the transition distributions: the constant $\tfrac12$ enters
+only through the inequality ``probability at least $\tfrac12$'', which becomes
+``at least $\min_v\min(b_v,1-b_v)>0$'', and the two converse arguments use no
+probability at all. A controlled vertex whose actions share the support
+$\{e_1,e_0\}$ satisfies exactly the same clause as a chance vertex with that
+support in both fixed points.
+\end{proof}
+
+\subsubsection*{Contexts, calls and the gate lemma}
+
+\begin{definition}[Context, call, composition]\label{def:fs16-context}
+A \emph{context} is a structure $H$ on a vertex set $V_H$ together with the two
+sinks, in which every vertex has an ordered pair of successors and is of one of
+the four kinds $\max$, $\min$, $\mathrm{avg}$, $\mathrm{call}$; for a call $c$
+we write $(e_1(c),e_0(c)):=\mathrm{succ}(c)$. $H$ is \emph{admissible} if it is
+stopping when every call is read as a controlled vertex, i.e.\ if the only
+subset $U\subseteq V_H$ with both successors in $U$ at every average vertex of
+$U$ and some successor in $U$ at every other vertex of $U$ is $U=\emptyset$.
+
+For a stopping SSG $G$ with start $v_0$, the \emph{composition} $H\langle
+G\rangle$ is the SSG obtained from $H$ by replacing each call $c$ by a private
+copy $G^{c}$ of $G$: every edge into $c$ is redirected to the copy's $v_0$,
+every edge of the copy into $t_1$ is redirected to $e_1(c)$, and every edge of
+the copy into $t_0$ to $e_0(c)$.
+\end{definition}
+
+\begin{definition}[The $(p,q)$-gate]\label{def:fs16-gate}
+For $p,q\in[0,1]$, the \emph{$(p,q)$-gate} with exits $(e_1,e_0)$ is the vertex
+whose operator is
+\[
+  \mathcal{G}_{p,q}(A,B)\;:=\;
+  \begin{cases} pA+(1-p)B, & A\ge B,\\ qA+(1-q)B, & A<B,\end{cases}
+  \qquad A:=x(e_1),\ B:=x(e_0).
+\]
+Equivalently $\mathcal{G}_{p,q}(A,B)=\max$ of $pA+(1-p)B$ and $qA+(1-q)B$ when
+$p\ge q$, and their $\min$ when $p\le q$; so a gate is a controlled vertex with
+two chance actions, each of support $\{e_1,e_0\}$. It is monotone,
+$1$-Lipschitz in the sup-norm, and commutes with increasing affine maps of
+$(A,B)$. We write $H^{p,q}$ for the context $H$ with every call replaced by the
+$(p,q)$-gate on its exits.
+\end{definition}
+
+\begin{lemma}[Gate lemma: a plugged-in game is exactly a gate]\label{lem:fs16-gate}
+Let $G$ be a stopping SSG with start $v_0$, let $G^{\mathrm{rev}}$ be $G$ with
+the two players' roles exchanged (sinks unchanged), and put
+\[
+  p:=\val_G(v_0)=\max_\sigma\min_\tau\Pr\nolimits_{\sigma,\tau}[\,t_1\,],
+  \qquad
+  q:=\val_{G^{\mathrm{rev}}}(v_0)=\min_\sigma\max_\tau\Pr\nolimits_{\sigma,\tau}[\,t_1\,].
+\]
+Let $H$ be an admissible context. Then $H\langle G\rangle$ is stopping and
+\[
+  \val_{H\langle G\rangle}(v)=\val_{H^{p,q}}(v)\qquad\text{for every }v\in V_H,
+\]
+and inside the copy at the call $c$ the values are those of $G$ with the two
+sinks paying $\val_{H^{p,q}}(e_1(c))$ and $\val_{H^{p,q}}(e_0(c))$.
+No inequality between $p$ and $q$ holds in general: $p=1,q=0$ for the
+one-vertex game $v\to(t_1,t_0)$ with $v\in\Vmax$, $p=0,q=1$ with $v\in\Vmin$,
+and $p=q$ whenever $G$ has no controlled vertex.
+\end{lemma}
+
+\begin{proof}
+\emph{Payoff transfer.} Let $G[A,B]$ be $G$ with $t_1$ paying $A$ and $t_0$
+paying $B$, and let $\psi(x):=B+(A-B)x$, so that the payoff of a play is
+$\psi(\mathbf 1[\,t_1\,])$; this uses that $G$ is stopping, so that a play is
+absorbed almost surely and $\Pr[t_0]=1-\Pr[t_1]$. If $A\ge B$ then $\psi$ is
+nondecreasing and commutes with $\max$ and $\min$, so
+$\val_{G[A,B]}(v_0)=\psi(p)=pA+(1-p)B$. If $A<B$ then $\psi$ is decreasing, so
+$\min_\tau\psi(\cdot)=\psi(\max_\tau\cdot)$ and
+$\max_\sigma\psi(\cdot)=\psi(\min_\sigma\cdot)$, whence
+$\val_{G[A,B]}(v_0)=\psi(q)=qA+(1-q)B$. In both cases
+$\val_{G[A,B]}(v_0)=\mathcal{G}_{p,q}(A,B)$.
+
+\emph{Stopping.} Let $(\sigma,\tau)$ be a positional pair of $H\langle
+G\rangle$. Inside a copy it restricts to a pair of $G$, so the token leaves the
+copy almost surely, landing on $e_1(c)$ or $e_0(c)$. The induced process on
+$V_H$ is therefore a Markov chain in which a call moves to $e_1(c)$ with some
+probability $\rho_c$ and to $e_0(c)$ with $1-\rho_c$. A finite chain absorbs
+almost surely from every state iff the set of states from which no sink is
+reachable is empty; that set is closed, so it has both successors in it at
+every average vertex and at least one at every other vertex, and admissibility
+of $H$ forces it to be empty, whatever the $\rho_c$.
+
+\emph{Values.} Let $W:=\val_{H^{p,q}}$ and define $x$ on $V(H\langle G\rangle)$
+by $x:=W$ on $V_H\setminus K$, $x:=W(c)$ at the entry of the copy of $c$, and,
+on the copy of $c$, $x:=\val_{G[W(e_1(c)),W(e_0(c))]}$. At a vertex of
+$V_H\setminus K$ the two Shapley operators read the same numbers, so
+$(Tx)(v)=(T_{H^{p,q}}W)(v)=W(v)=x(v)$. At an interior vertex of a copy the
+operator is that of $G[W(e_1),W(e_0)]$, whose value vector $x$ is, so
+$(Tx)(v)=x(v)$. At the entry of the copy of $c$,
+$(Tx)=\val_{G[W(e_1),W(e_0)]}(v_0)=\mathcal{G}_{p,q}(W(e_1),W(e_0))=W(c)=x$ by
+the payoff transfer and the definition of $H^{p,q}$. So $Tx=x$; as
+$H\langle G\rangle$ is stopping, \Cref{thm:contraction} makes $x$ the value.
+\end{proof}
+
+\begin{theorem}[Two-exit contraction]\label{thm:fs16-contract}
+Let $G$ be a stopping SSG and $M$ a set of non-sink vertices such that every
+edge leaving $M$ lands in $\{o_1,o_0\}$ for two fixed vertices
+$o_1,o_0\notin M$. Let $G_M$ be the game induced on $M$ with $o_1$ read as
+$t_1$ and $o_0$ as $t_0$ (it is stopping), and for each \emph{entry}
+$e$ of $M$ --- a vertex of $M$ with an in-edge from outside $M$, or the start
+vertex --- put $p_e:=\val_{G_M}(e)$ and $q_e:=\val_{G_M^{\mathrm{rev}}}(e)$.
+Let $G/M$ be obtained from $G$ by deleting $M$, adding one $(p_e,q_e)$-gate
+$g_e$ with exits $(o_1,o_0)$ per entry $e$, and redirecting every edge that
+entered $e$ from outside $M$ to $g_e$. Then
+\[
+  \val_{G/M}(v)=\val_G(v)\ \ (v\notin M),\qquad \val_{G/M}(g_e)=\val_G(e),
+\]
+and the values inside $M$ are those of $G_M$ with the sinks paying
+$\val_G(o_1)$ and $\val_G(o_0)$.
+
+In particular the \emph{response of a part with two exits is described by two
+numbers per entry}: it is the piecewise-affine map $\mathcal{G}_{p_e,q_e}$,
+with exactly two affine pieces, separated by the hyperplane $A=B$.
+\end{theorem}
+
+\begin{proof}
+Identical to the last paragraph of \Cref{lem:fs16-gate}, run with $W:=\val_{G/M}$
+and with one gate per entry: the payoff transfer inside $M$ depends only on the
+pair $(\val_G(o_1),\val_G(o_0))$ and is applied at each entry separately, and
+$G_M$ is stopping because a play confined to $M$ for ever would exhibit a
+nonempty trap of $G$, contradicting \Cref{lem:trapchar}. $G/M$ is stopping for
+the same reason as in \Cref{lem:fs16-gate}, and $Tx=x$ with $x$ assembled as
+there.
+\end{proof}
+
+\begin{remark}[Where the response table explodes, exactly]\label{rem:fs16-two}
+\Cref{thm:fs16-contract} is the sharp complement of \Cref{rem:fold-width}. A
+part with \emph{two} exits has a response with exactly two affine pieces, and
+it can therefore be \emph{stored}: two rationals per entry. A part with
+\emph{three} exits --- the situation of \Cref{thm:fold}, where the exits are
+$u$, $t_0$ and $t_1$ and one free parameter survives affine normalisation ---
+already has $2^{D}$ pieces on $6D+2$ vertices. So the amortisation asked for
+after \Cref{prop:modulator-family} is available at separators of interface
+dimension zero and is closed at interface dimension one. Consequently a
+stopping SSG that can be reduced to a single vertex by repeated contraction of
+parts with at most two exits and boundedly many entries, the parts and the
+quotients being recursively of the same shape and of geometrically decreasing
+size, is solved exactly in polynomial time; the class is narrow --- with
+boundedly many entries the decomposition exhibits balanced separators of
+bounded size, so it lies at bounded treewidth, where \Cref{thm:qp} already
+gives a quasipolynomial bound --- and the point of the statement is not the
+class but the location of the boundary.
+\end{remark}
+
+\subsubsection*{An energy identity and a crossing bound}
+
+\begin{theorem}[Energy and crossings]\label{thm:fs16-cross}
+Let $\Gamma$ be a stopping game with Max, Min and chance vertices, each chance
+vertex $v$ having two successors $v^{(1)},v^{(0)}$ taken with probabilities
+$b_v,1-b_v$, and two sinks of payoff $1$ and $0$. Let $W:=\val_\Gamma$, let
+$(\sigma,\tau)$ be an optimal pair, let $N_v$ be the expected number of visits
+to $v$ from $v_0$ in the chain $\Gamma_{\sigma,\tau}$, and put
+$\Delta_v:=W(v^{(1)})-W(v^{(0)})$. Let $r+1$ be the number of distinct values
+in $W(V)\cup\{0,1\}$. Then
+\begin{align}
+  \sum_{v\ \mathrm{chance}} N_v\,b_v(1-b_v)\,\Delta_v^{2}
+  &\;=\;W(v_0)\bigl(1-W(v_0)\bigr), \label{eq:fs16-energy}\\
+  \sum_{v\ \mathrm{chance}} N_v\,2b_v(1-b_v)\,|\Delta_v|
+  &\;\le\;\tfrac{r}{2}+1. \label{eq:fs16-cross}
+\end{align}
+For an SSG (all $b_v=\tfrac12$) these read
+$\sum_{v\in\Vavg}N_v\Delta_v^{2}=4w^\ast(v_0)(1-w^\ast(v_0))$ and
+$\sum_{v\in\Vavg}N_v|\Delta_v|\le r+2$. Both hold verbatim with $W$ replaced by
+$\val_{\sigma,\tau}$ for an \emph{arbitrary} absorbing pair $(\sigma,\tau)$.
+\end{theorem}
+
+\begin{proof}
+Let $X_0=v_0,X_1,\dots$ be the chain and $M_t:=W(X_t)$. Under the optimal pair,
+$W(v)=W(\sigma(v))$ at Max vertices and $W(v)=W(\tau(v))$ at Min vertices, and
+$W(v)=b_vW(v^{(1)})+(1-b_v)W(v^{(0)})$ at chance vertices; so $(M_t)$ is a
+bounded martingale, constant along the controlled steps, and absorbed in
+$\{0,1\}$ almost surely.
+
+\eqref{eq:fs16-energy}: at a chance vertex $v$ the increment is $(1-b_v)\Delta_v$
+with probability $b_v$ and $-b_v\Delta_v$ with probability $1-b_v$, so its
+conditional second moment is $b_v(1-b_v)\Delta_v^{2}$. Summing over time,
+$\sum_v N_vb_v(1-b_v)\Delta_v^{2}=\mathbb{E}\sum_t(M_{t+1}-M_t)^2
+=\mathrm{Var}(M_\infty)=W(v_0)(1-W(v_0))$, since $M_\infty\in\{0,1\}$ with
+$\mathbb{E}M_\infty=W(v_0)$.
+
+\eqref{eq:fs16-cross}: for $\lambda\in(0,1)$ let $C(\lambda)$ be the number of
+transitions of the chain that cross the level $\lambda$, i.e.\ from $M_t\le
+\lambda$ to $M_{t+1}>\lambda$ or the reverse. Only chance steps can cross. At a
+chance vertex $v$ with $\Delta_v>0$ we have
+$W(v^{(0)})<W(v)<W(v^{(1)})$; if $\lambda\in[W(v^{(0)}),W(v))$ then exactly the
+move to $v^{(0)}$ crosses, with probability $1-b_v$, and if
+$\lambda\in[W(v),W(v^{(1)}))$ then exactly the move to $v^{(1)}$ crosses, with
+probability $b_v$. The two intervals have lengths $b_v\Delta_v$ and
+$(1-b_v)\Delta_v$, so
+\[
+  \int_0^1\mathbb{E}\,C(\lambda)\,d\lambda
+  =\sum_v N_v\bigl(b_v\Delta_v(1-b_v)+(1-b_v)\Delta_v b_v\bigr)
+  =\sum_v N_v\,2b_v(1-b_v)|\Delta_v|,
+\]
+the same computation applying when $\Delta_v<0$.
+
+Now let $0=w_0<w_1<\dots<w_r=1$ list the distinct values, so the $r$ gaps
+$(w_{j-1},w_j)$ have lengths $g_j$ summing to $1$. Fix $\lambda$ in the $j$-th
+gap. A crossing of $\lambda$ is a single transition from $\le w_{j-1}$ to
+$\ge w_j$ or the reverse, and successive crossings alternate in direction;
+hence the upward crossings of $\lambda$ are exactly upcrossings of
+$[w_{j-1},w_j]$ in Doob's sense, and their number $U$ satisfies
+$g_j\,\mathbb{E}U\le\mathbb{E}(M_\infty-w_{j-1})^{+}-(M_0-w_{j-1})^{+}
+\le\min\bigl(w_{j-1}(1-W(v_0)),\,W(v_0)(1-w_{j-1})\bigr)\le\tfrac14$.
+The downward crossings $D$ satisfy $D\le U+1$ pathwise, so
+$\mathbb{E}C(\lambda)\le 2\mathbb{E}U+1\le \tfrac1{2g_j}+1$ and
+\[
+  \int_0^1\mathbb{E}C(\lambda)\,d\lambda
+  \;\le\;\sum_{j=1}^{r} g_j\Bigl(\frac1{2g_j}+1\Bigr)\;=\;\frac r2+1 .
+\]
+For an arbitrary absorbing pair the same proof applies with $\val_{\sigma,\tau}$,
+which is harmonic for that chain by definition.
+\end{proof}
+
+\begin{corollary}\label{cor:fs16-visits}
+In a stopping SSG, every average vertex satisfies
+$N_v\le 4w^\ast(v_0)(1-w^\ast(v_0))\,\Delta_v^{-2}\le\Delta_v^{-2}$: an average
+vertex whose two successors differ in value by $\Delta$ is visited at most
+$\Delta^{-2}$ times in expectation under an optimal pair.
+\end{corollary}
+
+\begin{corollary}[Composition is $O(|V_H|)$-Lipschitz in the plugged-in
+value]\label{cor:fs16-lip}
+Let $H$ be an admissible context with $s:=|V_H|$ vertices and $v\in V_H$, and
+for $p,q\in(0,1)$ write $V(p,q):=\val_{H^{p,q}}(v)$. Then $V$ is continuous and
+piecewise rational, and wherever it is differentiable
+\[
+  \Bigl|\frac{\partial V}{\partial p}\Bigr|\ \le\ \frac{s+3}{2}\cdot\frac1{2p(1-p)},
+  \qquad
+  \Bigl|\frac{\partial V}{\partial q}\Bigr|\ \le\ \frac{s+3}{2}\cdot\frac1{2q(1-q)} .
+\]
+In particular $p\mapsto V(p,p)$ is $\tfrac43(s+3)$-Lipschitz on
+$[\tfrac14,\tfrac34]$.
+\end{corollary}
+
+\begin{proof}
+Fix $p$ at which the optimal pair and the gate actions are locally constant.
+The chain is absorbing and the standard perturbation formula for absorbing
+chains gives $\partial V/\partial p=\sum_{c}N_c\bigl(W(e_1(c))-W(e_0(c))\bigr)
+=\sum_c N_c\Delta_c$, the sum over the calls that use the action of bias $p$.
+Those are chance steps of bias $p$ in the chain, so by
+\eqref{eq:fs16-cross} --- whose left-hand side runs over all chance steps and
+therefore dominates the sub-sum over those calls ---
+$\sum_cN_c|\Delta_c|\,2p(1-p)\le\tfrac r2+1$ with
+$r\le s+1$, since $W$ takes at most $s+2$ distinct values on $V_H\cup\{t_0,t_1\}$.
+$V$ is continuous because the values of a stopping game depend continuously on
+the transition probabilities, and it is piecewise rational with finitely many
+pieces, one per optimal profile, so it is absolutely continuous and the bound
+integrates. On $[\tfrac14,\tfrac34]$, $2p(1-p)\ge\tfrac38$.
+\end{proof}
+
+\subsubsection*{Two impossibility statements for black-box constructions}
+
+\begin{theorem}[No black-box gap amplification]\label{thm:fs16-noamp}
+Let $H$ be an admissible context on $s$ vertices, let $v\in V_H$, and for
+$\theta\in(0,1)$ let $C_\theta$ be any stopping SSG without controlled vertices
+whose value at its start is $\theta$ (so $p=q=\theta$ in
+\Cref{lem:fs16-gate}; such a game exists for every dyadic $\theta$, a binary
+chain as in \Cref{thm:compare-equivalence}). Put
+$V(\theta):=\val_{H\langle C_\theta\rangle}(v)=\val_{H^{\theta,\theta}}(v)$, the
+second expression defining $V$ for the non-dyadic $\theta$ as well.
+If for some $\delta\in(0,\tfrac14]$
+\[
+  V(\theta)\ \ge\ \tfrac34\ \text{ for }\theta\ge\tfrac12,
+  \qquad
+  V(\theta)\ \le\ \tfrac14\ \text{ for }\theta\le\tfrac12-\delta,
+\]
+then $s\ \ge\ \dfrac{3}{8\delta}-3$.
+
+Consequently: no construction that plugs copies of the given game into a fixed
+context and reads the answer off a threshold on the composed value can amplify
+the gap. Since by \Cref{lem:denominator-sharp} the values of a stopping SSG
+with $a$ average vertices differ from $\tfrac12$ by at least $2^{-(a+1)}$ when
+they differ at all, such a construction needs
+$s\ge 3\cdot2^{a-2}-3=2^{\Omega(a)}$ vertices, and the composed game is
+exponentially large. In particular the ``play the game $K$ times and take a
+majority'' construction, and every finite-automaton verdict on a stream of
+independent plays --- $H$ being the automaton, one call per state --- needs
+$2^{\Omega(a)}$ states.
+\end{theorem}
+
+\begin{proof}
+By \Cref{lem:fs16-gate}, $V(\theta)=\val_{H^{\theta,\theta}}(v)$, so $V$ is the
+function of \Cref{cor:fs16-lip} restricted to the diagonal. The hypotheses give
+$|V(\tfrac12)-V(\tfrac12-\delta)|\ge\tfrac34-\tfrac14=\tfrac12$, and
+$[\tfrac12-\delta,\tfrac12]\subseteq[\tfrac14,\tfrac34]$ because
+$\delta\le\tfrac14$, so \Cref{cor:fs16-lip} gives
+$\tfrac12\le\tfrac43(s+3)\delta$, i.e.\ $s+3\ge 3/(8\delta)$.
+\end{proof}
+
+\begin{corollary}[The gap per vertex does not improve]\label{cor:fs16-gapratio}
+With $H$ and $V$ as above, $|V(\theta)-V(\theta')|\le\tfrac43(s+3)|\theta-\theta'|$
+for $\theta,\theta'\in[\tfrac14,\tfrac34]$, while $H\langle C_\theta\rangle$ has
+at least $s$ vertices. So a black-box composition multiplies the quantity to be
+resolved by at most $O(s)$ while multiplying the size by at least $s$: the ratio
+\emph{gap\,/\,size} is not improved by more than a constant factor, whatever the
+context.
+\end{corollary}
+
+\begin{theorem}[No black-box quantitative-to-qualitative
+reduction]\label{thm:fs16-noqual}
+Let $H$ be an admissible context and $v\in V_H$. Then for all
+$p,q,p',q'\in(0,1)$,
+\[
+  \val_{H^{p,q}}(v)=1\iff\val_{H^{p',q'}}(v)=1,
+  \qquad
+  \val_{H^{p,q}}(v)>0\iff\val_{H^{p',q'}}(v)>0 .
+\]
+Hence no context $H$ satisfies ``$\val_{H\langle G\rangle}(v)=1$ if and only if
+$\val_G(v_0)\ge\tfrac12$'' over the stopping SSGs $G$ with
+$\val_G(v_0)\in(0,1)$, and likewise for $\val>0$; the same holds for any
+objective whose almost-sure or positive winning set depends only on the
+supports of the transition distributions.
+\end{theorem}
+
+\begin{proof}
+A $(p,q)$-gate is a controlled vertex whose two actions both have support
+$\{e_1,e_0\}$, independently of $p,q\in(0,1)$; apply
+\Cref{cor:fs16-bias}. For the consequence, take $C_\theta$ with
+$\theta<\tfrac12$ and $\theta'\ge\tfrac12$: the two composed games are
+$H^{\theta,\theta}$ and $H^{\theta',\theta'}$, which have the same qualitative
+sets.
+\end{proof}
+
+\begin{remark}[Repeated play is only i.i.d.\ for a one-colour
+$G$]\label{rem:fs16-iid}
+Call a context \emph{monotone at $(p,q)$} if $\val_{H^{p,q}}(e_1(c))\ge
+\val_{H^{p,q}}(e_0(c))$ at every call. For a monotone context every gate uses
+the action of bias $p$, so $\val_{H\langle G\rangle}(v)$ is exactly the
+probability that the finite automaton $H$ --- one state per call, the exit
+$e_1$ read on the bit $1$ --- accepts a stream of independent
+$\mathrm{Bernoulli}(p)$ bits. This is the intended reading of ``play $G$ again
+and again and take a verdict''. It is however \emph{false} in general: for a
+two-player $G$ the copy is a $(p,q)$-gate with $p\ne q$
+(\Cref{lem:fs16-gate}), the bias is $p$ at the calls whose $e_1$-exit is the
+better one and $q$ at the others, and the composed value is not the acceptance
+probability of any fixed automaton on i.i.d.\ bits. \Cref{thm:fs16-noamp}
+covers both cases, being a statement about the diagonal $p=q$ and, through
+\Cref{cor:fs16-lip}, about each parameter separately.
+\end{remark}
+
+\begin{remark}[How steep an amplifier can be, measured]\label{rem:fs16-measured}
+The bound of \Cref{cor:fs16-lip} is tight up to a factor of about $8$. Over all
+contexts consisting of $s$ calls only --- i.e.\ all $s$-state automata --- the
+exact maximum of $\partial V/\partial p$ at $p=\tfrac12$ is
+$1,\ \tfrac43,\ 2,\ \tfrac{12}5$ for $s=1,2,3,4$ (exhaustive, up to relabelling
+of the states), and the best value found by hill-climbing or by the
+birth-and-death context below is $3,\ \tfrac{32}9,\ 4,\ \tfrac{40}9,\ 5$ at
+$s=5,\dots,9$ and $7$ at $s=13$ --- linear, not exponential, in $s$; the
+birth-and-death context (the gambler's-ruin counter,
+$c_j\to(c_{j+1},c_{j-1})$ with $c_0=t_0$, $c_{s+1}=t_1$, started in the middle)
+attains exactly $\tfrac{s+1}2$ for odd $s$ and is the maximiser at every $s$
+where the search is exhaustive. On that context the exact separations are
+$V(\tfrac12+\delta)-V(\tfrac12-\delta)=
+\tfrac{2080}{4481}=0.46418$, $0.46263$, $0.46225$, $0.46215$ at
+$(s,\delta)=(7,\tfrac1{16}),(15,\tfrac1{32}),(31,\tfrac1{64}),(63,\tfrac1{128})$
+(exact rationals, the last with a $58$-digit numerator): the product $s\delta$,
+not $s$ or $\delta$ alone, governs, exactly as \Cref{thm:fs16-noamp} says. To
+separate $\tfrac12$ from $\tfrac12-2^{-(a+1)}$ one therefore needs
+$s=\Theta(2^{a})$ calls, hence $\Theta(2^{a})$ copies of the game.
+\end{remark}
+
+\begin{remark}\label{rem:fs16-scope}
+\Cref{thm:fs16-noamp,thm:fs16-noqual} are statements about \emph{black-box}
+constructions: the context is fixed and the given game is used only as a
+plugged-in module entered at one vertex. They are not barriers against
+arbitrary polynomial-time reductions, and cannot be: a transformation
+$G\mapsto G'$ with $\val_{G'}=1$ iff $\val_G(v_0)\ge\tfrac12$ exists if and
+only if \textsc{SSG-Value} is in $\mathrm{P}$, trivially in both directions
+(if the problem is in $\mathrm{P}$, output the one-vertex game $t_1$ or $t_0$;
+conversely \Cref{thm:fs16-assure} decides the image). What the two theorems do
+is close the whole family of constructions that seed the question --- repeated
+play, majority votes, tournaments, duels, gambler's-ruin counters, any
+finite-state verdict on a stream of plays --- by a single Lipschitz estimate,
+and they identify the exact reason: a copy of $G$ is a gate
+(\Cref{lem:fs16-gate}), a gate is a chance vertex with a fixed support, and both
+the almost-sure and the positive winning sets are blind to the biases while the
+threshold at $\tfrac12$ is not.
+\end{remark}
+
+\subsubsection*{The mixed-Min landscape is vacuous}
+
+\begin{lemma}[Mixing at one Min vertex never helps Min]\label{lem:fs16-mixmin}
+Let $G$ be a stopping SSG with $\Vmin=\{u_1,\dots,u_k\}$. For
+$y\in[0,1]^{k}$ let $G^{y}$ be $G$ with each $u_j$ replaced by a chance vertex
+taking $u_j^{(1)}$ with probability $y_j$, and $V(y):=\val_{G^{y}}(v_0)$. Then
+for every $j$ and every $y$,
+\[
+  V(y)\ \ge\ \min\bigl(V(y[y_j{:=}0]),\,V(y[y_j{:=}1])\bigr),
+\]
+and $\min_{y\in[0,1]^k}V(y)=\val_G(v_0)$, attained at $y=\mathbf 1_{\tau}$ for
+every optimal Min strategy $\tau$.
+\end{lemma}
+
+\begin{proof}
+Fix $y_{-j}$. The game $\Gamma$ obtained from $G^{y}$ by restoring $u_j$ as a
+Min vertex has exactly two Min strategies, so
+$\val_\Gamma(v_0)=\min(V(y[y_j{:=}0]),V(y[y_j{:=}1]))$. Pinning Min to the
+mixed action $y_j$ is a particular Min behavioural strategy, and
+$\val^{\tau}\ge\val$ for every $\tau$. The second statement is the same
+argument applied to all coordinates at once, together with positional
+determinacy.
+\end{proof}
+
+\begin{proposition}[$V$ is monotone in each coordinate]\label{prop:fs16-mixmono}
+With the notation of \Cref{lem:fs16-mixmin}, for each $j$ and each fixed
+$y_{-j}$ the map $y_j\mapsto V(y)$ is monotone on $[0,1]$. Consequently exact
+coordinate descent on $V$ moves every coordinate to an endpoint of $[0,1]$ and
+coincides, from the second round on, with single-switch Min policy iteration on
+$G$: the continuous relaxation of $\Vmin$ contributes nothing.
+\end{proposition}
+
+\begin{proof}
+$G^y$ has no Min vertex, so $V(y)=\max_\sigma\val_\sigma(y)$. Because $G$ is
+stopping, $I-P_{\sigma,y}$ is nonsingular for every $y\in[0,1]^k$: a set closed
+under the chain would be a trap of $G$ in the sense of \Cref{lem:trapchar}. The
+entries of $I-P_{\sigma,y}$ are affine in $y_j$ and $y_j$ occurs only in the
+row of $u_j$, so by Cramer's rule $\val_\sigma$ is a ratio of two functions
+affine in $y_j$ whose denominator does not vanish on $[0,1]$; a M\"obius
+function without a pole in the interval is monotone. Split the strategies into
+those with $\val_\sigma$ nondecreasing and those with $\val_\sigma$
+nonincreasing in $y_j$; $V$ is the maximum of one nondecreasing and one
+nonincreasing function, so each sublevel set $\{V\le c\}$ is an intersection of
+two intervals, i.e.\ $V$ is quasiconvex: nonincreasing on $[0,\gamma]$ and
+nondecreasing on $[\gamma,1]$ for some $\gamma$. By
+\Cref{lem:fs16-mixmin} the minimum of $V$ over $[0,1]$ is attained at an
+endpoint; if it is at $0$ then $V$ is constant on $[0,\gamma]$ and $V$ is
+nondecreasing throughout, and symmetrically. Hence $V$ is monotone.
+\end{proof}
+
+\subsubsection*{The largest controlled vertex}
+
+\begin{theorem}[Naming the top controlled vertex is the whole
+problem]\label{thm:fs16-topctrl}
+Let \textsc{TopC} be the problem: given a stopping SSG with
+$\Vmax\cup\Vmin\ne\emptyset$, output a controlled vertex of maximum value. Then
+\textsc{TopC} is polynomial-time equivalent to \Cref{prob:main}, by a reduction
+making a single oracle call and adding six vertices.
+\end{theorem}
+
+\begin{proof}
+One direction is trivial. For the other it suffices, by
+\Cref{thm:compare-equivalence}, to reduce the comparison of two non-sink
+vertices $p,q$ of a stopping $G$ (if either is a sink the comparison is
+immediate). Build $H$: redirect every edge of $G$ into
+$t_1$ to a fresh average vertex $h_1$ and adjoin $h_1\to(h_2,t_0)$,
+$h_2\to(t_1,t_0)$; then adjoin the average vertices $z_p\to(t_1,p)$,
+$z_q\to(t_1,q)$ and the Max vertices $m_p\to(z_p,t_0)$, $m_q\to(z_q,t_0)$.
+
+$H$ is stopping and $\val_H(h_1)=\tfrac14$, so for every positional pair the
+probability of reaching $t_1$ from an old vertex is exactly one quarter of what
+it was: $\val_H(v)=\tfrac14\val_G(v)$ for every old $v$, and the optimal
+strategies on the old part are unchanged, a positive scaling of the payoff
+commuting with $\max$ and $\min$. Hence
+$\val_H(z_p)=\tfrac12+\tfrac18\val_G(p)$ and
+$\val_H(m_p)=\max(\val_H(z_p),0)=\tfrac12+\tfrac18\val_G(p)$, and likewise for
+$q$. Every old controlled vertex has value at most $\tfrac14<\tfrac12$, and
+$z_p,z_q$ are average, so the controlled vertices of maximum value are exactly
+$\{m_p\}$ if $\val_G(p)>\val_G(q)$, $\{m_q\}$ if $<$, and $\{m_p,m_q\}$ if $=$.
+A single oracle call therefore decides $\val_G(p)\ge\val_G(q)$ up to the
+harmless tie.
+\end{proof}
+
+\begin{remark}
+\textsc{TopC} joins \Cref{thm:top} on the list of target-equivalent
+reformulations, and its reduction is the simpler of the two: an average vertex
+cannot be capped, which is why \Cref{thm:top} needs reference and boost chains,
+whereas a Max vertex over a damped copy can be placed above everything
+controlled by one leak of $\tfrac14$.
+\end{remark}
+
+\subsubsection*{Attribution, and what was machine-checked}
+
+\begin{remark}[Prior art, from memory, unchecked against the sources]\label{rem:fs16-prior}
+\Cref{lem:fs16-positive,thm:fs16-assure} are the standard qualitative
+algorithms for turn-based stochastic reachability games (de~Alfaro;
+Chatterjee, Jurdzi\'nski and Henzinger), which \Cref{def:simorder} already
+cites from memory; what is new here is only that they are proved inside this
+document's model, so that the computation of $Z_0$ and $Z_1$ no longer rests on
+an unchecked citation. \Cref{cor:fs16-bias} is the folklore statement that
+qualitative winning depends only on the supports.
+\Cref{lem:fs16-gate,thm:fs16-contract} are two-terminal, or series, reductions
+in the style of Shapley's operator equivariance and of stochastic
+complementation; the only content beyond \Cref{lem:payoff-transfer} is that a
+\emph{two}-exit interface collapses to the pair $(p,q)$ and to a single bit,
+which is a candidate rediscovery. The perturbation formula
+$\partial V/\partial p=\sum_cN_c\Delta_c$ is the classical Green's-function
+derivative of an absorption probability. \eqref{eq:fs16-cross} is Doob's
+upcrossing inequality; using it to bound the sensitivity of a game value to the
+transition probabilities is, as far as we know, not standard, but the
+consequence --- a finite-state device cannot amplify a bias $\delta$ with fewer
+than $\Omega(1/\delta)$ states --- is folklore in the probabilistic-automata
+literature, adjacent to Rabin's isolated-cut-point theorem, and the
+\emph{moral} of \Cref{thm:fs16-noamp} is Condon's original observation that the
+value gap of an SSG is exponentially small and that the natural transformations
+preserve it. \Cref{lem:fs16-mixmin} is positional determinacy for Min.
+\end{remark}
+
+\begin{remark}[Machine checks]\label{rem:fs16-checks}
+All in exact rational arithmetic, values always by brute force over positional
+pairs or by the least-fixed-point solver, never by greedy policy iteration.
+\Cref{lem:fs16-positive,thm:fs16-assure}: the two attractor computations agree
+with $\{\val=0\}$, $\{\val>0\}$, $\{\val=1\}$ on $32\,000$ random SSGs (two
+independent runs) of which $11\,702$ are not stopping.
+\Cref{cor:fs16-bias}: $2100$ (game, bias) pairs with
+random rational biases, qualitative sets unchanged. \Cref{lem:fs16-gate}:
+$3820$ composed games $H\langle G\rangle$ built as honest SSGs, values by
+brute force, agreeing with $\val_{H^{p,q}}$ computed independently.
+\Cref{thm:fs16-contract}: $5000$ contractions of random parts with at most two
+outside successors, $1800$ of them with more than one entry.
+\Cref{thm:fs16-cross}: \eqref{eq:fs16-energy} verified as an exact identity on
+$2500$ optimal profiles and $39\,260$ arbitrary absorbing profiles;
+\eqref{eq:fs16-cross} verified on $4400$ biased games, worst ratio
+$\mathrm{lhs}/\mathrm{rhs}=22/75$. \Cref{cor:fs16-lip}: the derivative formula
+agrees exactly with an exact secant at $185$ of $203$ contexts (the remaining
+ones being points where the optimal profile changes and the derivative is
+one-sided), and $|\partial V/\partial p|$ never exceeded the bound in $900$
+(context, $p$) samples, the worst ratio being $1/4$.
+\Cref{rem:fs16-measured}: exhaustive over all $s$-state automata for $s\le4$.
+\Cref{lem:fs16-mixmin,prop:fs16-mixmono}: $2569$ coordinate lines sampled on a
+grid of nine points, no interior minimum and no non-monotone line.
+\Cref{thm:fs16-topctrl}: $3500$ reductions, the value identities and the
+argmax both checked. Finally both statements of \Cref{thm:fs16-cross} were
+re-run on this document's engineered families rather than on random games:
+$L_n$ ($n\le8$, from $v_1$ and from $w_1$), $G_m$ ($m\le7$), $\mathrm{WD}(e,j,m)$
+at $N=11,16,19,23,23$ and $\mathrm{CC}(L,m)$ at $N=11,18,25,32$, the identity
+\eqref{eq:fs16-energy} being exact in every case.
+\end{remark}
+
+\begin{remark}[The identity does not see the hard families]\label{rem:fs16-blind}
+On $\mathrm{WD}(e,j,m)$ and on $\mathrm{CC}(L,m)$ --- the two families of
+\Cref{sec:wedge,thm:hybrid-lower} --- the value at the start is exactly
+$\tfrac12$, so \eqref{eq:fs16-energy} reads
+$\sum_{v\in\Vavg}N_v\Delta_v^{2}=1$, and the measured total variation
+$\sum_{v\in\Vavg}N_v|\Delta_v|$ is exactly $1$ as well, against a bound $r+2$
+that grows linearly. The whole energy of these games sits on a single average
+vertex of gap $1$ visited once. \Cref{thm:fs16-cross} therefore says nothing
+about what makes them hard: it constrains the geometry of the value vector, not
+the difficulty of finding it, and it is recorded here because it is what makes
+\Cref{cor:fs16-lip} --- and hence the two impossibility statements --- work.
+\end{remark}

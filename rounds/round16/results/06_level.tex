@@ -1,0 +1,490 @@
+% ---------------------------------------------------------------------------
+% level-lemma route.  Paste-ready; labels prefixed lvl:.
+% Full file: /tmp/claude-1000/-data-ssg-proof/d1fe2115-9b72-4784-bb94-87421ac1106c/scratchpad/level-lemma/lvl_frontier.tex
+% ---------------------------------------------------------------------------
+
+\subsection{The blow-up as an induction: what cannot obstruct it, and what does}
+\label{lvl:sec}
+
+\Cref{rem:blowup-realise} asks whether every level of the tower $B^{k}$ can be
+added at additive cost, and names three quantities that could obstruct it: the
+precision, the Holt--Klee defect $\chi_{\mathrm{HK}}$ of \Cref{thm:min-count},
+and the readout order $r$ of \Cref{def:readout-system}.  Two of the three are
+closed below: they are bounded by the dimension, so no lower bound extracted
+from them can ever exceed $O(k)$ Min vertices.  What is left is the precision
+and the construction itself, and for the construction we isolate the exact
+inductive statement, prove the half of it that concerns the translated layer,
+and verify every ingredient on \Cref{prop:b2-realised}'s game.
+
+\subsubsection*{Products, and the Holt--Klee defect of the tower}
+
+\begin{definition}[Product of orientations]\label{lvl:product}
+For outmaps $s_1$ of the $m_1$-cube and $s_2$ of the $m_2$-cube let
+$s_1\otimes s_2$ be the outmap of the $(m_1+m_2)$-cube with
+$(s_1\otimes s_2)(v_1,v_2)=s_1(v_1)\cup s_2(v_2)$, the second block of
+coordinates shifted.
+\end{definition}
+
+\begin{lemma}[Products preserve Holt--Klee]\label{lvl:hk-product}
+If $s_1,s_2$ are unique sink orientations so is $s_1\otimes s_2$; if both are
+acyclic so is the product; and if both are Holt--Klee so is the product.
+\end{lemma}
+
+\begin{proof}
+\emph{Unique sink.} For $(u_1,u_2)\ne(v_1,v_2)$ pick a block in which they
+differ; that block's orientation supplies a coordinate in
+$(s(u)\oplus s(v))\cap(u\oplus v)$, since the outmap restricted to a block
+depends only on that block.  \emph{Acyclic.} A directed cycle projects to a
+closed directed walk in each factor, which in an acyclic orientation is
+constant; so the cycle is constant in both blocks, hence trivial.
+\emph{Holt--Klee.} Every face of the product is a product $F_1\times F_2$ of
+faces and carries the product of the restrictions; its source and sink are
+$(a_1,a_2)$ and $(b_1,b_2)$ where $a_i,b_i$ are the source and sink of $F_i$.
+Because the outmap is a union, a directed path in $F_1\times F_2$ is exactly
+an interleaving of a directed path of $F_1$ with one of $F_2$.  Let
+$P_1,\dots,P_{d_1}$ be internally disjoint directed $a_1\to b_1$ paths in
+$F_1$ and $Q_1,\dots,Q_{d_2}$ internally disjoint $a_2\to b_2$ paths in $F_2$;
+at most one $P_i$ has length one (the edge $a_1b_1$ is unique if it exists),
+so number them with that one first, and likewise the $Q$'s.  Write $p_i$ for
+the second vertex of $P_i$ and $q_j$ for the second vertex of $Q_j$, and set
+\begin{align*}
+ R_1  &:= (P_1\times\{a_2\})\cdot(\{b_1\}\times Q_1),\\
+ R'_1 &:= (\{a_1\}\times Q_1)\cdot(P_1\times\{b_2\}),\\
+ R_i  &:= \bigl(\{a_1,p_i\}\times\{a_2\}\bigr)\cdot
+          \bigl(\{p_i\}\times Q_1\bigr)\cdot
+          \bigl(P_i^{\ge p_i}\times\{b_2\}\bigr)\qquad(i\ge2),\\
+ R'_j &:= \bigl(\{a_1\}\times\{a_2,q_j\}\bigr)\cdot
+          \bigl(P_1\times\{q_j\}\bigr)\cdot
+          \bigl(\{b_1\}\times Q_j^{\ge q_j}\bigr)\qquad(j\ge2),
+\end{align*}
+where $P_i^{\ge p_i}$ is the part of $P_i$ from $p_i$ on and
+$Q_j^{\ge q_j}$ the part of $Q_j$ from $q_j$ on.
+All are directed, since an interleaving of directed paths is directed.  For
+$i\ge2$ the vertex $p_i$ is internal to $P_i$, hence lies on no other $P$ and
+is neither $a_1$ nor $b_1$; likewise $q_j$ for $j\ge2$.  The internal vertices
+are: of $R_1$, the $(x,a_2)$ with $x\in P_1\setminus\{a_1\}$ and the
+$(b_1,y)$ with $y\in Q_1\setminus\{b_2\}$; of $R'_1$, the $(a_1,y)$ and the
+$(x,b_2)$ symmetrically; of $R_i$ $(i\ge2)$, the $(p_i,y)$ with $y\in Q_1$ and
+the $(x,b_2)$ with $x\in P_i$ after $p_i$ and before $b_1$; of $R'_j$
+$(j\ge2)$, the $(x,q_j)$ with $x\in P_1$ and the $(b_1,y)$ with $y\in Q_j$
+after $q_j$ and before $b_2$.  Two of these sets meet only if a first
+coordinate lies on two of the $P$'s or is one of $a_1,b_1$, and simultaneously
+a second coordinate lies on two of the $Q$'s or is one of $a_2,b_2$; running
+through the six kinds of pair --- $(R_i,R_{i'})$, $(R_i,R_1)$, $(R_i,R'_1)$,
+$(R_i,R'_j)$, $(R'_j,R'_{j'})$, $(R_1,R'_1)$ --- every case is excluded by
+$P_i\cap P_{i'}=\{a_1,b_1\}$, $Q_j\cap Q_{j'}=\{a_2,b_2\}$, $p_i\notin
+P_1\cup\{a_1,b_1\}$, $q_j\notin Q_1\cup\{a_2,b_2\}$ and the exclusions
+above.  Hence $d_1+d_2$ vertex-disjoint paths from source to sink.  (If
+$d_1=0$ or $d_2=0$ the face is a face of one factor and there is nothing to
+prove.)  (That the Holt--Klee class of unique sink
+orientations is closed under products is presumably known; from memory,
+unchecked against the source.)
+\end{proof}
+
+\begin{proposition}[The Holt--Klee defect of the tower is at most $3^{k-1}$]
+\label{lvl:tower-cover}
+Let $z_k$ be the translation vector of the $k$-th blow-up
+(\Cref{rem:blowup-measured}).  Then $\chi_{\mathrm{HK}}(B^{k})\le3^{k-1}$ for
+$k\ge1$.  Consequently \Cref{thm:min-count} can force at most
+$(k-1)\log_23<1.59\,k$ Min vertices in a realisation of $B^{k}$.
+\end{proposition}
+
+\begin{proof}
+Write $U_{\mathrm{ev}},U_{\mathrm{od}},U_{00}$ for the three unique sink
+orientations of the $2$-cube with outmaps, at
+$(\alpha,\beta)=(0,0),(1,0),(0,1),(1,1)$,
+\[
+ U_{\mathrm{ev}}:\ \emptyset,\{\alpha,\beta\},\{\beta\},\{\alpha\};\qquad
+ U_{\mathrm{od}}:\ \emptyset,\{\alpha\},\{\alpha,\beta\},\{\beta\};\qquad
+ U_{00}:\ \emptyset,\{\alpha\},\{\beta\},\{\alpha,\beta\},
+\]
+the first two being the two rows of \Cref{thm:blowup}'s outer table and the
+third the uniform orientation with sink $(0,0)$.  All orientations of the
+$2$-cube are Holt--Klee.  If $t_1,\dots,t_R$ are Holt--Klee acyclic unique sink
+orientations of the $m$-cube from which $s$ is a pointwise selection, then the
+$3R$ orientations
+\[
+ t_l\otimes U_{\mathrm{ev}},\qquad t_l\otimes U_{\mathrm{od}},\qquad
+ (t_l\circ{\oplus z})\otimes U_{00}\qquad(l\le R)
+\]
+are Holt--Klee acyclic unique sink orientations of the $(m+2)$-cube
+(\Cref{lvl:hk-product}; translation is an automorphism of the cube and
+preserves both properties), and $B(s)$ is a pointwise selection from them: at
+$(\alpha,\beta,v)$ with $(\alpha,\beta)\ne(0,0)$ the value of $B(s)$ is
+$s(v)\cup O_{\alpha\beta}(v)$ and $O_{\alpha\beta}$ is the even or the odd row
+according to the parity of $h_s(v)$, so a $t_l$ with $t_l(v)=s(v)$ gives the
+value through $U_{\mathrm{ev}}$ or $U_{\mathrm{od}}$; at $(0,0,v)$ the value is
+$s(v\oplus z)\cup\emptyset$, and a $t_l$ with $t_l(v\oplus z)=s(v\oplus z)$
+gives it through $U_{00}$.  Seeded at $\chi_{\mathrm{HK}}(B^{1})=1$ ($B^{1}$ is
+Holt--Klee) the recursion gives $3^{k-1}$.
+\end{proof}
+
+\begin{proposition}[The Holt--Klee defect never exceeds the dimension]
+\label{lvl:chi-cap}
+For every outmap $s$ of the $m$-cube, $\chi_{\mathrm{HK}}(s)\le2^{m}$.  Hence
+the bound $k\ge\log_2\chi_{\mathrm{HK}}(s)$ of \Cref{thm:min-count}, on the
+cube or on any face, never exceeds $m$.
+\end{proposition}
+
+\begin{proof}
+The uniform orientation $u_c(\sigma):=\sigma\oplus c$ is an acyclic unique sink
+orientation with sink $c$, and it is Holt--Klee: a face of a uniform
+orientation is uniform, so it suffices to exhibit $m$ vertex-disjoint directed
+paths from $\bar1$ to $\bar0$ in the orientation in which every edge decreases
+a coordinate, and the $m$ paths that flip the coordinates in the cyclic orders
+$i,i+1,\dots,i-1$ do it: the vertex reached by the $i$-th path after $k+1$
+steps is the complement of the cyclic interval $[i,i+k]$, and distinct proper
+nonempty cyclic intervals are distinct.  Taking $c=\sigma\oplus s(\sigma)$
+covers $\sigma$, so $2^{m}$ uniform orientations cover $s$.
+\end{proof}
+
+\begin{proposition}[Readout order never exceeds the dimension either]
+\label{lvl:order-cap}
+If an outmap $s$ of the $m$-cube is realised by a readout system of order
+$(m,r)$ with configuration $(x_\sigma)$, it is realised, with the same
+configuration, by a subsystem of order $(m,2^{m})$.  Hence a lower bound on
+$|\Vmin|$ obtained from \Cref{thm:readout-realise}(a) --- which gives
+$r\le2^{|\Vmin|}$ --- never exceeds $m$.
+\end{proposition}
+
+\begin{proof}
+Fix $(v,a)$.  Keep, for each of the $2^{m-1}$ strategies $\sigma$ with
+$\sigma(v)=a$, one piece attaining the minimum of $\Psi_{v,a}$ at
+$x_{\sigma,-v}$, and for each $\sigma$ with $\sigma(v)=1-a$ at which the
+system asks for $\Psi_{v,a}(x_{\sigma,-v})<x_\sigma(v)$, one piece attaining
+the minimum there; at most $2^{m}$ pieces in all.  A minimum over a subset of
+the pieces is everywhere $\ge$ the original, so the retained function is
+$\ge\Psi_{v,a}$ pointwise, while at each of the listed points it is $\le$ the
+retained minimising piece, whose value there is $\Psi_{v,a}$'s.  So the two
+agree at all $2^{m}$ points $x_{\sigma,-v}$, and every equality and every
+strict inequality of \Cref{def:readout-system} is preserved.  The fixed points
+are unchanged because the readouts agree at them.
+\end{proof}
+
+\begin{corollary}[Two of the three candidate obstructions are closed]
+\label{lvl:no-obstruction}
+No lower bound on the number of Min vertices of a realisation of $B^{k}$
+derived from \Cref{thm:min-count} or from the readout order of
+\Cref{thm:readout-realise}(a) can exceed $m_k=2k+1$; on the tower the first
+gives at most $1.59\,k$ by \Cref{lvl:tower-cover}.  In particular neither can
+refute the additive regime of \Cref{rem:blowup-realise}, and the only
+quantity left that could is the denominator.  For that,
+\Cref{thm:alternation-bits} gives only $D\ge h_k-1=3\cdot2^{k}-3$ for the
+denominator of the \emph{values}, that is $\log_2 D\ge k$, which is the
+additive regime itself; rows of denominator $2^{d}$ over $m$ controlled
+vertices produce values of denominator at most $2^{dm}$, so the alternation
+bound constrains $d$ only by $d\ge k/m=\Theta(1)$.
+\end{corollary}
+
+\subsubsection*{The translated layer is one row exchange, not an anti-value}
+
+\begin{lemma}[Affine covariance of readout systems]\label{lvl:rescale}
+Let $\Psi$ be a $\delta$-leaky readout system of order $(m,r)$ realising $s$
+with configuration $x$, and let $\lambda,\mu\ge0$ with $\lambda+\mu\le1$.  The
+system $\Psi^{(\lambda,\mu)}$ obtained by replacing every piece $(p,q)$ by
+$(p,\ \lambda q+\mu(1-|p|_1))$ is substochastic, $\delta(1-\mu)$-leaky, dyadic
+if $\lambda,\mu$ and $\Psi$ are, realises the same $s$, has configuration
+$\lambda x+\mu\mathbf1$ and margins $\lambda$ times those of $\Psi$.
+\end{lemma}
+
+\begin{proof}
+$|p|_1+\lambda q+\mu(1-|p|_1)=(1-\mu)|p|_1+\lambda q+\mu\le
+(1-\mu)(1-\delta-q)+\lambda q+\mu=1-\delta(1-\mu)+q(\lambda+\mu-1)
+\le1-\delta(1-\mu)$.  Evaluating a piece at $\lambda y+\mu\mathbf1$ gives
+$\lambda(p\cdot y+q)+\mu$, so every readout satisfies
+$\Psi^{(\lambda,\mu)}_{v,a}(\lambda y+\mu\mathbf1)=\lambda\Psi_{v,a}(y)+\mu$;
+the fixed point and the margins follow.
+\end{proof}
+
+\begin{lemma}[Translating a layer is exchanging one vertex's two rows]
+\label{lvl:swap}
+Let $\Psi$ realise $s$ with configuration $x$ and let $j\le m$.  The system
+$\Psi^{\oplus j}$ with $\Psi^{\oplus j}_{j,a}:=\Psi_{j,1-a}$ and all other
+readouts unchanged realises $s(\cdot\oplus e_j)$, with configuration
+$x^{\oplus j}_\sigma=x_{\sigma\oplus e_j}$.
+\end{lemma}
+
+\begin{proof}
+Put $y_\sigma:=x_{\sigma\oplus e_j}$.  For $i\ne j$,
+$\sigma_i=(\sigma\oplus e_j)_i$, so
+$y_\sigma(i)=\Psi_{i,\sigma_i}(y_{\sigma,-i})$; and
+$y_\sigma(j)=\Psi_{j,1-\sigma_j}(y_{\sigma,-j})=
+\Psi^{\oplus j}_{j,\sigma_j}(y_{\sigma,-j})$.  So $y_\sigma$ is the fixed
+point of $\Psi^{\oplus j}$ at $\sigma$, and the margin conditions of
+\Cref{def:readout-system} at $\sigma$ for $\Psi^{\oplus j}$ are those of $\Psi$
+at $\sigma\oplus e_j$, which is exactly $s(\cdot\oplus e_j)$.
+\end{proof}
+
+\begin{remark}\label{lvl:no-antivalue}
+\Cref{lvl:swap} removes the obstacle as \Cref{rem:blowup-realise} states it.
+The remark reasons that on the translated layer ``every inner vertex must
+compare its options as it would at $v\oplus e_j$'', so that the game would have
+to be shown the anti-value of $j$, which no vertex has.  By \Cref{lvl:swap} it
+need not: the translate of a system is the \emph{same} readouts at every vertex
+but $j$, evaluated at a different configuration, and only $j$ exchanges its two
+rows.  What a realisation of $B(s)$ must do on layer $(0,0)$ is therefore not
+to invert a value but to present, at one vertex, its other action --- and the
+configuration there cannot be $x_{\sigma\oplus e_j}$ itself, by
+\Cref{lvl:layer-order} below, so the exchange has to be paid for by a change of
+constants.  The anti-value is available in any case: $j$'s two successors are
+vertices, so $\val(j^{(0)})+\val(j^{(1)})-\val(j)$ is the value of an average
+vertex over the two successors, doubled, minus $\val(j)$ --- an affine
+functional of readable values with one negative coefficient, and margins are
+differences of two rows, so negative coefficients are allowed in them.
+\end{remark}
+
+\begin{lemma}[The layers are ordered]\label{lvl:layer-order}
+In $B(s)$, for every inner $v$ there are directed paths, along outer edges
+only, from $(1,0,v)$, $(0,1,v)$ and $(1,1,v)$ to $(0,0,v)$.  Hence in every
+stopping realisation of $B(s)$, $\val_{(0,0,v)}\ge\val_{(L,v)}$ componentwise for
+every layer $L$ and every $v$ (\Cref{lem:switch}).
+\end{lemma}
+
+\begin{proof}
+From \Cref{thm:blowup}'s table, $\alpha\in O_{1,0}(v)$ and $\beta\in O_{0,1}(v)$
+for every $v$ and both parities, so $(1,0,v)\to(0,0,v)$ and
+$(0,1,v)\to(0,0,v)$.  At $(1,1,v)$, $O=\{\alpha\}$ if $h_s(v)$ is even, giving
+$(1,1,v)\to(0,1,v)\to(0,0,v)$, and $O=\{\beta\}$ if odd, giving
+$(1,1,v)\to(1,0,v)\to(0,0,v)$.
+\end{proof}
+
+\begin{corollary}[The drive can only push up]\label{lvl:drive-nonneg}
+Let $G$ realise $B(s)$ and let $c$ be a controlled vertex of the inner block
+--- an inner Max vertex or a Min vertex read only by inner rows --- with row
+$p\cdot y_{\mathrm{inner}}+\rho_A y_A+\rho_B y_B+q$ for the action $a$, all
+coefficients nonnegative.  Then for every $v$ and every layer $L$ the effective
+constant $\rho_Ay_A+\rho_By_B+q$ of that row at $(0,0,v)$ is at least its value
+at $(L,v)$.  So, at each inner strategy, the layer-$(0,0)$ inner block is a
+\emph{nonnegative lift} of the inner block of any other layer: same slopes,
+larger constants.
+\end{corollary}
+
+\subsubsection*{Pinning: why layer $(0,0)$ is one frozen system}
+
+\begin{lemma}[The closed outer loop]\label{lvl:pin}
+Let $A,B$ be Max vertices with $F_{A,0}(y)=a_1y_B+a_0$ and
+$F_{B,0}(y)=b_1y_A+b_0$, $a_i,b_i\ge0$, $a_1b_1<1$.  Then at every strategy
+with $\sigma_A=\sigma_B=0$,
+\[
+  y_A=\pi_A:=\frac{a_0+a_1b_0}{1-a_1b_1},\qquad
+  y_B=\pi_B:=\frac{b_0+b_1a_0}{1-a_1b_1},
+\]
+independently of every other vertex of the game.
+\end{lemma}
+
+\begin{proof}
+At such a $\sigma$ the two equations $y_A=a_1y_B+a_0$, $y_B=b_1y_A+b_0$ of
+\Cref{lem:readout}(b) close on $(y_A,y_B)$ alone, and $I-\left(\begin{smallmatrix}0&a_1\\
+b_1&0\end{smallmatrix}\right)$ is invertible because $a_1b_1<1$.
+\end{proof}
+
+\begin{theorem}[The translated layer reduces to one frozen system]
+\label{lvl:layer00-exact}
+Let $G$ be a stopping SSG whose Max vertices are $x_1,\dots,x_m,A,B$, in which
+(i) $A,B$ satisfy \Cref{lvl:pin}, and (ii) no row of an inner Max vertex and no
+row of a Min vertex read by one reads $A$, every such row reading $B$ with a
+nonnegative coefficient.  Let $\Sigma(t)$ denote the readout system on
+$x_1,\dots,x_m$ obtained by substituting the constant $t$ for $y_B$.  Then at
+every strategy with $\sigma_A=\sigma_B=0$ the restriction of $\val_\sigma$ to
+$x_1,\dots,x_m$ is the configuration of $\Sigma(\pi_B)$ at the inner strategy,
+and the inner part of the improvement outmap on that layer is the outmap of the
+single system $\Sigma(\pi_B)$.  In particular the layer-$(0,0)$ requirement of
+\Cref{thm:blowup} --- inner part $s(\cdot\oplus z)$, outer part $\emptyset$ ---
+holds iff
+\[
+ \text{(a) } \mathrm{outmap}(\Sigma(\pi_B))=s(\cdot\oplus z),\qquad
+ \text{(b) } F_{A,1}(x_\sigma)<\pi_A \text{ and } F_{B,1}(x_\sigma)<\pi_B
+ \text{ at every configuration } x_\sigma \text{ of } \Sigma(\pi_B).
+\]
+The gain is not in the number of conditions but in their nature: the whole
+translated layer is a statement about \emph{one} frozen readout system in $m$
+coordinates, decoupled from the rest of the game, and in particular from the
+three layers on which the drive is not pinned.
+\end{theorem}
+
+\begin{proof}
+By \Cref{lvl:pin} the outer values on that layer are $\pi_A,\pi_B$ whatever the
+inner strategy, and by (ii) the inner block sees the outer part of the game only
+through $y_B=\pi_B$; so the inner equations are those of $\Sigma(\pi_B)$, whose
+fixed point is unique by \Cref{lem:readout}(b) applied to the stopping game.
+The inner margins are then those of $\Sigma(\pi_B)$, and the outer margins are
+$F_{A,1}(x)-\pi_A$ and $F_{B,1}(x)-\pi_B$.
+\end{proof}
+
+\begin{proposition}[Anatomy of the level-two realisation]\label{lvl:b2-anatomy}
+The game of \Cref{prop:b2-realised} satisfies the hypotheses of
+\Cref{lvl:layer00-exact} with $A=c_4$, $B=c_5$, inner block $c_1,c_2,c_3$ and
+the Min vertex $c_6$: indeed $F_{c_4,0}=\tfrac{502}{512}y_{c_5}+\tfrac{8}{512}$
+and $F_{c_5,0}=\tfrac{509}{512}y_{c_4}$, and no inner row reads $c_4$.  Hence
+\[
+  \pi_A=\tfrac{2048}{3313}=0.6181708\ldots,\qquad
+  \pi_B=\tfrac{2036}{3313}=0.6145487\ldots,
+\]
+and these are, exactly, the values of $c_4,c_5$ at all eight strategies of
+layer $(0,0)$.  The driven inner block
+\[
+\begin{array}{r@{\;}l@{\qquad}r@{\;}l}
+ c_1{:}&(12,461,36,0)\mid 0 & &(276,0,0,0)\mid 127t+47\\
+ c_2{:}&(0,0,509,0)\mid 0 & &(0,83,0,0)\mid 320t+12\\
+ c_3{:}&(0,0,0,460)\mid 43 & &(267,187,0,0)\mid 56t\\
+ c_6{:}&(472,0,0,0)\mid 0 & &(0,493,0,0)\mid 16t+1
+\end{array}
+\]
+(rows in $512$-ths over $(c_1,c_2,c_3,c_6)$; $c_6$ is the Min vertex; the
+second column is the mass to $t_1$) has outmap $B^{1}$ at $t=0$ and at every point of the grid
+$\tfrac1{2000}\mathbb Z\cap[0,\,0.1865)$, and outmap
+$B^{1}(\cdot\oplus e_2)=(7,4,5,2,0,1,3,6)$ at every point of the grid in
+$[\tfrac{47}{80},\tfrac{311}{500}]$ and --- exactly, this being the statement
+that matters --- at $t=\pi_B=\tfrac{2036}{3313}$; bisection puts the two
+fences of the window round $\pi_B$ at $0.5802359\ldots$ and $0.6222488\ldots$.  So the translated layer of the
+realisation is exactly \Cref{lvl:layer00-exact}(a) with the pinned drive
+$\pi_B$ inside that window.  Off layer $(0,0)$ the drive is not frozen: it
+ranges over $[0,\,0.34764\ldots]$, which leaves the window in which the frozen
+system has outmap $B^{1}$, so the other three layers realise $B^{1}$ only
+through the feedback $y_B\leftrightarrow$ inner values, not as a frozen system.
+Every number above was recomputed in exact rational arithmetic from the
+published normal form.
+\end{proposition}
+
+\begin{definition}[Driven system, liftability]\label{lvl:driven}
+A \emph{driven readout system} of order $(m,r)$ is a readout system in $m$ Max
+coordinates each of whose pieces carries, in addition, a nonnegative
+coefficient on a scalar $t$; $\Sigma(t)$ is the readout system obtained by
+freezing $t$.  It \emph{realises $s$ liftably at $(W,\pi)$}, for an interval
+$W$ and $\pi>\sup W$, when $\Sigma(t)$ realises $s$ for $t\in W$ and
+$\Sigma(\pi)$ realises $s(\cdot\oplus e_{j})$ for the coordinate $j$ with
+$e_j=z$, with every value of $\Sigma(\pi)$ strictly above every value of
+$\Sigma(t)$, $t\in W$.
+\end{definition}
+
+\begin{remark}[The induction, and where it stops]\label{lvl:induction}
+\Cref{lvl:layer00-exact} and \Cref{lvl:b2-anatomy} say that the inductive step
+splits into three independent tasks: (I) an inner block realising $s$ liftably
+at $(W,\pi_B)$ --- this is the whole of the translated layer, and it is
+\emph{one} frozen system, not $2^{m}$ conditions; (II) the outer pair, whose
+action $0$ is the closed loop of \Cref{lvl:pin} and whose action $1$ must
+realise \Cref{thm:blowup}'s outer rule, that is
+$g_\alpha=+\iff(\beta=1\wedge h_s(v)\text{ odd})$ and
+$g_\beta=+\iff(\alpha=1\wedge h_s(v)\text{ even})$ --- a parity readout, which
+by \Cref{cor:parity-unreadable} cannot be affine and in
+\Cref{prop:b2-realised} is supplied by the single Min vertex $c_6$, a
+comparison of two inner values; and (III) the coupled system off layer
+$(0,0)$, which must still realise $s$ although its drive leaves the window $W$.
+The induction hypothesis that has to be propagated is (I) for the \emph{new}
+system: the level-$(k+1)$ block must again be liftable, now along
+$z_{k+2}=e_{\alpha_{k+1}}$ (\Cref{rem:blowup-measured}).  That is the gap.
+Two measurements bound the search.  First, no \emph{one-player} inner block
+was found to be liftable: with the slopes of a one-player system fixed and both
+constant vectors free, the linear programme demanding that one set of constants
+realise $s$ and a pointwise larger set realise $s(\cdot\oplus e_j)$, all
+margins strictly signed, is infeasible for every $j$ for each of the three
+published one-player realisations (the two of $B^{1}$ at denominator $64$ and
+the one of $B(\text{$2$-cube})$ at denominator $256$), and for $3000$ random
+slope matrices at $m=3$ with target $B^{1}$ and $j=2$, and $1200$ each for
+$j=0,1$; a hill-climb on the slopes minimising the total violation of the sign
+conditions stalls at about five violated conditions out of $48$.  The inner block of
+\Cref{prop:b2-realised} is liftable, and it contains a Min vertex; so the step
+cannot be started from a one-player realisation of the previous level.
+Second, neither published realisation of $B^{2}$ is liftable along
+$z_3=e_{\alpha_2}$: for the best-response pattern and for both constant Min
+patterns the corresponding linear programme is infeasible, and $30$ restarts of
+a local search over the lift vector left at best $14$ of the $160$ edge
+orientations wrong.  So the level-three block cannot be obtained from the
+published level-two game by adding a drive; the level-two game has to be
+rebuilt to carry the hypothesis.  Both measurements are measurements.
+\end{remark}
+
+\begin{remark}[On \Cref{sec:readouts}'s open question]\label{lvl:finite-order}
+\Cref{lvl:order-cap} settles the ``finite order'' half of the monotone route's
+question: an outmap of the $m$-cube realised by a readout system of \emph{any}
+order is realised by one of order at most $2^{m}$, so ``realisable by a readout
+system of finite order'' and ``realisable by a nondegenerate stopping SSG with
+exactly $m$ Max vertices'' are the same property, and it is decidable --- for a
+fixed order the conditions of \Cref{def:readout-system} are a semialgebraic
+system in the $O(m^{2}r)$ coefficients.  What remains open is whether some
+acyclic unique sink orientation is realisable by none, and
+\Cref{lvl:chi-cap,lvl:order-cap} say that neither of the two necessary
+conditions the paper has --- Holt--Klee defect and readout order --- can be the
+obstruction for more than $m$ Min vertices' worth.
+\end{remark}
+
+\subsubsection*{What the outer pair has to read, level by level}
+
+\begin{proposition}[The height of a blow-up, and its parity]\label{lvl:parity-recursion}
+Let $s$ be an acyclic unique sink orientation of the $m$-cube with sink $o$,
+let $u$ be the seed of \Cref{thm:blowup}, $z=o\oplus u$, $h:=h_s$,
+$h_u:=h_s(u)$, and for $v$ in the $m$-cube write $v':=v\oplus s(v)$ for its
+bottom-antipodal successor.  Then the bottom-antipodal height $H$ of $B(s)$ is
+\[
+\begin{array}{ll}
+ H(0,0,v)=h(v\oplus z), &
+ H(1,1,v)=h(v)+2+h_u,\\[2pt]
+ H(1,0,v)=\begin{cases} h(v)+2+h_u,& h(v)\ \text{even}\\
+                        1+h(v'\oplus z),& h(v)\ \text{odd,}\end{cases} &
+ H(0,1,v)=\begin{cases} 1+h(v'\oplus z),& h(v)\ \text{even}\\
+                        h(v)+2+h_u,& h(v)\ \text{odd.}\end{cases}
+\end{array}
+\]
+\end{proposition}
+
+\begin{proof}
+On layer $(0,0)$ the outer part of the outmap is empty, so the
+bottom-antipodal step moves only the inner coordinates and does so by
+$s(\cdot\oplus z)$; in the coordinates $y=v\oplus z$ that is the
+bottom-antipodal walk of $s$, of length $h(y)$.  Elsewhere the step flips the
+outer coordinates of $O_{\alpha\beta}(v)$ and the inner coordinates of $s(v)$
+simultaneously, so the inner height drops by one at every step.  From
+$(1,0,v)$ with $h(v)$ even one reaches $(0,1,v')$ with odd inner height, from
+$(0,1,\cdot)$ with odd height one reaches $(1,0,\cdot)$ with even height, and
+so on; after $h(v)$ steps the inner vertex is $o$ and the layer is $(1,0)$,
+whence $(1,0,o)\to(0,1,o)\to(0,0,o)$ and then $h(o\oplus z)=h_u$ further
+steps.  From $(0,1,v)$ with $h(v)$ odd one enters that alternation after one
+step; from $(1,1,v)$ likewise, in both parities.  From $(1,0,v)$ with $h(v)$
+odd the outer part is $\{\alpha\}$ and the step lands in layer $(0,0)$ at
+$v'$, and from $(0,1,v)$ with $h(v)$ even the outer part is $\{\beta\}$ and it
+lands in $(0,0)$ at $v'$; the first clause then applies.  (Verified on the
+tower for $k=1,2,3$ in exact arithmetic.)
+\end{proof}
+
+\begin{corollary}[The parity signal does not propagate by itself]
+\label{lvl:parity-nonlocal}
+Along the tower $h_u$ is even from the second level on, so
+$\pi_{k}:=h_{B^{k}}\bmod2$ satisfies
+\[
+ \pi_{k+1}(0,0,v)=\pi_k(v\oplus z),\qquad
+ \pi_{k+1}(1,1,v)=\pi_k(v),
+\]
+\[
+ \pi_{k+1}(1,0,v)=\begin{cases}0,&\pi_k(v)=0\\
+   1\oplus\pi_k(v'\oplus z),&\pi_k(v)=1,\end{cases}
+ \qquad
+ \pi_{k+1}(0,1,v)=\begin{cases}1\oplus\pi_k(v'\oplus z),&\pi_k(v)=0\\
+   1,&\pi_k(v)=1.\end{cases}
+\]
+(All four clauses checked exhaustively at $k=1,2$, that is for the parities of
+$B^{2}$ and $B^{3}$.)  The
+function $\pi_{k+1}$ is \emph{not} determined by
+$(\text{layer},\pi_k(v),\pi_k(v\oplus z))$ for $k\ge2$ --- checked
+exhaustively at $k=2,3$ --- so a system that exports its own parity signal
+does not automatically export the next level's: in the two transitional cases
+--- layer $(1,0)$ at odd inner height and layer $(0,1)$ at even inner height,
+exactly the two from which the walk enters the translated layer at once --- the
+next parity is the parity of the height at the \emph{translated
+bottom-antipodal successor}, which is not a state of the game at the current
+strategy.  In the other two layers it is the parity the inner block already
+carries, at $v$ on layer $(1,1)$ and at $v\oplus z$ --- that is, in the lifted
+regime --- on layer $(0,0)$.
+\end{corollary}
+
+\begin{remark}[What the pivot actually needs]\label{lvl:accounting}
+\Cref{rem:blowup-realise} asks for $O(1)$ controlled vertices and $O(1)$ bits
+per level.  For the conclusion it draws, polynomial suffices: a realisation of
+$B^{k}$ with $2k+1$ Max vertices, $\mathrm{poly}(k)$ Min vertices and rows of
+dyadic denominator $2^{d}$ with $d=\mathrm{poly}(k)$ is a stopping SSG on
+$N=\mathrm{poly}(k)$ vertices (\Cref{lem:dyadic-row}) whose all-switches run
+has length $h_k=3\cdot2^{k}-2=2^{\Omega(N^{1/c})}$, superpolynomial in $N$; and
+that is what \Cref{prop:auso-size} and \Cref{thm:seed-dichotomy} consume.  The
+dichotomy to settle is therefore $d=\mathrm{poly}(k)$ against
+$d=2^{\Omega(k)}$, and by \Cref{lvl:no-obstruction} the only one of the three
+candidate obstructions still able to decide it is the precision.
+\end{remark}
