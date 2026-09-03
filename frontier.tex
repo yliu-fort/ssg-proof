@@ -3217,6 +3217,21 @@ local data of polynomial range, and any argument that bounds the number of
 iterations by
 $(\text{range of a potential})/(\text{minimum increment})$ is
 inherently exponential --- independently of which potential is chosen.
+
+The denominator amplifies the \emph{gap}, not the \emph{rise}. Along an
+all-switches run let $u$ be at rest at $\sigma_t$ and let it switch at a
+later round $t'$ to an action $b$ with return mass $h=h(b\to u)$. The
+theorem writes that round's rise at $u$ as
+$(\val_{\sigma_{t'}}(b)-\val_{\sigma_{t'}}(a))/(1-h)$, and the gap in the
+numerator is itself $(1-h)(\ell-\val(u))$ with $\ell$ the value of $b$
+conditioned on not returning to $u$, so the rise is $\ell-\val(u)$ and
+the factor $1/(1-h)$ is real; but \Cref{lem:rise-bound}, applied to
+$\sigma_t$ and $\sigma_{t'+1}$, bounds $\val_{\sigma_{t'+1}}(u)-\val_{\sigma_t}(u)$
+by the largest rise, over the whole waiting period, among the controlled
+vertices that $b$ reads. A delayed switch can gain far more than the gap
+that triggered it, and never more than the rise of its trigger. (The
+round-$15$ lane route was opened on the opposite premise and refuted
+it.)
 \end{remark}
 
 \section{Refutations and barriers}\label{sec:refutations}
@@ -3420,6 +3435,46 @@ proposition covers none of $M1$--$M6$ or \Cref{def:bsi}: it is a law of
 runs, not a barrier against algorithms.
 \end{remark}
 
+Two of the three ingredients of those published constructions do
+binarise at polynomial cost, and the third is where a transcription would
+have to be done by hand.
+
+\begin{lemma}[A tree of Max vertices is an argmax with logarithmic lag]\label{lem:max-tree}
+Let a state have $r\ge2$ actions and replace it by a rooted binary tree of
+$r-1$ Max vertices whose $r$ leaves carry the actions. If the values of
+the $r$ actions do not change during $d:=\lceil\log_2r\rceil$ consecutive
+rounds of an all-switches run, then at the end of those rounds the root
+selects a leaf of maximal value and holds that value; the cost is $r-1$
+Max vertices and no average vertex.
+\end{lemma}
+
+\begin{proof}
+Induction on the height: a vertex at height one compares its two leaves
+and after one round holds the larger; if every vertex of height at most
+$j$ holds its subtree maximum after $j$ rounds, a vertex at height $j+1$
+sees the two subtree maxima from round $j$ on and after one further round
+holds the larger. Ties are kept, harmlessly.
+\end{proof}
+
+The lag is real: the round-$15$ lane route exhibits a $15$-vertex
+one-player stopping game --- a three-vertex lane with exits worth
+$\tfrac78,\tfrac34,\tfrac58$, and two Max vertices computing
+$\max(l_1,l_2)$ and then the maximum of that with $l_3$ --- on which, at
+the first round of the all-switches run, the best leaf is worth $1$ while
+the root is worth $\tfrac78$ (exact arithmetic, the route's computation).
+A delay of $d$ rounds is likewise cheap, a chain of $d$ Max vertices whose
+second actions are constants. What does not transfer is the timing: in
+the published counters the action values change in every iteration by
+design, and the root of a selection tree then lags. The exact missing
+statement is this: \emph{is there a choice of binary selection trees and
+delay chains for Fearnley's Markov decision process (from memory,
+unchecked against the source: bit states with $2i+O(1)$ actions,
+$\Theta(n^{2})$ states in all) of total size $n^{O(1)}$ such that the
+all-switches run of the resulting two-action instance reproduces, at every
+bit state and in every round, the choice the source instance makes, up to
+a fixed per-state lag?} A positive answer would settle the pivot of
+\Cref{rem:auso-size} by transcription.
+
 \begin{theorem}[Peak law]\label{thm:peak-law}
 Let $G$ be stopping and let $\sigma,\sigma'$ satisfy
 $\val_{\sigma'}\ge\val_\sigma$ and $\val_{\sigma'}\ne\val_\sigma$. Put
@@ -3461,6 +3516,69 @@ $\phi(\sigma(v))\le M=\phi(v)$,
 \[
   y(\sigma(v))=x(\sigma(v))+\phi(\sigma(v))\ \le\ x(v)+\phi(v)=y(v)=y(\sigma'(v)).\qedhere
 \]
+\end{proof}
+
+\begin{corollary}[The peak sits on a switch that is made]\label{cor:peak-sharp}
+In \Cref{thm:peak-law}, $A\cap S_\sigma\cap\Delta(\sigma,\sigma')\ne\emptyset$:
+the maximum of $\val_{\sigma'}-\val_\sigma$ is attained at a vertex that is
+strictly switchable at $\sigma$ and at which $\sigma'$ differs from
+$\sigma$. Along an all-switches run, for $0\le t<t'\le L$ the maximum of
+$\val_{\sigma_{t'}}-\val_{\sigma_t}$ is attained on $S_t$, at a vertex
+that $\sigma_{t'}$ has moved; with $t=0$ and $t'=L$, the whole improvement
+of a run is realised at a vertex strictly switchable at its first round.
+\end{corollary}
+
+\begin{proof}
+In the proof of \Cref{thm:peak-law}, if $v\in\Delta$ is not strictly
+switchable at $\sigma$ then $\sigma'(v)=\bar\sigma(v)$ and
+$\delta(v)=x(\bar\sigma(v))-x(\sigma(v))\le0$; so $\delta\le0$ off
+$S_\sigma\cap\Delta$ and $\phi\le P\phi$ holds at every vertex outside
+$S_\sigma\cap\Delta$. If $A$ missed $S_\sigma\cap\Delta$ the closedness
+argument of the theorem would apply to $A$ verbatim and contradict
+stopping. Along a run $\val_{\sigma_{t'}}\ge\val_{\sigma_t}$ with a strict
+increase somewhere (\Cref{lem:switch}), and a vertex of $S_t$ at which
+$\sigma_{t'}$ still agrees with $\sigma_t$ is outside
+$\Delta(\sigma_t,\sigma_{t'})$. (Checked besides on $714$ run pairs of
+$250$ random two-player stopping games in exact arithmetic; the weaker
+form with $S_t$ alone is the round-$15$ lane route's, and its auditor
+supplied this one.)
+\end{proof}
+
+\begin{lemma}[Rise bound]\label{lem:rise-bound}
+Let $G$ be stopping, let $\sigma,\sigma'$ be Max strategies with
+$\val_{\sigma'}\ge\val_\sigma$, and let $u\in\Vmax$ be at rest at
+$\sigma$, that is $u\notin S_\sigma$. Put $b:=\sigma'(u)$, let $(p,q)$ be
+the first-passage law of the action $b$ onto $C\cup\{t_1\}$ --- $p_w$ the
+probability that the token, leaving $u$ by $b$, next meets a controlled
+vertex at $w$, and $q$ the probability that it reaches $t_1$ first; a
+datum of the graph, since only average vertices lie between controlled
+ones --- and let $W:=\{w\in C\setminus\{u\}:p_w>0\}$ be the controlled
+vertices the action reads. Then
+\[
+  \val_{\sigma'}(u)-\val_\sigma(u)\ \le\ \max_{w\in W}\bigl(\val_{\sigma'}(w)-\val_\sigma(w)\bigr),
+\]
+the maximum over the empty set being $0$. In particular, if $W=\{w\}$ then
+$\val_{\sigma'}(u)-\val_{\sigma'}(w)\le\val_\sigma(u)-\val_\sigma(w)$: a
+vertex once at rest never overtakes the single controlled vertex its
+later action reads.
+\end{lemma}
+
+\begin{proof}
+Every value vector is a fixed point of its frozen operator, hence the mean
+of its successors at every average vertex, so for every Max strategy
+$\rho$ and $v\in\Vmax$ one has
+$\val_\rho(v)=\sum_{w\in C}p^{v,\rho(v)}_w\val_\rho(w)+q^{v,\rho(v)}$ ---
+the collapse of the average part that also underlies \Cref{thm:impedance}.
+Write $x:=\val_\sigma$, $y:=\val_{\sigma'}$, $\Delta_w:=y(w)-x(w)\ge0$ and
+$M:=\max_W\Delta_w$. At rest the action $b$ is worth at most $x(u)$ under
+$x$, that is $p_ux(u)+\sum_{w\ne u}p_wx(w)+q\le x(u)$, while
+$\sigma'(u)=b$ gives $y(u)=p_uy(u)+\sum_{w\ne u}p_wy(w)+q$. Subtracting,
+$(1-p_u)\bigl(y(u)-x(u)\bigr)\le\sum_{w\ne u}p_w\Delta_w\le(1-p_u)M$,
+the row being substochastic; and $p_u<1$, since otherwise $\{u\}$
+together with the average vertices on its return paths would be a trap
+(\Cref{lem:trapchar}). The last clause is the case $W=\{w\}$ rearranged.
+(Verified besides on $671$ run pairs of $250$ random two-player stopping
+games, every Max vertex at rest.)
 \end{proof}
 
 Now let $\sigma_0,\sigma_1,\dots,\sigma_L$ be the all-switches run from
@@ -5299,6 +5417,25 @@ $1/(D_jD_{j+1})\ge4^{-a}$, whence $L\le N4^{a}$. Tightness: on $L_n$ one
 has $a=n$ and $N=2n+2$, and \Cref{thm:ladder} exhibits a single-switch
 improving sequence of length $2^{n}-1=2^{a}-1$.
 \end{proof}
+
+\begin{remark}[The grid bound, vertex by vertex]\label{rem:grid-per-vertex}
+The argument refines to each Max vertex separately: if $v$ switches at
+rounds $t_1<\dots<t_{n_v}$ of an improving run then, by \Cref{lem:switch},
+$\val(v)$ takes at least $n_v+1$ distinct values along the run, all on the
+grid of \Cref{lem:denominator-sharp}, so $L\le\sum_vn_v\le m\,(D(a)-1)$
+with $D(a)$ the number of grid points --- a constant-factor refinement of
+the theorem, except at $a=0$, where it says that every all-switches run
+has length at most $m$: with no average vertex every value is $0$ or $1$
+and a vertex switches at most once. That is attained by the ladder with its
+average chain deleted, $v_i\to(v_{i+1},t_0)$ for $i<k$ and
+$v_k\to(t_1,t_0)$: a stopping one-player game on $N=k+2$ vertices whose
+all-switches run from the all-$t_0$ strategy switches $v_k,v_{k-1},\dots,v_1$
+one per round --- Howard's rule on a deterministic reachability instance,
+folklore --- so that $L=N-2$, the most a one-player stopping game without
+average vertices allows. Whether $L\le N-2$ for \emph{every} one-player
+stopping game is, by \Cref{rem:ladder}, the open question of Melekopoglou
+and Condon for Howard's rule with two actions per state.
+\end{remark}
 
 \begin{remark}
 This is the exact form of the ``potential'' barrier. The value vector is
