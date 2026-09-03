@@ -2795,18 +2795,15 @@ $A(C_0)=n+2$; no descent path is longer, and the tie at $X_0$ is the only
 freedom in $\sigma^\ast$ and does not lower the count, so
 $d(\mathrm{FV}_2(n))=n+2$.
 \end{proof}
-\begin{proposition}[The few-denominator class contains vacuous stalls]\label{prop:fv-stall}
+\begin{proposition}[Three calculi are silent on the few-denominator families]\label{prop:fv-stall}
 The families $\mathrm{FV}(n)$ and $\mathrm{FV}_2(n)$ have $D(G)=3$ and
 are solved by \Cref{thm:few-denominator} in $O(N^{2})$ operations; yet
 for $n=3,4,5$, seeded with $Z_0,Z_1$ and read in both directions of
 \Cref{rem:own-successor} at every controlled vertex, the slack calculus of
 \Cref{def:slack}, its min-plus closure of \Cref{def:trans-slack} and the
 one-shot transport test of \Cref{def:transport} never fire on them, at any
-round, while the value-simulation preorder of \Cref{def:simorder} decides
-every controlled vertex and the seeded hybrid of \Cref{sec:hybrid} does so
-by round three. (The argument below is a schema whose three finite checks
-were carried out for $n=3,4,5$; the statement for every $n$ is not
-proved.)
+round. (The argument below is a schema whose three finite checks were
+carried out for $n=3,4,5$; the statement for every $n$ is not proved.)
 \end{proposition}
 
 \begin{proof}
@@ -2831,15 +2828,16 @@ $W\ge0$: neither direction fires. (Exact for $n=3,4,5$ and both variants,
 by the round-$15$ verification route, confirmed by its auditor.)
 \end{proof}
 
-So, unlike the escape class (\Cref{rem:escape-class}), the few-denominator
-class contains instances on which the mechanisms M2, M2T and M4 are silent
-for ever; but these are not stalls in the sense of the open question of
+So the few-denominator class contains instances on which the mechanisms
+M2, M2T and M4 are silent for ever; but these are \emph{not} stalls in
+the sense of \Cref{def:decision-rule} or of the open question of
 \Cref{rem:alphabet-compare}: every controlled vertex of $\mathrm{FV}(n)$
-has two successors of equal value, exactly the case in which
-\Cref{def:decision-rule} licenses abstention, so the decision the
-mechanism fails to make carries no information, and M6 and \Cref{def:bsi}
---- which halts at once on these families --- are untouched. Whether the
-class contains a stall with a
+has two successors of equal value, exactly the case in which a sound
+non-stalling rule is licensed to abstain, so the decision the calculi fail
+to make carries no information, $S_\sigma$ is empty at every $\sigma$ so
+M1, M3 and \Cref{def:bsi} halt at once, and the families are strictly
+weaker witnesses than the wedge of \Cref{sec:wedge}. Whether the class
+contains a stall with a
 value-distinguishing vertex is open and is a different question: a small
 denominator makes every value gap at least $1/D(G)$, but
 \Cref{thm:slack-vi-upper} converts a gap into a firing round only through
@@ -3613,10 +3611,11 @@ at $\sigma$ iff $\ell>\val_\sigma(a)$, and then $\val_{\sigma[p]}(p)=\ell$.
 \end{corollary}
 
 \begin{proof}
-Condition on the first visit to $p$, where the strong Markov property and
-$\val_\sigma(p)=\val_\sigma(a)$ give the first term; $1-h>0$ makes the
-two inequalities equivalent; and \Cref{thm:impedance} at $v=p$, where
-$h(p\to p)=1$, gives $\val_{\sigma[p]}(p)-\val_\sigma(a)=(\val_\sigma(b)-\val_\sigma(a))/(1-h)=\ell-\val_\sigma(a)$.
+The display is the excursion decomposition of \Cref{lem:excursion} at
+$p$, with $\val_\sigma(p)=\val_\sigma(a)$, and $h<1$ is part of
+\Cref{thm:impedance}'s statement; $1-h>0$ makes the two inequalities
+equivalent; and \Cref{thm:impedance} at $v=p$, where $h(p\to p)=1$, gives
+$\val_{\sigma[p]}(p)-\val_\sigma(a)=(\val_\sigma(b)-\val_\sigma(a))/(1-h)=\ell-\val_\sigma(a)$.
 \end{proof}
 
 
@@ -4234,22 +4233,14 @@ into $Z^{\flat}$. A tie at $0$ has both heads in $Z$, and both chain heads
 then carry the value $0$ in $G^{\flat}$.
 \end{proof}
 
-\begin{proposition}[A nondegenerate game with the same run]\label{prop:nondeg-overshoot}
-Replace the edge in slot $k\in\{0,1\}$ of vertex $v$ of $B'$ by a chain of
-$j_{v,k}$ average vertices delivering its head with probability
-$1-2^{-7}-2^{-j_{v,k}}$, $t_0$ with probability $2^{-7}$ and $t_1$ with
-probability $2^{-j_{v,k}}$, where
-$(j_{v,0},j_{v,1})_{v=0,\dots,11}=(8,11),(11,9),(12,9),(12,8),(11,12),(13,8),(9,9),(9,11),(8,8),(11,10),(13,11),(8,8)$.
-The result is a stopping one-player SSG on $253$ vertices with the same
-four Max vertices, nondegenerate --- none of its $64$ incidences is tied
---- whose improvement orientation is the Holt--Klee acyclic unique sink
-orientation $(12,15,14,13,0,11,10,9,4,3,2,1,8,5,7,6)$ of height $6$ and
-whose all-switches run from $\sigma_0=(1,1,1,0)$ is again
-$\{0,3\},\{0,1,2\},\{0,1\},\{1\},\{2\},\{3\}$, exactly as in
-\Cref{prop:overshoot-small}: the degenerate witness there has a
-nondegenerate realisation with the same run. (Exact computation of the
-round-$15$ verification route, re-verified by its auditors.)
-\end{proposition}
+The run of $B'$ nonetheless has a nondegenerate realisation: its
+orientation class is one of the $56$ Holt--Klee classes of height $6$
+that \Cref{rem:hk-survey} realises by nondegenerate one-player games on
+about a hundred vertices, and the round-$15$ verification route built one
+on $253$ vertices --- each edge replaced by a chain leaking $2^{-7}$ to
+$t_0$ and a chosen $2^{-j}$ to $t_1$ --- with the same run
+$\{0,3\},\{0,1,2\},\{0,1\},\{1\},\{2\},\{3\}$ from the same start (exact,
+re-verified by its auditor).
 
 
 \begin{remark}\label{rem:allsw-laws}
@@ -8185,7 +8176,10 @@ BSI is the one-sided rule $\mathrm{MR}\colon\sigma\mapsto\sigma[C_{\max}]$,
 which reads $\val_\sigma$ and $\phi$ only, and by \Cref{thm:bsi-nostall}
 it is a switching rule in the sense of \Cref{def:rule}: it endorses the
 switch of $v$ to $q$ exactly when Min's best response to $\sigma$ at the
-mirror vertex $\phi(v)$ weakly (strictly) prefers $\phi(q)$.
+mirror vertex $\phi(v)$ weakly (strictly) prefers $\phi(q)$. Self-dual
+games are thereby reduced to a one-sided rule, not excluded:
+$\mathrm{MR}$ is covered by no barrier of this document, for the reason
+\Cref{rem:bsi-br} gives for $R_{\mathrm{BR}}$.
 \end{proposition}
 
 \begin{proof}
@@ -12063,8 +12057,12 @@ $|C|\le2$ --- the wedge $WD(e,j,m)$ of \Cref{def:wedge} and
 $\mathrm{CC}(L,m)$ have two controlled vertices, and $G8$, $S$, $S_r$,
 $H_m$ and $G_m$ have at most one. So \Cref{thm:lasserre-vacuous} touches
 none of the instances on which the mechanisms of \Cref{sec:gap} are known
-to stall, and it is not evidence that the lift is weak where the problem is
-hard. It is evidence that it is weak already where the problem is easy.
+to stall --- indeed the round-$15$ verification route proved, and its
+auditor confirmed, that the degree-two lift is \emph{exact} on every
+stopping SSG with $|C|\le2$, with no nondegeneracy hypothesis, so on those
+instances it returns the value --- and it is not evidence that the lift is
+weak where the problem is hard. It is evidence that it is weak already
+where the problem is easy.
 \end{remark}
 
 \begin{remark}[The complementarity route, and why we do not pursue it]\label{rem:lcp}
