@@ -14,6 +14,8 @@ Exact-arithmetic scripts behind `thm:blowup`, `rem:blowup-measured`,
 | `huntG.py`, `huntW2.py` | integer normal-form searches (full orientation / walk only), after round 13's `hunt7.py` |
 | `verifyG.py` | exact re-verification of a search candidate from the game |
 | `G_m3_k0_den64_s{1,2}.json`, `B1_game.json` | two one-player realisations of the first level (height 4, dimension 3); the explicit 58-vertex game |
+| `b2cube.py` | the blow-up of every AUSO of the 2-cube: Holt-Klee status and membership in the realised classes; the second level B^2 and its layer-00 incidence count |
+| `AP_m4_k0_den256_s200.json`, `AP_m4_k0_den256_s200_game.json` | the one-player realisation (normal form, denominator 256; explicit 100-vertex game) of the blow-up of the 2-cube, height 6, whose layer 00 is the inner cube translated by 1-bar |
 | `fastnf.py`, `nf2.py`, `build.py`, `verify.py`, `auso.py` | round-13 harness (normal form, gadget construction, verification) |
 
 The Lean formalisation of the theorem is `lean/SSGProof/Blowup.lean`.

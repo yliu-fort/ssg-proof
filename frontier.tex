@@ -4465,9 +4465,11 @@ $2,6,14,30$; $7,16,34,70$; and $12,26,54,110$, each exactly $2h+2$, with
 the unique-sink and acyclicity predicates confirmed at every step. Two
 things the computation adds to the theorem. First, the translation vector
 $z=o\oplus u$ is a \emph{single} coordinate at every level from the second
-on --- the $\alpha$ coordinate introduced two dimensions earlier --- so
-the layer $(0,0)$ of a level presents the previous level ``as if its
-$\alpha$ had been flipped''. Second, the vector is the whole difference
+on --- one of the two coordinates introduced two dimensions earlier, namely
+$\beta$ when the previous level's seed had odd height and $\alpha$ when it
+had even height, hence $\alpha$ from the third level on, since every height
+beyond the first level is even --- so the layer $(0,0)$ of a level presents
+the previous level ``as if that coordinate had been flipped''. Second, the vector is the whole difference
 between doubling and not: with $z=\bar1$ the operation is $D$ of
 \Cref{prop:D-quadratic} and the heights are $4,9,16,25,36$; with the
 reversal $v\mapsto\bar1\oplus s(v)$ of all inner edges in place of the
@@ -4490,6 +4492,21 @@ searches for it, with two or three Min vertices, did not converge, but the
 same searches also failed to re-find the known walks of $G^{\sharp}$ and
 of a one-player height-$6$ game within the same budget, so that is not
 evidence.
+
+A translated layer is realised at inner dimension two. For four of the
+eight height-$2$ orientations of the $2$-cube, $B$ is one Holt--Klee
+orientation class of the $4$-cube of height $6$, with canonical outmap
+$(0,1,3,2,7,6,4,13,15,14,12,9,11,10,8,5)$, and that class is the
+improvement orientation of a nondegenerate one-player stopping SSG on
+$100$ vertices (four Max, ninety-four average, two sinks), found by the
+same search and verified from the game, with a bottom-antipodal walk of
+length $6$; the other four seeds give a $B$ that is not Holt--Klee. On the
+layer $(0,0)$ of the realised orientation each of the two inner vertices
+compares its options as it would if the other were flipped --- the
+translation is by $\bar1$ there --- so the operation that
+\Cref{rem:blowup-realise} identifies as the obstacle is performed by the
+monotone readouts of a one-player game at inner dimension two. How that
+game does it has not been analysed.
 
 The theorem is also machine-checked. The file \texttt{lean/SSGProof/Blowup.lean}
 of the repository formalises cube orientations as maps
@@ -4530,9 +4547,10 @@ $\val(j)$, so the inner game would have to be shown the \emph{anti-value}
 $\val(j^{(0)})+\val(j^{(1)})-\val(j)$ of $j$, which is strictly decreasing
 in $\val(j)$. No vertex of any SSG has such a value: under fixed
 strategies every value is a nonnegative combination of the others, and
-Min's best response is a minimum of such combinations, so every value is
-nondecreasing in every other. Substituting a value therefore cannot do
-it. What a gadget could still do is reproduce the \emph{signs}: an inner
+Min's best response is a minimum of such combinations, so every value is nondecreasing in every other. Substituting a value therefore
+cannot do it, and the realised blow-up of the $2$-cube in
+\Cref{rem:blowup-measured} shows that a game does it by other means at
+inner dimension two. What a gadget could still do is reproduce the \emph{signs}: an inner
 vertex whose two options read $j$ with weights $w_p,w_q$ compares, at
 $v\oplus e_j$, a quantity in which the coefficient of $\val(j)$ has the
 opposite sign and the constant is shifted by
