@@ -1,0 +1,152 @@
+{
+ "target": "frontier.tex calculi (lines 7185-8714)",
+ "sound": false,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "cor:slack-stalls (lines 7788-7809, final sentence 7794-7795)",
+   "defect": "The corollary's conclusion -- \"The decision rule built from the slack calculus therefore stalls on H_m for 2^{Omega(N)} rounds\" -- is proved only for the PAIR test; the own-successor test of rem:own-successor, which the standing rule requires, is covered nowhere by a proof and only by measurement.",
+   "evidence": "thm:slack-barrier bounds Delta_k below only on (A u sinks) x (B u sinks) with A,B disjoint and successor-closed. The unique controlled vertex v of H_m has successors c_1 in B and h in A, so EVERY successor-closed set containing v meets both A and B and the barrier cannot cover Delta_k(v,c_1), Delta_k(v,h), Delta_k(c_1,v), Delta_k(h,v) -- exactly the entries on which a decision rule fires by rem:own-successor(i),(ii). I recomputed the own-successor firing rounds in exact arithmetic (my hm.py): 15, 39, 101, 250, 597 for m = 3..7 against pair-test rounds 14, 38, 100, 249, 596 (rem:own-successor at line 9389 reports 15,39,101,250 for m=3..6 and asserts \"so cor:slack-stalls is unaffected\" on that basis). So the substance survives at every measured size, but the 2^{Omega(N)} statement for the decision rule is measured, not proved, and the only acknowledgement is a remark 1600 lines later in a different section. Either restate the corollary for the pair test (as def:seeded's \"associated decision rule\" is defined) or prove a lower bound on Delta_k(h,v) and Delta_k(v,c_1)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "thm:gap-equivalence (proof, line 7234)",
+   "defect": "The cited LP is misdescribed: \"that program's feasible set is {x in X : x <= T_{sigma_t}x}\" contradicts the cited proof, which says the feasible set is properly contained in that set.",
+   "evidence": "The LP is eq:lp in the proof of thm:compare-equivalence (line 6570ff); that proof states verbatim: \"Its feasible set is contained in {x in X : x <= T_sigma x} --- properly so in general, since the Max and average rows are equalities\". The conclusion (val_sigma is the unique maximiser) is unaffected."
+  },
+  {
+   "severity": "minor",
+   "result_name": "thm:gap-equivalence (proof, line 7238)",
+   "defect": "ex:pi-fails is cited to show that the polynomial evaluation of val_{sigma_t} \"cannot be replaced by greedy improvement\", but ex:pi-fails is explicitly a NON-stopping phenomenon while the game here (G_m from thm:stopping-transform) is stopping.",
+   "evidence": "ex:pi-fails is titled \"Greedy policy iteration for Min is unsound without stopping\" (line 2790) and its proof turns on the failure of cor:comparison in the absence of stopping. On a stopping game greedy improvement for Min is sound (cor:comparison applies); the real reason to use an LP there is that policy iteration is not known to be polynomial, which the citation does not say."
+  },
+  {
+   "severity": "minor",
+   "result_name": "cor:slack-stalls (proof, line 7802)",
+   "defect": "\"Since h -> {t_0,t_1} we have u_k(h) = l_k(h) = 1/2 for k >= 1\" is false at k = 1 with the unpinned initial vectors used everywhere in this section; the correct range is k >= 2.",
+   "evidence": "u_0 = 1 and l_0 = 0 on ALL of V (thm:slack-vi-upper and thm:ratio-sandwich state this explicitly), and T pins the sinks only from the first application; recomputed for m = 3,4: u_1(h) = 1, l_1(h) = 0, u_2(h) = l_2(h) = 1/2. The conclusion is unaffected (at k = 1 the barrier bound is 1 - 0 = 1 > 0), and cor:ratio-stall (line 8513) inherits the same off-by-one."
+  },
+  {
+   "severity": "minor",
+   "result_name": "cor:separable (line 8166-8167)",
+   "defect": "The corollary announces \"Three consequences.\" and then lists five items (a)-(e); the proof establishes only (a),(b),(c), and (d),(e) are asserted -- yet they are cited elsewhere.",
+   "evidence": "The enumerate contains (a) triangle inequality of E_k, (b) lem:phi-certificate is the general separable certificate, (c) a rate proof needs a non-separable certificate, (d) the same applies to def:hybrid, (e) thm:hybrid-convex-barrier escapes by zeroing the diagonal. rem:hybrid-barrier-lift (line 10145) cites \"cor:separable(d),(e)\", so the items are intended; only the header and the proof's coverage are wrong."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:simorder-stalls (lines 7625-7627)",
+   "defect": "\"the primal--dual bracket of def:bracket generated from the all-first-successor strategy\" names a construction that the document never defines; def:bracket defines only what a bracket is, not how to generate one from a strategy.",
+   "evidence": "The only description is inside prop:pdc-separation's proof (line 7508): \"L := max{val_sigma, val_rho} and U := val^{tau'}\" with tau a Min best response to sigma, rho a Max best response to tau, tau' a Min best response to rho. I verified the claim under both readings on G* (my gstar_check.py): with L = val_sigma, U = val^tau for every Min best response tau, and with the three-step (L,U) for every tie-breaking, the bracket decides NONE of the seven controlled vertices, as claimed."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:mobius(d) (line 8626)",
+   "defect": "\"its members are pairwise incomparable\" is not supported by the two measurements offered: they never separate beta=1 from beta=4 in either direction, and never show beta=1/4 beating beta=0.",
+   "evidence": "Recomputed exactly (my incomp.py): on W the pair (0,2) is decided at round 2 by beta=0 and at round 3 by beta=1/4,1,4 (matching the text); on W' the pair (3,6) is decided at round 7 by beta=1,4 and at round 8 by beta=0,1/4 (matching the text). So {0} vs {1,4} is separated in both directions, but 1 vs 4 is separated in neither, and 1/4 vs 0 only in one direction. A 400-game random scan of mine (mob.py) also failed to separate beta=1 from beta=4 in either direction; it did separate beta=1/4 from beta=1 and beta=4 in both directions. Random sampling proves nothing negative, but the printed evidence does not support \"pairwise\"."
+  },
+  {
+   "severity": "minor",
+   "result_name": "def:simorder (line 7528)",
+   "defect": "\"Z_0 := {v : w*(v)=0} and Z_1 := {v : w*(v)=1}, both computable by attractor sweeps in linear time\": true for Z_0 (complement of the positive-reachability attractor, average vertices existential), false as stated for Z_1, which is the almost-sure reachability set and is not a one-pass attractor sweep.",
+   "evidence": "The paper's own G_8 (line 7632) has the average vertex 0 -> (0,t_1) with w*(0) = 1 (recomputed: w* = (1,1/2,1/5,3/5,2/5,1/2), Z_1 = {0,t_1}); any sweep that adds an average vertex only when BOTH successors are already in the set returns Z_1 = {t_1} and misses it. The proof of prop:simorder-stalls silently uses the semantic set (\"t_1 attracts 0\"). Almost-sure reachability needs the standard alternating attractor/safety fixed point; no algorithm or reference is given. Soundness of all downstream results is unaffected (they need only Z_0 subset {w*=0}, Z_1 subset {w*=1})."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:locality (proof, line 7423)",
+   "defect": "The final step ignores the abstention option: \"A rule reading only N_k(.,v) therefore returns the same answer on G and on G', and is unsound on one of them\" -- a rule that returns bot on both is sound (soundness is vacuous at bot); the argument needs non-stalling, which does hold here.",
+   "evidence": "def:decision-rule (line 7280) makes soundness a condition only on outputs of the form (v,i); bot is always sound. In G and G' the single controlled vertex v distinguishes values (difference +-2^{-L}, recomputed for k = 1..4: 1/32, 1/64, 1/128, 1/256 on 2L+3 = 13,15,17,19 vertices, radius-k balls identical), so a sound NON-STALLING rule must answer at v and the intended conclusion follows once non-stalling is invoked."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:trans (line 8276)",
+   "defect": "\"prop:trans-stall locates permanent blindness precisely: it exists, but only where T has more than one fixed point in [0,1]^V\" -- the \"only where\" direction is proved nowhere; thm:trans-complete assumes stopping and lem:phi-certificate is one-directional.",
+   "evidence": "Non-stopping games whose T has a unique fixed point in [0,1]^V exist (e.g. a single Max vertex p -> (p,t_1): {p} is a trap by lem:trapchar, and T(x)(p) = max(x(p),1) = 1 pins the unique fixed point). thm:trans-complete's Step 1 needs the modified-sink operator to have a unique fixed point with converging orbits, which stopping supplies and \"T has one fixed point\" does not. I scanned random games (gfp.py, greatest fixed point computed exactly as 1 - w* of the dual game): 6 non-stopping instances with a unique fixed point, on all of which Delta^T did reach D within 40 rounds -- so the claim is plausible but unproved. Also lem:phi-certificate does not give blindness from ANY second fixed point, only from one with phi(x) >= phi(y) where w*(x) < w*(y)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:ratio-closure (lines 8688-8716)",
+   "defect": "Three gaps in the soundness/monotonicity discussion of the measured variant: the cap at 2^a is unsound when some value is 0, the \"rounding up can only delay a firing\" argument does not cover the cap (which rounds DOWN), and the min-times closure has no convention for infinity times 0.",
+   "evidence": "(i) If w*(y) = 0 < w*(x) the true ratio is +infinity and the capped entry 2^a asserts w*(x) <= 2^a*0 = 0; the justification \"a positive value is at least 2^{-a} by lem:denominator-sharp\" bounds the ratio only when w*(y) > 0 (on H_m every value is positive, so the reported measurement is safe). (ii) Line 8711: \"Rounding up can only delay a firing, so the counts are upper bounds on those of the exact iteration\" -- the cap lowers entries above 2^a and can therefore only accelerate firing, so the comparison with the exact iteration is not established. (iii) In C(x,y) <= R(x,z)R(z,y) with R(x,z) = +infinity and R(z,y) = 0 (z in Z_0), the absorbing convention 0 would set R(x,y) = 0 and be unsound; my implementation skips infinite factors. The measured counts themselves reproduce exactly: 7, 11, 15, 20, 24 for m = 3..7 (rclos.py)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "cor:ratio-stall (line 8521)",
+   "defect": "The counts 32/36, 79/84, 204/210 are reproducible but their stated explanation is wrong, and \"the entries examined\" is never defined.",
+   "evidence": "Reproduced exactly (eqcount.py): the entries are the two entries (h,c_1) and (c_1,h) over rounds k = 1..K with K = 18, 42, 105 (2K = 36, 84, 210), and equality with u_k(x)/l_k(y) holds at 32, 79, 204 of them. The remaining 4, 5, 6 are the rounds at which l_k(y) = 0, i.e. the BOUND is +infinity, not (as the text says) \"rounds at which R_k is still +infinity\": my run records 0 rounds in which R_k was infinite while the bound was finite. Neither K nor the choice of the two entries appears in the text."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:mobius (lines 8666-8686)",
+   "defect": "The multiplicative analogue of thm:separable is vacuous as literally stated at beta = 0, and the letter beta is overloaded inside the same remark.",
+   "evidence": "The hypothesis is a sequence of POSITIVE matrices M_k(x,y) = phi_k(x)/psi_k(y) \"dominated by every clause of def:ratio\"; def:ratio's base gives R(t_0,y) <= 0 (t_0 in Z_0), which no positive matrix satisfies, so no such sequence exists at beta = 0. Under def:mobius's beta > 0 bases (1 at Z_0, 1 at Z_1, beta/(1+beta) at both) the hypothesis is consistent and the argument goes through, and there M_k(t_0,t_1) <= beta/(1+beta) < 1 also supplies the strict inequality alpha < beta that the closing citation of lem:gen-comparison needs. The closing sentence then writes \"alpha = phi_k(t_0) < beta = phi_k(t_1)\", reusing beta, the family parameter of def:mobius, for the upper sink payoff."
+  },
+  {
+   "severity": "minor",
+   "result_name": "def:trans-slack (line 7892)",
+   "defect": "C(W)(x,y) is defined as a minimum over all sequences z_0=x,...,z_r=y of arbitrary length; this is finite only if W has no negative cycle, which is never stated.",
+   "evidence": "The definition is applied to L(Delta^T_k), which is >= D by thm:trans-sound, and every cycle sum of D telescopes to 0, so no negative cycle exists and the min over sequences equals the min over simple paths (which is what Floyd-Warshall, invoked in thm:trans-sound's cost claim, computes). For a general W the definition is not well posed."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:pdc-separation(a) (line 7468)",
+   "defect": "\"it decides only the vertices 4 and 5, at which sigma is already correct\" -- vertex 5 is a Min vertex, so sigma (a Max strategy) has no choice there and \"already correct\" is meaningless; the intended point is that no Max switch occurs.",
+   "evidence": "Vmin = {1,2,5} per the same statement (line 7795). Everything else in (a) and (b) recomputed exactly (pdc.py): the game is stopping on 29 non-sinks, w*(0..6) = 1/2, 1/2, 23/64, 1/2, 1/2, 11/32, 33/64; tau, rho, tau' each unique; L(1) = 11/32 < 23/64 = w*(2); the bracket decides exactly {4,5}; val_sigma(1) = 5/16 > 0 = val_sigma(2); the decision-rule iteration retires 4, 0, 2, 5 in four rounds and then abstains with vertex 1 left, whose successors 3 and 4 both have value 1/2; 25 runs with randomised best-response and tie-break choices all terminate in four rounds with w* recovered."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:slack-sandwich (line 7871)",
+   "defect": "\"We checked the inequality on 300 random games, 207 of them non-stopping, at all N^2 pairs and for k <= 6\" does not say what was varied (size range, type distribution), and the 57,353 equality count is not reproducible without the generator.",
+   "evidence": "Independent re-check (rand.py): 119 random games (n = 1..7, three Max/Min density settings), 61 stopping and 58 non-stopping, all N^2 pairs, k <= 6: no violation of thm:slack-vi-upper or of thm:ratio-sandwich(a), with equality in 17,505 of 35,252 additive entries. The barrier direction (barrier.py): 250 random stopping games, 1050 separated configurations (A,B successor-closed, disjoint, avoiding Z_0 u Z_1), k <= 6: no violation of thm:slack-barrier or thm:ratio-sandwich(b), equality at 81,704 of 81,720 additive entries."
+  },
+  {
+   "severity": "minor",
+   "result_name": "remark after prop:simorder-stalls (line 7677)",
+   "defect": "\"G_8 is the smallest instance where the repayment is essential\" is a minimality claim with no verification anywhere.",
+   "evidence": "Partial support only: a random scan of 60,000 stopping games with 5 non-sink vertices and one controlled vertex (small.py rnd5) found no instance in which a value-distinguishing controlled vertex has preorder-incomparable successors; the exhaustive sweep over all 2*36^4 games with 4 non-sink vertices and one controlled vertex was still running when this report was written (output at /tmp/claude-1000/-data-ssg-proof/6e64b33d-520c-4c82-aa1b-ffb69ecfcb61/scratchpad/paper-audit-calculi/exh4.log). G_8 has 6 non-sinks, so no exhaustive check of the 5-non-sink case exists."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:simorder-stalls (line 7613)",
+   "defect": "The opening claim \"The preorder decides pairs that no bounded-radius rule can decide\" is never witnessed: G*, the instance that follows, witnesses only that the preorder beats the bracket.",
+   "evidence": "I supplied the missing witness (loc2.py): on prop:locality's own family, for k = 1,...,5, the preorder relates the two chain heads in the correct direction (gamma-head <= alpha-head, not conversely), so it decides exactly the pair that no radius-k rule can decide. Soundness of the computed preorder was asserted against w* at every related pair."
+  },
+  {
+   "severity": "note",
+   "result_name": "def:simorder / thm:simorder-sound (lines 7526-7551)",
+   "defect": "Prior art: the (match) clause is the standard lifting condition of probabilistic simulation, and soundness of simulation for reachability values is standard; the section presents the preorder as \"a natural one\" with no attribution.",
+   "evidence": "From memory, unchecked against sources: Jonsson-Larsen (weight functions / lifting of a relation to distributions, 1991) and Segala-Lynch (probabilistic simulation, 1994). For two-point uniform distributions the existence of a weight function supported in R is equivalent, by Birkhoff/Konig, to the existence of a bijection pi with (x^{(i)}, y^{(pi(i))}) in R -- which is exactly def:simorder(iii) at Vavg; the (up)/(down) clauses are the extra ingredient. The branch-compensation failure of the remark at line 7670 is the standard reason simulation is strictly finer than value comparison."
+  },
+  {
+   "severity": "note",
+   "result_name": "thm:simorder-sound (line 7551)",
+   "defect": "The name \"preorder\" and the symbol assert transitivity of gfp(F), which is never proved; nothing in the section uses it.",
+   "evidence": "No counterexample found: 300 random stopping games (trans.py), no failure of (x,y),(y,z) in R implies (x,z) in R. Reflexivity is proved (the diagonal is a post-fixed point)."
+  },
+  {
+   "severity": "note",
+   "result_name": "prop:trans-stall (line 8046)",
+   "defect": "\"Delta^T_k(p,q) = Delta^T_k(q,p) = 1/4 for all k >= 5\" is true but not sharp, and the claim \"so no k decides u\" is argued for the pair test only.",
+   "evidence": "Recomputed (a0.py): both entries equal 1/4 already from k = 3 (sequence 1, 1/2, 1/4, 1/4, ...). The own-successor test also never fires: Delta^T_k(u,p) = Delta^T_k(u,q) = 1/4 > 0 (so (i) cannot fire) and Delta^T_k(p,u) = Delta^T_k(q,u) = 0, never < 0 (so (ii) cannot fire); the phi-certificate covers (u,q) and (p,u) but the text does not say so. All other numbers verified: A_0 is not stopping, w* = (1/2,1/2,3/4,3/4), T phi = phi for phi = (1/2,1,3/4,1), and the damped (A_0)_m decides the pair at k = 7, 8, 10 for m = 2,3,4."
+  },
+  {
+   "severity": "note",
+   "result_name": "thm:trans-complete (line 7987)",
+   "defect": "thm:contraction and lem:absorption are invoked for an operator whose sinks pay arbitrary constants (\"use only that the sinks are absorbing and pay constants\"), including the degenerate case h(t_1) = h(t_0), which lem:gen-comparison (stated only for alpha < beta) does not cover; the extension is asserted rather than proved.",
+   "evidence": "thm:contraction (line 741) is stated for T, T_sigma, T_{sigma,tau} on X, i.e. with sinks pinned at 0 and 1. In Step 1 beta := h(t_1) - h(t_0) >= 0 may be 0, in which case the fixed point is the constant h(t_0) and lem:gen-comparison is unavailable. The conclusion is correct (the contraction estimate is indifferent to the sink constants) but the citation does not literally supply it."
+  },
+  {
+   "severity": "note",
+   "result_name": "cor:slack-stalls / def:damping / thm:gap-equivalence (lines 885, 7228, 7789)",
+   "defect": "Name collision: G_m denotes the damped game of def:damping, the output of thm:stopping-transform (used in thm:gap-equivalence's proof and in prop:trans-stall's \"(A_0)_m of def:damping\"), and thm:vi-lower's value-iteration family from which H_m is built.",
+   "evidence": "cor:slack-stalls line 7789: \"let H_m be G_m of thm:vi-lower together with ...\"; prop:trans-stall line 8054: \"on (A_0)_m of def:damping\"; thm:gap-equivalence line 7228: \"build G_m by thm:stopping-transform\". Three different objects, one symbol."
+  },
+  {
+   "severity": "note",
+   "result_name": "thm:slack-vi-upper (proof, y = t_1 branch)",
+   "defect": "The displayed chain for y = t_1 uses the first half of the induction at k = 0, where l_0(t_1) = 0 rather than 1, so the needed inequality Delta_1(x^{(i)},t_1) <= u_1(x^{(i)}) - 1 comes from the base clause and not from the displayed argument.",
+   "evidence": "For k >= 1, l_k(t_1) = 1 and the first half gives Delta_{2k+1}(x,t_1) <= u_{k+1}(x) - 1 directly. For k = 0 one needs Delta_1(x',t_1) <= u_1(x') - 1 = 0 for non-sink x' (u_1 = 1 on all non-sinks because u_0 = 1 everywhere), which the base clause \"0 if y in Z_1\" supplies. The theorem itself is correct: no violation in 119 random games at all N^2 pairs and k <= 6."
+  }
+ ],
+ "verdict": "NOT SOUND: one major defect survives (cor:slack-stalls' decision-rule claim is proved only for the pair test), plus 16 minor and 7 note-level defects. Everything else I checked reproduces exactly.\n\nWHAT I RECOMPUTED IN EXACT RATIONAL ARITHMETIC, with my own independent core (/tmp/claude-1000/-data-ssg-proof/6e64b33d-520c-4c82-aa1b-ffb69ecfcb61/scratchpad/paper-audit-calculi/ac.py: values by max-min over all positional pairs with the least-fixed-point restriction, trap-based stopping test, def:slack, def:trans-slack, def:ratio, min-times closure, def:mobius, unpinned value iteration) -- ALL MATCH THE PAPER:\n- prop:locality: 2L+3 vertices, difference +-2^{-L} = 1/32, 1/64, 1/128, 1/256 at k = 1..4, radius-k balls identical including edge order (misc.py).\n- prop:pdc-separation: w*(0..6) = 1/2,1/2,23/64,1/2,1/2,11/32,33/64; unique tau, rho, tau'; L(1) = 11/32 < 23/64; bracket decides exactly {4,5}; val_sigma(1) = 5/16 > 0 = val_sigma(2); (b) four rounds retiring 4, 0, 2, 5, then abstention with vertex 1 (successors both 1/2) and w* recovered; 25 randomised runs identical (pdc.py).\n- prop:simorder-stalls: G* stopping on 17 non-sinks, all 7 controlled vertices value-distinguishing, preorder sound and separating exactly 6 of 7 (misses vertex 5), bracket from the all-first-successor strategy decides none under every tie-breaking and under both readings of the construction; G_8: w* = (1,1/2,1/5,3/5,2/5,1/2), 4 and 1 preorder-incomparable, and (5,4),(5,1) unrelated so the stall survives the own-successor test (gstar_check.py, g8own.py).\n- prop:slack-repairs: Delta_k(4,1) = 1, 1/2, 1/4, 1/8, 1/16, 0, -1/32 for k = 1..7 (ac.py).\n- prop:trans-Hm: Delta^T decides {h,c_1} at k = 9,13,17,21,25,29,33 for m = 3..9 and 38 at m = 10; Delta at 14,38,100,249,596 for m = 3..7 (one more than thm:vi-lower's measured 13,37,99,248,595); the printed m = 3 sequence 1,1/2,1/2,3/8,1/4,1/8,3/64,0,-7/256 is exact; the residual of Delta^T on (c_1,c_2) halves every round as the explanation says (hm.py, final.py).\n- prop:trans-stall: A_0 non-stopping, w* = (1/2,1/2,3/4,3/4), T phi = phi, Delta^T stalls at 1/4, damped counts 7, 8, 10 (a0.py).\n- prop:cw(b): D_L bracket [1,2] with max ratio 2^{L-1} = 2^{N-3} for L = 2..7 (misc.py).\n- prop:ratio-incomparable: both games, both value vectors, and both printed sequences exact (R_k(0,2) = inf,1/2,1/2,1/2 and Delta_k(0,2) = 1,0,-1/4,-3/8 for k = 1..4; R_k(3,6) = inf,inf,4,5/2,7/4,53/40,259/240,221/240 and Delta_k(3,6) = 1,1,1/2,1/4,1/8,1/32,-1/64,-3/64 for k = 1..8) -- note both lists are indexed from k = 1, not from the definitional k = 0 (incomp.py).\n- cor:ratio-stall: own-successor firing at 15, 39, 101 for m = 3,4,5, same as the additive calculus; equality counts 32/36, 79/84, 204/210 reproduced exactly (rhm.py, eqcount.py).\n- prop:mobius(c),(d): identical firing rounds for beta = 0,1/4,1,4 on H_3 (pair 14, own 15); W decided at 2 by beta=0 and 3 by the rest; W' at 7 by beta=1,4 and 8 by beta=0,1/4 (final.py, incomp.py).\n- prop:ratio-closure: rounded min-times variant fires at 7, 11, 15, 20, 24 for m = 3..7, against 9,13,17,21,25 for Delta^T -- and I confirm the comparison is apples-to-apples, since for Delta^T the pair test and the own-successor test fire in the SAME round at every m = 3..10 (rclos.py, hm.py).\n- Soundness of every calculus was asserted against w* at every entry of every round of every run above; no violation anywhere. Random checks: thm:slack-vi-upper and thm:ratio-sandwich(a) on 119 random games (61 stopping, 58 non-stopping, all N^2 pairs, k <= 6), thm:slack-barrier and thm:ratio-sandwich(b) on 1050 separated configurations in 250 random stopping games -- no violation.\n\nPROOFS RECONSTRUCTED STEP BY STEP AND FOUND CORRECT (sinks, ties, empty sets and one-vertex cases checked): thm:gap-equivalence (both directions; thm:short-path does supply the missing switch), thm:decide-one-bit (the retyping argument, the stopping inheritance, the vacuity-of-soundness point, the final linear solve), thm:simorder-sound (the trap argument, the y = t_0 and y in Z_1 corners, f in X), thm:slack-sound, thm:slack-barrier (region closure and every sink corner), thm:slack-vi-upper, thm:trans-sound, thm:trans-complete (both steps, including beta = 0), lem:phi-certificate, def:separable/lem:separable-lower/thm:separable, cor:set-certificate (the nesting hypothesis P_0 superset P_1 ... is never used), prop:cw(a), thm:ratio-sound (every clause, including the mediant and the 0-conventions), thm:ratio-sandwich(b) (fully; (a) is asserted \"in multiplicative form\" and I verified it numerically instead), cor:ratio-complete, prop:mobius(a),(b),(c).\n\nWHAT I DID NOT CHECK: the results cited from outside the range (thm:vi-lower, thm:stopping-transform, thm:compare-equivalence, thm:short-path, prop:bracket, thm:contraction, lem:gen-comparison, def:hybrid, thm:hybrid-convex-barrier, lem:transport-exact) beyond reading their statements to see whether they say what is claimed; the paper's own 300-game/57,353-equality figures (not reproducible without their generator -- I ran my own instead); an exhaustive minimality check for G_8 (a 5-non-sink exhaustive sweep is out of reach in Python, and the 4-non-sink sweep was still running); and I made no attempt to find a stopping game on which Delta^T needs superpolynomially many rounds."
+}

@@ -1,0 +1,86 @@
+{
+ "target": "route \"gadget\" \u2014 Realising the second blow-up level by hand (labels gad:)",
+ "sound": false,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "gad:B2-size / gad:size / the route's stated gap",
+   "defect": "The inference \"gad:precision-blowup shows d_k >= k+1: additive growth is necessary\" (and, in the gap paragraph, \"gad:precision proves the necessary c is at least 1\") is a NON SEQUITUR. gad:precision bounds |Vavg| and the denominator D of the VALUES; d is the denominator exponent of the normal-form ROWS. The route's own realisation formula |Vavg| = O(|C|^2 d) runs the wrong way \u2014 it is an upper bound on size, so a lower bound on |Vavg| gives no lower bound on d. So NOTHING in this route constrains the precision per level, and the one sentence that claims the theorem \"falls on the favourable side\" of the size question is unsupported.",
+   "evidence": "From rows of denominator 2^d on |C| controlled vertices, val_sigma = M^{-1}q' with M integral and entries <= 2^d, so by Hadamard D <= |C|^{|C|/2} 2^{d|C|}. Combining with the route's own D >= h-1 = Theta(2^k) and |C| = Theta(k) gives d >= (k - Theta(k log k))/Theta(k) < 0: vacuous. The paper's current rem:blowup-realise (frontier.tex:4890) does NOT contain this inference \u2014 it says only \"Nothing here proves or refutes the additive regime beyond one step\". The root agent must not absorb gad:size as written."
+  },
+  {
+   "severity": "major",
+   "result_name": "gad:mono / gad:B2-rows",
+   "defect": "gad:mono as stated in the paste-ready LaTeX carries a superfluous hypothesis on q-hat that breaks the corollary it exists to support. Delta_i(z) = (p-hat^{i,1}-p-hat^{i,0}).y + (q-hat^{i,1}-q-hat^{i,0}) is monotone in y under the p-hat inequality ALONE; the constant is irrelevant. With q-hat folded into \"comparable\", gad:B2-rows's conclusion (\"the two reduced rows are incomparable\") does NOT imply its own \"in particular\" clauses \u2014 and those clauses are the entire design content of the corollary.",
+   "evidence": "Counterexample to the stated implication: action 0 straight to the sinks (p-hat^{i,0}=0, q-hat^{i,0}=1/2) and action 1 with p-hat^{i,1} = 1/4 at some w, q-hat^{i,1}=0. Neither (p-hat^1>=p-hat^0 and q-hat^1>=q-hat^0) nor the reverse holds, so the rows are \"incomparable\" in the stated sense, yet Delta = y_w/4 - 1/2 is monotone and {g=+} is up-closed. The route's own code is correct \u2014 mono.py's docstring uses w_i = p^{i,1}-p^{i,0} with no q clause. Fix: delete the q-hat clause; that strengthens the proposition and repairs the corollary."
+  },
+  {
+   "severity": "major",
+   "result_name": "gad:precision",
+   "defect": "Presented as \"the first size statement about the tower\" with no comparison to thm:switch-count, which already gives essentially the same statement, by the same proof technique. thm:switch-count bounds every multi-switch improving sequence on a stopping game by L <= N 4^a, hence a >= (log2 h - log2 N)/2 for any realisation of an orientation of BA height h; gad:precision's proof is the identical Phi-telescoping argument with the all-ones weight vector replaced by w = p^{alpha,1}-p^{alpha,0} and alternation used to make the terms add rather than cancel. The honest claim is: a factor-2 sharpening of a corollary of thm:switch-count, with the N removed. It is also vacuous in practice.",
+   "evidence": "frontier.tex:5384 thm:switch-count, proof by Phi(x)=sum_v x(v) and lem:denominator-sharp \u2014 the same two ingredients. Quantitatively the bound demands >= log2(3) = 1.58 average vertices at level 1 (the realisation uses 53) and >= log2(9) = 3.17 at level 2 (it uses 130). I verified the theorem itself holds on the level-2 game along the corollary's own alternating sequence sigma_t = 20,19,21,17,16 (inner BA walk at (alpha_2,beta_2)=(0,1)): signs of Delta_{alpha_2} are -+-+-, and sum_{t=1..h-1}|Delta| = 4509125874973191010079/151628943141037584416768 = 0.0297 <= 1, a factor 34 of slack."
+  },
+  {
+   "severity": "minor",
+   "result_name": "gad:B2 (verification wording), and prop:b2-realised in frontier.tex:4830",
+   "defect": "\"Holt-Klee fails on the unit vertex-capacity max-flow test\" is misleading as written: the test on the WHOLE 5-cube PASSES. The failure is on subfaces only. cor:seven-two-player says \"on every face\" for G-sharp; the same qualifier is needed here, and unlike G-sharp (where the top-level test itself returns 2 of 4) the top-level test here returns the full 5.",
+   "evidence": "My independent max-flow: whole 5-cube gives 5 internally vertex-disjoint monotone source-to-sink paths (= m, so it passes). Violations occur on exactly 8 faces: six 3-faces (fixed coords (0,3)=(1,0), (0,4)=(1,0), (1,3)=(1,0), (1,4)=(1,0), (2,3)=(0,1), (2,4)=(0,1), each giving 2 of 3) and two 4-faces (coord 0 = 1 and coord 1 = 1, each giving 3 of 4)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "gad:face-census (gad:face's remark)",
+   "defect": "\"it is implied by, but strictly weaker than, Holt--Klee\" is asserted as a general fact and supported only by an m=4 census. The implication HK => no forbidden pair is a GAP, not a theorem. By the project's own standing rule, absence of a counterexample is not evidence.",
+   "evidence": "I recomputed the census independently (recomputing Holt-Klee myself rather than trusting the file's flag): over the 12640 AUSO classes of the 4-cube, 6113 are Holt-Klee and 0 of them has a forbidden pair; of 6527 non-HK, 4365 have one and 2162 do not. Every number the route reports is exactly right. At m=5 I built 4000 combed AUSOs from pairs of HK 4-cube classes, of which 1144 are Holt-Klee, and found no HK orientation with a forbidden pair \u2014 which is not evidence. Restate as \"exhaustively at m=4\"."
+  },
+  {
+   "severity": "minor",
+   "result_name": "gad:size / gad:B2-size",
+   "defect": "Internal arithmetic inconsistency. gad:size states the realisation cost as O(|C|^2 d) average vertices, but gad:B2-size concludes N = O(k^2) from |C_k| = 3k, d_k = 3k+3, which needs O(|C| d); the results block asserts both O(m^2) and O(m^3). The measured data supports O(|C| d).",
+   "evidence": "Level 1: 6 rows at d=6 -> 53 average vertices (~9 per row). Level 2: 12 rows at d=9 -> 130 average vertices (~11 per row), i.e. roughly d+2 per row, so O(|C| d), giving O(k^2) = O(m^2). O(|C|^2 d) with |C|=Theta(k), d=Theta(k) is Theta(k^3). Harmless for the conclusion (polynomial either way) but the stated formula and the stated conclusion do not match."
+  },
+  {
+   "severity": "minor",
+   "result_name": "gad:B2-size (results block)",
+   "defect": "\"so the Min response map must be active across a constant fraction of the cube\" contradicts the route's own numbers, which show a strictly decreasing fraction. The LaTeX remark states the numbers correctly and without this clause; the results block adds an unsupported inference.",
+   "evidence": "I recomputed the forbidden-pair counts independently: 0, 4, 28, 136, 600 at levels 1-5 out of 6, 80, 672, 4608, 28160 two-faces \u2014 fractions 0%, 5.0%, 4.2%, 3.0%, 2.1%, decreasing. (All five counts match the route exactly.)"
+  },
+  {
+   "severity": "minor",
+   "result_name": "gad:readout",
+   "defect": "Not new to the paper. The identity val_rho(v) = sum_w p^{v,rho(v)}_w val_rho(w) + q^{v,rho(v)} is prop:oneplayer-lp's harmonic normal form, and the self-return division by (1-p_v) \u2014 the whole of gad:readout beyond that \u2014 is already performed explicitly inside the proof of lem:rise-bound. It is also standard (Meyer's stochastic complement), which the route does attribute. It should be a sentence in the normal-form discussion, not a lemma.",
+   "evidence": "frontier.tex:4267 (prop:oneplayer-lp, \"the first-passage law of action a at v\"); frontier.tex:3577-3583 (lem:rise-bound's proof: \"(1-p_u)(y(u)-x(u)) <= sum_{w!=u} p_w Delta_w ... and p_u < 1\", with the remark that this is \"the collapse of the average part that also underlies thm:impedance\")."
+  },
+  {
+   "severity": "note",
+   "result_name": "gad:B2 (significance framing)",
+   "defect": "The 138-vertex game is not a height record and should never be read as one. thm:ladder's L_68 has N = 138 and BA height 68. The entire value of gad:B2 is that it realises a PRESCRIBED orientation of the tower \u2014 one data point toward an iterable construction \u2014 not that a run of 10 rounds on 138 vertices is long.",
+   "evidence": "L_n has N = 2n+2 and an all-switches run of n rounds (thm:ladder, def:ladder); at N = 138, n = 68 > 10."
+  },
+  {
+   "severity": "note",
+   "result_name": "gad:B2-min",
+   "defect": "Its headline conclusion (Vmin nonempty for B^2) was already in the paper before this route; the genuinely new content is narrower than the framing suggests. What is new and real: the LOCALISATION (which three 2-faces), and that the condition constrains TWO-player realisations, where prop:oneplayer-lp constrains only one-player ones. As a necessary condition for one-player realisability it is strictly weaker than what the paper already has.",
+   "evidence": "frontier.tex:4771 (rem:blowup-measured, pre-route): \"The second level ... is not Holt--Klee, so any realisation needs Min vertices or ties\". The localisation does do real work: I confirmed on the constructed game that a single Min strategy is optimal against all four Max strategies of the face {x,alpha_1} at beta_1=0 in layer (0,0) \u2014 the layer with no forbidden pair \u2014 and that NO single tau is optimal on the three layers (0,1), (1,0), (1,1), exactly the three the theorem names."
+  },
+  {
+   "severity": "note",
+   "result_name": "gad:B2-size (the extrapolation)",
+   "defect": "\"+1 Min vertex per level\" is extrapolated from a single step 0 -> 1, the weakest extrapolation possible, and the growing forbidden-pair count (4, 28, 136, 600) is the one measured signal pointing the other way. The route's honest label \"measured, two data points\" covers the precision claim but the Min-vertex claim is a one-point extrapolation and should say so.",
+   "evidence": "Level 1 has |Vmin| = 0, level 2 has |Vmin| = 1. Nothing in gad:face bounds the number of Min vertices needed at level 3; the number of faces on which no single tau can be optimal grows as 4, 28, 136, 600."
+  },
+  {
+   "severity": "note",
+   "result_name": "gad:face(c) first clause",
+   "defect": "\"a square with both coordinates non-constant is the directed 4-cycle, which has two sinks\" is standard USO folklore (every 2-face of a USO has at least one combed coordinate; Szabo-Welzl), presented without attribution. One line, so not a rediscovery of substance, but the paper's own convention is to name such things.",
+   "evidence": "The paper already cites Szabo-Welzl for the USO condition (used in thm:blowup's proof and in the repairs commit 9fafa72, \"the Szabo-Welzl lemma\")."
+  },
+  {
+   "severity": "note",
+   "result_name": "gad:pi",
+   "defect": "An immediate corollary of gad:face(c) applied to one 2-face; its measured half (\"25 independent one-player realisations of B^1, parity separation infeasible in every one\") re-measures a proved lemma and adds nothing.",
+   "evidence": "The proof is three lines: on beta_1 = 0 the B^1 heights are 0,1,2,3 at (x,alpha_1) = (0,0),(1,0),(0,1),(1,1) \u2014 I confirmed ba_heights(B^1) = [0,1,2,3,4,2,4,3] \u2014 so parity is the sigma_x split, and g_x is non-constant there (B^1[0]=0 gives '-', B^1[2]=3 gives '+'). Apply gad:face(c)."
+  }
+ ],
+ "verdict": "THE HEADLINE IS REAL AND I COULD NOT BREAK IT. I re-derived B^2 from thm:blowup's definition from scratch (seed the 1-cube with sink 0, u = 4, z = e_2 = beta_1) and it is character-for-character the claimed outmap, height 10, USO, acyclic. I then verified the 138-vertex game with my own code, using none of the route's: read the harmonic normal form off the built game by DAG dynamic programming (it reproduces all twelve published rows exactly); confirmed out-degree two everywhere, greatest trap of V\\{t0,t1} empty so stopping by lem:trapchar; computed all 32 val_sigma by full 136x136 exact Gaussian elimination over Fractions as the componentwise minimum over both positional tau \u2014 never policy iteration \u2014 and checked each is a fixed point of T_sigma; found zero tied incidences; recovered exactly the outmap B^2, USO by Szabo-Welzl on all C(32,2) pairs, acyclic, heights 4,2,4,3,0,1,2,3,6,5,8,2,10,8,10,2,5,7,3,9,4,3,4,9,6,7,8,9,10,8,10,9, walk 12->19->13->17->8->16->0->7->1->5->4. The 155-vertex second realisation and the 58-vertex level-1 game check out identically. gad:xor's every stated rational is exact (val(x1) = 21/172 on sigma_1 = 0; 256*Delta_1 = 7z0-71z1+133z2+102z3-21 positive exactly on L; 256*Delta_0 = -40z0+165z1-121z2+4z3-2; max_{L=0}T = 2497696403/23623057920 < 21/172 < 347482169/2787045602 = min_{L=1}T; sign Delta_0 = NOT(sigma_1 XOR L)). The 4-cube census (6113 HK, 0 with a forbidden pair; 4365 of 6527 non-HK with one) and the tower's forbidden-pair counts 0,4,28,136,600 all reproduce. This is the most carefully verified negative-side construction in the repository and prop:b2-realised deserves its place.\n\nIS IT NEW? Yes, and nothing here restates thm:ladder, thm:short-path, lem:cut, lem:duality or thm:seed-dichotomy. Two caveats. gad:readout is not new to the paper \u2014 the identity is prop:oneplayer-lp's normal form and the (1-p_u) division is performed inside lem:rise-bound's proof; the route does attribute the underlying fact to Meyer, so this is duplication, not a rediscovery defect. And gad:precision is a factor-2, N-free sharpening of what thm:switch-count already gives, by thm:switch-count's own proof technique; calling it \"the first size statement about the tower\" is the one place where the route's novelty framing overreaches.\n\nIS IT CIRCULAR OR VACUOUS? No oracle, no claimed algorithm, no claimed polynomial class, no claimed family. The four \"obstruction theorems\" are not algorithm barriers and cover NONE of M1, M2, M2T, M3, M4, M5, M6 or def:bsi \u2014 they are constraints on the lower-bound programme itself, and the route does not pretend otherwise. gad:precision, however, IS effectively vacuous as a size statement: it demands 1.58 and 3.17 average vertices where the two realisations use 53 and 130, and for the whole tower it demands only Theta(m), which every polynomial-size family satisfies. gad:B2-min is the opposite \u2014 I confirmed it is doing genuine work: on the constructed game a single Min strategy IS optimal against all four Max strategies of the face {x,alpha_1} at beta_1=0 in layer (0,0), the layer with no forbidden pair, and NO single tau is optimal on the three layers the theorem names.\n\nWHAT IS ACTUALLY WRONG. One false inference, one broken corollary, one overreach. (i) \"gad:precision-blowup shows d_k >= k+1, additive growth is necessary\" is a non sequitur \u2014 the theorem bounds |Vavg| and the value denominator, not the row denominator, and the correct chain (Hadamard on the |C|x|C| system) makes the derived bound on d negative, hence vacuous. Do not integrate that sentence; the paper's rem:blowup-realise is currently clean on this point and must stay so. (ii) gad:mono's superfluous q-hat hypothesis makes gad:B2-rows's \"in particular no Max vertex may have an action that goes straight to the sinks\" a non sequitur from its own stated conclusion; the route's code has it right and the LaTeX must drop the q-hat clause, which strengthens the proposition. (iii) \"implied by Holt-Klee\" is an m=4 census stated as a general theorem.\n\nTHE REAL REMAINING GAP, stated harder than the route states it: the route's gap is a quantitative conjecture about additive cost, but there is no map at all from a realisation of B^k to a realisation of B^{k+1} \u2014 the level-two game came from a sequential LP with a hand-chosen Min response, gad:readout/mono/face/precision constrain the search without determining it, and \"+1 Min vertex per level\" is extrapolated from 0 -> 1 while the one measured trend (4, 28, 136, 600 forbidden pairs) points the other way; so the open statement is not \"can the cost stay additive\" but \"does ANY construction iterate at all\", and even a yes settles only all-switches, at 2^{Theta(sqrt N)}, leaving the target untouched.\n\nBETTER OR WORSE? BETTER, with three deletions. Integrate: gad:B2 (already in, as prop:b2-realised \u2014 keep, add \"on a face\" to the Holt-Klee sentence); gad:face and gad:B2-min (new, correct, localising, and the only statement here that constrains two-player realisations \u2014 but restrict the census clause to m=4 and mark HK => no-forbidden-pair as a gap); gad:xor (it answers a question rem:blowup-measured explicitly leaves open, \"how the game does it has not been analysed\", and every number is exact); gad:mono/gad:B2-rows with the q-hat clause deleted. Integrate gad:precision only as an explicitly labelled sharpening of thm:switch-count, without gad:size. Do NOT integrate: gad:readout as a standalone lemma (it is already in the paper twice), gad:pi's measured half, gad:size's precision inference, or gad:B2-size as anything beyond the two-row table the paper already carries."
+}

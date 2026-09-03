@@ -1,0 +1,128 @@
+{
+ "target": "frontier.tex classes (lines 1124-2684)",
+ "sound": false,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "line 2246-2247 / 2382 / 2455, def:alphabet + thm:alphabet-rigid + thm:alphabet-denominator",
+   "defect": "Under def:alphabet's own convention that Lambda, k, D are read on the subgame reachable from v0, the assertion \"{0,1} subseteq Lambda(G) and k(G) >= 2\" is false, thm:alphabet-rigid's \"lambda_1 = 0 and lambda_k = 1\" is false, and thm:alphabet-denominator (\"Every stopping SSG satisfies D(G) <= 2^{k(G)-2}\") is FALSE, on an explicit one-vertex stopping SSG.",
+   "evidence": "Take the stopping SSG with single non-sink v in Vmax, v -> (t1,t1), v0 = v (verified stopping: the only candidate trap {v} fails lem:trapchar since t1 not in it). Reachable subgame = {v,t1}, so Lambda(G) = {1}, k = 1, D = 1, while 2^{k-2} = 1/2 < 1. Recomputed in exact arithmetic (paper-audit-classes/misc.py, last block: 'alphabet=[Fraction(1,1)] k=1 D=1 ... *** FAILS ***'). The failure set is exactly the stopping games with one sink unreachable from v0; there every reachable value is 0, or every reachable value is 1, so k=1 and D=1 always. One-line repair: define Lambda(G) := {0,1} union {val(v) : v reachable}. thm:alphabet-iteration's proof also breaks there ('L is a finite lattice with least element x_0' needs 0 in Lambda), though its conclusion survives."
+  },
+  {
+   "severity": "major",
+   "result_name": "lines 1248-1266, rem:few-avg-tight",
+   "defect": "The remark's witness claim is false (the exhibited game IS stopping, as the remark's own next clause and lem:survival(c) both imply), and its headline claim -- that thm:few-avg's per-block contraction factor 1-2^{-a} 'cannot be improved' and 'is attained factor for factor' -- is not established by that witness, on which the per-block factor is 1/8 against the permitted 1/2.",
+   "evidence": "Game c -> (t1,c), N=3, a=1. (i) Only candidate trap inside V\\{t0,t1} is {c}; c is average with successor t1 not in {c}, so by lem:trapchar the only trap is empty and G IS stopping; is_stopping returns True (paper-audit-classes/misc.py). Independently, (1/2, 1) is an escape certificate for it (Sx(c) = x(c)/2), and lem:survival(c) says a game with a certificate is stopping -- so line 1251 contradicts lem:survival(c) inside the same section. (ii) thm:few-avg charges 1-2^{-a}=1/2 per block of N=3 applications; exact computation gives val - T^3(1_{t1})(c) = 1/8, so M_1/M_0 = 1/8, and the block bound is NOT attained. (iii) 'The factor 2^{-a} of lem:descent(b) is therefore exactly the escape probability along the forced descent': on this instance the probability of reaching t1 within N=3 steps is 7/8, not 2^{-a}=1/2. A genuine witness for the block constant needs the coin crossed once per Theta(N) steps (e.g. c -> (t1,p_1), p_i -> (p_{i+1},p_{i+1}), p_{N-3} -> (c,c) with p_i in Vmax); none is given."
+  },
+  {
+   "severity": "minor",
+   "result_name": "line 1708, prop:escape-family proof, item (i)",
+   "defect": "\"lambda = 3/4 is close to the least admissible value 2^{-1/2} and no smaller rational rate is available\" is false: a rational rate strictly between 2^{-1/2} and 3/4 is available for every D.",
+   "evidence": "Exact certificate, verified for D = 3,4,5,6,8,12 (paper-audit-classes/esc2.py): lambda = 71/100, x(s_j)=1, x(M_j)=x(W)=141/100. Constraints: x(W)/2 = 71/100 <= lambda*1; x(M_j)/2 = 71/100 <= lambda*1; x(s_{j-1}) = 1 <= lambda*141/100 = 10011/10000; x(s_D) = 1 <= 10011/10000. check_cert returns True in every case, kappa = 141/100. The correct consequence of the cycle composition is only lambda >= 2^{-1/2}, which agrees with the measured Lambda(Z_D) = 0.7071067812 for D = 3..8."
+  },
+  {
+   "severity": "minor",
+   "result_name": "line 1768, rem:escape-class",
+   "defect": "\"it is a polynomial class disjoint from the four combinatorial ones\" is false -- the escape class and the class of thm:few-avg intersect in an infinite family -- and it contradicts prop:escape-family's own last line (line 1667), which says \"incomparable\", the word the proposition actually proves.",
+   "evidence": "Explicit family E_M: Vmax = {x_1..x_M}, Vavg = {u}, x_i -> (x_{i+1},x_{i+1}) (i<M), x_M -> (u,u), u -> (t0,t1), start x_1. Stopping, N = M+3, a = 1, so it is inside thm:few-avg's class (a = O(log N)); and (1/2, x) with x(x_i) = 2^{M-i+1}, x(u) = 1 is an escape certificate (verified exactly for M = 4,8,16 in paper-audit-classes/misc.py: 'escape cert (1/2,x) valid=True'), kappa = 2^M, so (a + log2 kappa)/log2(1/lambda) = M+1 = O(N). Both classes."
+  },
+  {
+   "severity": "minor",
+   "result_name": "lines 1554 and 2244, def:survival-rate vs def:alphabet",
+   "defect": "Lambda(G) is defined twice, with two different meanings, both inside the audited range and both used afterwards: max_pi rho(M_pi) (a real number in (0,1]) at line 1554, and the value alphabet (a set of rationals) at line 2244.",
+   "evidence": "Line 1554 'Put $\\Lambda(G):=\\max_\\pi\\rho(M_\\pi)$'; line 2244 'let $\\Lambda(G):=\\{\\val(v):v\\in V\\}$'. Both are used later (lines 1566-1625 spectrally, lines 2261-2416 as a set). The same clash exists for D(G): line 1786 defines it as the average-jump digraph (def:jump), line 2245 as the least common denominator, and both are used (lines 1836-1843 vs 2455-2504)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "lines 1266-1280 and 2219-2233, unlabelled remark after rem:few-avg-tight",
+   "defect": "The remark beginning \"\\Cref{thm:few-avg} should be read together with \\Cref{thm:vi-lower}\" appears twice, verbatim.",
+   "evidence": "diff of lines 1266-1280 against lines 2219-2233 differs only in the first and last lines (the surrounding environment delimiters); the 13 lines of body are byte-identical. Occurrences at lines 1269 and 2222."
+  },
+  {
+   "severity": "minor",
+   "result_name": "lines 2520-2521 vs 2535, rem:alphabet-compare",
+   "defect": "The same remark gives two different running times for thm:few-denominator on the same instance family GR(n): O(N^4) at line 2521 and O(N^3) at line 2535. Only O(N^4) follows from thm:few-denominator's own bound O(N^2 D(G)^2) with D = n+1 = N-1; O(N^3) is an unproved (though empirically correct) claim.",
+   "evidence": "Exact measurement of the total productive sweeps of the D = 1,2,3,...,D(G) loop on GR(n) (paper-audit-classes, few_denominator): n=8: 104 sweeps (N=10); n=16: 403 (N=18); n=32: 1577 (N=34); n=48: 3519 (N=50) -- about 1.4 N^2 sweeps at O(N) each, so Theta(N^3) actual work, but the theorem proves only sum_{D<=D(G)} O(N^2 D) = O(N^2 D(G)^2) = O(N^4)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "lines 1740-1756, rem:escape-class (the stall argument)",
+   "defect": "The argument silently identifies two different sequences both written u_k, l_k: thm:slack-vi-upper's (line 7813: u_k = T^k 1, l_k = T^k 0 from the CONSTANT vectors on all of V) and lem:survival(b)'s (line 1471: u_0 = 1 on V' and l_0 = 0 on V', both CARRYING THE SINK PAYOFFS). lem:survival(b) explicitly says the constants version fails ('starting from the constants the bound fails already at k=1').",
+   "evidence": "The identification is rescued only by an index shift that is not stated: T(constant 1) equals lem:survival's u_0 and T(constant 0) equals its l_0, because T pins the sinks from the first application onward, so thm:slack-vi-upper's u_k - l_k equals lem:survival's u_{k-1} - l_{k-1} <= lambda^{k-1} kappa for k >= 1. The O(.) conclusion survives, but as written the two displayed inequalities are about different vectors, and the second one is the case lem:survival(b) warns is false."
+  },
+  {
+   "severity": "minor",
+   "result_name": "lines 1765-1767, rem:escape-class (wedge derivation)",
+   "defect": "The implication \"(2 lambda)^{e-1}(2 lambda + 1)(1 - lambda) < 1, so every admissible lambda on WD(e,j,m) has 1 - lambda < 2^{1-e}/3\" does not follow.",
+   "evidence": "At e=2, lambda = 83/100: (2 lambda)^{e-1}(2 lambda + 1)(1 - lambda) = 1.66 * 2.66 * 0.17 = 0.7507 < 1, while 1 - lambda = 0.17 > 2^{-1}/3 = 0.1667. In general, substituting epsilon = 2^{1-e}/3 gives (1-epsilon)^{e-1}(1 - (2/3)epsilon) < 1 for every e, so the displayed inequality never forces the stated threshold. What it does give is 1 - lambda = O(2^{-e}), which suffices for log2(1/lambda) = 2^{-Theta(N)}. The sharp statement is available from lem:escape-rate instead: I measured Lambda(WD) = 0.8846461771, 0.9496605444, 0.9767508186, 0.9889035576 at max(e,j) = 2,3,4,5, so 1 - lambda <= 1 - Lambda = 0.1154, 0.0503, 0.0232, 0.0111, all below 2^{1-e}/3."
+  },
+  {
+   "severity": "minor",
+   "result_name": "line 1667 and items (ii)-(vii), prop:escape-family",
+   "defect": "\"The escape class is therefore incomparable with each of the five\" mis-counts (six classes are excluded, items (ii)-(vii), the sixth being thm:few-denominator, added in a later round), and the 'therefore' is not earned: the only converse witness offered, F_k, lies in the class of thm:few-escape only, so it establishes non-containment against that one class, not against the other five.",
+   "evidence": "Items (ii) few-avg, (iii) few-escape, (iv) kacyclic, (v) bounded-components, (vi) subexp, (vii) few-denominator = six. F_k has d = 2 (verified exactly for k = 2,3,4,5,6,8) and a = N-7, is not k-acyclic for any colour, has D(F_k) = 2^{Theta(N)}, and is not stopping, so it is in none of the other five classes as posed; a separate witness is needed for each. Additionally, line 1673 says the excluded bounds 'are exponential there', but item (vi) supplies e^{2 sqrt(D-1)} poly(N), which is subexponential."
+  },
+  {
+   "severity": "minor",
+   "result_name": "lines 2064-2114, lem:residual(b) and (c)",
+   "defect": "Two steps are asserted rather than proved: (c) equates val_H = lfp(T_H) of def:payoff with lem:det-game's operationally defined value (max over theta in c(Z) with v in Attr(X_theta)), which lem:det-game never identifies with a least fixed point; and (b) invokes \"the argument of lem:trapped-comparison, with the sinks replaced by the terminals\", whereas lem:trapped-comparison (line 565) is stated only for SSGs with sinks t_0,t_1 -- the payoff-game version is an adaptation, not a citation.",
+   "evidence": "lem:det-game (line 1804) says only 'the value of H at v equals ...', with 'a play never reaching Z pays Max 0'; def:payoff (line 1994) defines val_H := lfp(T_H). The two agree (I checked the composite algorithm against brute-force wstar on 311 avg-acyclic random SSGs with no mismatch), but the identification -- lim_k T_H^k(0) = the infinite-horizon value, which needs the attractor argument once more -- is nowhere made. lem:gen-comparison (line 9780) exists in the document but is not cited here and comes 7700 lines later."
+  },
+  {
+   "severity": "minor",
+   "result_name": "lines 2116-2145, thm:kacyclic",
+   "defect": "\"computable exactly in polynomial time\" is asserted without any bound on the bit-size of the |C| nested exact evaluations: the residual solve at step u takes the previously computed x-values as terminal payoffs, and no denominator bound is given for them.",
+   "evidence": "The proof's only cost sentence is 'Each of the |C|+1 evaluations is a payoff game ... and is solved by the corresponding case of lem:residual', and lem:residual's 'the values are rationals of polynomial bit-size in the input' is relative to that step's input, which contains the previous step's output. (The gap is benign: by lem:cut every intermediate x_u equals val_H(u), so all intermediate numbers are coordinates of one fixed vector; but this is exactly the sentence that is missing.) On SSGs the algorithm is correct: I implemented thm:kacyclic from the statement and matched brute-force wstar on 600 random k-acyclic SSGs (335 max-, 303 min-, 311 avg-acyclic; 438 of them NOT stopping), 0 mismatches."
+  },
+  {
+   "severity": "note",
+   "result_name": "lines 1178-1246, thm:few-avg (prior art)",
+   "defect": "The headline of thm:few-avg -- SSGs with a = O(log N) average vertices are decidable in polynomial time -- is published mathematics presented here without attribution, although the document attributes the same authors elsewhere (line 6652) for a different theorem.",
+   "evidence": "From memory, unchecked against the source: Gimbert and Horn, 'Simple Stochastic Games with Few Random Vertices are Easy to Solve' (FoSSaCS 2008), give an a!*poly(N) algorithm; Condon (1992) already observes tractability for a constant number of average vertices. The paper's 2^a poly(N) is genuinely better than a!*poly(N) (which is only quasi-polynomial at a = log N), and the section could say so in one sentence; as written sec:special claims 'a genuine positive result' with no prior art named. The same applies, more mildly, to thm:one-player (line 1949), which is the textbook LP for maximal reachability probabilities in an MDP (d'Epenoux, attributed at line 4120 for a different purpose but not here), and to rem:kacyclic's mu_k parameter, which is Auger-Coucheney-Strozecki's feedback-vertex parameterisation (in the document's own rediscovery list, but not cited here)."
+  },
+  {
+   "severity": "note",
+   "result_name": "line 1219, thm:few-avg proof",
+   "defect": "D := 2^{ceil(3a/2)} is taken from lem:denominator, while lem:denominator-sharp (line 993, proved 200 lines earlier) gives the strictly better 2^a, which every other result in the section (thm:few-escape line 1387, thm:escape-class line 1523) uses; the weaker constant then propagates into the iteration count j.",
+   "evidence": "'Put $D:=2^{\\lceil 3a/2\\rceil}$, which bounds the denominators of $\\val$ by \\Cref{lem:denominator} and \\Cref{thm:determinacy}' (line 1219) versus 'Two distinct coordinates of $\\val$ differ by at least $4^{-a}$ (\\Cref{lem:denominator-sharp})' (line 1387). Not an error, but it makes j larger than necessary by a factor 2^{a/2} and the section internally inconsistent."
+  },
+  {
+   "severity": "note",
+   "result_name": "lines 1502-1512, thm:escape-class",
+   "defect": "The count is stated as \"O((a + log2 kappa)/log2(1/lambda)) iterations of T\", but the algorithm it invokes (thm:few-escape) rounds and applies lem:certificate only at multiples of N, so the true count is max(N, that quantity); the bound as stated can be below N.",
+   "evidence": "thm:few-escape line 1373: 'Run the fixed-point iteration u_j := T^{jN}(1_{t_1}) ... after each block round the iterate'. On Z_D the two agree (the quantity is about 2.41 D + 1.4 against N = 2D+2), which is why prop:escape-family(i)'s 'O(N) iterations' is right; but for a family with a = o(N) and lambda bounded away from 1 the stated bound is smaller than one block."
+  },
+  {
+   "severity": "note",
+   "result_name": "lines 1289-1302, def:escape",
+   "defect": "ell(v) is defined only for v in C_infinity, yet omega and 'successor of strictly smaller level' quantify over both successors, one of which may lie outside C_infinity; the proof of prop:fv-family (line 2650) has to supply the missing convention in passing ('whose other successor is t_0, of infinite level').",
+   "evidence": "def:escape: 'let ... $\\ell(v):=\\min\\{j:v\\in C_j\\}$ be as in \\Cref{lem:descent}' and then 'omega(v) := 1 if v in Vavg has exactly one successor of strictly smaller level'. For v in C_infinity at least one successor has smaller level, so the definition is repairable by reading ell = +infinity off C_infinity, which is what my recomputation used and what reproduces d(F_k)=2, d(Z_D)=D and d(FV_2(n))=n+2."
+  },
+  {
+   "severity": "note",
+   "result_name": "lines 1329-1362, lem:certificate",
+   "defect": "sigma_x is not uniquely determined (there may be several greedy successors of strictly smaller D-level, and 'any greedy successor' elsewhere), yet the biconditional is stated for 'the' sigma_x; the quantifier over the choices is left open.",
+   "evidence": "Both readings happen to be correct -- the proof of each direction uses no property of the choice -- so this is cosmetic. Verified: the certificate accepted val on 1200 random SSGs (824 of them not stopping) and rejected a differing greatest fixed point on all 507 instances where one existed (paper-audit-classes/randtest2.py)."
+  },
+  {
+   "severity": "note",
+   "result_name": "lines 1573-1592, lem:escape-rate; lines 1706-1712 and 1782-1784, prop:escape-family",
+   "defect": "Three asserted steps: (a) 'M_pi is substochastic, so rho(M_pi)=1 exactly when some nonempty U ... with row sum 1' is used without proof, although the identical Perron-Frobenius argument IS written out in thm:alphabet-rigid 60 lines later; (b) the sum sum_k (S^k 1)(v) is called 'the expected time the token survives ... when both players play to survive', which interchanges sup_pi and sum_k; (c) prop:escape-family's proof disposes of items (ii),(v),(vi) as 'counts' and (iii) as 'a computation', with no numbers given in the paper.",
+   "evidence": "For (c) I recomputed all of them exactly (paper-audit-classes/zd.py) and they are correct: N = 2D+2, a = D, |Vmax| = D-1, stopping, all non-sinks reachable from s_D, d(Z_D) = D for D = 3..8, values val(s_j) = 2^{D-j}/(2^D-1), val(M_j) = 2^{D-j+1}/(2^D-1), val(W) = 1/(2^D-1), common denominator 2^D - 1, and the certificate (3/4, x) with kappa = 3/2 valid for every D."
+  },
+  {
+   "severity": "note",
+   "result_name": "line 2590-2591, prop:fv-family; line 2570, prop:alphabet-four",
+   "defect": "Two small imprecisions: 'thm:few-denominator solves it in four sweeps for every n' counts only the successful grid D = 3, not the D = 1 and D = 2 grids that thm:few-denominator's loop runs first; and 'a single edge to a sink gives {0,1}' is under-specified (every non-sink has out-degree exactly two) and, read with def:alphabet's reachability convention, v -> (t1,t1) gives {1}, not {0,1}.",
+   "evidence": "Exact measurement on FV(n), n = 2..6: 4 productive sweeps at D = 3, 14 sweeps in total over D = 1,2,3 (paper-audit-classes/fv2.py). All other numbers in prop:fv-family are correct: N = 4n+2, a = 2n, stopping, val identically 1/3 on X_i,L_i and 2/3 on Y_i,M_i (brute-forced for n <= 4, fixed point + stopping for n <= 10), k = 4, D = 3; FV_2: N = 5n+2, a = 3n, chain values 1/3, k = 4, D = 3, d(FV_2(n)) = n+2 for n = 2,3,4,5; neither family is k-acyclic for any colour, and the Max-reachability digraph is one component of size n."
+  },
+  {
+   "severity": "note",
+   "result_name": "lines 2659-2683, rem:alphabet-equivalence",
+   "defect": "Two overreaches: the appeal to thm:alphabet-rigid ('the candidate is moreover pinned by k-2 midpoint equations') carries a stopping hypothesis that the surrounding equivalence statement, quantified over arbitrary SSGs, does not; and 'k is Theta(N) exactly where the problem is hard' is editorial -- neither direction of 'exactly' is established, and FV_2 in the same subsection has k = 4 and is easy.",
+   "evidence": "thm:alphabet-rigid (line 2382) begins 'Let G be stopping'; the equivalence at line 2661 is stated for SSG-Value with no hypothesis. The remark's own last clause rests on the measured equality k = 2 + log2 D, which I confirmed exactly on every family listed (L_n n=3,5,7; H_m and G_m m=2,3,4 and also 5,6; WD(3,2,5), WD(4,3,6), WD(3,3,7); CC(2,2), CC(3,3)) -- a measurement on nine families, not a theorem."
+  }
+ ],
+ "verdict": "NOT SOUND: two major defects survive, plus eleven minor ones and seven notes.\n\nTHE TWO MAJORS. (1) thm:alphabet-denominator is false as stated under def:alphabet's own reachable-subgame convention: on the one-vertex stopping SSG v in Vmax, v -> (t1,t1), v0 = v, the reachable alphabet is {1}, so k = 1, D = 1 and D <= 2^{k-2} = 1/2 fails; def:alphabet's own \"{0,1} subseteq Lambda(G), k(G) >= 2\" and thm:alphabet-rigid's \"lambda_1 = 0, lambda_k = 1\" fail on the same instance. Repair: Lambda(G) := {0,1} union {val(v) : v reachable}. (2) rem:few-avg-tight asserts its witness \"is not stopping\" -- it IS stopping (only trap empty by lem:trapchar; it carries the escape certificate (1/2,1), so lem:survival(c) in the same section forces stopping), and the remark's headline that the per-block factor 1-2^{-a} \"is attained factor for factor\" is contradicted by that same witness, on which the per-block factor is 1/8 against the permitted 1/2 and lem:descent(b)'s within-N escape probability is 7/8 against the claimed 2^{-a} = 1/2.\n\nWHAT I RECOMPUTED IN EXACT ARITHMETIC (all in /tmp/claude-1000/-data-ssg-proof/6e64b33d-520c-4c82-aa1b-ffb69ecfcb61/scratchpad/paper-audit-classes/, independent code, Fraction only; numpy floats used only for spectral radii, where the exact cycle-product check confirms the answer):\nCORRECT, every number: prop:fk-family (N = k+9, a = k+2 = N-7, non-stopping, val(v0) = 1/2 - 2^{-(k+1)}, d(F_k) = 2, for k = 2,3,4,5,6,8); prop:escape-family (N = 2D+2, a = D, |Vmax| = D-1, stopping, full reachability, the (3/4, x) certificate with kappa = 3/2, d(Z_D) = D, val(s_j) = 2^{D-j}/(2^D-1), val(M_j) = 2^{D-j+1}/(2^D-1), val(W) = 1/(2^D-1), denominator 2^D - 1, for D = 3..8; and Lambda(Z_D) = 2^{-1/2} exactly as the proof's composition predicts); rem:escape-rate (Lambda(WD) = 0.8846461771, 0.9496605444, 0.9767508186, 0.9889035576 at max(e,j) = 2,3,4,5; equality on (2,3,5),(3,2,5),(3,3,5) and on (2,4,6),(4,2,6),(3,4,6),(4,3,6); also independent of m; Lambda(G_m) = 1/(2u) with 2u-1 = u^m to 12 digits for m = 3..8, and 1-Lambda = 2^{-m}(1+o(1))); thm:alphabet-rigid's candidate-alphabet table 1,1,3,16,130,1494,22604 for k = 2..8 (exhaustive over 1, 1, 4, 36, 576, 14400, 518400 systems); prop:alphabet-four (the three k=4 sets are exactly the enumeration's output, and all five alphabets are realised); thm:alphabet-denominator's sharpness on L_n (k = n+2, D = 2^n, n = 1..7); rem:alphabet-compare's k = 2 + log2 D on all nine families listed, plus H_m a = 2m+1 D = 2^{m+1}, G_m a = 2m D = 2^{m+1}, GR(n) val(u_i) = i/(n+1) and D = k-1 = n+1; rem:alphabet-down (val = (1/3,0,2/3,2/3,2/3), stopping, upward returns val, downward halts at (0,0,0,0,1/3)); prop:kacyclic-strict (w* = (1/2,1/2,3/4,1/2), stopping, max-acyclic only); prop:fv-family (every count, both families, d(FV_2(n)) = n+2).\nALGORITHMS RE-IMPLEMENTED FROM THE STATEMENTS AND CROSS-CHECKED AGAINST BRUTE-FORCE wstar: thm:kacyclic via lem:cut + lem:residual on 600 random k-acyclic SSGs (335/303/311 by colour, 438 of them NOT stopping) -- 0 mismatches; lem:certificate on 1200 random SSGs (824 not stopping) -- accepted val 1200/1200, rejected a differing greatest fixed point 507/507; lem:descent(b) and lem:descent-refined by exact backward induction against every time-dependent Min strategy on 800 random SSGs -- 0 violations, and 0 violations of the consequences val > 0 implies val >= 2^{-d} and val - T^{jN}(1_{t1}) <= (1-2^{-d})^j for j = 1,2,3; thm:alphabet-iteration with Lambda = Lambda(G) and thm:few-denominator -- 0 violations on the same 1200.\nPROOFS RECONSTRUCTED STEP BY STEP with no error found: lem:descent, thm:few-avg (including the arithmetic of j and the threshold 1/2 - 1/(4D)), lem:descent-refined, lem:certificate, thm:few-escape, lem:survival(a)(b)(c), thm:escape-class, lem:escape-rate, lem:jump-acyclic, lem:det-game, thm:avg-acyclic, thm:player-free, thm:one-player, lem:successor-closed, lem:cut, thm:kacyclic, thm:alphabet-iteration, cor:grid-iteration, lem:alphabet-cover, thm:alphabet-rigid, cor:alphabet-chain, thm:alphabet-denominator, thm:few-denominator.\nNOT CHECKED: the quoted instance counts in the remarks (1130, 2862/2179, 2239, 3477, 3707 = 1020+1539+1148 drawn from 3681 of which 2856 non-stopping) are not reproducible from the text -- the arithmetic 1020+1539+1148 = 3707 is right, but \"3707 instances drawn from 3681 games\" is only consistent if a game may be k-acyclic for two colours, which the text does not say; the LP formulations of lem:residual(a),(b) were checked through equivalent exact solvers, not as literal linear programmes; and thm:subexp, thm:bounded-components and thm:vi-lower themselves are outside my range.\n\nPaste-ready LaTeX for the five things I proved is in /tmp/claude-1000/-data-ssg-proof/6e64b33d-520c-4c82-aa1b-ffb69ecfcb61/scratchpad/paper-audit-classes/findings.tex (labels audclass:tight-stopping, audclass:zd-rate, audclass:not-disjoint, audclass:alphabet-sinks, audclass:wedge-implication)."
+}

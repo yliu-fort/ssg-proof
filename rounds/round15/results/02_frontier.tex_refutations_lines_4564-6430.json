@@ -1,0 +1,122 @@
+{
+ "target": "frontier.tex refutations (lines 4564-6430)",
+ "sound": false,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "thm:window-barrier / rem:window-barrier / intro l.164-167 / summary l.10757-10759 (lines 5486, 5496-5499, 5586-5590)",
+   "defect": "The claim that the barrier covers every rule freeing a polynomially bounded number of average vertices is refuted by the document's own rho_{Vavg}, which is a k-window rule with k = a <= N-2 and halts in ONE round; the proof only supports a window bound fixed independently of the game, or k(n) = O(n^{1-eps}).",
+   "evidence": "thm:window-barrier l.5496: 'In particular no $k$-window rule with $k$ bounded by a polynomial in $N$ runs in polynomially many rounds unless the all-switches rule already does'; rem:window-barrier l.5586: 'no rule that solves exactly a number of average vertices bounded by \\emph{any} polynomial in $N$ can be the missing mechanism unless the all-switches rule already is'; intro l.165: 'nor, more generally, any rule that solves exactly a number of average vertices bounded by a polynomial'; summary l.10758: 'the whole hierarchy is covered for every polynomially bounded $k$'. def:freeze (l.5238) itself says 'rho_{Vavg} solves G outright' and rem:freeze (l.5378) 'rho_{Vavg}, which finishes in one round'. |B| = a <= N-2 is bounded by the polynomial N, so the quoted sentences assert that all-switches is polynomial. They are also contradicted three lines earlier in the same remark (l.5582-5586): 'the theorem says nothing about windows that are a constant fraction of Vavg, in particular nothing about rho_{Vavg} ... a proportional window is not blinded by this construction and we do not know whether it can be.' The correct fixed-point condition for a window bound k(n) is K >= k(N + 4(K+1)(N-2)), which has a polynomial-size solution K = Theta(N^{(1-eps)/eps}) iff k(n) = O(n^{1-eps}) and has none for k(n) = Omega(n). The theorem's first two sentences ARE correct and I verified them computationally: 260/260 windows with |B| <= k on N_k(G) of random stopping games returned exactly sigma[S_sigma] (/tmp/.../paper-audit-refutations/t_window.py)."
+  },
+  {
+   "severity": "major",
+   "result_name": "rem:bsi-br (lines 5884-5891)",
+   "defect": "The stated exhaustive count for R_BR on G# is wrong: the worst case is 5 rounds, not 4, and the stated longest switch-set sequence is not even a possible R_BR run.",
+   "evidence": "Recomputed in exact rational arithmetic from the harmonic normal form PRINTED in prop:auso-seven (l.3955-3966), which my code reproduces faithfully: it returns the paper's own outmap [0,1,3,6,7,4,13,10,14,15,9,12,11,8,5,2] with zero ties, and the paper's own BA-walk lengths 0,1,2,3,4,2,6,4,7,7,4,5,5,3,6,4 (t_gsharp2.py). Over all 16 starts and every Min best response at every round, in BOTH veto variants, worst-case R_BR = 5, attained from sigma = (0,1,1,1) with switch sets {c1,c3},{c4},{c2,c3},{c3},{c1} (t_gsharp3.py prints val_sigma, val^tau and C_max at every round). The paper's third round is impossible: at sigma = (1,1,0,0) the Min best response is UNIQUE (tau = (1,0), verified: it is the only tau with val_{sigma,tau} = val_sigma) and it endorses both c_2 and c_3, so C_max = {c2,c3}, never {c2}. The 5-round run is also produced by the canonical greedy best response, so it is not an artefact of exotic tie-breaking. (A second, independent model built from the 97-vertex game file /tmp/claude-1000/-data-ssg-proof/dc099d6a-.../auso-pivot/final_game.json, whose normal form is byte-for-byte the printed one, gives the same 5.) The remark's substantive points survive: R_BR (5) still beats all-switches (7), and c_1 is still switched twice - indeed c_3 is switched three times."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:ladder (lines 4677-4678)",
+   "defect": "'the single value val_b(v_1) does not increase monotonically at all' is false: val_b(v_1) is nondecreasing at every step of the least-index run; it is merely not strictly increasing.",
+   "evidence": "Exact computation for n = 1..12 (lad.py, t_ladder.py, t_ladder2.py): monotone nondecreasing in every case. n = 4 gives 0,1/8,1/8,1/4,1/4,3/8,3/8,1/2,1/2,5/8,5/8,3/4,3/4,7/8,7/8,1 (9 distinct values in 16 strategies); n = 3 gives 0,1/4,1/4,1/2,1/2,3/4,3/4,1; the all-switches runs are also nondecreasing (n=5: 0,11/16,13/16,15/16,15/16,1). The contrast the remark wants to draw is 'the vector rises strictly, the scalar only weakly', not non-monotonicity."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:a-presentation (lines 5179-5197)",
+   "defect": "The conclusion 'Iterating produces, for every M, a stopping SSG carrying no redex at all' is false without the hypothesis - present in lem:normalform(v) and dropped here - that G itself carries no redex.",
+   "evidence": "Counterexample verified exactly (t_apres.py): G with non-sinks 0,1,2,3 all average, 0->(t0,t1), 1->(t0,t1), 2->(3,t1), 3->(t0,t1). Every non-sink has a sink successor so the only trap is empty (stopping), and 2->3 is an edge between two average vertices, so the hypothesis as stated holds. But {0,1} is a merge redex of lem:splice and neither 0 nor 1 has an average successor, so no application of the gadget touches them: after 1, 2, 3 rounds a = 6, 16, 66 and the merge redexes (0,1), (0,3), (1,3) are still present. lem:normalform(v) states the conditional form correctly ('N'(G) carries no redex at all if G carries none'); prop:a-presentation drops the antecedent."
+  },
+  {
+   "severity": "minor",
+   "result_name": "thm:normalform-barrier (lines 5084-5091)",
+   "defect": "The transfer uses monotonicity of p (from |V(N'(G))| <= 5N to p(5N)) but the hypothesis 'p nondecreasing' is not stated; thm:window-barrier states it.",
+   "evidence": "l.5085-5088: 'If R is residue-blind and halts within p(|V(G)|) rounds ... then the all-switches rule halts within p(5N) rounds'. lem:normalform(i) gives only |V(N'(G))| <= 5N, so p(|V(N'(G))|) <= p(5N) needs p nondecreasing. thm:window-barrier l.5494 correctly says 'with $p$ nondecreasing'."
+  },
+  {
+   "severity": "minor",
+   "result_name": "lem:kblind(i), proof (line 5439)",
+   "defect": "The sentence 'Every old average vertex has such a successor, namely either spine head of its own two edges' is false - a spine head g^{z,u}_1 has TWO predecessors, z and h^{z,u}_1 - so the merge-redex argument as written does not apply to old average vertices; the conclusion nevertheless holds.",
+   "evidence": "In N_k(G), h^{z,u}_1 -> (g^{z,u}_2, g^{z,u}_1), so g^{z,u}_1 is not uniquely preceded by z. Verified: for G = (avg 0 ->(1,2), max 1, avg 2), k = 0 and k = 1 both give predecessors of g_1 equal to [z, h_1] (t_window.py / the predecessor dump). The conclusion is repairable: h_1's multiset {g_2, g_1} equals z's multiset {g_1^{z,u_0}, g_1^{z,u_1}} only if g_2^{z,u_0} = g_1^{z,u_1}, which is impossible; and I verified the conclusion on 80 random N_k(G) (k = 0, 1) - all redex-free, all stopping, all with |V(H)| = N + 4(k+1)(N-2) exactly."
+  },
+  {
+   "severity": "minor",
+   "result_name": "cor:bsi-levels (lines 5684-5685)",
+   "defect": "'thm:impedance and cor:no-height, both about scalar measures of bounded range or height' misdescribes cor:no-height, which explicitly assumes nothing numeric.",
+   "evidence": "cor:no-height (l.4751-4762) says 'Nothing is assumed about computability, and mu_G may depend on G arbitrarily' and its own remark (l.4784) 'not even that Lambda_G be a set of numbers'. Its measures are poset-valued and its height bound is 2^n, so being lexicographic is not why it misses Phi = (M,|Z|). The correct reason is the one rem:bsi-br gives at l.5905: 'cor:no-height does not either, its measures being required to increase along every improving switch' - Phi is attached to a rule and to pairs (sigma,tau), not to Max strategies."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:bsi (lines 5940-5942)",
+   "defect": "'the veto in def:bsi can leave S_sigma nonempty and still halt --- and the theorem says that when it does, it is right to' contradicts thm:bsi-nostall, which concludes S_sigma = S^tau = empty at every halt on a stopping game.",
+   "evidence": "thm:bsi-nostall (l.5619-5624): 'If C_max = C_min = emptyset then L = U = w*; in particular sigma and tau are both optimal and S_sigma = S^tau = emptyset.' def:bsi is defined only for stopping G, so the a-priori possibility the remark describes never occurs there; it occurs exactly on the non-stopping instance of prop:bsi-nonstopping (S_sigma = {5} at a halt), which I verified exactly (t_bsins.py). As written the sentence asserts that BSI halts with S_sigma nonempty and that the theorem endorses this."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:rules-fail (lines 6250-6252)",
+   "defect": "Six of the seven rules are refuted by assertion - 'explicit stopping games found by exhaustive search over the same family; each fails on a positive fraction of instances' - with no instance and no count, violating the manuscript's own evidentiary standard; and for one of the six the 'same family' claim is not reproducible.",
+   "evidence": "Only the lookahead witness is exhibited (I confirmed it exactly: val_sigma = (1,0,1/2,0,0), Phi(val_{sigma[u_1]}) = 7/2, Phi(val_{sigma[u_4]}) = 4, u_4 not wrong). On that very instance all four numeric rules TIE (gap 1 at both u_1 and u_4; val(other) = 1 at both; val(current) = 0 at both), so they refute nothing without an adversarial tie-break. In the paper's own family (five non-sinks, kinds (max,max,avg,max,max)), 34079 sampled stopping games x all 16 Max strategies gave ZERO instances in which 'smallest val_sigma(sigma(v))' uniquely picks a non-wrong vertex (73078 under some tie-break) - t_family2.py/fam2.log. The claim is nevertheless TRUE: I supply explicit witnesses for all six, verified in exact arithmetic (t_witness.py, corrections.tex item (E)) - e.g. for 'smallest val_sigma(sigma(v))': Vmax = {0,2}, Vavg = {1,3,4}, 0->(3,1), 1->(t1,0), 2->(3,4), 3->(1,t0), 4->(0,t0), sigma = (0->3, 2->4), val_sigma = (1/3,2/3,1/6,1/3,1/6), w* = (1,1,1/2,1/2,1/2), S_sigma = {0,2}, only 0 wrong, rule picks 2."
+  },
+  {
+   "severity": "minor",
+   "result_name": "def:bsi (l.5601-5603), cor:bsi-levels (l.5691-5693), cor:bsi-correct (l.5802-5806)",
+   "defect": "lem:duality is cited for a strategy-frozen identity it does not state: it states val_{Gbar} = 1 - val_G off the sinks, not val_{Gbar,sigma} = 1 - val^sigma_G, which is what 'computable by thm:eval-stopfree applied to Gbar', 'carrying the result back by lem:duality gives U' <= U' and 'thm:switch-count applied to ... Gbar' all need.",
+   "evidence": "lem:duality (l.6461-6472) states only 'val_{Gbar}(v) = 1 - val_G(v) for every non-sink v'. Its PROOF establishes the profile identity (the Gbar-payoff of the exchanged pair is 1 - v_{sigma,tau}), from which the frozen version follows; so the gap is a citation gap, not a mathematical one. The frozen-strategy duality should be stated, since three results in the range depend on it."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:freeze-sound (lines 5248-5300) and def:freeze (line 5238)",
+   "defect": "cor:comparison and the 'optimal iff attains the max at every Max vertex' characterisation (thm:opt-subcube) are applied to Ghat_B(x), a game with many terminals carrying arbitrary payoffs; neither is stated in that generality, and lem:gen-comparison covers only two terminals with payoffs alpha < beta.",
+   "evidence": "prop:freeze-sound l.5262-5268 argues correctly that lem:absorption and thm:contraction transfer verbatim, hence unique fixed points and orbit convergence, which is exactly what cor:comparison's proof needs - so the comparison step is repairable in place. But def:freeze's tie-break ('an optimal Max strategy ... chosen to agree with sigma wherever sigma already attains the optimum') and the step 'at controlled vertices ... one has equality' both use the multi-terminal analogue of thm:opt-subcube, which is nowhere stated. thm:window-barrier's final step depends on it. All three displayed relations, and the iff, were verified on 2873 (game, sigma, B) triples with |B| <= 2 over 400 random stopping games (t_stress.py, 0 violations)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "lem:readonce (lines 6328-6340)",
+   "defect": "'exactly k Min vertices m_1,...,m_k' is false when some index is unused, which the hypothesis 'each index i in {1,...,k} used at most once' permits.",
+   "evidence": "l.6330 'each index $i\\in\\{1,\\dots,k\\}$ used at most once' versus l.6333 'exactly $k$ Min vertices $m_1,\\dots,m_k$'. If F = OR(0,1) then G_F has no Min vertex at all. Harmless (val^tau(r) is then constant in the missing coordinates) but it is a quantifier slip in the only lemma prop:no-submodular's generality claim rests on."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:window-barrier (lines 5578-5581)",
+   "defect": "'among 6152 spine-sized windows on the normalisations N_1(G), N_2(G) of 90 random stopping games, 28 returned a strategy different from tilde-sigma[S]' is unreproducible: no seed, no definition of 'spine-sized window' (size k+1, or an actual spine?), and no statement of what was varied.",
+   "evidence": "With B a random size-(k+1) subset of Vavg(N_k(G)): 0 of 6192 windows differed (t_spine.py). With B an actual spine {g_1,...,g_m} of an edge, which is what the remark's own argument requires: 1 of 720 differed (t_spine2.py; example: G = (max,avg,max,max) with succ [(5,1),(4,0),(0,1),(2,1)], k=1, spine of edge (3, succ0)). So the phenomenon is real and the order of magnitude (1 in ~220 vs my 1 in 720) is compatible, but the reported number cannot be checked. The manuscript's standing rule is to say what was varied."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:bsi (lines 5943-5945)",
+   "defect": "'thm:normalform-barrier and thm:window-barrier cover rules that read only val_sigma' misdescribes def:residue-blind and def:window, which constrain a rule's BEHAVIOUR on padded games and say nothing about what it reads.",
+   "evidence": "def:residue-blind (l.5077-5082) is 'R(G,sigma) = sigma[S_sigma] whenever no controlled vertex has a controlled successor' - a condition on outputs, not on inputs. rem:bsi-br (l.5898-5905) gets this right and gives the correct argument for R_BR, which reads val^tau and IS a rule of the form R(G,sigma); I confirmed R_BR is not residue-blind on G# itself, which is bipartite (no controlled vertex has a controlled successor - checked on the game file) and where round 1 has S_sigma = {c_3,c_4} but C_max = {c_4}."
+  },
+  {
+   "severity": "note",
+   "result_name": "thm:cyclic-uso (line 5986) and cor:no-potential (line 6044)",
+   "defect": "No attribution. From memory, unchecked against the source: that the SSG-induced orientation of the COMBINED two-player strategy cube is a unique-sink orientation which need not be acyclic is part of the P-matrix-LCP/USO picture the document already credits elsewhere (Stickney-Watson, Gaertner-Ruest, Bjoerklund-Sandberg-Vorobyov), and the failure of simultaneous two-player switching to converge monotonically goes back to Condon's 1993 analysis of SSG algorithms.",
+   "evidence": "The theorem and corollary are stated with no source, in a document that elsewhere attributes carefully (thm:ladder to Melekopoglou-Condon, def:bsi to van Dijk-Loho-Maat). The hedge at l.5982 ('We make no claim here about any linear-complementarity formulation') disclaims the LCP connection but does not attribute the phenomenon. The mathematics is correct: I verified all eight value vectors, all eight out-sets, unique sinks in all 27 faces, and the 6-cycle with flip sequence a,m,b,a,m,b (t_cyc.py), and separately built the promised depth-4 realisation as a genuine 95-vertex stopping SSG (3 controlled, 90 average) that reproduces every number (t_cyc2.py)."
+  },
+  {
+   "severity": "note",
+   "result_name": "thm:vi-lower (line 6073)",
+   "defect": "No attribution. From memory, unchecked: exponential slowness of value iteration on SSGs whose value margin at v_0 is exponentially small is in Condon's 1992/1993 papers, and the slow convergence of an absorbing chain with absorption probability 2^{1-m} per excursion is textbook.",
+   "evidence": "The theorem and its remark carry no source, though Condon is credited elsewhere for the problem and the stopping transformation. All numbers verified exactly: val(c_1) = 1/2 + 2^{-(m+1)} and min_i val(c_i) = 2^{-m} for m = 3..12, and the iteration counts 13, 37, 99, 248, 595, 1385, 3149, 7041, 15545, 33985 exactly (t_vi.py, vi12.log)."
+  },
+  {
+   "severity": "note",
+   "result_name": "remark after thm:vi-lower (lines 6136-6140)",
+   "defect": "'growing by a factor close to 2.2 per increment of m' describes only the tail; the ratios decrease from 2.85 and must tend to 2.",
+   "evidence": "Recomputed ratios of the paper's own (correct) sequence: 2.846, 2.676, 2.505, 2.399, 2.328, 2.273, 2.236, 2.208, 2.186."
+  },
+  {
+   "severity": "note",
+   "result_name": "def:ladder (line 4581) and cor:no-height (line 4757)",
+   "defect": "Two harmless imprecisions: a sink is reached within n steps, not n+1; and 'height at least 2^n' uses the convention height = number of elements of the longest chain (the usual convention gives 2^n - 1).",
+   "evidence": "From v_1 the longest play is v_1 -> ... -> v_n -> t_0, of length n. The least-index run visits 2^n strategies, so the chain in Lambda_{L_n} has 2^n elements and 2^n - 1 covering steps. Neither affects any conclusion."
+  },
+  {
+   "severity": "note",
+   "result_name": "prop:auso-seven (line 3943; OUTSIDE the assigned range, flagged because rem:bsi-br depends on it)",
+   "defect": "The stated vertex count of G# (99: four Max, two Min, ninety-one average, two sinks) does not match the repository artefact, which has 97 vertices (4 Max, 2 Min, 89 average) and exactly the harmonic normal form printed in the proposition.",
+   "evidence": "/tmp/claude-1000/-data-ssg-proof/dc099d6a-f89a-421b-bbe2-2a87a9e19322/scratchpad/auso-pivot/final_game.json has 95 non-sinks (4 max, 2 min, 89 avg); its first-passage rows over (c_1..c_6,t_1) as multiples of 1/128 are exactly the twelve rows displayed in prop:auso-seven (harm.py + t_gsharp.py). root16/t_seven.py's own docstring calls it 'round 13's 97-vertex witness'. Either the paper describes a different 91-average realisation, or the count 99 (also used at l.3939 in rem:auso-size) is off by two. Everything derived from the normal form is unaffected."
+  }
+ ],
+ "verdict": "NOT SOUND: two major defects survive. All code is in /tmp/claude-1000/-data-ssg-proof/6e64b33d-520c-4c82-aa1b-ffb69ecfcb61/scratchpad/paper-audit-refutations/ (independent core aud.py; harmonic reduction harm.py; paste-ready LaTeX in corrections.tex).\n\nTHE TWO MAJORS. (1) The window barrier is overstated at four places, including the introduction (l.165) and the summary (l.10758): \"any rule that solves exactly a number of average vertices bounded by a polynomial\" is blinded. The document's own rho_{Vavg} (def:freeze) is such a rule with k = a <= N-2 and halts in ONE round, so the sentence asserts that all-switches is polynomial; rem:window-barrier's own middle paragraph concedes exactly this and then contradicts itself two sentences later. The theorem's proof is correct for a window bound k fixed independently of the game; extending it to k = k(n) needs K >= k(N + 4(K+1)(N-2)), which has a polynomial-size solution iff k(n) = O(n^{1-eps}). Repair in corrections.tex (A). (2) rem:bsi-br's exhaustive count for R_BR on G# is wrong: 5 rounds, not 4, from sigma = (0,1,1,1) with switch sets {c1,c3},{c4},{c2,c3},{c3},{c1}; the paper's third set {c2} is impossible because the Min best response at sigma = (1,1,0,0) is unique and endorses both c2 and c3. Recomputed from the harmonic normal form the paper itself prints, which my code reproduces together with the paper's outmap and all sixteen BA-walk lengths. Repair in corrections.tex (B). Neither major breaks a proof; both are false statements presented as verified.\n\nWHAT I RECOMPUTED AND CONFIRMED (exact rational arithmetic, own code). thm:ladder: 2^n - 1 for least-index AND smallest-gap, 2^n distinct strategies, all-switches exactly n, n = 1..12 (1,3,7,...,4095). rem:ladder: Opt = {0...01}, w*(v_1) = 1, improving distance 1 from 0^n. prop:residue-ladder: exactly one round, n = 1..7. prop:freeze-escapes: the whole instance (stopping, redex-free, controlled vertices independent, val_sigma == 0, S_sigma = {3}, rho_{{4}} switches 2 and 3, w* == 1). rem:parameter-presentation: a = 3 -> 9 -> 39 -> 189 with every value unchanged and no redex at any stage. rem:freeze: on N'(L_n), n = 2..6, all-switches = residue = n and best-single-c = n-1. lem:kblind(i): |V(H)| = N + 4(k+1)(N-2), redex-free and stopping on 80 random N_k(G). thm:window-barrier's core: 260/260 windows with |B| <= k returned exactly sigma[S_sigma]. prop:bsi-twice: the table reproduced entry for entry, including (M,|Z|) = (1,3),(1/2,1),(0,6). prop:bsi-nonstopping: all three value vectors, greatest trap {1,5}, C_max = C_min = empty in both variants. rem:bsi-br on L_n: 1,2,2,3,3,3,3,4 = floor(log2 n)+1 for n = 1..8, both variants, exhaustive over all 2^n starts. thm:cyclic-uso: all eight value vectors, all out-sets, unique sinks in all 27 faces, the 6-cycle with flips a,m,b,a,m,b - and I built the promised depth-4 realisation as a genuine 95-vertex stopping SSG that reproduces everything. thm:vi-lower: (i),(ii) exactly for m = 3..12 and the full iteration table 13,37,99,248,595,1385,3149,7041,15545,33985 (note: this is with the sink coordinates pinned in the initial vector; starting from the literal all-zero vector every count is one larger). thm:hamming-refuted, prop:needle (k = 2,3,5), prop:rules-fail's lookahead witness (Phi = 7/2 vs 4). prop:no-submodular: both games, all eight orientations, the codim-2 claim (exactly two of four orientations submodular), and the nine-vertex game's w* = (0,0,0,1/2,1,1/2,0). Plus a stress test over 400 random stopping games and every Max strategy: lem:switch, thm:residue-correct(a)(b)(c), prop:freeze-sound (all B with |B| <= 2), thm:bsi-nostall, cor:bsi-levels' lexicographic decrease, prop:bsi-oneplayer's |Vmax| bound, prop:bsi-br's C_max nonempty for EVERY best response, and lem:normalform(ii)(iii)(v) - about 11000 checks, zero violations.\n\nPROOFS I RECONSTRUCTED AND FOUND CORRECT: thm:ladder (the F_2-triangularity and the R -> R+1 argument are airtight), thm:switch-count (both grids), cor:no-height, prop:serialiser, lem:trapchar, thm:residue-correct, lem:normalform, thm:normalform-barrier (modulo the missing monotonicity of p), lem:splice, thm:window-barrier, thm:bsi-nostall (both variants, and the Vmin case which the text leaves as \"dual\" - I checked it), lem:bsi-pairloc, cor:bsi-levels, prop:bsi-oneplayer, cor:bsi-correct, prop:bsi-br, thm:cyclic-uso, cor:no-potential, thm:vi-lower, thm:hamming-refuted, cor:hamming, prop:needle, lem:readonce, prop:no-submodular. All 72 \\Cref targets in the range resolve.\n\nWHAT I DID NOT CHECK: the 6152/28 sampling experiment of rem:window-barrier (unreproducible as specified); the two-player disjoint-union sample of rem:bsi-br (the paper labels it a sample, correctly); statements outside the range beyond reading them for what the range's citations need (thm:impedance, prop:locality, thm:all-switches-refuted, prop:allswitch-overshoot, thm:compare-equivalence); and prop:auso-seven itself, though I reproduced its outmap and BA lengths from its printed normal form as a by-product and noticed the 99-vs-97 vertex-count discrepancy.\n\nON OVERSTATEMENT, beyond the window barrier: thm:normalform-barrier's class def:residue-blind is defined as \"coincides with all-switches on games where the controlled vertices are independent\", so given lem:normalform the barrier is close to a tautology. The manuscript is explicit about this (\"This is why the barrier is stated for the whole class ... rather than for one algorithm\", and rem:barrier-scope's \"What is not claimed is a lower bound\"), so I record it as a note rather than a defect - but a reader of the introduction's barrier list should know that this item covers the residue rule and rho_empty and nothing else that has ever been proposed."
+}

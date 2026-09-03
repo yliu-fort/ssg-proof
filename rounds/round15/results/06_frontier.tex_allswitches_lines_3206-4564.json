@@ -1,0 +1,194 @@
+{
+ "target": "frontier.tex allswitches (lines 3206-4564)",
+ "sound": false,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "prop:auso-seven (line 3943-3945; propagated to the abstract, line 184, and rem:auso-size, line 3939)",
+   "defect": "The stated size \"99 vertices --- four Max, two Min, ninety-one average\" does not belong to the game whose harmonic normal form the proposition prints: that table is the first-passage law of a 97-vertex game (4 Max, 2 Min, 89 average).",
+   "evidence": "I recomputed the harmonic normal form of every candidate G-sharp in the round-13 directory (gsharp99.py, nfcheck.py). final_game.json and game110.json (97 vertices, 4 max/2 min/89 avg) reproduce the printed table in all 84 entries EXACTLY (order c1..c6, no action swap). ap_h7_game.json, the only 99-vertex candidate (4 max/2 min/91 avg), differs from the printed table in 18 of the 84 entries after optimising over all permutations of Max, of Min and all action swaps (best agreement 66/84); e.g. its c1 action 0 row is (7,3,87,1,0,2,4) against the printed (6,3,88,1,0,0,4), and its c5 rows are (0,0,127,0,0,0,0),(0,0,0,0,0,0,71) against (0,0,0,0,13,0,64),(0,0,125,0,0,1,1). The 97-vertex game was verified FROM THE GAME with my own code: stopping (empty greatest trap), 0 ties in 64 incidences, outmap (0,1,3,6,7,4,13,10,14,15,9,12,11,8,5,2), heights (0,1,2,3,4,2,6,4,7,7,4,5,5,3,6,4), non-Holt-Klee. Round 13's own t_seven.py calls it \"round 13's 97-vertex witness\". The mathematics survives (a smaller witness), but the proposition's two data describe two different games and its proof claims both were computed \"on the game itself\"."
+  },
+  {
+   "severity": "major",
+   "result_name": "rem:blowup-measured (line 4496-4503)",
+   "defect": "\"For four of the eight height-2 orientations of the 2-cube, B is one Holt-Klee orientation class ... the other four seeds give a B that is not Holt-Klee\" is false: all eight seeds give both classes, the split being governed by which maximal-height vertex u is chosen, not by the seed.",
+   "evidence": "twocube2.py: each of the eight height-2 USOs of the 2-cube has exactly TWO vertices of maximal height. For every seed, the choice with z = o xor u a single coordinate yields the Holt-Klee class with canonical outmap (0,1,3,2,7,6,4,13,15,14,12,9,11,10,8,5), and the choice with z = 1-bar yields the non-Holt-Klee class (0,1,3,2,6,7,13,4,14,15,9,12,10,11,5,8). Example: seed [0,1,3,2] with u=2 gives HK, with u=3 gives non-HK; seed [1,0,2,3] with u=3 gives HK, with u=2 gives non-HK. The paper's four/four split is an artefact of the tie-break `start = max(range(n), key=lambda v: h[v])` in blowz.py, which the author's b2cube.py inherits. Root cause: thm:blowup's B(s) is a function of the PAIR (s,u), not of s."
+  },
+  {
+   "severity": "major",
+   "result_name": "rem:blowup-measured (line 4504-4506)",
+   "defect": "\"On the layer (0,0) of the realised orientation each of the two inner vertices compares its options as it would if the other were flipped --- the translation is by 1-bar there\" is false: no presentation of the realised class as a blow-up of a 2-cube has z = 1-bar.",
+   "evidence": "bstruct.py: I computed the full 384-element orbit of the realised outmap (5,8,10,11,9,12,14,15,13,4,6,7,2,3,1,0), taken from AP_m4_k0_den256_s200_game.json by my own exact evaluation of the game, and matched it against B(s,u,z) for every 2-cube USO s, every maximal u and every z in {0,1,2,3}. The class is hit exactly for z = 1 and z = 2 (single coordinates, 8 seed/u pairs each) and never for z = 3 = 1-bar; z = 1-bar hits only the OTHER class, which is non-Holt-Klee and therefore (prop:oneplayer-lp) unrealisable by any nondegenerate one-player game. Consistency note for the audit question posed: the remark is consistent with B(2-cube) being HK and realised only after this repair, and the repaired statement is STRONGER, since a single-coordinate translation is exactly the configuration rem:blowup-realise calls the obstacle."
+  },
+  {
+   "severity": "major",
+   "result_name": "rem:blowup-realise (line 4529-4534)",
+   "defect": "The flip counts 3,4,4,4,7,8,8,8 are not \"measured over all lines through the run's (val(v_1),val(v_2)) path\": they are maxima over ALL pairs of vertices of L_n, and at the pair (v_1,v_2) the counts are 3,4,3,4,5,8,3,4.",
+   "evidence": "The author's own leap.py prints \"max readable flips over vertex pairs\" and reports the maximising pair: (0,1)=(v1,v2) only for n=3,4,6,8; (0,2)=(v1,v3) for n=5,9; (0,7)=(v1,w1) for n=7; (0,3)=(v1,v4) for n=10. I reimplemented the measurement independently with an EXACT enumeration of all halfplane dichotomies (all critical directions of the dual arrangement plus all threshold gaps, rather than leap.py's heuristic candidate lines) in ladderflip.py: max over all pairs = 3,4,4,4,7,8,8,8 (same pairs), while at (v_1,v_2) it is 3,4,3,4,5,8,3,4 for n=3..10."
+  },
+  {
+   "severity": "major",
+   "result_name": "rem:blowup-realise (line 4568-4578)",
+   "defect": "The closing \"dichotomy ... which is the pivot of rem:auso-size\" is not one: neither implication holds, and the first drops precisely the size clause that prop:auso-size exists to impose.",
+   "evidence": "Horn 1, \"the weight-swapping gadget exists, and then an SSG-realisable family of exponential bottom-antipodal height exists\", omits polynomial size: prop:auso-size states that an AUSO of height 2^{Theta(m)} yields a superpolynomial all-switches bound ONLY if realised on N = m^{O(1)} vertices, and a gadget costing N -> N^c per level gives N_0^{c^k} at dimension m = 2k, which is superpolynomial in m. Horn 2, \"there is a theorem that the sign patterns of a translated orientation cannot be produced ..., and then the improvement orientations of stopping games form a class ... on which the bottom-antipodal walk is subexponential\", is a non sequitur: it constrains only orientations built by this one rule, and lem:hstar-super (same document, line 4279) already builds tall AUSOs with no translated layer at all. Moreover the \"anti-value\" argument the horns rest on is heuristic and asserted -- flipping j changes the whole value vector, so val(j^0)+val(j^1)-val(j) is not what an inner game would read -- and the same remark concedes that rem:blowup-measured's realised instance performs the operation anyway."
+  },
+  {
+   "severity": "major",
+   "result_name": "prop:allsw-auso (line 3592) and thm:flat-resolution (line 3751)",
+   "defect": "Both proofs establish \"every face has exactly one sink\" and then conclude that s (resp. s') is the outmap of a unique sink orientation in the sense of def:improvement-uso, which is the Szabo-Welzl outmap condition; the equivalence of the two is used, is not proved, and is not attributed.",
+   "evidence": "def:improvement-uso (line 3584) defines \"unique sink orientation\" ONLY by (s(u) xor s(v)) cap (u xor v) != empty; grep over the whole file shows no lemma relating that to face sinks. prop:allsw-auso's proof: \"a point of the face with no strictly switchable free coordinate is exactly a sink of that face ..., and thm:opt-subcube makes it unique\" -- then the conclusion is the outmap condition. thm:flat-resolution's \"Unique sink\" paragraph does the same for s'. The direction needed (face sinks unique => outmap condition) is the nontrivial one; the converse is one line. It is Szabo-Welzl (Unique sink orientations of cubes, FOCS 2001 -- from memory, unchecked against the source). I verified the equivalence computationally (equiv.py): over all 4096 orientations of the 3-cube the two predicates agree exactly (744 each, no discrepancy either way), and over 400000 random orientations of the 4-cube likewise. So the statement is true and standard; the defect is the missing lemma and the missing attribution, and cor:ceiling-general -- cited in the abstract, line 175 -- rests on it."
+  },
+  {
+   "severity": "minor",
+   "result_name": "def:maxreach (line 3421-3426), thm:bounded-components (line 3465-3467), rem:allsw-laws (line 3568-3570)",
+   "defect": "\"Two distinct Max vertices lie in the same strongly connected component of H(G) exactly when some cycle of G passes through both\" is false in the forward direction, so the gloss of K_1 as \"those in which no cycle passes through two distinct Max vertices\" describes a strictly larger class than the one the theorem bounds.",
+   "evidence": "Counterexample verified in exact arithmetic: Vmax = {u,v}, Vavg = {c,d,a}, edges u->(c,t0), v->(d,t0), c->(a,t0), d->(a,t0), a->(u,v). Only trap is empty, so stopping (lem:trapchar). H(G) has both u->v (path u,c,a,v) and v->u (path v,d,a,u), so {u,v} is one SCC of size 2 and G is NOT in K_1; but the only cycles of G are (u,c,a) and (v,d,a), and no cycle passes through both u and v. Correct gloss: \"no two distinct Max vertices are mutually reachable\". The same slip makes rem:allsw-laws's \"Omega(log) many Max vertices pairwise on common cycles\" wrong; it should be \"pairwise mutually reachable\"."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:closed-now-or-never, the definition preceding it (lines 3255-3262)",
+   "defect": "As written, \"every vertex reachable from pi(W) by a path whose interior avoids W is an average vertex or a sink\" forbids any member of W from being reachable from pi(W) at all, so the paper's own canonical example is not a closed configuration and the very next sentence contradicts the definition.",
+   "evidence": "A path from pi(v) ending at w in W has interior avoiding W, so the condition demands that w be average or a sink; but W is a subset of Vmax. The length-zero path even forbids pi(v) in W. Yet two sentences later: \"the play started in W is then a Markov chain on W, the sinks and those average vertices\", and the canonical example is \"a cycle of Max vertices each of whose pi-options reaches the next through average vertices\". Repair: \"is an average vertex, a member of W, or a sink\". I reconstructed prop:closed-now-or-never's proof line by line under that reading and it is correct (in particular part (b)'s chain lambda_W(v) = val_{sigma_{t''}}(v) = val_{sigma_{t''}}(pi(v)) >= val_{sigma_{t''-1}}(pi(v)) > val_{sigma_{t''-1}}(v) >= lambda_W(v) uses thm:lfp-general(a), lem:switch, strict switchability and part (a) at t''-1, all legitimately, and the nonemptiness of W_t is used exactly where it is needed)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "cor:law-u (line 3807-3816)",
+   "defect": "\"Consequently the switched sets S_0,...,S_L are pairwise distinct, which is strictly stronger than cor:antichain\" attaches \"strictly stronger\" to the wrong clause: pairwise distinctness does not imply cor:antichain.",
+   "evidence": "S_t = {1}, S_{t+1} = {1,2} are distinct yet S_t is a subset of S_{t+1}, violating cor:antichain. What IS strictly stronger is the display itself: at t' = t+1 it reads (S_t triangle S_{t+1}) cap S_t != empty, i.e. S_t minus S_{t+1} != empty, which is cor:antichain, and it additionally covers t = L-1 (with S_L = empty), which cor:antichain does not."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:auso-size (line 3911-3913)",
+   "defect": "\"A bottom-antipodal trace visits distinct vertices, so h(s) <= 2^m for every orientation of the m-cube\" is wrong twice: distinctness gives 2^m - 1, and for a general orientation the walk need not terminate, so h(s) is not defined.",
+   "evidence": "The 3-cube outmap (3,0,0,3,4,5,6,7) is a legitimate orientation (each edge oriented at exactly one end) whose bottom-antipodal walk from 0 is 0 -> 3 -> 0 -> ... (misc.py; ba_heights returns None). The sentence is correct for acyclic unique sink orientations, which is all it is used for."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:oneplayer-lp (line 4006-4050)",
+   "defect": "The proof treats X(G) as a polytope and applies Holt-Klee's theorem without establishing that X(G) is bounded, and the displayed identity obj(y^sigma) = sum_v val_sigma(v) leaves the index set unquantified, where it must be Vmax and not V.",
+   "evidence": "(i) Boundedness holds but needs an argument: if d >= 0 is a recession direction then summing the equations gives sum_{v,a} (1 - r_{v,a}) d_{v,a} = 0 with r_{v,a} = sum_w p^{v,a}_w, so d is supported on actions with r = 1; putting U = {w : sum_a d_{w,a} > 0} and summing the recession equations over U forces sum_{w in U} p^{v,a}_w = 1 on the support, and a strategy taking such an action at each v in U never leaves U, contradicting stopping. (ii) Computed on both realised one-player games (oneplp.py, exact): obj(y^sigma) equals sum over Vmax of val_sigma at all 2^m strategies and equals sum over ALL vertices at none of them. The document's Phi(x) = sum_{u in V} x(u) (lem:switch) makes the unqualified reading false. The substantive claims check out: y^sigma >= 1 everywhere, obj is non-constant on every edge, and obj increases from y^sigma to y^{sigma[v]} exactly when v is in S_sigma, on all 8 + 16 edges of the two games."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:allsw-auso (line 3596-3600)",
+   "defect": "\"thm:opt-subcube makes it unique\" is a citation that does not give what is used: thm:opt-subcube gives that Opt is a subcube, which is a single point only via the nondegeneracy hypothesis, and that step is never made.",
+   "evidence": "thm:opt-subcube (line 2723) states Opt = {sigma : w*(sigma(v)) = max(...)} and \"is a nonempty subcube\". Uniqueness of the sink of the face needs, at the optimal strategy pi* of G_C, that w*_{G_C}(x_i^{(0)}) != w*_{G_C}(x_i^{(1)}) for each free i; that follows from def:improvement-uso's nondegeneracy because w*_{G_C} = val_{pi*} for a Max strategy pi* of G (lem:subgame(b),(c)), but the proof does not say so."
+  },
+  {
+   "severity": "minor",
+   "result_name": "thm:blowup, the Acyclic paragraph (lines 4431-4439)",
+   "defect": "The enumeration of \"outer cycles among the three layers\" is garbled: the object called \"the four-cycle (1,0)->(1,1)->(0,1)->(1,1)\" is not a cycle, and the enumeration is not justified.",
+   "evidence": "It revisits (1,1) and never returns to (1,0). The clean argument, which I checked: at a fixed inner vertex v the outer arcs staying among (1,0),(0,1),(1,1) are (1,0)->(1,1) and (1,1)->(0,1) when h(v) is even, and (0,1)->(1,1) and (1,1)->(1,0) when odd; (1,0) and (0,1) are not adjacent in the cube, so each of those two digraphs is acyclic and no cycle exists. The rest of the acyclicity proof, the unique-sink case analysis (four cases: same layer; same inner vertex with the 2-cube outer USO for each parity, which I checked on all six pairs for each parity; different layer and inner vertex with neither layer (0,0); and layer (0,0) against another, where the other layer's outer part always contains a coordinate on which the layers differ), the identification of the sink (0,0,u), the walk of length 2h+2 with its parity invariant (layer (1,0) and h even, or (0,1) and h odd), and the numerical bounds 3.2^{(m-1)/2}-2, 2^{m/2+1}-2, 9.2^{(m-4)/2}-2, 14.2^{(m-5)/2}-2 all reconstruct correctly. Exhaustive machine check: for all 2388 pairs (s,u) with s an AUSO of the 2- or 3-cube and u of maximal height, B(s) is a USO, acyclic, of height exactly 2h+2."
+  },
+  {
+   "severity": "minor",
+   "result_name": "thm:blowup (line 4371-4373) and prop:D-quadratic (line 4324)",
+   "defect": "The per-vertex bottom-antipodal height function h(v), on which both statements depend, is never defined; def:improvement-uso defines only h(s), the greatest number of steps from any start.",
+   "evidence": "thm:blowup's outer table is \"a function of the layer and of the parity of h(v)\", and its proof asserts \"Along the bottom-antipodal walk of s the height drops by exactly one per step\" -- true by definition once h(v) is defined as the number of steps of the walk from v, which is finite by acyclicity, but neither the definition nor the finiteness is stated."
+  },
+  {
+   "severity": "minor",
+   "result_name": "thm:blowup (line 4371) and rem:blowup-measured (line 4466-4472)",
+   "defect": "B(s) is a function of the pair (s,u), not of s, since the vertex u of maximal bottom-antipodal height is in general not unique; the remark's \"the translation vector z = o xor u is a SINGLE coordinate at every level from the second on\" holds only for the u that the theorem's own walk starts at.",
+   "evidence": "choice.py: iterating B from the 1-cube, the number of maximal-height vertices is 2, 4, 8, 16, 32 at levels 1..5. At level 3 the four maximal vertices give z = 8, 10, 24, 26, of which only z = 8 is a single coordinate. For the canonical u the remark's identification is CORRECT and I confirm it: z_k = alpha_k when the previous level's seed height h_{k-1} is even and beta_k when it is odd. Answering the audit's question directly: at the SECOND level with an odd seed height (the 1-cube, h=1) the translation vector is beta_1, the beta coordinate introduced at the first level -- computed z_1 = 4 = bit 2 = beta_1 in the convention bit0 = inner, bit1 = alpha_1, bit2 = beta_1 -- and it is alpha from the third level on (z_2 = 8 = alpha_2, z_3 = 32 = alpha_3, z_4 = 128 = alpha_4), since every height past the first level is even."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:overshoot-small (line 3529-3530)",
+   "defect": "\"on an instance an order of magnitude smaller\" overstates the comparison by a factor of four.",
+   "evidence": "prop:allswitch-overshoot's game has 422 vertices (420 non-sink) and 14 Max vertices (line 3002-3003); prop:overshoot-small's has 182 and 4. The ratios are 2.3 and 3.5. The rest of the proposition is exact: I rebuilt both the explicit 180-non-sink damping (m=7) and the reduced 12-variable model, verified they agree at all twelve original vertices at every step, and reproduced the run of length 6 from (1,1,1,0) with switched sets {0,3},{0,1,2},{0,1},{1},{2},{3} and val(0) = 34611559809/37019025280."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:allsw-laws (lines 3550-3553)",
+   "defect": "Three defects in one sentence: the parenthetical pairs the two run lengths with the two instances in the wrong order, the \"137-vertex instance\" has no statement, data or computation anywhere in the document, and \"we do not know the true maxima\" is stale.",
+   "evidence": "\"explicit games realise runs of length 4 at |Vmax|=3 and 6 at |Vmax|=4 (prop:overshoot-small and the 137-vertex instance verified alongside it)\" -- prop:overshoot-small is the length-6, |Vmax|=4 witness, not the length-4 one. grep '137' over the whole file returns exactly this line. And the maxima at m = 3 and m = 4 ARE now known: cor:ceiling-general caps the run at h*(m), prop:auso-seven attains 7 at m = 4, and rem:blowup-measured's 58-vertex game attains 4 at m = 3 (both verified from the game here), so they are 4 and 7, not the 4 and 6 this sentence records."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:blowup-measured (line 4488-4490)",
+   "defect": "\"The second level ... is not Holt-Klee, so any realisation needs Min vertices\" drops the nondegeneracy qualification that rem:oneplayer-lp insists on and that rem:D-quadratic supplies.",
+   "evidence": "rem:oneplayer-lp (line 4128-4134): \"thm:flat-resolution resolves those into AUSOs that need not be Holt-Klee, since the resolution is a combinatorial completion and not an LP orientation. So the corollary bounds the heights of nondegenerate one-player games and says nothing about degenerate ones.\" rem:D-quadratic (line 4362) states the identical conclusion correctly: \"by prop:oneplayer-lp no NONDEGENERATE one-player game realises them\". The non-Holt-Klee status of B^2 itself I confirm (dimension 5, height 10, HK false)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:flat (line 3835)",
+   "defect": "The m=6 entries of the two ceilings, 21 for the three laws and 25 for the two, are recorded as measurements but the repository's own committed outputs do not contain 21, and the outputs it does contain were produced under an extra law that the paper never states.",
+   "evidence": "scripts/ceiling/laws.c implements four flags, bit1 being a 'peak-vertex law' ((sigma_s xor sigma_t) cap S_s) not-subset-of S_t which appears nowhere in frontier.tex. The committed m6_3.out (flags = law-b + peak-vertex) and m6_7.out (flags = law-b + peak-vertex + law-u) both record L = 20; there is no flags = 5 output, which is the paper's set (no-return + law-b + law-u). f6.out does record f(6) = 25 after 1.77e11 nodes. I re-ran the repository's own laws.c with flags = 5: after ~50 minutes it had reached best = 20 and had not terminated (the parallel flags = 1 control had reached 23 against the documented 25, so neither run is near completion); output at /tmp/claude-1000/-data-ssg-proof/6e64b33d-520c-4c82-aa1b-ffb69ecfcb61/scratchpad/paper-audit-allswitches/al6_5.{out,err} and al6_1.{out,err}. I DID reproduce the m<=5 entries of both sequences exactly with two independent programs: f = 1,2,4,7,13 and the three-law ceiling 1,2,4,7,12."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:monotone-law-general (line 3247-3249)",
+   "defect": "\"the conclusion propagates forward along any run of strictly improving switches: val_{sigma[W]} <= val_{sigma_t} for every t\" has an unbounded quantifier; the claim holds only for t at or after the round at which sigma is current.",
+   "evidence": "The bound comes from val_{sigma[W]} <= val_sigma together with lem:switch's monotonicity, which orders val_{sigma_t} only forwards from sigma; for t below that index the inequality is not available and is false in general."
+  },
+  {
+   "severity": "minor",
+   "result_name": "thm:component-bound (line 3435-3438 and 3450-3457)",
+   "defect": "D(C) is introduced as a set of vertices and then quantified over as a family of components.",
+   "evidence": "\"let D(C) be the union of C with all components reachable from C\" (a vertex set, used as such in \"Vmax cap R(C) = D(C)\"), then \"T := max{t(C') : C' != C, C' in D(C)}\" and \"D(C') subset of D(C) minus {C}\" (a family of components). The proof is otherwise correct as reconstructed, and I found no violation of the bound on 400 randomly generated stopping games with |Vmax| <= 6 (compbound.py)."
+  },
+  {
+   "severity": "note",
+   "result_name": "prop:auso-census (line 4135-4161)",
+   "defect": "No defect: every count reproduced independently.",
+   "evidence": "Own C census (census4.c, DFS over Szabo-Welzl-consistent outmaps, acyclicity by DFS, unit vertex-capacity max flow per face, lexicographic-minimum orbit test under the 2^m m! group): m=4 gives 5541744 USOs, 4792176 acyclic, 12640 classes, 2322704 acyclic Holt-Klee, 6113 Holt-Klee classes, height 7 attained by exactly 384 outmaps forming one free orbit, h*_HK(4) = 6. m=2,3 in Python: 12/12/2 classes and 744/728/18 classes, HK 12/2 and 656/16, h* = 2 and 4, h*_HK = 2 and 4. Class height histogram 1,754,4776,5404,1561,143,1; HK class histogram 1,423,2503,2401,729,56,0. (I also had to fix a bug in my own first flow implementation -- an infinite-capacity direct source-to-sink arc -- and the counts were unchanged after the fix, so the paper's numbers are not sensitive to that pitfall.)"
+  },
+  {
+   "severity": "note",
+   "result_name": "prop:hstar-five (line 4201-4247)",
+   "defect": "No defect: the whole computation reproduced, including the negative half.",
+   "evidence": "Own C enumeration reproduces 31,750,12390,135930,967560,4378320,12280440,20388600,19136400,9748080,2550240,347640,22320 and nothing of length 14. realise5.c completes each schedule to a bijective outmap under the Szabo-Welzl condition and tests acyclicity: at L = 13, all 22320 schedules fail; at L = 12, 480 of the 347640 succeed. The printed height-12 outmap is a bijection, a USO, acyclic, has exactly one sink and one source on each of the 211 faces of positive dimension, and has height exactly 12 attained from 0 along 0,15,24,31,20,23,18,14,26,10,2,3,1."
+  },
+  {
+   "severity": "note",
+   "result_name": "prop:gsharp-bigcube (line 4073-4098) and cor:seven-two-player (line 4054-4070)",
+   "defect": "No defect: both fully reproduced from the printed normal form.",
+   "evidence": "bigcube.py: 0 ties among the 384 incidences, USO, acyclic, Holt-Klee on all faces (729 faces counting dimension 0), BA height 5, every Min face has a unique sink which is a Min best response, sink projection equals s_{G#} exactly. cor:seven-two-player: max flow 2 on the whole 4-cube where 4 are needed, 42 simple directed source-to-sink paths with a largest pairwise internally-disjoint subfamily of 2, and the 3-face named in the text -- reading \"coordinates 1,2,4\" as the 1-based coordinate names x_1,x_2,x_4, i.e. direction mask 11, at the vertex 4 -- carries exactly 2. (Under the other reading, direction mask 7, the face carries 3; the text mixes 1-based coordinate names with a bitmask vertex label and should say so.)"
+  },
+  {
+   "severity": "note",
+   "result_name": "thm:blowup's Lean formalisation, rem:blowup-measured (lines 4508-4523)",
+   "defect": "No defect: the claim about the Lean file is accurate, but it is worth recording exactly what is and is not formalised.",
+   "evidence": "lean/SSGProof/Blowup.lean (609 lines) type-checks standalone against the v4.33.1 core library with no Mathlib import and no `sorry`; #print axioms gives isUSO_blow and walk_blow depending on [propext, Classical.choice, Quot.sound] and isAcyclic_blow on [propext, Quot.sound], as the paper says. outA/outB reproduce the paper's parity table exactly; blow, Height, parOf and startOf match the paper's definitions; walk_blow proves both directions (reaches mk false false u at 2 h u + 2 and at no earlier step). Not formalised, and not claimed: that (0,0,u) is the sink of the blow-up, that the blow-up's bottom-antipodal HEIGHT is therefore at least 2h+2, and the numerical corollaries. Also, IsAcyclic is a bounded-rank condition, equivalent to acyclicity on a finite cube; the paper says so."
+  },
+  {
+   "severity": "note",
+   "result_name": "rem:auso-size (line 3931-3933)",
+   "defect": "\"at m=3, sixteen of the eighteen isomorphism classes arise from one-player games and the remaining two from two-player ones\" is a realisability claim with no cited computation, and its second half asserts a non-realisability that prop:oneplayer-lp does not give for degenerate games.",
+   "evidence": "I confirm the arithmetic that makes it plausible: the 3-cube has exactly 18 AUSO classes of which exactly 16 are Holt-Klee (census3.py), so prop:oneplayer-lp excludes exactly two from nondegenerate one-player realisation. But no search is cited for the positive half, none is in the repository that I could find, and rem:oneplayer-lp itself warns that degenerate one-player games are not bound by Holt-Klee, so \"the remaining two from two-player ones\" does not follow. Also \"essentially everything is realisable\" at m = 4 sits awkwardly beside cor:seven-two-player and beside the root agent's own survey, in which 33 random non-Holt-Klee height-6 classes all failed."
+  },
+  {
+   "severity": "note",
+   "result_name": "lem:hstar-super (line 4279-4321)",
+   "defect": "No defect in the proof; the three numerical corollaries are all superseded by thm:blowup in the same subsection.",
+   "evidence": "I reconstructed the proof (the USO argument splits on whether the first block differs; acyclicity projects a cycle to a closed s_1-walk, forcing a constant first block, then the fibre carries a translate of s_2; the two phases give h*(k) + h*(l) with z = W^{h*(k)}(x*) xor x* and start (v_1, x* xor z)) and verified the construction: (k,l) = (5,1), (4,4), (4,5), (3,3), (3,4), (2,2), (1,1) all give a USO, acyclic, with a walk from the constructed start of exactly h*(k) + h*(l), equal to the orientation's maximum height. But thm:blowup gives h*(6) >= 16, h*(8) >= 34, h*(9) >= 54 against the lemma's 13, 14, 19."
+  },
+  {
+   "severity": "note",
+   "result_name": "prop:D-quadratic (line 4323-4356) and rem:D-quadratic",
+   "defect": "No defect: fully reproduced, and the Schurr-Szabo attribution is present and appropriate.",
+   "evidence": "dquad.py: heights 4, 9, 16, 25 at dimensions 3, 5, 7, 9 (and 36 at dimension 11, matching rem:blowup-measured's 4,9,16,25,36); D^1 is Holt-Klee, D^2 and D^3 are not, each with a 3-face (direction mask 11) carrying only two internally vertex-disjoint source-to-sink paths; every bottom-antipodal trace from every start of every iterate obeys cor:no-return and cor:law-b. rem:f-auso attributes the exponential growth of h* to Schurr and Szabo and says explicitly that thm:blowup reproves it from scratch, and rem:D-quadratic calls the rule shape Schurr-Szabo; that is the right labelling for what is, in substance, a rediscovery (Schurr-Szabo, \"Jumping doesn't help in abstract cubes\", IPCO 2005 -- from memory, unchecked against the source)."
+  },
+  {
+   "severity": "note",
+   "result_name": "rem:blowup-measured's variant heights and rem:blowup-realise's substitute heights",
+   "defect": "The variant heights all check out; the two \"substitute\" sequences are described too loosely to check against the code.",
+   "evidence": "variants.py reproduces: full inner reversal gives 4,10,16,23,30 with the reversed orientation's walk from the old sink of length 4,4,5,5,6; s(v) xor z is a USO but is no longer acyclic from the second level; z = 1-bar gives D. But \"thresholds on monotone quantities ... at most 4,6,8\" and \"the switchability of the previous level's outer vertices ... at most 4,8,10\" cannot be matched to particular readouts: aggregating the author's blowvar.py scan by readout gives maxima [3,6,8] for the height-threshold readout, [4,8,10] for the single-inner-coordinate readout, [4,7,8] for the sink/non-sink readouts, [4,7,10] for the source readout and [4,9,13] for popcount parity."
+  },
+  {
+   "severity": "note",
+   "result_name": "rem:f-auso (line 3862-3868)",
+   "defect": "The \"200 nondegenerate stopping games\" check does not say how the instances were generated or what was varied besides |Vmax| and |Vmin|; I reproduced its conclusion on my own sample.",
+   "evidence": "ndcheck.py: 2022 random stopping games with 2 <= |Vmax| <= 4 and |Vmin| <= 3 on 5..10 non-sink vertices, of which 200 nondegenerate and 1822 degenerate; in every nondegenerate case the improvement outmap is a USO and acyclic and every bottom-antipodal trace from every start obeys both laws. (The paper reports 1236 degenerate skips; the ratio depends entirely on the unstated sampling distribution.) I also confirmed lem:auso-laws exhaustively on all 740 AUSOs of the 2- and 3-cube, and confirmed lem:trichotomy, lem:flat-class(b), thm:flat-resolution (s' is an AUSO for the lexicographic corner choice), cor:ceiling-general and cor:law-u on 250 random stopping games of which 223 degenerate."
+  },
+  {
+   "severity": "note",
+   "result_name": "Reproducibility of scripts/blowup/",
+   "defect": "The committed script set is not self-contained: leap.py, which produces the ladder measurement of rem:blowup-realise, imports mycore and my_allsw, neither of which is committed.",
+   "evidence": "`python3 -c \"import mycore\"` in /data/ssg-proof/scripts/blowup/ fails; the modules exist only in the uncommitted working directory /tmp/.../scratchpad/solo/. Similarly the games behind prop:auso-seven live only in the round-13 scratch directory, which is why the 99-vs-97 discrepancy went unnoticed."
+  }
+ ],
+ "verdict": "NOT SOUND: six major defects survive, all of them in the never-audited solo-round material and in the AUSO identification; the two central theorems (thm:blowup, cor:ceiling-general) are themselves correct and, in thm:blowup's case, fully reconstructed and independently confirmed.\n\nWHAT IS SOLID. thm:blowup's proof reconstructs in full and is right: the unique-sink case analysis is exhaustive (same layer; same inner vertex with the outer 2-cube USO checked on all six pairs for each parity; different layer and inner vertex with neither layer 00; layer 00 against another, where the other layer's outer part always contains a coordinate on which the layers differ), the acyclicity argument is right once its garbled cycle enumeration is replaced by \"at fixed parity the three-layer outer digraph is a 2-path, and (1,0),(0,1) are not adjacent\", the walk of length 2h+2 has the invariant \"layer (1,0) with h even or (0,1) with h odd\" and closes correctly, and all four numerical bound families check. Exhaustively: for ALL 2388 pairs (s,u) with s an AUSO of the 2- or 3-cube, B(s) is an AUSO of height exactly 2h+2. Heights 4,10,22,46,94 / 2,6,14,30 / 7,16,34,70 / 12,26,54,110 all reproduced; B(1-cube) is Holt-Klee, B^2 is not; the 58-vertex realisation verified FROM THE GAME (stopping, 0 ties, outmap (0,1,3,6,7,4,5,2), height 4, Holt-Klee); the Lean file type-checks with no sorry and the stated three axioms. prop:auso-census, prop:hstar-five (including the negative half: all 22320 length-13 schedules fail to complete), prop:gsharp-bigcube, prop:k1-family, prop:overshoot-small, lem:hstar-super, prop:D-quadratic and the Klee-Minty datum were all reproduced exactly with my own code. lem:monotone-law, thm:peak-law, cor:no-return, cor:law-b, cor:antichain, thm:component-bound, thm:bounded-components, lem:trichotomy, lem:flat-class, lem:face-sink, thm:flat-resolution, cor:ceiling-general and cor:law-u all reconstruct correctly.\n\nTHE SIX MAJOR DEFECTS. (1) prop:auso-seven's \"99 vertices, ninety-one average\" belongs to a different game from the harmonic normal form it prints: that table is the normal form of a 97-vertex game (89 average), verified from the game; the 99-vertex candidate differs in 18 of 84 entries. The count is repeated in the abstract. (2) and (3) Both of rem:blowup-measured's claims about the realised blow-up of the 2-cube are false, and for the same root cause: B(s) is a function of (s,u), not of s. All eight height-2 seeds give both the Holt-Klee and the non-Holt-Klee class depending on which maximal u is taken, and the realised class is B(2-cube) only for z a single coordinate, never for z = 1-bar. Answering the audit's question: this makes the paper's claim STRONGER, not weaker -- a one-player game realises a genuinely single-coordinate translated layer, exactly the configuration rem:blowup-realise calls the obstacle. (4) rem:blowup-realise's ladder counts 3,4,4,4,7,8,8,8 are maxima over all vertex pairs, not over lines through the (val(v_1),val(v_2)) path, where the counts are 3,4,3,4,5,8,3,4; the author's own leap.py prints \"over vertex pairs\" and names a different maximising pair for four of the eight n. (5) rem:blowup-realise's closing dichotomy has two invalid implications: the first drops prop:auso-size's polynomial-size clause (a per-level N -> N^c gadget gives N_0^{c^k}), the second is a non sequitur that lem:hstar-super already contradicts. (6) prop:allsw-auso and thm:flat-resolution both prove \"every face has a unique sink\" and conclude the Szabo-Welzl outmap condition, using an equivalence that is neither stated nor attributed; it is true (verified exhaustively at m=3 and on 400000 random 4-cube orientations) and standard, and cor:ceiling-general -- cited in the abstract -- rests on it.\n\nWHAT I DID NOT SETTLE. rem:flat's two m=6 numbers, 21 and 25. The repository's own committed outputs record 20 under a flag set that includes a \"peak-vertex law\" the paper never states, and no committed output records 21; my exhaustive re-run of the repository's own program under the paper's actual three laws had reached 20 without terminating when this report was written (outputs at /tmp/claude-1000/-data-ssg-proof/6e64b33d-520c-4c82-aa1b-ffb69ecfcb61/scratchpad/paper-audit-allswitches/al6_5.{out,err}, al6_1.{out,err}). I also did not check rem:auso-size's m=3 realisability claim (no computation is cited and none is in the repository), rem:blowup-realise's \"at most 4,6,8\" and \"at most 4,8,10\" (too loosely specified to match against blowvar.py), or rem:f-auso's 1236 degenerate skips (sampling distribution unstated).\n\nPaste-ready LaTeX for every correction: /tmp/claude-1000/-data-ssg-proof/6e64b33d-520c-4c82-aa1b-ffb69ecfcb61/scratchpad/paper-audit-allswitches/AUDIT.tex (ex:allsw-audit-maxreach, lem:allsw-audit-sw, rem:allsw-audit-choice, prop:allsw-audit-b2, rem:allsw-audit-ladder, rem:allsw-audit-99, rem:allsw-audit-lp, rem:allsw-audit-acyc, rem:allsw-audit-small, rem:allsw-audit-closed, rem:allsw-audit-cites, rem:allsw-audit-over). Full recomputation log: RESULTS.md in the same directory; all code (cube.py, ssg.py, fastval.py, blow.py, census4.c, laws.c, realise5.c, gsharp.py, gsharp99.py, nfcheck.py, bigcube.py, kfam.py, overshoot.py, ladderflip.py, oneplp.py, flatres.py, ndcheck.py, super.py, dquad.py, variants.py, twocube.py, bstruct.py, misc.py, equiv.py) is beside them."
+}

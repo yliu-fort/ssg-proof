@@ -48,3 +48,16 @@ into the new scratchpad, edit `SCRATCH` at its top, recreate the harness there
 session `72fdeee0`'s `solo/`; the committed subset is `scripts/blowup/`), drop
 the routes whose results are already in `results/`, and call the Workflow tool
 with that `scriptPath`.
+
+## Results and audits (archived)
+
+`results/NN_x.json` are the structured returns of the routes and audits of
+run `wf_fed5a63d-530` (the resumed run; `journal.jsonl` is its journal).
+Integration into `frontier.tex` happened in commits after 9f5a4d7: every
+route was trimmed to what its significance audit kept and what the root
+agent re-verified (`scripts/round15-verify/`).  Kept: howard-cube
+(sec:deformed), monotone (sec:readouts), sink-projection (sec:projection),
+free-search (thm:b2-walk, thm:top), best-response (thm:bsi-tracks,
+thm:readout, prop:leapfrog), gadget (lem:crossing, cor:b2-min, prop:xor,
+thm:alternation-bits), lane and degenerate repairs.  Treewidth and
+verify-r14 audits are in results/ and were not integrated in this pass.
