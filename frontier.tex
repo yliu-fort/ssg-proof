@@ -5659,10 +5659,11 @@ bottom-antipodal height at most $d$.
 \end{theorem}
 
 \begin{proof}
-The orientation a generic objective induces on a polytope combinatorially
-a cube is an acyclic unique sink orientation (each face has the unique
-minimiser of $c$ as its sink, and $c$ decreases along every arc), so all
-walks below terminate. Induct on $k$. By \Cref{lem:deformed-rigid} the
+Orient every edge towards the larger value of $c$, as in
+\Cref{prop:oneplayer-lp}; a generic objective then induces on a polytope
+combinatorially a cube an acyclic unique sink orientation (each face has
+the unique maximiser of $c$ as its sink, and $c$ increases along every
+arc), so all walks below terminate. Induct on $k$. By \Cref{lem:deformed-rigid} the
 last block of the outmap is $\sigma_k(w_k(y))$ for one orientation
 $\sigma_k$ of the $m_k$-cube, induced by $c_k$ on $P_k$, of height at
 most $h^{\ast}_{\mathrm{LP}}(m_k)$; so the bottom-antipodal step acts on
@@ -5671,9 +5672,11 @@ block sits at $\sigma_k$'s sink $w^{\ast}_k$ and stays. On the face
 $G:=\{w_k(y)=w^{\ast}_k\}$ the $m_k$ tight constraints of the last block
 express $y_k$ affinely in $y_{<k}$, so $G$ projects injectively and
 affinely onto the deformed product of the first $k-1$ factors --- the two
-have the same vertices, computed by the same recursion --- with $c$
-becoming a linear functional there, and the walk continues as the
-bottom-antipodal walk of that orientation. For a deformed cube every
+have the same vertices, computed by the same recursion, and $G$ is a face
+of $P$ whose face lattice is, by the standing hypothesis on $P$, that of
+$P_1\times\dots\times P_{k-1}\times\{w^{\ast}_k\}$, so the image satisfies
+the same hypothesis --- with $c$ becoming a linear functional there, and
+the walk continues as the bottom-antipodal walk of that orientation. For a deformed cube every
 $m_i=1$: the last coordinate is uniform, one step enters the facet it
 points to, and induction gives $d$.
 \end{proof}
@@ -5697,7 +5700,9 @@ by $c_d(u_d-l_d)$, a sign independent of $x_{<d}$; the last coordinate is
 combed, one bottom-antipodal step enters the facet it points to, and that
 facet is again a deformed cube. So the standard machine for producing long
 monotone paths on cubes is useless for the pivot of \Cref{cor:f-auso}: a
-deformed product can only add its factors' heights. The occupancy polytope $X(G)$ of
+deformed product can only add its factors' ceilings $h^{\ast}_{\mathrm{LP}}(m_i)$
+(nothing in the argument controls the lower factors' own orientations, so
+the bound is a sum of ceilings, not of heights). The occupancy polytope $X(G)$ of
 \Cref{prop:oneplayer-lp} is not a deformed cube --- a uniform coordinate
 forces $h\le1+h^{\ast}(m-1)$, which is $5$ at $m=4$, while one-player
 games with $|\Vmax|=4$ and runs of length $6$ exist
@@ -6145,11 +6150,13 @@ The first half is \Cref{lem:flat-class}(a),(b) with
 \Cref{lem:profile-trichotomy} in place of \Cref{lem:trichotomy}; part (c)
 of that lemma has no analogue, the profile cube being possibly cyclic.
 For the second, freezing cannot create a trap, so $G_J$ is stopping
-(\Cref{lem:trapchar}); a profile of $F$ with no strictly switchable free
-coordinate is a positional equilibrium of $G_J$, hence optimal by
-\Cref{lem:local-global} applied to both players, optimal profiles exist
-and all carry $\val(G_J)$, so they lie in one flat class, and every
-member of $A\cap F$ has the same out-set.
+(\Cref{lem:trapchar}); at a profile of $F$ with no strictly switchable free
+coordinate each player's chosen action attains the optimum of its two
+options against $\val_\pi$, so $\val_\pi$ is a fixed point of the Shapley
+operator of $G_J$ and equals $\val(G_J)$ by \Cref{thm:contraction}, making
+$\pi$ an optimal pair; optimal pairs exist
+(\Cref{thm:stopping-determinacy}) and all carry $\val(G_J)$, so they lie in
+one flat class, and every member of $A\cap F$ has the same out-set.
 \end{proof}
 
 \begin{theorem}[The profile cube is a unique sink orientation]\label{thm:profile-uso}
