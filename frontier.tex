@@ -3769,6 +3769,174 @@ constrains the length of a run not at all. (The round-$15$ lane route
 was opened on the opposite premise and refuted it.)
 \end{remark}
 
+\subsection{Composition, and an energy identity}\label{sec:composition}
+
+The impedance formula of \Cref{thm:impedance} reads a game through the
+expected visits $N_v$ of its vertices. Two further facts about that
+Green's function are recorded here: a stopping game plugged into a larger
+one behaves, seen from outside, exactly like a controlled vertex with two
+chance actions, and the visits $N_v$ are tied to the value gaps
+$\Delta_v$ at the average vertices by an exact identity. Both were found
+by the round-$16$ free-search route.
+
+\begin{definition}[Contexts, and the $(p,q)$-gate]\label{def:gate}
+A \emph{context} $H$ is a game structure on a vertex set $V_H$ with the
+two sinks in which every vertex has an ordered pair of successors and is
+of one of the kinds $\max$, $\min$, $\mathrm{avg}$ or \emph{call}; for a
+call $c$ write $(e_1(c),e_0(c))$ for its successors. It is
+\emph{admissible} if it is stopping when every call is read as a
+controlled vertex. For a stopping SSG $G$ with start $v_0$ the
+\emph{composition} $H\langle G\rangle$ replaces each call $c$ by a
+private copy of $G$: edges into $c$ enter the copy at $v_0$, the copy's
+edges into $t_1$ go to $e_1(c)$, those into $t_0$ to $e_0(c)$. For
+$p,q\in[0,1]$ the \emph{$(p,q)$-gate} on exits $(e_1,e_0)$ is the vertex
+with operator
+\[
+  \mathcal G_{p,q}(A,B):=\begin{cases}pA+(1-p)B,&A\ge B,\\ qA+(1-q)B,&A<B,\end{cases}
+  \qquad A:=x(e_1),\ B:=x(e_0),
+\]
+a controlled vertex with two chance actions of support $\{e_1,e_0\}$; it
+is the maximum of the two affine expressions when $p\ge q$ and their
+minimum when $p\le q$. $H^{p,q}$ is $H$ with every call replaced by the
+$(p,q)$-gate on its exits.
+\end{definition}
+
+\begin{lemma}[A plugged-in game is a gate]\label{lem:gate}
+Let $G$ be a stopping SSG with start $v_0$, let $G^{\mathrm{rev}}$ be $G$
+with the two players' roles exchanged (sinks unchanged), and put
+$p:=\val_G(v_0)=\max_\sigma\min_\tau\Pr_{\sigma,\tau}[t_1]$ and
+$q:=\val_{G^{\mathrm{rev}}}(v_0)=\min_\sigma\max_\tau\Pr_{\sigma,\tau}[t_1]$.
+For every admissible context $H$ the composition $H\langle G\rangle$ is
+stopping and
+\[
+  \val_{H\langle G\rangle}(v)=\val_{H^{p,q}}(v)\qquad(v\in V_H),
+\]
+the copy at a call $c$ carrying the values of $G$ with the sinks paying
+$\val_{H^{p,q}}(e_1(c))$ and $\val_{H^{p,q}}(e_0(c))$. No inequality
+between $p$ and $q$ holds in general: $v\to(t_1,t_0)$ gives $(1,0)$ at a
+Max vertex and $(0,1)$ at a Min vertex, and $p=q$ when $G$ has no
+controlled vertex.
+\end{lemma}
+
+\begin{proof}
+Let $G[A,B]$ be $G$ with $t_1$ paying $A$ and $t_0$ paying $B$
+(\Cref{rem:terminals}) and $\psi(x):=B+(A-B)x$; $G$ being stopping, the
+payoff of a play is $\psi$ of the indicator of reaching $t_1$. For
+$A\ge B$ the map $\psi$ is nondecreasing and commutes with $\max$ and
+$\min$, so $\val_{G[A,B]}(v_0)=\psi(p)$; for $A<B$ it is decreasing and
+exchanges them, so $\val_{G[A,B]}(v_0)=\psi(q)$. In both cases the value
+is $\mathcal G_{p,q}(A,B)$. Stopping: under any positional pair each copy
+is left almost surely, so the induced process on $V_H$ is a chain in
+which a call moves to its exits with some probabilities, and
+admissibility leaves it no trap. Values: let $W:=\val_{H^{p,q}}$ and put
+$x:=W$ on $V_H$, $x:=W(c)$ at the copy's entry and, inside the copy at
+$c$, $x:=\val_{G[W(e_1(c)),W(e_0(c))]}$. Then $Tx=x$ at every vertex of
+$H\langle G\rangle$ --- at the entry by the payoff transfer --- and the
+composition being stopping, $x$ is its value (\Cref{thm:contraction}).
+\end{proof}
+
+\begin{theorem}[Two exits, two numbers]\label{thm:two-exit}
+Let $G$ be stopping and $M$ a set of non-sinks every edge out of which
+lands in $M\cup\{o_1,o_0\}$ for two vertices $o_1,o_0\notin M$, and
+suppose $p_e,q_e\in(0,1)$ below for every entry, or that $G/M$ is
+stopping. Let
+$G_M$ be the game induced on $M$ with $o_1$ read as $t_1$ and $o_0$ as
+$t_0$, and for each entry $e$ of $M$ (a vertex of $M$ with an edge from
+outside, or the start) put $p_e:=\val_{G_M}(e)$,
+$q_e:=\val_{G_M^{\mathrm{rev}}}(e)$. Replacing $M$ by one
+$(p_e,q_e)$-gate per entry with exits $(o_1,o_0)$ preserves every value
+outside $M$ and gives $\val_G(e)$ at the gate of $e$. Hence the response
+of a part with two exits to the values at its exits is, per entry, the
+two-piece map $\mathcal G_{p_e,q_e}$ --- against the $2^{D}$ pieces that
+\Cref{thm:fold} exhibits for a part with three exits.
+\end{theorem}
+
+\begin{proof}
+As for \Cref{lem:gate}, with one gate per entry, provided $G/M$ is
+stopping; $G_M$ is stopping since a play confined to $M$ would exhibit a
+trap of $G$ (\Cref{lem:trapchar}). That $G/M$ is stopping follows from
+$G$ being stopping when $p_e,q_e\in(0,1)$ for every entry: a trap $U$ of
+$G/M$ containing a gate then contains both exits, and replacing its gates
+by $M$ gives a trap of $G$. When some $p_e$ or $q_e$ is $0$ or $1$ the
+gate has a one-point action, and the statement is asserted under the
+additional hypothesis that $G/M$ is stopping (it was in every one of
+$1751$ random contractions the route's auditor built).
+\end{proof}
+
+\begin{theorem}[Energy and crossings]\label{thm:energy}
+Let $G$ be a stopping SSG, $(\sigma,\tau)$ an optimal pair, $N_v$ the
+expected number of visits to $v$ from $v_0$ under it, $\Delta_v:=
+w^\ast(v^{(1)})-w^\ast(v^{(0)})$, and $r+1$ the number of distinct values
+in $w^\ast(V)\cup\{0,1\}$. Then
+\[
+  \sum_{v\in\Vavg}N_v\Delta_v^{2}=4\,w^\ast(v_0)\bigl(1-w^\ast(v_0)\bigr),
+  \qquad
+  \sum_{v\in\Vavg}N_v|\Delta_v|\le r+2,
+\]
+and both hold with $w^\ast$ replaced by $\val_{\sigma,\tau}$ for any
+absorbing positional pair. In particular an average vertex whose
+successors differ in value by $\Delta$ is visited at most $\Delta^{-2}$
+times in expectation under an optimal pair.
+\end{theorem}
+
+\begin{proof}
+Along the chain of $(\sigma,\tau)$ the process $M_t:=w^\ast(X_t)$ is a
+bounded martingale, constant across controlled steps and absorbed in
+$\{0,1\}$; at an average vertex $v$ its increment is $\pm\tfrac12\Delta_v$
+with probability $\tfrac12$ each, of conditional second moment
+$\tfrac14\Delta_v^{2}$. Summing over time,
+$\tfrac14\sum_vN_v\Delta_v^{2}=\mathrm{Var}(M_\infty)=w^\ast(v_0)(1-w^\ast(v_0))$,
+which is the identity. For the bound let $C(\lambda)$ be the number of
+transitions crossing the level $\lambda$; only average steps cross, and
+integrating the crossing probabilities over $\lambda$ gives
+$\int_0^1\mathbb E\,C(\lambda)\,d\lambda=\tfrac12\sum_vN_v|\Delta_v|$. For
+$\lambda$ in the $j$-th gap between consecutive distinct values, of length
+$g_j$, the upward crossings are Doob upcrossings of that gap, so
+$g_j\,\mathbb EU\le\tfrac14$, and the downward ones number at most one
+more; hence $\mathbb E\,C(\lambda)\le1/(2g_j)+1$ and
+$\int_0^1\mathbb E\,C\le\sum_j(\tfrac12+g_j)=\tfrac r2+1$. The last claim
+is the identity with $4w(1-w)\le1$.
+\end{proof}
+
+\begin{remark}[What composition cannot do]\label{rem:no-amplification}
+\Cref{lem:gate} bounds what a fixed context can extract from a game it
+never inspects. Writing $V(p,q):=\val_{H^{p,q}}(v)$ for an admissible
+context $H$ on $s$ vertices, the derivative
+$\partial V/\partial p$ is a sum of visits times gaps, and
+\Cref{thm:energy} bounds each partial derivative by $(s+3)/(4p(1-p))$,
+at most $\tfrac43(s+3)$ on $[\tfrac14,\tfrac34]$; so a context that
+outputs at least $\tfrac34$ when the plugged-in value is at least
+$\tfrac12$ and at most $\tfrac14$ when it is at most $\tfrac12-\delta$
+has $s\ge3/(16\delta)-3$ vertices --- with $\delta=2^{-(a+1)}$
+(\Cref{lem:denominator-sharp}), exponentially many. Admissibility is a
+real restriction here: it forbids directed cycles through calls, so a
+cyclic finite-state device reading a stream of plays is not a context in
+this sense, and the bound says nothing about it. And since a gate's two
+actions have the same support whatever $p,q\in(0,1)$, the sets
+$\{\val=1\}$ and $\{\val>0\}$ of $H^{p,q}$ do not depend on $(p,q)$
+(\Cref{prop:qualitative}), so no context turns the threshold
+$\val_G(v_0)\ge\tfrac12$ into an almost-sure or a positive reachability
+question. Both statements concern black-box compositions only: every
+transformation this document performs (\Cref{thm:stopping-transform},
+\Cref{thm:compare-equivalence}, \Cref{lem:normalform}, \Cref{thm:top})
+reads the input's edges and is outside their scope, and they cover none
+of the mechanisms of \Cref{sec:gap}. The identity is likewise blind to
+the hard families: on $\mathrm{WD}$ and $\mathrm{CC}$ the total
+$\sum_vN_v|\Delta_v|$ is exactly $1$ against a bound growing with $r$.
+Two side remarks: the quantity $q=\val_{G^{\mathrm{rev}}}(v_0)$ is not
+\Cref{lem:duality}'s $1-\val$ and appears nowhere else in this document;
+and relaxing the Min vertices to biased coins adds nothing, the value of
+the relaxed game being monotone in each bias and minimised at a corner
+(the route's check of positional determinacy for Min). The identity is the
+quadratic-variation formula $\mathrm{Var}(M_\infty)=\mathbb E\langle
+M\rangle_\infty$ for the value martingale and the crossing bound is
+Doob's upcrossing inequality; the qualitative algorithms are de~Alfaro's
+and Chatterjee, Jurdzi\'nski and Henzinger's, and the moral of the
+amplification bound is Condon's observation that the value gap is
+exponentially small and preserved by the natural transformations (all
+from memory, unchecked against the sources).
+\end{remark}
+
 \section{Refutations and barriers}\label{sec:refutations}
 
 The results of this section eliminate several specific and otherwise
@@ -5785,6 +5953,58 @@ forces; nothing here bounds the denominator of the rows, which is the
 quantity \Cref{rem:blowup-realise} asks about.
 
 
+\begin{proposition}[A valid parity is affinely readable; the true one is not]\label{prop:parity-readable}
+Let $Z=(\val_\sigma|_{C})_{\sigma}$ be the $32$ value vectors of
+\Cref{prop:b2-realised}'s game, $W$ the bottom-antipodal walk of $B^{2}$ from
+$12$ (eleven vertices $12,19,13,17,8,16,0,7,1,5,4$) and $h$ the height of
+$B^{2}$.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item no affine functional of the value vector has the sign of
+      $h(v)\bmod2$ at all $32$ strategies --- the level-two analogue of
+      \Cref{cor:parity-unreadable} (the route measured this by a
+      floating-point linear programme; its auditor produced an exact
+      Farkas certificate, so it is proved).
+\item There is one whose sign is $h(v)\bmod2$ at the eleven strategies of $W$;
+      over the functionals $y\mapsto(p^{1}-p^{0})\cdot y+(q^{1}-q^{0})$ with
+      $(p^{a},q^{a})\ge0$ and $|p^{a}|_1+q^{a}\le1$ the largest attainable
+      margin is $8.056\cdot10^{-4}$, and the induced total function
+      $p=00010111011000001111101101110001$ (indexed by $v$) differs from
+      $h\bmod2$ at the six strategies $6,10,20,21,22,26$, all off the walk.
+\end{enumerate}
+By \Cref{prop:blowup-height} this $p$ is admissible, so the outer pair of a
+level-three realisation may read $p$ instead of the parity.
+\end{proposition}
+
+\begin{proposition}[The outer half of the third level is realised]\label{prop:b3-outer}
+There is a nondegenerate stopping SSG on $194$ vertices --- seven Max, one Min,
+$184$ average and the two sinks --- whose improvement outmap is
+$B_{p,0}(B^{2})$ for the $p$ of \Cref{prop:parity-readable}: an acyclic unique
+sink orientation of the $7$-cube of bottom-antipodal height $12$ whose
+all-switches run is
+$44,83,45,81,40,80,32,71,33,69,36,68,4$, the first twelve steps of the walk of
+$B_{p,8}(B^{2})$. Its harmonic normal form, as multiples of $\tfrac1{1024}$ over
+the targets $(x,\alpha_1,\beta_1,\alpha_2,\beta_2,\alpha_3,\beta_3,c_{\min},t_1)$
+with the remaining mass going to $t_0$, is the level-two normal form of
+\Cref{prop:b2-realised} unchanged (its entries doubled) on
+$x,\alpha_1,\beta_1,\alpha_2,\beta_2,c_{\min}$, together with
+\[
+ \begin{array}{r@{\quad}l@{\qquad}l}
+  \alpha_3: & (0,0,0,0,0,0,1021,0\,|\,2) & (0,0,549,335,0,0,0,0\,|\,0)\\
+  \beta_3:  & (0,0,0,0,0,1023,0,0\,|\,0) & (271,201,0,0,336,0,0,88\,|\,1).
+ \end{array}
+\]
+The inner six vertices do not read $\alpha_3$ or $\beta_3$, so their values are
+the level-two values in all four layers and the inner outmap is $B^{2}$ on each;
+on the layer $(0,0)$ the outer pair is the closed two-cycle of
+\Cref{rem:b2-anatomy}(i) with $A=\tfrac{1021}{1024}$, $A'=\tfrac{1023}{1024}$,
+$q=\tfrac1{512}$, $\Theta=\tfrac{2048}{4093}$. Verified from the game: the
+greatest trap is empty, the $256$ profile values were computed by exact
+elimination and $\val_\sigma$ taken as the minimum over the two Min strategies,
+no incidence is tied, the outmap is the displayed orientation, a unique sink
+orientation, acyclic, of height $12$, and the value vector increases at every
+vertex along the run.
+\end{proposition}
+
 \begin{remark}[What a game would have to read]\label{rem:blowup-realise}
 \Cref{thm:blowup} sharpens the realisability question of
 \Cref{prop:auso-size} to a statement about what the values of a game can
@@ -6583,8 +6803,8 @@ Holt--Klee property were recomputed here in exact arithmetic.
 m & 1 & 2 & 3 & 4 & 5 & 6 & 7\\ \hline
 h^{\ast}(m) & 1 & 2 & 4 & 7 & 12 & \ge16 & \ge26\\
 h^{\ast}_{\mathrm{HK}}(m) & 1 & 2 & 4 & 6 & 11 & \ge12 & \ge13\\
-h^{\ast}_{\mathrm{LP}}(m) & 1 & 2 & 4 & 6 & \ge9 & \ge12 & \ge12\\
-h^{\ast}_{1}(m) & 1 & 2 & 4 & 6 & \ge9 & \ge12 & \ge12
+h^{\ast}_{\mathrm{LP}}(m) & 1 & 2 & 4 & 6 & \ge10 & \ge12 & \ge12\\
+h^{\ast}_{1}(m) & 1 & 2 & 4 & 6 & \ge10 & \ge12 & \ge12
 \end{array}
 \]
 The first row is \Cref{prop:auso-census,prop:hstar-five,thm:blowup}; the
@@ -6600,12 +6820,14 @@ products at block dimensions $(4,4)$, $(4,5)$, $(5,4)$ and $(5,5)$ all
 fail Holt--Klee on a $3$-face (the route's auditor, reproduced by this
 round's), so \Cref{lem:hstar-super} preserves Holt--Klee for some pairs
 of factors and not others and no doubling follows); the last two rows are
-\Cref{cor:hstar-one,prop:oneplayer-runs} together with
+\Cref{cor:hstar-one,prop:oneplayer-runs,prop:hstar-one-five} together with
 $h^{\ast}_{1}\le h^{\ast}_{\mathrm{LP}}\le h^{\ast}_{\mathrm{HK}}$
 (\Cref{prop:oneplayer-lp}) and the monotonicity of both in $m$ (the game
 of \Cref{prop:oneplayer-runs} adjoining a Max vertex over $t_0$ and a
 fresh coin stays nondegenerate), the lower bounds being what a search
-found and not claimed tight. The one-player ceiling is strictly
+found and not claimed tight; beyond the table, $h^{\ast}_{1}(8)\ge13$
+and $h^{\ast}_{1}(7k)\ge12k$ for every $k$
+(\Cref{prop:hstar-one-eight,cor:stack-family}). The one-player ceiling is strictly
 below $h^{\ast}$ at $m=4$; at $m\ge5$ the last three rows are lower
 bounds only, so the table does not yet distinguish
 $h^{\ast}_{1}(m)\approx2m$ from $h^{\ast}_{1}(m)\approx c^{m}$; whether
@@ -6613,6 +6835,327 @@ $h^{\ast}_{1}$ grows superpolynomially, and is attained on $m^{O(1)}$
 vertices, is the one-player half of the pivot, which is Melekopoglou and
 Condon's question (\Cref{rem:ladder}).
 \end{remark}
+
+\subsection{One player: Howard's rule with two actions, sign-definite games, and stacking}\label{sec:oneplayer-howard}
+
+The one-player half of the pivot is Melekopoglou and Condon's question
+(\Cref{rem:ladder}). The round-$16$ one-player route made the dictionary
+of claim (v3) a proposition, isolated a class on which every improving
+rule is linear, and found the first one-player family whose all-switches
+run exceeds $|\Vmax|$ by a constant factor, by stacking copies of a block
+behind a freezing bias.
+
+\begin{remark}[The one-player dictionary]\label{rem:oneplayer-dictionary}
+Claim (v3) of the earlier rounds --- that all-switches on a stopping
+one-player SSG is Howard's policy-improvement rule on a transient
+two-action Markov decision process, in both directions --- is settled by
+\Cref{sec:readouts}: with $\Vmin=\emptyset$ every readout is a single
+substochastic affine map (\Cref{lem:readout}(a)), the first-passage rows
+onto $\Vmax\cup\{t_1\}$ are the transition rows and rewards of that
+process, $\val_\sigma|_{\Vmax}$ is the value of the policy $\sigma$
+(\Cref{lem:readout}(b)) and the strictly switchable set is the set of
+improvable states (\Cref{lem:readout}(c)); conversely a transient
+two-action process with dyadic rows of denominator $2^{d}$ is the process
+of a stopping one-player SSG on $O(m^{2}d)$ average vertices
+(\Cref{thm:readout-realise}(b) at $r=1$, \Cref{lem:dyadic-row}). So the
+one-player ceiling $h^{\ast}_{1}$ is the worst case of Howard's rule with
+two actions per state, Melekopoglou and Condon's question.
+\end{remark}
+
+\begin{definition}[Sign-definite games]\label{def:signdef}
+Let $G$ be a stopping SSG and, for $v\in V$, let $p^{v}$ be the law of the first visit
+to $C\cup\{t_0,t_1\}$ from $v$. Call $G$ \emph{sign-definite} if for every
+$v\in\Vmax$ the vector $d^{v}:=\bigl(p^{v^{(1)}}-p^{v^{(0)}}\bigr)\big|_{C}$ is
+sign-definite: either $d^{v}\ge0$ or $d^{v}\le0$ componentwise.
+\end{definition}
+
+\begin{theorem}[All-switches is linear on sign-definite games]\label{thm:signdef}
+Let $G$ be a sign-definite stopping SSG, and let $\sigma_0,\sigma_1,\dots$ be any run
+of improving switches (all-switches included). Then every $v\in\Vmax$ switches at most
+twice, so the run has length at most $2|\Vmax|$; membership is decidable in
+polynomial time. (Every improving rule is therefore polynomial on the class;
+whether the class contains a member outside the eight polynomial classes of
+this document is not determined --- the random samples below all have
+$\min(|\Vmax|,|\Vmin|)\le2$ --- so it is recorded as a bound on the rule and
+not as a new polynomial class.)
+\end{theorem}
+
+\begin{proof}
+As in \Cref{rem:oneplayer-dictionary}, for every Max strategy $\rho$ and every $v$,
+$\val_\rho(v)=\sum_{w\in C}p^{v}_w\val_\rho(w)+p^{v}(t_1)$, this time with $C$ in
+place of $\Vmax$ and $\val_\rho$ the value against a Min best response. Hence
+\[
+  \phi_v(t)\;:=\;\val_{\sigma_t}(v^{(1)})-\val_{\sigma_t}(v^{(0)})
+  \;=\;\sum_{w\in C}d^{v}_w\,\val_{\sigma_t}(w)+e_v ,
+\]
+with $e_v$ independent of $t$. By \Cref{lem:switch} the vector $\val_{\sigma_t}$ is
+nondecreasing in $t$, so if $d^{v}\ge0$ then $\phi_v$ is nondecreasing, and if
+$d^{v}\le0$ it is nonincreasing. A vertex switches at $t$ exactly when $\phi_v(t)$ is
+nonzero and its sign disagrees with the current choice; after such a switch the choice
+agrees with the sign of $\phi_v$, and a monotone real sequence changes sign at most
+once, so at most one further switch can occur. Hence $n_v\le2$ and, since each round
+switches at least one vertex, $L\le2|\Vmax|$. The run ends at an optimal strategy
+(\Cref{lem:local-global}), each round costs one Min best response and one evaluation
+(\Cref{thm:eval-stopfree}), and each $p^{v}$ is one rational linear solve on the
+average vertices, so both the algorithm and the membership test are polynomial.
+\end{proof}
+
+\begin{remark}\label{rem:signdef}
+The class admits two players, cycles and $a=\Theta(N)$, and is closed under
+\Cref{def:damping}, which multiplies every $d^{v}$ by a positive scalar, so
+the reduction of \Cref{thm:stopping-transform} keeps the hypothesis. The
+content of \Cref{thm:signdef} is the contrapositive,
+which is a design constraint on every attempt at a long run --- \emph{a run longer than
+$2|\Vmax|$ needs a Max vertex whose two successors have first-passage laws whose
+difference changes sign on $C$}, i.e.\ a vertex that genuinely trades one controlled
+vertex off against another rather than trading a bundle against a constant. The
+ladder $L_n$ of \Cref{def:ladder} is not sign-definite; the chain $\mathrm{RC}(k)$ of
+\Cref{rem:grid-per-vertex} is. In two independent samples of random stopping SSGs
+($882$ on $6$--$10$ non-sink vertices, of which $668$ are sign-definite, and $1009$ on
+$8$--$13$, of which $445$ are) the longest run inside the class was $3$ and the
+maximum number of switches at a single vertex was exactly $2$: the bound $n_v\le2$ is
+attained.
+\end{remark}
+
+\begin{definition}[Balanced normal form]\label{def:balanced}
+A one-player normal form on states $B$, given by substochastic rows $p^{b,c}$ over
+$B$ and rewards $q_{b,c}\ge0$, is \emph{balanced with mass $\rho$} if
+$\sum_{b'}p^{b,c}_{b'}=\rho<1$ for every $b\in B$ and $c\in\{0,1\}$.
+\end{definition}
+
+\begin{lemma}[Balancing costs one state]\label{lem:balance}
+Let $G_0$ be a nondegenerate one-player normal form on $m_0$ states with
+$\rho:=\max_{b,c}\sum_{b'}p^{b,c}_{b'}<1$, all-switches run of length $h_0$ from
+$\sigma^{0}$, and gaps
+$g_{\min}:=\min_{\sigma,b}\bigl|A_{b,1}(y_\sigma)-A_{b,0}(y_\sigma)\bigr|>0$,
+$g_{\max}$ the corresponding maximum. For every $\mu>0$ with
+$\rho+\mu\max q_{b,c}<1$ and every dyadic $\varsigma$ with
+$0<\varsigma<(1-\rho)^{2}\mu g_{\min}/4$ there is a \emph{balanced} nondegenerate
+one-player normal form $\widehat G_0(\mu,\varsigma)$ on $m_0+1$ states with mass
+$\rho$, namely: scale every reward by $\mu$; add a state $\omega$ with
+$p^{\omega,c}_\omega=\rho$ and rewards $0,\varsigma$; and pad the row of $(b,c)$ with
+$\rho-\sum_{b'}p^{b,c}_{b'}$ on $\omega$. Its values are
+$\mu\,y_\sigma+\pi_{\sigma}\varsigma/(1-\rho)$ on the old states with
+$\pi_\sigma\in[0,1]$ the pad of the chosen row, $\omega$ is never strictly switchable
+at its action $1$, and the all-switches run from $(\sigma^{0},1)$ is the run of $G_0$,
+of length $h_0$.
+\end{lemma}
+
+\begin{proof}
+Scaling every reward by $\mu$ scales every value by $\mu$ and every action value by
+$\mu$, so it changes no comparison. The added state satisfies
+$x_\omega=\rho x_\omega+r_c$, i.e.\ $x_\omega=r_c/(1-\rho)$, so its action $1$ is
+strictly better and it never switches from there; and the pad injects at
+most $\varsigma/(1-\rho)$ at every state, which propagates through
+$(I-P_\sigma)^{-1}$, of row sums at most $1/(1-\rho)$, so it perturbs each
+value by at most $\varsigma/(1-\rho)^{2}$ and each comparison by at most
+$2\varsigma/(1-\rho)^{2}<\mu g_{\min}/2$, less than half the smallest gap
+(the route's bound omitted one factor $1/(1-\rho)$; the built family uses
+$\varsigma=2^{-60}\mu g_{\min}$, far inside either). Hence every comparison keeps its sign and the improvement orientation on the old
+coordinates is unchanged.
+\end{proof}
+
+\begin{theorem}[Stacking: the run adds up]\label{thm:stack}
+Let $\widehat G$ be a balanced nondegenerate one-player normal form on $m_0$ states
+with mass $\rho$, gaps in $[g_{\min},g_{\max}]$, and an all-switches run of length
+$h_0$ from $\sigma^{0}$. For $k\ge1$ let $\mathrm{ST}(k)$ be the one-player normal form
+on $k\,m_0$ states built from $k$ disjoint copies $B_1,\dots,B_k$ of $\widehat G$ by
+\begin{itemize}[leftmargin=1.4em]
+\item scaling the rewards of copy $j$ by $\mu_j>0$;
+\item giving every state $b$ of copy $j\ge2$ the extra mass $\nu$ on a constant
+      gadget of value $\Theta_j$ on the action $\sigma^{0}(b)$, and the extra mass
+      $\nu$ on the state $v_{j-1}$ of copy $j-1$ on the other action, where $v_{j-1}$
+      is a state that copy $j-1$ switches at the last round of its run --- the
+      within-copy rows being re-padded so that the within-copy mass stays $\rho$ for
+      both actions.
+\end{itemize}
+Let $x^{-}_j<x^{+}_j$ be the values of $v_{j-1}$ in $\mathrm{ST}(j-1)$ at the last two
+strategies of its run, put $\Gamma_j:=x^{+}_j-x^{-}_j>0$, and choose
+\[
+  0<\epsilon<\frac{(1-\rho)g_{\min}}{(1-\rho)g_{\min}+g_{\max}},\qquad
+  \Theta_j:=x^{+}_j-\epsilon\Gamma_j,\qquad
+  \frac{\nu\epsilon\Gamma_j}{(1-\rho)g_{\min}}<\mu_j<\frac{\nu(1-\epsilon)\Gamma_j}{g_{\max}} .
+\]
+Then the all-switches run of $\mathrm{ST}(k)$ from the strategy that puts every copy at
+$\sigma^{0}$ has length exactly $k\,h_0$: copy $j$ is frozen at $\sigma^{0}$ for the
+first $(j-1)h_0$ rounds and performs $\widehat G$'s run during rounds
+$(j-1)h_0,\dots,jh_0-1$.
+\end{theorem}
+
+\begin{proof}
+Copies read only themselves and the single state $v_{j-1}$ of the previous copy, so
+the transition matrix is block lower triangular and the values of copies
+$1,\dots,j$ do not depend on copies $>j$; in particular $\mathrm{ST}(j-1)$'s values are
+the restriction of $\mathrm{ST}(k)$'s, and the recursion defining $\Theta_j,\mu_j$ is
+well founded.
+
+Fix $j$ and a Max strategy $\sigma$ of $\mathrm{ST}(k)$, and write $x$ for the value
+vector, $P_\sigma$ for the within-copy transition matrix of copy $j$ and
+$y_\sigma$ for the value of $\sigma|_{B_j}$ in $\widehat G$. The equations of copy $j$
+read $x_b=(P_\sigma x)_b+\mu_jq_{b,\sigma(b)}+\beta_b$ with
+$\beta_b=\nu\Theta_j$ if $\sigma(b)=\sigma^{0}(b)$ and $\beta_b=\nu x_{v_{j-1}}$
+otherwise. With $\delta:=x_{v_{j-1}}-\Theta_j$ and
+$\chi_\sigma(b):=\mathbf 1[\sigma(b)\ne\sigma^{0}(b)]$ this is
+$\beta=\nu\Theta_j\mathbf 1+\nu\delta\chi_\sigma$, and since every row of $P_\sigma$
+has mass exactly $\rho$ we have $(I-P_\sigma)^{-1}\mathbf 1=(1-\rho)^{-1}\mathbf 1$,
+whence
+\[
+  x|_{B_j}\;=\;\mu_j\,y_\sigma\;+\;\frac{\nu\Theta_j}{1-\rho}\mathbf 1
+  \;+\;\nu\delta\,u_\sigma,\qquad u_\sigma:=(I-P_\sigma)^{-1}\chi_\sigma\in\Bigl[0,\tfrac1{1-\rho}\Bigr]^{B_j}.
+\]
+Because both rows at $b$ have the same mass $\rho$, $(p^{b,1}-p^{b,0})\cdot\mathbf 1=0$
+and $(p^{b,1}-p^{b,0})\cdot u\le\rho\,\mathrm{osc}(u)$; so the comparison
+$C_b:=(\text{value of action }1)-(\text{value of action }0)$ at $b$ is
+\[
+  C_b\;=\;\mu_j\,\Delta_b(y_\sigma)\;-\;s_b\,\nu\delta\;+\;\nu\delta\,\eta_b,
+  \qquad |\eta_b|\le\frac{\rho}{1-\rho},
+\]
+where $\Delta_b(y):=A_{b,1}(y)-A_{b,0}(y)$ is $\widehat G$'s own difference and
+$s_b=+1$ if $\sigma^{0}(b)=1$, $s_b=-1$ if $\sigma^{0}(b)=0$.
+
+\emph{Freezing.} Suppose $\sigma|_{B_j}=\sigma^{0}$ and $x_{v_{j-1}}\le x^{-}_j$. Then
+$\chi_\sigma=0$, so $\eta_b=0$ \emph{exactly}, and
+$\delta\le x^{-}_j-\Theta_j=-(1-\epsilon)\Gamma_j<0$. Hence
+$C_b=\mu_j\Delta_b(y_{\sigma^{0}})-s_b\nu\delta$ has the sign of $-s_b\nu\delta$,
+i.e.\ the sign that keeps $\sigma^{0}(b)$, as soon as
+$\nu(1-\epsilon)\Gamma_j>\mu_jg_{\max}$ --- the right-hand inequality of the display in
+the statement. So no state of copy $j$ is strictly switchable.
+
+\emph{Running.} Suppose $x_{v_{j-1}}=x^{+}_j$, so $\delta=\epsilon\Gamma_j$. Then
+$|C_b-\mu_j\Delta_b(y_\sigma)|\le\nu\epsilon\Gamma_j(1+\rho/(1-\rho))
+=\nu\epsilon\Gamma_j/(1-\rho)<\mu_jg_{\min}\le\mu_j|\Delta_b(y_\sigma)|$ by the
+left-hand inequality; so $C_b$ and $\Delta_b(y_\sigma)$ have the same sign for every
+$\sigma$ and every $b$. The improvement orientation of copy $j$ is therefore
+$\widehat G$'s, and its all-switches trajectory from $\sigma^{0}$ is $\widehat G$'s run.
+
+\emph{The induction.} By induction on $j$, copy $j$ is at $\sigma^{0}$ and frozen while
+$x_{v_{j-1}}\le x^{-}_j$, which by \Cref{lem:switch} (values are nondecreasing along the
+run, and $v_{j-1}$ takes the value $x^{-}_j$ at round $(j-1)h_0-1$ and $x^{+}_j$ at
+round $(j-1)h_0$) is exactly the first $(j-1)h_0$ rounds; from round $(j-1)h_0$ on,
+$x_{v_{j-1}}=x^{+}_j$ is constant, because copies $\le j-1$ are unaffected by copies
+$\ge j$ and copy $j-1$ has reached its optimum. Copy $j$ then runs for $h_0$ rounds.
+The copies therefore run one after another and the total is $k\,h_0$. Finally
+$\epsilon<(1-\rho)g_{\min}/((1-\rho)g_{\min}+g_{\max})$ is exactly the condition that
+the interval for $\mu_j$ is nonempty.
+\end{proof}
+
+\begin{corollary}[A one-player family with slope $12/7$]\label{cor:stack-family}
+Let $G_0$ be the $m=6$ one-player normal form behind the entry
+$h^{\ast}_{1}(6)\ge12$ of \Cref{rem:four-ceilings} (round-$15$ howard-cube route; its
+rows have denominator $2^{12}$ and its all-switches run from $\sigma=25$ has length
+$12$), and let $\widehat G:=\widehat G_0(\mu,\varsigma)$ be its balanced form on $7$
+states (\Cref{lem:balance}). Then for every $k$ there is a one-player
+stopping SSG with $7k$ Max vertices, dyadic data of $O(k)$ bits and $O(k^{3})$ average
+vertices, whose all-switches run from the stated start has length $12k$;
+it is nondegenerate for $k\le2$ (exhaustive over all incidences, by the
+route's auditor), and \Cref{thm:stack} excludes ties only along the
+designated run, so nondegeneracy for every $k$ is not proved. Hence
+\[
+  h^{\ast}_{1}(m)\;\ge\;\tfrac{12}{7}\,m\qquad\text{for } m\equiv0 \pmod 7 ,
+\]
+and more generally $h^{\ast}_{1}(m_1+k(m_0+1))\ge h_1+k\,h_0$ whenever a one-player
+normal form on $m_1$ (resp.\ $m_0$) states has a run of length $h_1$ (resp.\ $h_0$);
+in particular $h^{\ast}_{1}$ is superadditive up to one state,
+$h^{\ast}_{1}(m_1+m_2+1)\ge h^{\ast}_{1}(m_1)+h^{\ast}_{1}(m_2)$. Two
+consequences, both from the route's auditor. By Fekete's lemma the limit
+$\lim_m h^{\ast}_{1}(m)/m$ exists and equals
+$\sup_{m_0}h^{\ast}_{1}(m_0)/(m_0+1)$: stacking is capped by its best
+block and can never by itself make $h^{\ast}_{1}$ superlinear. And since
+$\mathrm{ST}(2)$ is nondegenerate, \Cref{prop:oneplayer-lp} makes its
+orientation Holt--Klee, so $h^{\ast}_{\mathrm{HK}}(14)\ge h^{\ast}_{\mathrm{LP}}(14)\ge24$
+--- the first block-doubling of a Holt--Klee height at the sizes where
+\Cref{lem:hstar-super}'s abstract product leaves the Holt--Klee class
+(\Cref{rem:four-ceilings}); the two constructions add heights by
+different means, the product by a conditional translation and the stack
+by a freezing bias that keeps every copy alive.
+\end{corollary}
+
+\begin{proof}
+\Cref{lem:balance} and \Cref{thm:stack}; the parameters are
+$\rho=4095/4096$, $\nu=2^{-20}$, $\mu_1=2^{-12}$,
+$\epsilon=g_{\min}/(2^{24}g_{\max})$, $\mu_{j+1}=2^{-31}\mu_j$ and $\Theta_{j+1}$ the
+dyadic truncation of $x^{+}_{j+1}-\epsilon\Gamma_{j+1}$; each $\Theta_j$ and $\mu_j$
+needs $O(j)$ bits, so \Cref{lem:dyadic-row} gives $O((7k)^2\cdot O(k))=O(k^{3})$
+average vertices. For the last clause take copy $1$ to be the unpadded first game (no
+bias is attached to copy $1$, so it needs no balancing) and copies $2,\dots$ to be
+balanced copies of the second.
+\end{proof}
+
+\begin{remark}[What was computed]\label{rem:stack-measured}
+The family of \Cref{cor:stack-family} was built and its run verified in exact rational
+arithmetic for $k=1,\dots,10$, giving
+$(m,L)=(7,12),(14,24),(21,36),(28,48),(35,60),(42,72),(49,84),(56,96),(63,108),(70,120)$;
+the value vector increases pointwise at every round of every run. The raw SSGs were
+also built through \Cref{lem:dyadic-row} and the runs recomputed \emph{from the games}
+by a second, independent evaluator: $\mathrm{ST}(1)$ is a stopping one-player SSG on
+$N=734$ vertices ($7$ Max) with a run of length $12$, and $\mathrm{ST}(2)$ one on
+$N=2199$ vertices ($14$ Max) with a run of length $24$ (both re-verified
+here from the game files: no tied incidence, unique sink orientations,
+acyclic, heights $12$ and $24$, the run of $\mathrm{ST}(2)$ recomputed
+through its exact first-passage normal form over all $2^{14}$ starts). The construction is the first
+family of one-player stopping SSGs whose all-switches run exceeds $|\Vmax|$ by a
+constant factor: the previous record families, $\mathrm{RC}(k)$ and the ladder, both
+have $L=|\Vmax|$, and \Cref{cor:gate}'s attained example has $L=|\Vmax|+2$.
+\end{remark}
+
+\begin{proposition}[$h^{\ast}_{1}(5)\ge10$]\label{prop:hstar-one-five}
+Freezing the fifth Max vertex of the $m=6$ one-player game of \Cref{cor:stack-family} at its
+first action and retyping it as an average vertex (\Cref{def:subcube}) gives a
+nondegenerate one-player stopping SSG on $346$ vertices with $5$ Max vertices whose
+all-switches run from the strategy $01010$ has length $10$, with switched sets
+\[
+ \{0,1,3,4\},\{0,1,2,4\},\{0,1,4\},\{0,1,3\},\{0,1\},\{0\},\{2,3,4\},\{3,4\},\{4\},\{2\}.
+\]
+Its improvement orientation is an acyclic Holt--Klee unique sink orientation of the
+$5$-cube of bottom-antipodal height $10$. Hence $h^{\ast}_{1}(5)\ge10$ and
+$h^{\ast}_{\mathrm{LP}}(5)\ge10$, improving the entries $\ge9$ of
+\Cref{rem:four-ceilings}; the Holt--Klee ceiling $h^{\ast}_{\mathrm{HK}}(5)=11$ of
+\Cref{prop:hkfive} is now within one.
+\end{proposition}
+
+\begin{proof}
+A finite exact computation, done twice: once on the normal form obtained by
+eliminating the frozen state (stochastic complementation), and once on the explicit
+SSG, by an evaluator that resolves the average part of the graph in topological order
+and solves the resulting $6\times6$ rational system. All $32$ starting strategies were
+tried; $10$ is the maximum, and the other eleven facets of the $m=6$ record give
+$5,6,6,6,6,6,6,7,8,8,6$. The orientation was checked to be a USO, acyclic, tie-free
+and Holt--Klee (the max-flow test of \Cref{prop:hkfive}).
+\end{proof}
+
+\begin{proposition}[$h^{\ast}_{1}(8)\ge13$]\label{prop:hstar-one-eight}
+A one-player normal form on $8$ states with denominator $2^{44}$,
+found by annealing and verified exactly (tie-free, USO, acyclic, Holt--Klee),
+has bottom-antipodal height $13$: its run from $\sigma=10011000$ switches
+\[
+\{0,1,2,4,6,7\},\{0,1,2,3,5\},\{0,1,2,5\},\{0,1,5\},\{0,1,3\},\{0,1\},\{0\},
+\{2,3,4,5,6\},\{3,5\},\{5\},\{2\},\{4\},\{6\}.
+\]
+So $h^{\ast}_{1}(8)\ge13$ and $h^{\ast}_{\mathrm{LP}}(8)\ge13$ (the game,
+on $2691$ vertices, was built and its run recomputed from the graph by
+the route's auditor). With
+\Cref{prop:hstar-one-five} the one-player row of \Cref{rem:four-ceilings} becomes
+\[
+  h^{\ast}_{1}(m)\;=\;1,\;2,\;4,\;6,\;\ge10,\;\ge12,\;\ge12,\;\ge13\qquad(m=1,\dots,8),
+\]
+and \Cref{cor:stack-family} adds $h^{\ast}_{1}(7k)\ge12k$ for every $k$.
+\end{proposition}
+
+\begin{proposition}[Exhaustive census at $N\le8$]\label{prop:oneplayer-census-small}
+Over \emph{all} one-player stopping SSGs whose non-sink vertices number
+$n\le 6$ --- all $\binom{n+2}{2}^{\,n}$ assignments of an unordered pair of
+\emph{distinct} targets to each vertex, for every split of $n$ into $|\Vmax|=m$ and
+$a=n-m$; a vertex whose two successors coincide may be contracted, which lowers $n$
+and does not raise $m$, so this is no loss --- the longest all-switches run over all
+$2^{m}$ starting strategies is exactly $m$, for every $(m,a)$ with $3\le m\le n$
+(for $m\le2$ the same bound is the known $h^{\ast}_{1}(1)=1$, $h^{\ast}_{1}(2)=2$, and
+for $a=0$ it is \Cref{rem:grid-per-vertex}). In particular $L\le N-2$ on all of them,
+with equality only at $a=0$, where the chain $\mathrm{RC}(m)$ attains it; average
+vertices never lengthen a run at these sizes, so the smallest one-player game with
+$L>|\Vmax|$ --- one exists, since $h^{\ast}_{1}(3)=4$ --- has at least $7$ non-sink
+vertices. The computation is exact (integer Bareiss elimination, values compared as
+numerators over the common determinant) and covers $1.5\times10^{9}$ games.
+\end{proposition}
 
 \subsection{Readouts: what a game presents to its Max vertices}\label{sec:readouts}
 
@@ -6785,9 +7328,9 @@ every outmap $s$ --- the orientation with every edge pointing towards
 $\sigma\oplus s(\sigma)$ is a linear-programming orientation, hence
 Holt--Klee, and agrees with $s$ at $\sigma$ --- so the bound never asks
 for more than $m$ Min vertices. The bound is attained at $B^{2}$, where
-$\chi_{\mathrm{HK}}=2$ and \Cref{prop:b2-realised} has $k=1$; at
-$m=3$ (\Cref{prop:m3-realised}) the realisations known use six Min
-vertices where it asks for one.
+$\chi_{\mathrm{HK}}=2$ and \Cref{prop:b2-realised} has $k=1$, and at
+$m=3$, where \Cref{prop:m3-realised} first used six Min vertices,
+\Cref{prop:m3-one-min} attains it with one.
 \end{theorem}
 
 \begin{proof}
@@ -6817,7 +7360,8 @@ normal-form denominators $64$ and $128$ --- so at $m=3$ one-player realisability
 exactly the Holt--Klee condition, by \Cref{prop:oneplayer-lp} --- and each
 of the two other classes is the improvement orientation of a nondegenerate
 stopping SSG with three Max and six Min vertices, on $98$ and $170$
-vertices. In particular the first blow-up level
+vertices --- and, by \Cref{prop:m3-one-min} below, with three Max and one
+Min vertex. In particular the first blow-up level
 $B(\text{$1$-cube})=(0,1,3,6,7,4,5,2)$ of \Cref{rem:blowup-measured} is
 realised on $39$ vertices rather than $58$. (The route's readout systems
 were found by linear programming and an evolution strategy and turned
@@ -6826,6 +7370,112 @@ and the $98$-vertex game were re-verified here from the game --- trap
 test, exact value vectors as minima over all Min strategies, outmap, no
 ties --- and both two-player games by the route's auditor; the eighteen
 games are kept beside the repository's round-$16$ verification scripts.)
+\end{proposition}
+
+\begin{proposition}[Best-response pieces of the two realisations]\label{prop:pieces-measured}
+All statements exact, recomputed here from the printed normal forms.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $G^{\sharp}$ (\Cref{prop:auso-seven}; $m=4$, $k=2$). Index Min
+      strategies by $\tau=\tau_{c_5}+2\tau_{c_6}$. The four frozen
+      orientations are
+      $t_{0}=(0,1,3,6,5,4,7,10,15,14,9,12,11,8,13,2)$,
+      $t_{1}=(1,4,3,6,5,0,7,10,14,15,9,12,11,8,13,2)$,
+      $t_{2}=(0,1,2,3,7,4,13,6,15,14,9,12,11,8,5,10)$,
+      $t_{3}=(1,0,3,2,7,4,13,6,14,15,9,12,11,8,5,10)$,
+      all four nondegenerate acyclic unique sink orientations, all four
+      Holt--Klee, of heights $5,3,4,4$. The pieces are
+      $S_{0}=\{0,1,7,13,15\}$, $S_{1}=\{2,3,8,9,12\}$,
+      $S_{2}=\{5\}$, $S_{3}=\{4,6,10,11,14\}$. Along the
+      height-$7$ run $8,6,11,7,13,5,1,0$ the best responses are
+      $1,3,3,0,0,2,0$: five blocks, more than the $2^{k}=4$ available
+      responses, so a response recurs.
+\item $B^{2}$ (\Cref{prop:b2-realised}; $m=5$, $k=1$). The two frozen
+      orientations are nondegenerate Holt--Klee acyclic unique sink
+      orientations of heights $8$ and $4$; the pieces are
+      $S_1=\{11,15,19,23,27,31\}$ and $S_0$ its complement; along the run
+      $12,19,13,17,8,16,0,7,1,5,4$ the best response is $0$ except at
+      $\sigma=19$, so the single Min vertex turns twice, and the run takes
+      $9$ of its $10$ steps under $t_0$, more than $h(t_0)=8$: the one step
+      under $t_1$ carries the walk from a point of $t_0$-height $3$ to one
+      of $t_0$-height $8$, so no bound of the form ``steps under
+      $\vartheta$ number at most $h(t_\vartheta)$'' holds.
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}[The Holt--Klee defect, as far as it can be computed]\label{rem:hk-defect}
+The invariant $\chi_{\mathrm{HK}}$ of \Cref{thm:min-count} asks for a
+second Min vertex nowhere that can be computed. Every acyclic unique sink
+orientation of the $4$-cube has $\chi_{\mathrm{HK}}\le2$: of the $12640$
+classes of \Cref{prop:auso-census}, $6113$ are Holt--Klee and the other
+$6527$ are pointwise selections from two Holt--Klee acyclic unique sink
+orientations (exhaustive over the $4\,792\,176$ orientations and the
+$2\,322\,704$ Holt--Klee ones, one class representative at a time; the
+round-$16$ Min-budget route, reproduced by both its auditors). At $m=5$
+the height-$12$ orientation $s_{12}$ of \Cref{prop:hstar-five} has
+$\chi_{\mathrm{HK}}=2$ as well, witnessed by the Holt--Klee acyclic unique
+sink orientations
+\[
+\begin{aligned}
+ t_1=(&15,0,1,2,27,14,12,29,19,10,8,25,22,21,20,23,\\
+      &31,18,16,17,11,30,28,5,7,26,24,13,3,6,4,9),\\
+ t_2=(&7,18,0,1,19,30,4,5,15,26,8,13,27,22,12,25,\\
+      &23,2,28,21,3,6,24,17,31,14,16,29,10,9,20,11),
+\end{aligned}
+\]
+of heights $8$ and $4$, which agree with $s_{12}$ on the $21$-element set
+$\{0,1,2,3,4,6,7,8,10,11,12,13,14,15,16,17,19,23,24,27,30\}$ and on the
+$12$-element set $\{5,9,10,18,20,21,22,25,26,28,29,31\}$; the two overlap
+at $10$ and cover the cube. So the greatest height of an orientation with
+$\chi_{\mathrm{HK}}\le2$ is $h^{\ast}(m)$ for every $m\le5$, and
+\Cref{thm:min-count} never forces $k\ge2$ there. Nor do the heights of
+the pieces bound the height of a selection: $s_{G^{\sharp}}$, of height
+$7$, is a pointwise selection from
+$t_1=(0,1,2,3,15,4,13,6,8,9,10,11,7,12,5,14)$ and
+$t_2=(1,4,3,6,7,0,5,10,14,15,9,12,11,8,13,2)$, Holt--Klee of heights $2$
+and $3$, and the height-$6$ orientation
+$(2,7,8,5,12,11,14,9,10,15,4,13,6,3,1,0)$ is a selection from two
+Holt--Klee orientations of height $2$; over the $4$-cube the least sum of
+piece heights over Holt--Klee covers of $s_{G^{\sharp}}$ is $5$, the excess
+$h-\Sigma^{\ast}$ is at most $2$, and the distribution of $\Sigma^{\ast}$
+over the $12640$ classes is $46,5367,7130,97$ at $\Sigma^{\ast}=2,3,4,5$.
+Whether a dimension-free bound on the height of a selection in terms of
+its pieces' heights exists is not settled by these two sizes.
+\end{remark}
+
+\begin{proposition}[The Min-count bound is attained at $m=3$]\label{prop:m3-one-min}
+Each of the two non-Holt--Klee classes of the $3$-cube is the improvement
+orientation of a nondegenerate stopping SSG with three Max vertices and
+\emph{one} Min vertex, so \Cref{thm:min-count}'s bound
+$k\ge\log_2\chi_{\mathrm{HK}}=1$ is attained there and the six Min vertices
+of \Cref{prop:m3-realised} are not needed. The harmonic normal forms, as
+multiples of $\tfrac1{D}$ over the targets $(c_1,c_2,c_3,c_4,t_1)$ with
+$c_4$ the Min vertex and the remaining mass going to $t_0$, are
+\[
+ \begin{array}{r@{\quad}l@{\qquad}l}
+  \multicolumn{3}{l}{\text{(a) } s=(0,1,3,2,5,4,6,7),\ h=2,\ D=4096:}\\
+  c_1: & (5,298,1722,0;\,2050)   & (0,0,1850,596;\,1643)\\
+  c_2: & (0,188,3900,0;\,0)      & (176,176,2148,176;\,176)\\
+  c_3: & (27,0,0,2682;\,1379)    & (0,582,0,2649;\,822)\\
+  c_4: & (0,0,0,0;\,3959)        & (0,534,2800,75;\,679)\\[2pt]
+  \multicolumn{3}{l}{\text{(b) } s=(0,1,3,2,6,7,5,4),\ h=3,\ D=256:}\\
+  c_1: & (219,7,0,0;\,1)         & (201,8,0,46;\,0)\\
+  c_2: & (0,0,153,0;\,86)        & (12,12,0,12;\,112)\\
+  c_3: & (0,0,0,0;\,255)         & (0,0,0,194;\,0)\\
+  c_4: & (0,0,0,0;\,15)          & (56,15,0,28;\,0).
+ \end{array}
+\]
+Both were built into explicit fair-coin games by \Cref{lem:dyadic-row} ---
+$145$ and $86$ vertices, three Max, one Min, $139$ resp.\ $80$ average and
+the two sinks --- and verified from the game: greatest trap empty, the
+eight $\val_\sigma$ taken as the componentwise minimum over both Min
+strategies of exact profile values, no tied incidence, the outmap as
+displayed, acyclic unique sink orientations of heights $2$ and $3$, not
+Holt--Klee. In (a) the pieces are $S_0=\{0,1\}$, $S_1=\{2,\dots,7\}$ and
+both frozen orientations are Holt--Klee of height $2$; in (b) they are
+$S_0=\{0,1,2,3,6,7\}$, $S_1=\{4,5\}$ with frozen orientations
+$(0,1,3,2,7,6,5,4)$ and $(1,0,3,2,6,7,5,4)$, Holt--Klee of heights $3$ and
+$2$, and the longest run $4,2,1,0$ uses both pieces (verified here from
+both games).
 \end{proposition}
 
 \subsection{The profile cube and its sink projection}\label{sec:projection}
@@ -7055,6 +7705,361 @@ and a cyclic profile cube, while $G^{\sharp}$ and the one-player
 realisations of \Cref{rem:blowup-measured} have positive handicap at
 every base profile (the route's exact computations, re-verified by its
 auditor).
+
+\subsection{Lemke's algorithm as a bias homotopy}\label{sec:bias}
+
+The linear complementarity formulation of \Cref{prop:lcp} comes with an
+algorithm, Lemke's, which \Cref{rem:lcp} left aside. The round-$16$
+algorithmic free search read it in the game: it is a homotopy in a
+loyalty bonus paid to a base profile: on one player an improving
+single-switch rule that none of the barriers of this document constrains,
+on two players a directed path of the profile cube along which the value
+vector need not be monotone.
+
+\begin{definition}[The biased system]\label{def:bias}
+Let $G$ be stopping in harmonic normal form on $C=\Vmax\cup\Vmin$
+(\Cref{def:profile-orientation}), with readouts $f_{v,a}$ and signs
+$\varepsilon_v$. Fix a \emph{base profile} $\beta\in\{0,1\}^{C}$ and a
+positive \emph{covering vector} $d\in\mathbb R^{C}_{>0}$. For $\lambda\ge0$
+put
+\[
+  f^{\lambda}_{v,a}(y)\;:=\;f_{v,a}(y)-\varepsilon_v d_v\lambda\,
+     [\,a\ne\beta(v)\,],
+\]
+so that at every controlled vertex the base action is favoured by $d_v\lambda$
+against its owner's alternative, and let
+$T_\lambda(y)_v:=\operatorname{opt}_a f^{\lambda}_{v,a}(y)$ be the
+corresponding operator on $\mathbb R^{C}$. Call a profile $\pi$
+\emph{$\lambda$-optimal} if $y_\pi$, the unique solution of
+$y_v=f^{\lambda}_{v,\pi(v)}(y)$, satisfies $T_\lambda y_\pi=y_\pi$.
+By \Cref{lem:survival-contract} the operator $T_\lambda$ has exactly one
+fixed point $y(\lambda)$ for every $\lambda$, the rewards being arbitrary
+reals there, and $y(0)=\val|_C$.
+\end{definition}
+
+\begin{theorem}[Lemke's algorithm is the bias homotopy]\label{thm:lemke-homotopy}
+Let $G$ be stopping, $\beta$, $d$ as above, and let $M,q$ be the data of
+\Cref{prop:lcp} for the base $\beta$; write $z,w$ for its variables. Then
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item for every $\lambda\ge0$ the pair $(z,w+\lambda d)$ solves
+  $\mathrm{LCP}(M,q+\lambda d)$ if and only if the underlying $y$ is
+  $y(\lambda)$; the solution is unique, $M$ being a $P$-matrix, so
+  $\lambda\mapsto z(\lambda)$ is a well-defined piecewise affine path;
+\item $\lambda_0:=\max_v\max\bigl(0,-q_v/d_v\bigr)$ is the least $\lambda$ at
+  which $\beta$ is $\lambda$-optimal, and $\beta$ is $\lambda$-optimal for
+  every $\lambda\ge\lambda_0$;
+\item for $S\subseteq C$ the set $I_S$ of $\lambda\ge0$ whose solution has
+  $z_v=0$ off $S$ and $(w+\lambda d)_v=0$ on $S$ is a closed interval, on
+  which $z_S(\lambda)=-(M_{SS})^{-1}(q_S+\lambda d_S)$ is affine; the $I_S$
+  cover $[0,\infty)$ and meet only in endpoints, so
+  $\lambda\mapsto S(\lambda)$ is a step function with at most $2^{|C|}-1$
+  breakpoints and pairwise distinct values, so the corresponding profiles
+  $\beta\oplus S$ are pairwise distinct, consecutive ones differing in one
+  coordinate when consecutive breakpoints are distinct;
+\item Lemke's algorithm with covering vector $d$, started from the initial
+  ray $z=0$, traverses exactly
+  $\{(z(\lambda),w(\lambda)+\lambda d,\lambda):0\le\lambda\le\lambda_0\}$
+  with $\lambda$ decreasing, and terminates at $\lambda=0$ with
+  $y(0)=\val|_C$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) Write $w^{\lambda}:=w+\lambda d$. By \Cref{prop:lcp},
+$z_v=\varepsilon_v(y_v-f_{v,\beta(v)}(y))=
+\varepsilon_v(y_v-f^{\lambda}_{v,\beta(v)}(y))$ and
+$w^{\lambda}_v=\varepsilon_v(y_v-f_{v,\bar\beta(v)}(y))+\lambda d_v
+=\varepsilon_v(y_v-f^{\lambda}_{v,\bar\beta(v)}(y))$. Hence
+$z,w^\lambda\ge0$ says that at a Max vertex $y_v$ dominates both biased
+readouts and at a Min vertex is dominated by both, while
+$z^{\mathsf T}w^{\lambda}=0$ says one of the two is attained at each vertex;
+together these are $T_\lambda y=y$, whose solution is unique
+(\Cref{lem:survival-contract}). Since $y\mapsto z$ is an affine bijection and
+$w=Mz+q$, these conditions are $\mathrm{LCP}(M,q+\lambda d)$, and $M$ is a
+$P$-matrix by \Cref{prop:lcp}(a).
+
+(b) At $z=0$ the underlying $y$ is $y_\beta$ (\Cref{prop:lcp}(b) with
+$S=\emptyset$) and $w^{\lambda}=q+\lambda d$, a solution iff
+$q+\lambda d\ge0$.
+
+(c) On $I_S$ the equations $w^{\lambda}_S=0$ read
+$M_{SS}z_S+q_S+\lambda d_S=0$, determining $z_S$ affinely --- $M_{SS}$ is a
+$P$-matrix, hence invertible --- and $I_S$ is cut out by the affine
+inequalities $z_S(\lambda)\ge0$ and
+$(Mz(\lambda)+q+\lambda d)_{C\setminus S}\ge0$, so it is an interval.
+Uniqueness in (a) makes the interiors of the $I_S$ disjoint with union
+$[0,\infty)$, so each $S$ occurs on one interval only.
+
+(d) Along an edge of Lemke's almost-complementary path the basis is
+$\{z_v:v\in S\}\cup\{w_v:v\notin S\}\cup\{z_0\}$ and one complementary pair
+is nonbasic, so every point of the edge is a \emph{complementary} solution of
+$\mathrm{LCP}(M,q+\lambda d)$ for $\lambda=z_0$; by (a) the edge lies in the
+graph of the function $\lambda\mapsto z(\lambda)$, so the path projects
+injectively to $\lambda$. It starts at $\lambda_0$ and, secondary ray
+termination being impossible for a $P$-matrix, ends at $\lambda=0$; being
+connected it is the whole segment.
+\end{proof}
+
+\begin{corollary}[The homotopy is an exact algorithm]\label{cor:bias-algorithm}
+On a stopping SSG the \emph{bias homotopy} --- start at $\pi_0=\beta$,
+$\lambda=\lambda_0$; on the current piece solve
+$y(\lambda)=\alpha+\lambda\gamma$ by two exact $|C|\times|C|$ linear systems;
+take the largest $\lambda'<\lambda$ at which some regret
+$\rho_v(\lambda):=\varepsilon_v\bigl(y_v(\lambda)-
+f^{\lambda}_{v,\bar\pi(v)}(y(\lambda))\bigr)$ vanishes; switch that $v$ and
+repeat --- terminates with $\val|_C$ after at most $2^{|C|}-1$ switches --- the
+trivial enumeration ceiling, no better than trying every profile --- each
+costing $O(|C|^{3})$ exact rational operations on numbers of polynomial
+bit-size, and decides \Cref{prob:main}.
+\end{corollary}
+
+\begin{remark}\label{rem:bias-attribution}
+The reduction of turn-based stochastic games to $P$-matrix LCPs and the
+Stickney--Watson correspondence are attributed in \Cref{rem:lcp,prop:lcp}
+(G\"artner--R\"ust; Jurdzi\'nski--Savani; Hansen--Ibsen-Jensen). That the
+Lemke path of a $P$-matrix LCP is the solution path of the one-parameter
+family $\mathrm{LCP}(M,q+\lambda d)$ is standard in the complementarity
+literature (Lemke; Cottle--Pang--Stone), reproved above only because the
+exact form is needed; from memory, unchecked. The reading of $\lambda$ as
+a \emph{loyalty bonus} paid to the base profile is, from memory and
+unchecked against the sources, the Harsanyi--Selten linear tracing
+procedure with prior $\beta$, whose complementary-pivoting path van den
+Elzen and Talman identified with a Lemke path for bimatrix games and
+which Herings and Peeters carried to stochastic games; what appears new
+here is its statement on the harmonic normal form of an SSG,
+\Cref{prop:bias-one-improving,lem:bias-path-lp} and the measurements.
+\end{remark}
+
+\begin{proposition}[One player: an improving single-switch rule]\label{prop:bias-one-improving}
+Let $G$ be a stopping SSG with $\Vmin=\emptyset$, let
+$\mu_1>\mu_2>\dots>\mu_K>\mu_{K+1}:=0$ be the breakpoints of the bias homotopy
+and $\pi_0=\beta,\pi_1,\dots,\pi_K$ its profiles, so that $\pi_0$ is
+$\lambda$-optimal on $[\mu_1,\infty)$ and $\pi_t$ on $[\mu_{t+1},\mu_t]$ for
+$1\le t\le K$ (all these intervals nondegenerate --- if two breakpoints
+coincide, delete the intermediate profile and the statement is unchanged).
+Write $\kappa_\pi(v):=\sum_{w}d_w\,\mathbb E_\pi[N_w\mid v]\,[\pi(w)\ne\beta(w)]$
+for the $d$-weighted expected number of visits to the deviating vertices.
+Then for every $0\le t<K$,
+\[
+  \val_{\pi_{t+1}}-\val_{\pi_t}\;=\;\mu_{t+1}\bigl(\kappa_{\pi_{t+1}}-\kappa_{\pi_t}\bigr)\;\ge\;0
+  \qquad\text{pointwise,}
+\]
+so the path is a nondecreasing chain of value vectors and, consecutive
+profiles differing in one coordinate, every step is an improving single
+switch: on one-player games the bias homotopy is a switching rule in the
+sense of \Cref{def:rule}, and one not among the seven of
+\Cref{prop:rules-fail}.
+\end{proposition}
+
+\begin{proof}
+All $\varepsilon_v=+1$, so the biased value of a fixed profile is
+$\val^{\lambda}_\pi=\val_\pi-\lambda\kappa_\pi$: the bias subtracts
+$d_w\lambda$ at each visit to a deviating $w$. At $\lambda=\mu_{t+1}$ both
+$\pi_t$ and $\pi_{t+1}$ are $\lambda$-optimal, hence both attain the optimal
+value vector of that one-player game, giving
+$\Delta v=\mu_{t+1}\Delta\kappa$ with
+$\Delta v:=\val_{\pi_{t+1}}-\val_{\pi_t}$,
+$\Delta\kappa:=\kappa_{\pi_{t+1}}-\kappa_{\pi_t}$. For
+$\lambda\in[\mu_{t+2},\mu_{t+1})$, a nondegenerate interval, the profile
+$\pi_{t+1}$ is optimal, so $\Delta v-\lambda\Delta\kappa\ge0$; substituting
+the identity gives $(\mu_{t+1}-\lambda)\Delta\kappa\ge0$, hence
+$\Delta\kappa\ge0$ and $\Delta v\ge0$. A single switch that does not lower the value is an improving
+switch.
+\end{proof}
+
+\begin{proposition}[One player: the path is a shadow-vertex path]\label{prop:bias-shadow}
+Let $G$ be a stopping SSG with $\Vmin=\emptyset$ and harmonic normal form
+$(q^{v,a},p^{v,a})$ on $\Vmax$, $|\Vmax|=m$, and let
+$\mathrm{Occ}(\mu)=\{f\ge0:\ \sum_{a}f_{v,a}-\sum_{u,a}f_{u,a}p^{u,a}_v=\mu_v\}$
+be d'Epenoux's occupancy polytope for an initial distribution $\mu>0$ ---
+by \Cref{prop:oneplayer-lp} a simple $m$-polytope with $2m$ facets whose
+$2^{m}$ vertices are the deterministic profiles. Then $\pi$ is $\lambda$-optimal exactly when $f^{\pi}$
+maximises $(c-\lambda e_\beta)\cdot f$ over $\mathrm{Occ}(\mu)$, where
+$c_{v,a}:=q^{v,a}$ and $(e_\beta)_{v,a}:=d_v[a\ne\beta(v)]$. Hence the bias
+homotopy is the parametric --- equivalently shadow-vertex --- simplex path of
+that linear programme in the $2$-plane spanned by $c$ and $e_\beta$, started
+at the vertex $f^{\beta}$, and its length is the number of vertices of the
+shadow of $\mathrm{Occ}(\mu)$ in that plane between $f^{\beta}$ and the
+optimum.
+\end{proposition}
+
+\begin{proof}
+The occupancy correspondence and the identification of vertices with
+deterministic profiles is d'Epenoux's, already used in
+\Cref{prop:oneplayer-lp}; $\lambda$-optimality of $\pi$ is optimality of the
+policy in the one-player game with rewards $c-\lambda e_\beta$, which for
+$\mu>0$ is optimality of $f^{\pi}$ in the linear programme.
+\end{proof}
+
+\begin{proposition}[Two players: a directed path of the profile cube, not a value-monotone one]\label{prop:bias-two-nonmono}
+The identity $\val_{\pi_{t+1}}-\val_{\pi_t}=\mu_{t+1}
+(\kappa^{\varepsilon}_{\pi_{t+1}}-\kappa^{\varepsilon}_{\pi_t})$, with
+$\kappa^{\varepsilon}_\pi(v)=\sum_w\varepsilon_wd_w\mathbb E_\pi[N_w\mid v]
+[\pi(w)\ne\beta(w)]$, holds on every stopping SSG by the same proof, but
+its right-hand side has no sign when both players are present, and the
+value vector is measurably not monotone along the path (exact: at $99+66$
+of $181+137$ two-player steps on random $10$- and $13$-vertex stopping
+games some coordinate of $\val_\pi$ fell, while every one-player step
+raised none). What survives with two players is the profile cube: every
+step of the homotopy flips a coordinate that lies in the out-map
+$s_C(\pi_t)$ of the profile orientation of \Cref{thm:profile-uso}, so
+the path is a directed path of that unique sink orientation (the route's
+auditor, exact: every step of every path from all $64$ base profiles of
+$G^{\sharp}$ and of the game of \Cref{prop:b2-realised}, and all $3612$
+steps on $400$ random stopping games). It is therefore not a switching
+rule of \Cref{def:rule} on the Max cube, and neither
+\Cref{cor:no-height,thm:impedance,thm:normalform-barrier,thm:window-barrier}
+nor \Cref{thm:matching-barrier,thm:slack-barrier,thm:seeded-barrier,thm:ratio-sandwich}
+speaks about it; it is also not residue-blind, reading as it does the whole
+harmonic normal form.
+\end{proposition}
+
+\begin{lemma}[Realising a prescribed path is one linear programme]\label{lem:bias-path-lp}
+Fix the transition part $(Q_\beta,Q_{\bar\beta})$ of a harmonic normal form on
+$C$, the signs $\varepsilon$ and the covering vector $d$; then
+$M=E(I-Q_{\bar\beta})(I-Q_\beta)^{-1}E$ is fixed and
+$q=MEr_\beta-Er_{\bar\beta}$ is affine in the reward vectors. Let
+$S_0=\emptyset,S_1,\dots,S_K$ be subsets of $C$ with
+$|S_t\triangle S_{t-1}|=1$. Then the reward vectors and breakpoints
+$\lambda_1>\dots>\lambda_K>0$ for which the bias homotopy has exactly that
+sequence of supports are the solutions of the linear system
+\[
+  0\le r_{\beta}\le\bbone-Q_\beta\bbone,\quad
+  0\le r_{\bar\beta}\le\bbone-Q_{\bar\beta}\bbone,\quad
+  q+\lambda_1d\ge0,
+\]
+\[
+  z_{S_t}(\lambda)\ge0\ \text{and}\ \bigl(Mz(\lambda)+q+\lambda d\bigr)_i\ge0\ (i\notin S_t)
+  \quad\text{at }\lambda=\lambda_t\text{ and }\lambda=\lambda_{t+1},\ 1\le t\le K,
+\]
+with $\lambda_{K+1}:=0$ and $z_{S}(\lambda)=-(M_{SS})^{-1}(q_S+\lambda d_S)$,
+all of whose left-hand sides are affine in
+$(r_\beta,r_{\bar\beta},\lambda_1,\dots,\lambda_K)$.
+\end{lemma}
+
+\begin{proof}
+$z_S$ and $w$ are affine in $(q,\lambda)$ by
+\Cref{thm:lemke-homotopy}(c), and $q$ is affine in the rewards by
+\Cref{prop:lcp}; an affine function of $\lambda$ nonnegative at both
+endpoints of an interval is nonnegative on it; and by uniqueness of the
+solution, ``$z_{S}(\lambda)\ge0$ and $w_i(\lambda)\ge0$ off $S$'' says exactly
+that the solution at $\lambda$ is the complementary basic solution with basis
+$S$, i.e.\ that the profile there is $\beta\oplus S$. The reward bounds are
+the constraints $q^{v,a}\ge0$, $q^{v,a}+\sum_wp^{v,a}_w\le1$ of a harmonic
+normal form.
+\end{proof}
+
+\begin{remark}[The named families do not defeat the homotopy]\label{rem:bias-families}
+With $d=\bbone$ and the maximum over all $2^{|C|}$ base profiles, the
+number of breakpoints is: $L_n$ ($n\le10$) exactly $n$; $\mathrm{RC}(k)$
+($k\le10$) exactly $k$; $M_n$ ($n=3,4,5$) exactly $2n+1=|C|$; the
+$19$-vertex instance $G^{\ast}$ of the harness ($|C|=7$) $9$;
+$\mathrm{WD}$, $\mathrm{CC}$, $H_m$, $G_m$ ($|C|\le2$) at most $3$;
+$G^{\sharp}$ and the game of \Cref{prop:b2-realised} ($|C|=6$) $12$ each,
+attained at one base profile (the route's auditor); and $P_D$ of
+\Cref{thm:fold} at most $2D=|C|$ --- the route counted $0,2,4,6,10,12$ at
+$D\le6$ and its auditor $0,1,2,3$ at $D\le4$, the difference being a
+convention at the profile degeneracy of $P_D$, whose $F_d$ and $G_d$
+share a successor pair. So none of the hard families of this document
+costs the homotopy more than $2|C|$ switches; in particular the ladder,
+on which least-index and smallest-gap need $2^{n}-1$, costs it $n$.
+\end{remark}
+
+\begin{proposition}[The path exceeds $|C|$; four exact witnesses]\label{prop:bias-witnesses}
+Let $\mathrm{LP}^{\ast}(m)$ be the greatest number of homotopy breakpoints,
+with $d=\bbone$, over stopping SSGs with $|C|=m$ and over all base profiles.
+Then, witnessed by explicit \emph{one-player} stopping SSGs verified from the
+game,
+\[
+  \mathrm{LP}^{\ast}(1)=1,\quad \mathrm{LP}^{\ast}(2)=3=2^{2}-1,\quad
+  \mathrm{LP}^{\ast}(3)\ge7=2^{3}-1,\quad
+  \mathrm{LP}^{\ast}(4)\ge12,\quad \mathrm{LP}^{\ast}(5)\ge18,\quad
+  \mathrm{LP}^{\ast}(6)\ge22 .
+\]
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $\mathrm{HAM}_3$, on $35$ vertices ($3$ Max, $30$ average, normal-form
+  denominator $2^{4}$), base profile $\beta=(1,0,0)$: the homotopy visits
+  \emph{all eight} profiles,
+  $100\to110\to010\to000\to001\to011\to111\to101$, a Hamiltonian path in the
+  profile cube, and Lemke makes $8$ pivots. Its normal form is
+  \[
+  \begin{array}{l|ll}
+   v & f_{v,0} & f_{v,1}\\\hline
+   1 & \tfrac18+\tfrac58y_1+\tfrac18y_2 & \tfrac1{16}y_1+\tfrac{11}{16}y_3\\
+   2 & \tfrac58y_1+\tfrac5{16}y_2 & \tfrac18+\tfrac1{16}y_1+\tfrac7{16}y_3\\
+   3 & \tfrac14+\tfrac7{16}y_3 & \tfrac1{16}+\tfrac{15}{16}y_3
+  \end{array}
+  \]
+  with $\val|_C=(\tfrac{11}{15},\tfrac23,1)$ and breakpoints
+  $\tfrac{47}{1080},\tfrac{391}{9720},\tfrac{283}{7416},\tfrac5{144},
+   \tfrac{29}{876},\tfrac{71}{2216},\tfrac7{232}$;
+\item $\mathrm{PATH}_4$, on $233$ vertices ($4$ Max, $227$ average),
+  $\beta=(0,0,0,0)$: the homotopy visits $13$ of the $16$ profiles,
+  $0000\to0100\to1100\to1000\to1001\to1011\to1010\to1110\to1111\to0111\to
+  0110\to0010\to0011$; Lemke makes $13$ pivots;
+\item $\mathrm{PATH}_5$, on $232$ vertices ($5$ Max, $225$ average),
+  $\beta=(0,0,0,0,1)$: the homotopy visits $19$ of the $32$ profiles; Lemke
+  makes $19$ pivots;
+\item $\mathrm{PATH}_6$, on $300$ vertices ($6$ Max, $292$ average),
+  $\beta=(0,0,0,0,1,0)$: the homotopy visits $23$ of the $64$ profiles; Lemke
+  makes $23$ pivots.
+\end{enumerate}
+$\mathrm{PATH}_6$ is $\mathrm{PATH}_5$ with a sixth Max vertex adjoined,
+so the four are three independent data points and not a family with a
+growth law. All four were built from their dyadic normal forms by \Cref{lem:dyadic-row}
+and verified \emph{from the game}: stopping by \Cref{lem:trapchar}, the normal
+form recomputed from the successor lists, the value against brute force over
+all profiles, and the path by two independent implementations --- the
+game-side homotopy and a lexicographic Lemke tableau on $(M,q)$, whose pivot
+count is one more than the number of breakpoints. In particular no bound
+$\mathrm{LP}\le|C|$ and no bound $\mathrm{LP}\le2|C|$ holds.
+\end{proposition}
+
+\begin{remark}[Exactly what is missing]\label{rem:bias-gap}
+One statement: \emph{there are $c>0$ and stopping SSGs $G_n$ with
+$|C(G_n)|=n$, a base profile and covering vector $\bbone$, on which the bias
+homotopy makes at least $2^{cn}$ switches.} By \Cref{prop:bias-shadow} its
+one-player half asks for a two-action Markov decision process whose occupancy
+polytope has an exponentially long shadow in a direction selecting one
+action-coordinate per state; by \Cref{prop:bias-one-improving} such a family would
+also be an exponential lower bound for an improving single-switch rule that is
+none of the seven of \Cref{prop:rules-fail} and is not all-switches.
+Conversely a polynomial bound on the path would, by
+\Cref{thm:lemke-homotopy}, put \textsc{SSG-Value} in $\mathsf P$, so no
+polynomial bound may be conjectured here.
+
+The obstruction met in the search is concrete, and can be stated as a lemma.
+Let an outer Max vertex $u$ be added to a block $B$ so that both of $u$'s
+actions enter $B$ at the same distribution up to a positive scalar: action $x$
+sends the token into $B$ with law $c_x\mu$ and pays $r_{u,x}$. Then for a
+policy $(x,\tau)$ the shadow coordinates are
+$\kappa=[x{=}1]+c_x\kappa_{\mathrm{in}}(\mu,\tau)$ and
+$\val=r_{u,x}+c_x\val_{\mathrm{in}}(\mu,\tau)$, so each of the two copies of
+the inner point set is a \emph{homothety} of it: the two copies carry
+identical slope sequences $s_1>\dots>s_{k-1}$, where $k$ is the number of
+vertices of the inner hull. If the copies are separated in $\kappa$ --- which
+they are as soon as the $+1$ from $u$'s own occupancy dominates --- the joint
+hull takes a prefix of length $p$ of one and a suffix of length $q$ of the
+other, and concavity forces $s_{p-1}>s_{k-q+1}$, i.e.\ $p+q\le k+1$: the
+doubling gains \emph{at most one} vertex. Doubling therefore requires the two
+actions of $u$ to enter $B$ with \emph{non-proportional} weightings, so that
+the second copy's slopes are compressed below the first's. That is what
+$\mathrm{HAM}_3$ achieves at $m=3$; iterating it is open.
+The measured growth of $\mathrm{LP}^{\ast}$ is
+$1,3,7,\ge12,\ge18,\ge22$ at $m=1,\dots,6$, against the ceiling
+$2^{m}-1=1,3,7,15,31,63$: the ceiling is attained at $m\le3$ and the
+successive differences are $2,4,5,6,\ge4$, the last search being the least
+converged. Nothing may be read into the shape of that sequence:
+every search in this project that looked for a hard instance failed until the
+instance was engineered, and a quadratic bound on $\mathrm{LP}^{\ast}$ would
+put \textsc{SSG-Value} in $\mathsf P$, so it must not be conjectured. What the
+numbers do establish is the lower bounds above; they were obtained by local
+search on the \emph{transition structure} with the rewards eliminated by
+\Cref{lem:bias-path-lp}, and by local search on the reduced game scored by the
+exact path length, in both cases followed by dyadic rounding and
+re-verification from the built game --- not by sampling raw games, which never
+exceeded $|C|+2$.
+\end{remark}
 
 \subsection{A rule that needs exponentially many switches}
 
@@ -8777,6 +9782,233 @@ accepted, and \Cref{thm:bsi-tracks} bounds only the strictly endorsed
 switches within a block.
 
 
+\begin{lemma}[$R_{\mathrm{BR}}$ moves towards the double best response]\label{lem:double-br}
+Let $G$ be stopping, $\tau$ a Min strategy and $U:=\val^{\tau}$.
+\begin{enumerate}
+\item[(a)] $\sigma'\in\mathrm{BR}(\tau)$ if and only if $\sigma'$ is
+  \emph{$U$-greedy}: $U(\sigma'(v))=\max_iU(v^{(i)})$ for every $v\in\Vmax$.
+\item[(b)] For every Max strategy $\sigma$ and every $v\in\Vmax$,
+\[
+  U(\bar\sigma(v))>U(\sigma(v))\iff \sigma'(v)\ne\sigma(v)\ \text{for all }
+  \sigma'\in\mathrm{BR}(\tau),\qquad
+  U(\bar\sigma(v))\ge U(\sigma(v))\iff \sigma'(v)=\bar\sigma(v)\ \text{for some }
+  \sigma'\in\mathrm{BR}(\tau).
+\]
+\end{enumerate}
+Consequently, if $\tau$ is a Min best response to $\sigma$, the two variants of
+\Cref{prop:bsi-br} switch
+\[
+  C^{>}_{\max}=S_\sigma\cap\!\!\bigcap_{\sigma'\in\mathrm{BR}(\tau)}\!\!\mathrm{Dis}(\sigma,\sigma'),
+  \qquad
+  C^{\ge}_{\max}=S_\sigma\cap\!\!\bigcup_{\sigma'\in\mathrm{BR}(\tau)}\!\!\mathrm{Dis}(\sigma,\sigma'),
+\]
+and when the Max best response $\sigma^{\ast}$ to $\tau$ is unique both are
+$S_\sigma\cap\mathrm{Dis}(\sigma,\sigma^{\ast})$: one round of $R_{\mathrm{BR}}$
+switches exactly those improving Max vertices at which $\sigma$ disagrees with
+a best response to a best response to $\sigma$.
+\end{lemma}
+
+\begin{proof}
+(a) $U=\val^{\tau}$ is the unique fixed point of $T^{\tau}$
+(\Cref{thm:contraction}, $G$ stopping), so $U(v)=\max_iU(v^{(i)})$ at
+$v\in\Vmax$, $U(v)=U(\tau(v))$ at $v\in\Vmin$ and $U$ is the mean of its
+successors at average vertices.  If $\sigma'$ is $U$-greedy then $U$ satisfies
+all the equations of the profile $(\sigma',\tau)$, and by uniqueness of that
+fixed point $U=\val_{\sigma',\tau}$.  Conversely if $\val_{\sigma',\tau}=U$
+then $U(v)=U(\sigma'(v))$ at every $v\in\Vmax$, so $\sigma'(v)$ attains
+$\max_iU(v^{(i)})$.  (b) is immediate from
+$U(v)=\max\{U(v^{(0)}),U(v^{(1)})\}$ and (a).
+\end{proof}
+
+
+
+
+
+\begin{lemma}[Min's preference at a clamp reverses once]\label{lem:clamp-reverses-once}
+Let $\sigma_0,\sigma_1,\dots$ be a run of a switching rule and let
+$u\in\Vmin$ have successors $p,q$ with $\val_\sigma(q)=c$ constant.  A Min
+best response $\tau_t$ to $\sigma_t$ has $\tau_t(u)=p$ when
+$\val_{\sigma_t}(p)<c$ and $\tau_t(u)=q$ when $\val_{\sigma_t}(p)>c$.  Hence
+if ties are broken by a fixed preference at $u$, the action $\tau_t(u)$ is a
+monotone step function of $t$ and changes at most once along the run.
+\end{lemma}
+
+\begin{proof}
+$\val_{\sigma,\tau}=\val_\sigma$ forces $\tau(u)$ to attain
+$\min_i\val_\sigma(u^{(i)})$ (dual of \Cref{lem:double-br}(a)), and
+$t\mapsto\val_{\sigma_t}(p)-c$ is nondecreasing by \Cref{lem:switch}.
+\end{proof}
+
+\begin{theorem}[Blocks, and the reordering bound]\label{thm:reorder}
+Consider a run of $R_{\mathrm{BR}}$, in either variant, on a stopping $G$ with
+$|\Vmax|=m$, producing $\sigma_0,\dots,\sigma_R$ with guides
+$U_t:=\val^{\tau_t}$.  Put
+\[
+  d_t:=\bigl|\{v\in\Vmax:\ U_{t-1}(\sigma_t(v))=\textstyle\max_iU_{t-1}(v^{(i)})
+   \ \text{and}\ U_t(\sigma_t(v))<\max_iU_t(v^{(i)})\}\bigr|\qquad(1\le t\le R-1),
+\]
+the number of Max vertices at which the guide's preference \emph{reverses away
+from the current action} at round $t$.  Then
+\[
+  R\ \le\ m+\sum_{t=1}^{R-1}d_t .
+\]
+In particular $d_t=0$ whenever $U_t=U_{t-1}$, so a maximal block of
+consecutive rounds sharing one guide has at most $m$ rounds and
+$R\le m\bigl(1+\#\{t:\tau_t\ne\tau_{t-1}\}\bigr)$.  For \Cref{def:bsi}, in
+either variant, the same argument gives
+\[
+  R\ \le\ m+B+\sum_{t}d_t\qquad\text{and dually}\qquad R\ \le\ k+A+\sum_{t}d'_t,
+\]
+with $A,B$ as in \Cref{thm:bsi-tracks}; since $d_t\le m$ and $d_t=0$ at a
+round with $C_{\min}=\emptyset$, this refines \Cref{thm:bsi-tracks}'s
+$R\le m+(m+1)B$.
+\end{theorem}
+
+\begin{proof}
+Put $\Phi(\sigma,U):=|\{v\in\Vmax: U(\sigma(v))=\max_iU(v^{(i)})\}|\in[0,m]$.
+Every $v\in C_{\max}$ has $U_t(\bar\sigma_t(v))\ge U_t(\sigma_t(v))$, so
+$\bar\sigma_t(v)$ is $U_t$-greedy and $\sigma_{t+1}(v)$ is $U_t$-greedy;
+unswitched vertices keep their status.  Hence
+$\Phi(\sigma_{t+1},U_t)=\Phi(\sigma_t,U_t)+a_t$, where $a_t:=|C^{>}_{\max}|$
+counts the switched vertices that were \emph{not} $U_t$-greedy.  Next,
+$\Phi(\sigma_{t+1},U_{t+1})\ge\Phi(\sigma_{t+1},U_t)-d_{t+1}$ by the
+definition of $d_{t+1}$.  Summing over $t$ and using $0\le\Phi\le m$,
+\[
+  \sum_{t=0}^{R-1}a_t\ \le\ m+\sum_{t=1}^{R-1}d_t .
+\]
+For $R_{\mathrm{BR}}$, \Cref{prop:bsi-br} in its strict reading gives
+$C^{>}_{\max}\ne\emptyset$ at every round with $S_\sigma\ne\emptyset$, so
+$a_t\ge1$ and $R\le\sum a_t$.  For \Cref{def:bsi}, $a_t\ge1$ can fail; but by
+\Cref{lem:bsi-pairloc} in its strict reading every productive round has
+$C^{>}_{\max}\ne\emptyset$ or $C^{<}_{\min}\ne\emptyset$, and the rounds of
+the second kind have $C_{\min}\ne\emptyset$ and so number at most $B$.
+\end{proof}
+
+\begin{corollary}[Clamped games are easy for $R_{\mathrm{BR}}$]\label{cor:clamp}
+Let $G$ be stopping with $|\Vmax|=m$, $|\Vmin|=k$, and suppose every Min
+vertex has a constant successor.  Then $R_{\mathrm{BR}}$, run with any fixed
+tie-breaking preference at each Min vertex, halts within $m(k+1)$ rounds from
+every start.  Dually, if every Max vertex has a constant successor, every
+switching rule halts within $2m$ rounds (a Max vertex over a variable and a constant switches at most twice along any improving run, \Cref{lem:switch}).
+\end{corollary}
+
+\begin{proof}
+By \Cref{lem:clamp-reverses-once} each Min vertex changes its chosen action at most once,
+so $\tau_t$ changes at most $k$ times and the run splits into at most $k+1$
+blocks; each has at most $m$ rounds by \Cref{thm:reorder}.
+\end{proof}
+
+\begin{remark}\label{rem:clamp}
+\Cref{cor:clamp} is why every family this document carries is fast for
+$R_{\mathrm{BR}}$: $\mathrm{RD}(n)$ has all its $\Theta_j$ constant
+($m=k=n$, bound $n(n+1)$, truth $n$), $L_n$, $H_m$, $\mathrm{CC}(L,m)$,
+$\mathrm{WD}(e,j,m)$ and $\mathrm{SD}(K)$ have $k=0$, and
+\Cref{prop:bsi-oneplayer} is the case $k=0$ of the corollary.  Together with
+the two-switch bound for a constant option (\Cref{lem:switch}, and the remark after \Cref{lem:max-tree}) it says what a superpolynomial family must contain:
+\emph{both} a Max vertex whose two options are non-constant and a Min vertex
+whose two options are non-constant, the Min one reversing superpolynomially
+often.  This subsumes the round-$15$ auditor's refutation of the $R_{\mathrm{BR}}$
+route's proposed counter (a Max vertex over a constant gadget) and gives its
+Min-side twin.
+\end{remark}
+
+\begin{proposition}[$W_2$: three rounds with two Max vertices]\label{prop:w2}
+Let $W_2$ be the stopping SSG whose harmonic normal form
+(\Cref{lem:dyadic-row}) has $\Vmax=\{v_0,v_1\}$, $\Vmin=\{u\}$ and rows
+\[
+\begin{array}{r@{\ }l@{\qquad}l}
+ v_0\ (\max): & \tfrac{13}{16}\,v_1 & \tfrac1{32}v_1+\tfrac{23}{32}u+\tfrac5{32}t_1\\
+ v_1\ (\max): & \tfrac{29}{32}\,u   & \tfrac14\,t_1\\
+ u\ (\min):   & \tfrac{15}{16}\,v_0 & \tfrac1{32}\,t_1
+\end{array}
+\]
+(the missing mass leaks to $t_0$; every row is dyadic of denominator $32$, so
+\Cref{lem:dyadic-row} realises $W_2$ as a stopping SSG on $34$ vertices: $2$
+Max, $1$ Min, $29$ average and the two sinks).  Then
+$w^{\ast}=(\tfrac{13}{64},\tfrac14,\tfrac1{32})$ and:
+\begin{enumerate}
+\item[(i)] from $\sigma_0=(0,0)$, $R_{\mathrm{BR}}$ takes exactly three
+ productive rounds, $(0,0)\to(1,0)\to(1,1)\to(0,1)$, switching $v_0$, then
+ $v_1$, then $v_0$ again; the run is the same in the veto and the strict
+ variant and for \emph{every} choice of best response, and no comparison made
+ along it is a tie;
+\item[(ii)] all-switches takes at most two rounds from every start, and
+ $h^{\ast}(2)=2$ (\Cref{prop:auso-census}), so $R_{\mathrm{BR}}$ beats the
+ all-switches ceiling already at $m=2$;
+\item[(iii)] $R=3=2^{m}-1$ is the absolute maximum for $m=2$, so
+ $h_{\mathrm{BR}}(2)=3$ against $h^{\ast}(2)=2$, $h^{\ast}_{HK}(2)=2$;
+\item[(iv)] \Cref{def:bsi} from $(\sigma_0,\tau_0)=((0,0),0)$ takes exactly
+ four rounds in both variants, with switch sets
+ $(\{v_0\},\emptyset),(\emptyset,\{u\}),(\{v_1\},\emptyset),(\{v_0\},\emptyset)$,
+ and $4=(2^{m}-1)+(2^{k}-1)$ is the absolute maximum for $(m,k)=(2,1)$.  In
+ particular a BSI run can be longer than $|C|$, which the two families of
+ \Cref{rem:readout} are not.
+\end{enumerate}
+The two guides involved are
+$\val^{\tau=0}=(\tfrac{2560}{4909},\tfrac{2175}{4909},\tfrac{2400}{4909})$ with
+Max best response $(1,0)$, and $\val^{\tau=1}=w^{\ast}$ with Max best response
+$(0,1)$; the Min best response is $\tau=0$ at $\sigma_0$ and $\tau=1$ at every
+later strategy, and the value vectors along the run are
+$\val_{\sigma_0}=(0,0,0)$,
+$\val_{\sigma_1}=(\tfrac{5885}{32768},\tfrac{29}{1024},\tfrac1{32})$,
+$\val_{\sigma_2}=(\tfrac{191}{1024},\tfrac14,\tfrac1{32})$ and
+$\val_{\sigma_3}=w^{\ast}$.
+\end{proposition}
+
+\begin{proof}
+The rows all leak, so $W_2$ is stopping by \Cref{lem:trapchar}.  Everything
+else is a finite exact computation, carried out twice: in the normal form,
+with $\val_\sigma$ the componentwise minimum over both Min strategies and
+$\val^{\tau}$ the componentwise maximum over all four Max strategies; and on
+the realised $34$-vertex SSG with the independent core of the harness, whose
+$w^{\ast}$ and whose $R_{\mathrm{BR}}$ run agree.  For (iii) and the second
+half of (iv): $\val_\sigma$ strictly increases at each round with
+$C_{\max}\ne\emptyset$ and $\val^{\tau}$ strictly decreases at each round with
+$C_{\min}\ne\emptyset$ (\Cref{lem:switch} in $G$ and in $\bar G$), so no
+$\sigma$ and no $\tau$ recurs and there are at most $2^{m}-1$ rounds of the
+first kind and $2^{k}-1$ of the second, every productive round being of one
+kind or the other.
+\end{proof}
+
+\begin{remark}[What a superpolynomial family must contain]\label{rem:rbr-programme}
+Collecting the two-switch bound for a constant option, \Cref{lem:clamp-reverses-once,thm:reorder,cor:clamp}:
+\begin{enumerate}
+\item[(a)] every Max vertex switched more than twice has two non-constant
+ options, and every Min vertex whose best response reverses more than once has
+ two non-constant options: the round-$15$ auditor's refutation and its exact
+ Min-side twin;
+\item[(b)] $R\le m+\sum_td_t$, so the guide must \emph{reorder} the options at
+ Max vertices $\Omega(R)$ times in total --- changing $\tau$ is not enough,
+ the change must reverse a preference;
+\item[(c)] in the clamped class --- every Min vertex with a constant successor
+ --- $R\le m(k+1)$ under any fixed tie-breaking preference at the Min
+ vertices, which is $O(N^{2})$ and no more.  So the clamped class
+ cannot carry a superpolynomial family, and the most a clamp construction can
+ give is quadratic.
+\end{enumerate}
+Two statements would be real progress, and neither is proved here.
+
+\medskip\noindent\textsc{Gap 1 (quadratic, clamped).} \emph{There is a family
+of stopping SSGs on $O(n\log n)$ vertices with $|\Vmax|=|\Vmin|=\Theta(n)$, in
+which every Min vertex has a constant successor, on which $R_{\mathrm{BR}}$
+takes $\Theta(n^{2})$ rounds from a stated start.}  By (c) this is the
+ceiling of the clamped class; it would be the first superlinear lower bound
+for the rule, $\mathrm{RD}(n)$ giving only $\Theta(N)$.  The shape is forced
+by \Cref{thm:reorder}: $k$ clamps engaging in succession give $k+1$ guides,
+and each block must be a cascade of $m$ single switches, so the construction
+needs a Max chain that sweeps forwards under one guide and backwards under the
+next.
+
+\medskip\noindent\textsc{Gap 2 (superpolynomial).} \emph{There is a stopping
+SSG with a Min vertex $u$, both of whose options are non-constant, along whose
+$R_{\mathrm{BR}}$ run the sign of
+$\val_{\sigma_t}(u^{(0)})-\val_{\sigma_t}(u^{(1)})$ changes superpolynomially
+often.}  By \Cref{thm:reorder} this is necessary; by \Cref{prop:leapfrog} the
+analogous reversal at a \emph{Max} vertex is available at $O(1)$ vertices per
+reversal, but there the reversals are driven by fresh drivers that switch once
+each, and what is needed here is a leapfrog whose drivers are the run itself.
+\end{remark}
+
 \begin{proposition}[Stopping is necessary]\label{prop:bsi-nonstopping}
 For the SSG on non-sinks $0,\dots,5$ with $t_0=6$, $t_1=7$, types
 $(\mathrm{avg},\min,\max,\max,\mathrm{avg},\max)$ and successor pairs
@@ -10496,18 +11728,73 @@ purely combinatorial way, and there is a natural one: a simulation
 preorder, computed as a single greatest fixed point, which uses no
 arithmetic and yet compares values.
 
+\begin{proposition}[The two qualitative sets, inside the model]\label{prop:qualitative}
+Let $G$ be an arbitrary SSG, stopping or not.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $\{v:\val(v)>0\}$ is the least fixed point of
+  \[
+    Y\;\longmapsto\;\{t_1\}\cup\{v\in\Vmax\cup\Vavg:\ \text{some successor in }Y\}
+                      \cup\{v\in\Vmin:\ \text{both successors in }Y\},
+  \]
+  computed in $O(N^{2})$ operations without arithmetic.
+\item For $W\subseteq V$ let $Y(W)$ be the least fixed point of
+  \[
+    Y\;\longmapsto\;\{t_1\}\cup
+    \{v\in W\cap\Vmax: \text{some successor in }Y\}\cup
+    \{v\in W\cap\Vmin: \text{both successors in }Y\}\cup
+    \{v\in W\cap\Vavg: \text{both successors in }W\text{ and some in }Y\}.
+  \]
+  Then $\{v:\val(v)=1\}$ is the greatest fixed point of $W\mapsto Y(W)$,
+  reached from $W_0:=V$ by $W_{i+1}:=Y(W_i)$ within $N$ steps, in
+  $O(N^{3})$ operations without arithmetic.
+\end{enumerate}
+Neither set depends on the coin biases: the same fixed points describe
+the game in which each average vertex takes its second successor with any
+probability in $(0,1)$. The one-pass version ``the closed set from which
+$t_1$ is reached'' is wrong for (b): with $u\in\Vmin$, $u\to(x,t_1)$ and
+$x\in\Vavg$, $x\to(u,u)$ the vertex $u$ has value $0$.
+\end{proposition}
+
+\begin{proof}
+(a) Let $\mathrm{rk}(v)$ be the least $i$ with $v$ in the $i$-th iterate.
+For $v$ in the fixed point let $\sigma(v)$, at Max vertices, be a
+successor of smaller rank; against every $\tau$ the rank drops with
+probability at least $\tfrac12$ per step (probability $1$ at Max and Min
+vertices, the latter having both successors of smaller rank), so $t_1$ is
+reached within $N$ steps with probability at least $2^{-N}$. Conversely
+let $U$ be the complement of the fixed point: every Max and average
+vertex of $U$ has both successors in $U$ and every Min vertex of $U$ has
+one, and $t_1\notin U$; a Min strategy choosing that successor confines
+the token to $U$ for ever, so $\val=0$ on $U$.
+
+(b) $Y(W)\subseteq W$ and $Y$ is monotone, so the iterates decrease to
+the greatest fixed point $W$. For $v\in W$ define $\sigma(v)$ as in (a)
+inside the least fixed point computing $Y(W)$; the token then never leaves
+$W$ (both successors of a Min or average vertex of $W$ lie in $W$, and
+$\sigma(v)\in W$), and the rank drops with probability at least
+$\tfrac12$ per step, so $t_1$ is reached with probability $1$ from every
+$v\in W$ under every $\tau$: $\val(v)=1$. Conversely let
+$A:=\{\val=1\}$; by Knaster--Tarski it suffices that $A\subseteq Y(A)$.
+Suppose $B:=A\setminus Y(A)\neq\emptyset$. An average vertex of $B$ has
+both successors in $A$, hence, not being in $Y(A)$, both in $B$; a Min
+vertex of $B$ has both successors in $A$ and one in $B$; a Max vertex of
+$B$ has every successor that lies in $A$ lying in $B$, and at least one
+successor in $A$. Let $c:=\max\{\val(u):u\notin A\}<1$ ($c:=0$ if
+$A=V$). Against any $\sigma$ let Min stay in $B$ while the token is in
+$B$ and play optimally once it leaves; the token leaves $B$ only at a Max
+vertex, into a vertex of value at most $c$, so $\val(v)\le c<1$ for
+$v\in B$, a contradiction. The bias claim holds because both arguments
+use only the supports of the transitions.
+\end{proof}
+
 \begin{definition}[Value-simulation preorder]\label{def:simorder}
 Let $G$ be stopping. Let $Z_0:=\{v:w^\ast(v)=0\}$ and
-$Z_1:=\{v:w^\ast(v)=1\}$. Both are computable without arithmetic: $Z_0$
-is the complement of the set from which $t_1$ is reachable when Max
-chooses freely and an average vertex counts as reaching whatever either
-successor reaches, one attractor sweep; $Z_1$, the set from which Max can
-reach $t_1$ almost surely, is not a single sweep --- in $G_8$ below the
-average vertex $0\to(0,t_1)$ has $w^\ast(0)=1$ although one of its
-successors is itself --- but is computed in polynomial time by the
-standard qualitative algorithm, a nested attractor iteration (from memory,
-unchecked against the sources: de~Alfaro; Chatterjee, Jurdzi\'nski and
-Henzinger). Everything below uses only $Z_0\subseteq\{w^\ast=0\}$ and
+$Z_1:=\{v:w^\ast(v)=1\}$. Both are computable without arithmetic, by the
+two fixed points of \Cref{prop:qualitative}: $Z_0$ is the complement of
+the least fixed point in (a), one attractor sweep, and $Z_1$ is the
+greatest fixed point in (b), a nested iteration --- not a single sweep,
+since in $G_8$ below the average vertex $0\to(0,t_1)$ has $w^\ast(0)=1$
+although one of its successors is itself. Everything below uses only $Z_0\subseteq\{w^\ast=0\}$ and
 $Z_1\subseteq\{w^\ast=1\}$, so any sound under-approximation may be
 substituted. On $2^{V\times V}$, ordered by
 inclusion, define the monotone map
