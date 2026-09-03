@@ -90,8 +90,8 @@ outside all five of the above (\Cref{prop:fv-family}); a class keyed to a
 decomposition, the games with a bounded modulator number, solved by a
 fixed-point search over the frozen vertices (\Cref{thm:modulator}) with a
 family inside it and outside all the others
-(\Cref{prop:modulator-family}), games of bounded treewidth being solved
-in quasipolynomial time (\Cref{thm:qp}); and, in general, a subexponential
+(\Cref{prop:modulator-family}), stopping games of bounded treewidth
+being solved in quasipolynomial time (\Cref{thm:qp}); and, in general, a subexponential
 Las~Vegas algorithm of expected running time
 $e^{2\sqrt n}\,\mathrm{poly}(N)$ (\Cref{thm:subexp}) --- Ludwig's
 random-facet bound, reproved here without genericity assumptions --- which
@@ -2891,6 +2891,46 @@ Terminals are absorbing and never need separating; counting them raises
 either parameter by at most two.
 \end{definition}
 
+\begin{lemma}[Transfer to payoff games]\label{lem:payoff-transfer}
+Let $H$ be a stopping payoff game with rational terminal payoffs of common
+denominator $\Delta$ and $a$ average vertices. Then (a) the contraction
+estimate of \Cref{thm:contraction} holds for $T_H$, $T_\sigma$ and
+$T_{\sigma,\tau}$ with the same rate $1-2^{-a}$; (b) $H$ is determined
+with positional optimal strategies, and the unique fixed point of $T_H$
+is $\val_H$ (\Cref{thm:stopping-determinacy}); (c) the two-sided
+comparison of \Cref{cor:comparison} holds: $T_H\hat x\le\hat x$ implies
+$\val_H\le\hat x$ and $T_H\hat x\ge\hat x$ implies $\val_H\ge\hat x$; (d)
+every coordinate of $\val_H$ is a rational whose denominator divides a
+positive integer at most $2\Delta2^{a}$, and two distinct coordinates
+differ by at least $(2\Delta2^{a})^{-2}$.
+\end{lemma}
+
+\begin{proof}
+(a) The proof of \Cref{thm:contraction} compares two iterates that agree
+at the terminals, whatever their payoffs, and uses only the absorption
+estimate of \Cref{lem:absorption}, a property of the transition structure.
+(b) Replace each terminal of payoff $p=r/s$ by a finite absorbing chain of
+fair coins reaching $t_1$ with probability exactly $p$ --- the binary
+expansion of $p$ is eventually periodic, and a chain with one cycle
+realises it (\Cref{lem:gadget} for the dyadic case) --- to obtain a
+stopping SSG $H'$ in which every original vertex has the same value under
+every profile, the chain absorbing almost surely; \Cref{thm:stopping-determinacy}
+for $H'$ gives positional optimal strategies and identifies the fixed
+point of $T_{H'}$, and restricting to the original vertices identifies
+that of $T_H$, unique by (a). (c) The proof of \Cref{cor:comparison} uses
+monotonicity of $T_H$ and (b) only. (d) For a positional pair the value
+solves $(I-P)y=b$ with $P$ the transition matrix among non-terminals and
+$b$ the vector of half-sums of terminal payoffs, so $2\Delta b$ is
+integral; Cramer's rule with $\det(I-P)\le2^{a}$ (\Cref{lem:denominator-sharp})
+gives the denominator bound, and two rationals with denominators at most
+$Q$ differ by at least $Q^{-2}$.
+\end{proof}
+
+The lemma is what lets the two-sink theorems of \Cref{sec:operators} be
+used below on the games with frozen terminals that a decomposition
+produces; its auditor verified the four consequences numerically and
+asked that they be stated.
+
 \begin{lemma}[The cut map is sign-definite]\label{lem:cut-sign}
 Let $H$ be stopping, $S$ a set of non-terminals and $F_S$ the cut map of
 \Cref{lem:cut}. Then $H[x]$ is stopping for every $x\in[0,1]^{S}$,
@@ -2902,7 +2942,7 @@ $x\ge\val_H|_S$ while $F_S(x)\ge x$ implies $x\le\val_H|_S$.
 A trap of $H[x]$ avoids its terminals, hence $S$, and is a trap of $H$,
 hence empty (\Cref{lem:trapchar}). With $\hat x$ the assembly
 \eqref{eq:assembly} of $x$, $F_S(x)\le x$ reads $T_H\hat x\le\hat x$ and
-\Cref{cor:comparison} gives $\val_H\le\hat x$; the other implication is
+\Cref{lem:payoff-transfer}(c) gives $\val_H\le\hat x$; the other implication is
 symmetric, and both together at a fixed point give uniqueness.
 \end{proof}
 
@@ -2956,13 +2996,10 @@ Round-up is monotone. A fixed point has $\hat\theta\ge F_S(\hat\theta)$,
 hence $\hat\theta\ge\val_H|_S$ by \Cref{lem:cut-sign}, and
 $\hat\theta\le F_S(\hat\theta)+\varepsilon\bbone$, which for the assembly
 $\hat x$ reads $T_H\hat x\le\hat x\le T_H\hat x+\varepsilon\bbone$; the
-contraction rate $(1-2^{-a})^{\lfloor k/N\rfloor}$ of \Cref{thm:contraction}
---- valid for payoff games by \Cref{lem:gen-comparison} --- bounds
-$\|\hat x-\val_H\|_\infty$ by $\sum_k\|T^{k}\hat x-T^{k+1}\hat x\|_\infty\le N2^{a}\varepsilon$.
-For the denominators, the value of a positional pair is $A_U^{-1}b$ with
-$A_U$ as in \Cref{lem:denominator}, $\det A_U\le2^{a}$
-(\Cref{lem:denominator-sharp}) and $2\Delta b$ integral; two rationals of
-denominator at most $Q$ differ by at least $1/Q^{2}$, and a rational $p/q$
+contraction rate $(1-2^{-a})^{\lfloor k/N\rfloor}$ of
+\Cref{lem:payoff-transfer}(a) bounds $\|\hat x-\val_H\|_\infty$ by
+$\sum_k\|T^{k}\hat x-T^{k+1}\hat x\|_\infty\le N2^{a}\varepsilon$. The
+denominator bound is \Cref{lem:payoff-transfer}(d), and a rational $p/q$
 with $|x-p/q|<1/(2q^{2})$ is a convergent of $x$ --- Legendre's theorem,
 a textbook fact imported here and used only by the algorithms of this
 subsection.
@@ -2977,7 +3014,11 @@ solved exactly in time $p(n,\beta)$ on payoffs of bit-size $\beta$, then
 $\val_H$ is computed exactly in time
 $O((B+2)^{\mu}p(n,O(B))+\mathrm{poly}(n,B))$ with
 $B=O(a+\log N+\log\Delta)$, so for a stopping SSG in time
-$N^{O(\mu)}p(N,O(N))$; the algorithm ends by checking $T_Hw=w$ exactly.
+$N^{O(\mu)}p(N,O(N))$; the algorithm ends by checking $T_Hw=w$ exactly,
+which certifies the output because a \emph{stopping} game has a unique
+fixed point --- on a non-stopping game the same check can pass at a
+wrong vector, as its auditor exhibited, so the stopping hypothesis is not
+decorative.
 The $k$-acyclic games of \Cref{thm:kacyclic}, the acyclic games, the games
 with $a\le a_0$, the classes $\mathcal K_k$ of \Cref{thm:bounded-components}
 and the games carrying an escape certificate of fixed rate
@@ -2987,7 +3028,9 @@ own denominator. In particular, with $\mu_k$ the least number of vertices
 meeting every directed cycle through a kind-$k$ vertex, the value of a
 stopping SSG is computable in time $N^{O(\mu_k)}$, polynomial when
 $\mu_k=O(1)$; $\mu_k=0$ is \Cref{thm:kacyclic}, and this answers
-\Cref{rem:kacyclic}.
+\Cref{rem:kacyclic} for stopping games. Non-stopping games reduce to
+stopping ones by \Cref{thm:stopping-transform}, whose effect on the
+modulator number and on the width is not analysed here.
 \end{theorem}
 
 \begin{proof}
@@ -3027,14 +3070,15 @@ common denominator $\Delta$, and a tree decomposition of $\Gamma(G)$ of
 width $k$. Then $\val_G$ is computed exactly with
 $2^{O(k\log^{2}n)}=n^{O(k\log n)}$ arithmetic operations on rationals of
 $O(n^{1+\log_23}+n^{\log_23}\log\Delta)$ bits, and the output is certified
-by $T_Gw=w$. In particular \Cref{prob:main} restricted to any family of
+by $T_Gw=w$, which certifies because $G$ is stopping. In particular
+\Cref{prob:main} restricted to any family of \emph{stopping} games of
 bounded treewidth is decidable in quasipolynomial time $N^{O(\log N)}$.
 \end{theorem}
 
 \begin{proof}
 If $G$ has no directed cycle among its non-terminals, backward induction
 solves it; if $n\le2(k+1)$, brute force over positional pairs does
-(\Cref{thm:stopping-determinacy}); if $\Gamma(G)$ is disconnected, each
+(\Cref{lem:payoff-transfer}(b)); if $\Gamma(G)$ is disconnected, each
 component is successor-closed up to terminals and is solved separately
 (\Cref{lem:successor-closed}). Otherwise the centroid argument on the
 decomposition tree gives a bag $X$, $|X|\le k+1$, such that every
@@ -3092,10 +3136,9 @@ $D$ by an explicit path decomposition and $\operatorname{pw}(P_D)>3$ for $4\le D
 (the route's exhaustive computations, re-verified by its auditors). So no
 bound $\mathrm{poly}(N,\operatorname{tw})$ on the number of pieces holds: at treewidth
 four the exact response tables of a decomposition have $2^{\Omega(N)}$
-pieces, and every dynamic programme that stores them is exponential. The
-route also shows that a chain of identical gadgets reading no terminal
-cannot fold twice, and asks whether the explosion already occurs at
-pathwidth three; nothing in this document depends on the answer.
+pieces, and every dynamic programme that stores them is exponential.
+Whether the explosion already occurs at pathwidth three is open; nothing
+in this document depends on the answer.
 \end{remark}
 
 \begin{proposition}[A family in the modulator class and in none of the six]\label{prop:modulator-family}
@@ -13418,7 +13461,7 @@ shows lies inside none of the five; the games with a bounded
 modulator number, solved in $N^{O(\mu)}$ by a fixed-point search over a
 frozen set of $\mu$ vertices, with $M_n$ a family inside that class and
 outside every other (\Cref{thm:modulator,prop:modulator-family}), and the
-games of bounded treewidth, solved in quasipolynomial time
+stopping games of bounded treewidth, solved in quasipolynomial time
 (\Cref{thm:qp}); and, in general, a
 Las~Vegas algorithm of expected time $e^{2\sqrt n}\,\mathrm{poly}(N)$
 obtained from a full, tie-robust analysis of Ludwig's random-facet
