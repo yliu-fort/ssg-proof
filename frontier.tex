@@ -45,7 +45,12 @@ $\val(v_0)\ge\tfrac12$. Everything asserted below is proved from first
 principles --- with two imported exceptions, named where they occur: the
 classical determinacy statement of \Cref{thm:determinacy}, and Holt and
 Klee's theorem on the orientations that linear programmes induce on
-polytopes, used in \Cref{prop:oneplayer-lp}; and a handful of
+polytopes, used in \Cref{prop:oneplayer-lp}; two textbook facts used in
+the algorithms of \Cref{sec:width} and in one descriptive clause of
+\Cref{sec:projection}, Legendre's theorem that a close rational
+approximant is a convergent (\Cref{lem:round-recover}) and the
+Samelson--Thrall--Wesler characterisation of $P$-matrices
+(\Cref{prop:lcp}), the latter used nowhere else; and a handful of
 computations recorded explicitly as measurements --- and every negative
 statement is witnessed by an explicit instance verified in exact rational
 arithmetic.
@@ -2958,7 +2963,9 @@ For the denominators, the value of a positional pair is $A_U^{-1}b$ with
 $A_U$ as in \Cref{lem:denominator}, $\det A_U\le2^{a}$
 (\Cref{lem:denominator-sharp}) and $2\Delta b$ integral; two rationals of
 denominator at most $Q$ differ by at least $1/Q^{2}$, and a rational $p/q$
-with $|x-p/q|<1/(2q^{2})$ is a convergent of $x$ (Legendre).
+with $|x-p/q|<1/(2q^{2})$ is a convergent of $x$ --- Legendre's theorem,
+a textbook fact imported here and used only by the algorithms of this
+subsection.
 \end{proof}
 
 \begin{theorem}[The modulator class]\label{thm:modulator}
@@ -6608,8 +6615,9 @@ operator on $C$, of which there is one (\Cref{thm:lfp-general}). (a)
 Letting $r_{\bar\beta}$ range over $\mathbb R^{C}$ lets $q$ range over all
 of $\mathbb R^{C}$ while, by \Cref{lem:survival-contract}, the operator
 keeps a unique fixed point; an LCP with a unique solution for every $q$
-has a $P$-matrix, by the theorem of Samelson, Thrall and Wesler (a
-standard fact, from memory). (b) $y_\pi$ satisfies
+has a $P$-matrix, by the theorem of Samelson, Thrall and Wesler --- a
+textbook fact imported here, from memory, and used nowhere else in this
+document. (b) $y_\pi$ satisfies
 $y_\pi(v)=f_{v,\pi(v)}(y_\pi)$, which reads $w_v=0$ on $S$ and $z_v=0$
 off $S$, and the basic system $(I-Q_\pi)y=r_\pi$ has that unique
 solution. (c) is the definition of $z,w$ read at $y_\pi$.
