@@ -59,5 +59,9 @@ agent re-verified (`scripts/round15-verify/`).  Kept: howard-cube
 (sec:deformed), monotone (sec:readouts), sink-projection (sec:projection),
 free-search (thm:b2-walk, thm:top), best-response (thm:bsi-tracks,
 thm:readout, prop:leapfrog), gadget (lem:crossing, cor:b2-min, prop:xor,
-thm:alternation-bits), lane and degenerate repairs.  Treewidth and
-verify-r14 audits are in results/ and were not integrated in this pass.
+thm:alternation-bits), lane and degenerate repairs; then, after their
+audits, the bounded-width route (sec:width: lem:payoff-transfer,
+lem:cut-sign, thm:tarski, lem:round-recover, thm:modulator, thm:qp,
+rem:fold-width, prop:modulator-family) and the verify-r14 items
+(lem:same-successor, prop:bsi-normal, prop:q16, prop:zero-ties,
+prop:nondeg-overshoot, cor:isolated, cor:selfread, prop:fv-stall).
