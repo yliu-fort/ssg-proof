@@ -2785,6 +2785,51 @@ $A(C_0)=n+2$; no descent path is longer, and the tie at $X_0$ is the only
 freedom in $\sigma^\ast$ and does not lower the count, so
 $d(\mathrm{FV}_2(n))=n+2$.
 \end{proof}
+\begin{proposition}[The few-denominator class contains stalls]\label{prop:fv-stall}
+The families $\mathrm{FV}(n)$ and $\mathrm{FV}_2(n)$, $n\ge3$, have
+$D(G)=3$ and are solved by \Cref{thm:few-denominator} in $O(N^{2})$
+operations; yet, seeded with $Z_0,Z_1$ and read in both directions of
+\Cref{rem:own-successor} at every controlled vertex, the slack calculus of
+\Cref{def:slack}, its min-plus closure of \Cref{def:trans-slack} and the
+one-shot transport test of \Cref{def:transport} never fire on them, at any
+round, while the value-simulation preorder of \Cref{def:simorder} decides
+every controlled vertex and the seeded hybrid of \Cref{sec:hybrid} does so
+by round three.
+\end{proposition}
+
+\begin{proof}
+Every controlled vertex has two successors of equal value, so only the
+non-strict direction of \Cref{rem:own-successor} is available, and firing
+requires the bound $\Delta_k$ to \emph{attain} $0$. Let $W(x,y):=w^{\ast}(x)-w^{\ast}(y)$
+and $F$ one round of the mechanism, so that soundness gives
+$F(W)\ge W$. Each entry of $F(D)$ is a minimum of finitely many
+expressions, each a constant or a maximum, minimum, mean or min-plus path
+sum of entries of $D$; for a $0/1$ matrix $\Psi$ and $D=W+c\Psi$ these are
+piecewise affine in $c$ with breakpoints where two attainable
+$W$-combinations differ divided by the difference of two attainable
+$\Psi$-combinations, and on these families all values lie in
+$\{0,\tfrac13,\tfrac23,1\}$, so no breakpoint lies in $(0,\tfrac1{6N})$ and
+$F(W+c\Psi)=F(W)+c\Theta$ there for a fixed $\Theta$. Run $K=14$ rounds
+from $D_0\equiv\bbone$, let $S:=\{D_K>W\}$, $\Psi:=\bbone_S$ and
+$t:=\min\{\min_S(D_K-W),\tfrac1{12N}\}>0$; the three exact checks
+$F(W)\ge W$, $\Theta\ge\tfrac12\Psi$ and $D_K\ge W+t\Psi$ give by
+induction $D_{K+j}\ge W+t2^{-j}\Psi$ for all $j$, so $D_k>W$ on $S$ for
+ever, and every entry the test reads either lies in $S$ with $W=0$ or has
+$W\ge0$: neither direction fires. (Exact for $n=3,4,5$ and both variants,
+by the round-$15$ verification route.)
+\end{proof}
+
+So, unlike the escape class (\Cref{rem:escape-class}), the few-denominator
+class contains stalls of the mechanisms M2, M2T and M4; but every stall it
+is known to contain is vacuous, no controlled vertex of the instance being
+value-distinguishing, so the decision the mechanism fails to make carries
+no information. Whether the class contains a stall with a
+value-distinguishing vertex is open and is a different question: a small
+denominator makes every value gap at least $1/D(G)$, but
+\Cref{thm:slack-vi-upper} converts a gap into a firing round only through
+the two-sided value-iteration width, whose rate \Cref{thm:contraction}
+bounds by $(1-2^{-a})^{k/N}$ and which $D(G)$ does not control.
+
 
 \begin{remark}[The alphabet as a reformulation, and its strength]\label{rem:alphabet-equivalence}
 \Cref{thm:alphabet-iteration} converts the problem into the manufacture of
@@ -2811,6 +2856,270 @@ $k=2+\log_2 D$ measured on every hard family of
 built here --- a measurement on nine families, not a theorem, and
 $\mathrm{FV}_2$ in this subsection has $k=4$ and is easy.
 \end{remark}
+
+\subsection{Width: the search is quasipolynomial, the tables are not}\label{sec:width}
+
+Every polynomial class above is a colour condition on cycles
+(\Cref{thm:kacyclic}), a count (\Cref{thm:few-avg,thm:few-escape,thm:bounded-components}),
+a rate (\Cref{thm:escape-class}) or the answer (\Cref{thm:few-denominator});
+none is a \emph{width} condition, and the hard families of this document
+all have small width. This subsection, from the round-$15$ bounded-width
+route, records what a tree decomposition buys: the dynamic programme that
+stores exact response tables is exponential already at pathwidth four
+(\Cref{rem:fold-width}), while the search that only queries the response at
+grid points is quasipolynomial at every constant treewidth (\Cref{thm:qp})
+and polynomial whenever a bounded set of vertices carries the whole
+recursion (\Cref{thm:modulator}), which answers the question of
+\Cref{rem:kacyclic}. Throughout, $H$ is a payoff game (\Cref{def:payoff}),
+$n$ its number of non-terminals, $a$ its number of average vertices.
+
+\begin{definition}[Width]\label{def:width}
+The \emph{interaction graph} $\Gamma(H)$ is the undirected simple graph on
+the non-terminals with an edge $\{u,v\}$ whenever one is a successor of the
+other; $\operatorname{tw}(H)$ and $\operatorname{pw}(H)$ are the treewidth and pathwidth of $\Gamma(H)$.
+Terminals are absorbing and never need separating; counting them raises
+either parameter by at most two.
+\end{definition}
+
+\begin{lemma}[The cut map is sign-definite]\label{lem:cut-sign}
+Let $H$ be stopping, $S$ a set of non-terminals and $F_S$ the cut map of
+\Cref{lem:cut}. Then $H[x]$ is stopping for every $x\in[0,1]^{S}$,
+$\val_H|_S$ is the unique fixed point of $F_S$, and $F_S(x)\le x$ implies
+$x\ge\val_H|_S$ while $F_S(x)\ge x$ implies $x\le\val_H|_S$.
+\end{lemma}
+
+\begin{proof}
+A trap of $H[x]$ avoids its terminals, hence $S$, and is a trap of $H$,
+hence empty (\Cref{lem:trapchar}). With $\hat x$ the assembly
+\eqref{eq:assembly} of $x$, $F_S(x)\le x$ reads $T_H\hat x\le\hat x$ and
+\Cref{cor:comparison} gives $\val_H\le\hat x$; the other implication is
+symmetric, and both together at a fixed point give uniqueness.
+\end{proof}
+
+\begin{theorem}[Divide-and-conquer search for a fixed point]\label{thm:tarski}
+Let $L=\{0,\dots,M-1\}$ and $F:L^{d}\to L^{d}$ be monotone. A fixed point
+of $F$ is found with at most $2(\lceil\log_2M\rceil+1)^{d}$ evaluations
+of $F$: on a box $[\mathrm{lo},\mathrm{hi}]$ that $F$ maps into itself,
+take the midpoint $m$ of the $d$-th coordinate range, find recursively a
+fixed point $y^{\ast}$ of the slice $y\mapsto F(y,m)_{<d}$, put
+$x:=(y^{\ast},m)$; if $F(x)_d=m$ return $x$, if $F(x)_d>m$ recurse on
+$[F(x),\mathrm{hi}]$, and if $F(x)_d<m$ on $[\mathrm{lo},F(x)]$.
+\end{theorem}
+
+\begin{proof}
+The slice map is monotone and maps $[\mathrm{lo}_{<d},\mathrm{hi}_{<d}]$
+into itself, so the recursive call is legitimate and gives
+$F(x)_{<d}=x_{<d}$. If $F(x)_d>m$ then $F(x)\ge x$, so $F(y)\ge F(F(x))\ge F(x)$
+for $y\ge F(x)$ and $F(y)\le F(\mathrm{hi})\le\mathrm{hi}$: $F$ maps the new
+box into itself, which by Knaster--Tarski contains a fixed point; the
+$d$-th range at least halves at each step and a one-point range returns.
+With $Q(d)$ evaluations, $Q(d)\le(\lceil\log_2M\rceil+1)(Q(d-1)+1)$ and
+$Q(0)=0$.
+\end{proof}
+
+The scheme is the divide-and-conquer of Etessami, Papadimitriou,
+Rubinstein and Yannakakis for the \textsc{Tarski} problem, whose
+$O(\log^{d}M)$ bound this is (Fearnley, P\'alv\"olgyi and Savani improve
+the exponent, Chen and Li prove lower bounds; all from memory, unchecked);
+using $F(x)$ rather than $x$ as the new corner makes the progress
+elementary and removes the need for a \emph{least} fixed point. They also
+observe that a simple stochastic game is a \textsc{Tarski} instance in
+dimension $N$, which by itself gives nothing; what is new below is the
+coupling with \Cref{lem:cut}, which runs the search in dimension equal to
+the size of a frozen set.
+
+\begin{lemma}[Rounding onto a grid, and exact recovery]\label{lem:round-recover}
+Let $H$ be stopping with $N$ vertices, $S$ a set of non-terminals and
+$L\subseteq[0,1]$ a finite chain containing $0,1$ with mesh at most
+$\varepsilon$. Then $F^{L}:=\lceil\cdot\rceil_L\circ F_S$ is a monotone
+self-map of $L^{S}$ and every fixed point $\hat\theta$ of it satisfies
+$\val_H|_S\le\hat\theta\le\val_H|_S+N2^{a}\varepsilon\bbone$. If $\Delta$
+is a common denominator of the terminal payoffs, every coordinate of
+$\val_H$ has denominator at most $Q:=2\Delta2^{a}$, and a coordinate known
+to within $1/(2Q^{2})$ is recovered exactly as the unique rational of
+denominator at most $Q$ in that interval, by $O(\log Q)$ steps of the
+continued-fraction expansion.
+\end{lemma}
+
+\begin{proof}
+Round-up is monotone. A fixed point has $\hat\theta\ge F_S(\hat\theta)$,
+hence $\hat\theta\ge\val_H|_S$ by \Cref{lem:cut-sign}, and
+$\hat\theta\le F_S(\hat\theta)+\varepsilon\bbone$, which for the assembly
+$\hat x$ reads $T_H\hat x\le\hat x\le T_H\hat x+\varepsilon\bbone$; the
+contraction rate $(1-2^{-a})^{\lfloor k/N\rfloor}$ of \Cref{thm:contraction}
+--- valid for payoff games by \Cref{lem:gen-comparison} --- bounds
+$\|\hat x-\val_H\|_\infty$ by $\sum_k\|T^{k}\hat x-T^{k+1}\hat x\|_\infty\le N2^{a}\varepsilon$.
+For the denominators, the value of a positional pair is $A_U^{-1}b$ with
+$A_U$ as in \Cref{lem:denominator}, $\det A_U\le2^{a}$
+(\Cref{lem:denominator-sharp}) and $2\Delta b$ integral; two rationals of
+denominator at most $Q$ differ by at least $1/Q^{2}$, and a rational $p/q$
+with $|x-p/q|<1/(2q^{2})$ is a convergent of $x$ (Legendre).
+\end{proof}
+
+\begin{theorem}[The modulator class]\label{thm:modulator}
+Call a class $\mathcal P$ of payoff games \emph{freezing-closed} if it is
+preserved by retyping any set of non-terminals as terminals with arbitrary
+payoffs, and let $\mu_{\mathcal P}(H)$ be the least $|X|$ such that
+$H[X{:=}\theta]\in\mathcal P$ for every $\theta$. If $\mathcal P$ is
+solved exactly in time $p(n,\beta)$ on payoffs of bit-size $\beta$, then
+$\val_H$ is computed exactly in time
+$O((B+2)^{\mu}p(n,O(B))+\mathrm{poly}(n,B))$ with
+$B=O(a+\log N+\log\Delta)$, so for a stopping SSG in time
+$N^{O(\mu)}p(N,O(N))$; the algorithm ends by checking $T_Hw=w$ exactly.
+The $k$-acyclic games of \Cref{thm:kacyclic}, the acyclic games, the games
+with $a\le a_0$, the classes $\mathcal K_k$ of \Cref{thm:bounded-components}
+and the games carrying an escape certificate of fixed rate
+(\Cref{thm:escape-class}) are freezing-closed, freezing only deleting
+edges; \Cref{thm:few-denominator} is not, a frozen grid value carrying its
+own denominator. In particular, with $\mu_k$ the least number of vertices
+meeting every directed cycle through a kind-$k$ vertex, the value of a
+stopping SSG is computable in time $N^{O(\mu_k)}$, polynomial when
+$\mu_k=O(1)$; $\mu_k=0$ is \Cref{thm:kacyclic}, and this answers
+\Cref{rem:kacyclic}.
+\end{theorem}
+
+\begin{proof}
+Put $Q:=2\Delta2^{a}$, $\varepsilon:=1/(4N2^{a}Q^{2})$ and let $L$ be the
+dyadic grid of mesh $2^{-B}\le\varepsilon$. A grid point $\theta$ is
+evaluated by solving $H[X{:=}\theta]\in\mathcal P$ exactly and applying
+$\mathrm{op}_x$ at each $x\in X$, which is exactly $F_X(\theta)$; by
+\Cref{lem:round-recover} the rounded map is a monotone self-map of $L^{X}$,
+\Cref{thm:tarski} finds a fixed point in at most $2(B+2)^{\mu}$
+evaluations, its error is below $1/(2Q^{2})$, and continued fractions
+recover $\val_H|_X$; one more $\mathcal P$-solve at $\theta=\val_H|_X$
+gives the values off $X$ (\Cref{lem:cut}), and a stopping game's operator
+has a unique fixed point (\Cref{thm:contraction}), so the final check
+certifies.
+\end{proof}
+
+With $\mathcal P$ the acyclic games, $\mu_{\mathcal P}$ is the feedback
+vertex number, and that a bounded feedback vertex number makes simple
+stochastic games tractable is Auger, Coucheney and Strozecki's (from
+memory, unchecked; their exact parameter and bound cannot be checked
+here). The proof here is different --- a search rather than a dichotomy on
+values --- and the parameter is smaller: \Cref{prop:modulator-family}
+has $\mu_{\max}=1$ where the feedback vertex number is $\Theta(N)$.
+
+The same freezing gives, without any stopping hypothesis, the value of
+an arbitrary SSG in time $\mathrm{poly}(N)2^{f_k}$, where $f_k$ counts the
+kind-$k$ vertices on directed cycles: retype each of them as an average
+vertex with both edges to one chosen successor, solve the $k$-acyclic
+result by \Cref{thm:kacyclic}, and take the extremum over the $2^{f_k}$
+choices, which is the value by positional determinacy
+(\Cref{thm:determinacy}); this is \Cref{thm:bounded-components} without
+stopping.
+
+\begin{theorem}[Bounded treewidth is quasipolynomial]\label{thm:qp}
+Let $G$ be a stopping payoff game with $n$ non-terminals, payoffs of
+common denominator $\Delta$, and a tree decomposition of $\Gamma(G)$ of
+width $k$. Then $\val_G$ is computed exactly with
+$2^{O(k\log^{2}n)}=n^{O(k\log n)}$ arithmetic operations on rationals of
+$O(n^{1+\log_23}+n^{\log_23}\log\Delta)$ bits, and the output is certified
+by $T_Gw=w$. In particular \Cref{prob:main} restricted to any family of
+bounded treewidth is decidable in quasipolynomial time $N^{O(\log N)}$.
+\end{theorem}
+
+\begin{proof}
+If $G$ has no directed cycle among its non-terminals, backward induction
+solves it; if $n\le2(k+1)$, brute force over positional pairs does
+(\Cref{thm:stopping-determinacy}); if $\Gamma(G)$ is disconnected, each
+component is successor-closed up to terminals and is solved separately
+(\Cref{lem:successor-closed}). Otherwise the centroid argument on the
+decomposition tree gives a bag $X$, $|X|\le k+1$, such that every
+component $C_i$ of $\Gamma(G)-X$ has at most $n/2$ vertices, and every
+successor of a vertex of $C_i$ lies in $C_i\cup X$ or is a terminal; so
+for $\theta\in[0,1]^{X}$ the game on $C_i$ with $X$ frozen at $\theta$ is
+stopping (\Cref{lem:cut-sign}), has at most $n/2$ non-terminals and
+inherits a decomposition of width at most $k$. Solving these recursively
+and applying $\mathrm{op}_x$ on $X$ evaluates $F_X(\theta)$ exactly, and
+the search at the node is that of \Cref{thm:modulator} with $\mu=|X|$:
+$2(B+2)^{k+1}$ evaluations, $B=O(a+\log\Delta+\log n)$, followed by exact
+recovery and one more round of recursive solves. Bit-size: the children
+receive the node's payoffs and grid values of $B$ bits, so the
+denominator exponents satisfy $\delta_{j+1}\le\delta_j+B\le3\delta_j+4n$
+and, the depth being at most $\log_2n$, all numbers have
+$O(n^{\log_23}(n+\log\Delta))$ bits. Cost: a node makes $n^{O(k)}$
+evaluations, each a set of recursive solves on components of total size at
+most $n$ and individual size at most $n/2$, so
+$T(n)\le n^{O(k)}\cdot n\,T(n/2)+\mathrm{poly}$ and
+$T(n)\le(n^{O(k)})^{\log_2n}=2^{O(k\log^{2}n)}$.
+\end{proof}
+
+Two readings should be resisted. The bound is quasipolynomial for a
+structural reason: the recursion re-solves both sides from scratch at
+every query, so the query cost is raised to the depth, and storing the
+response instead is exactly what \Cref{rem:fold-width} forbids. And the
+hard families of this document --- $L_n$, $H_m$, $G_m$, $\mathrm{WD}$,
+$\mathrm{CC}$, all of width at most four by the route's exact
+computations --- are covered, but they were never hard to \emph{solve};
+they are hard for mechanisms (\Cref{sec:gap}), on which a width bound is
+silent. What \Cref{thm:qp} does buy is a comparison: on constant
+treewidth it beats \Cref{thm:subexp}'s $e^{2\sqrt n}\mathrm{poly}(N)$
+and \Cref{thm:few-avg}'s $\mathrm{poly}(N)2^{a}$, and it says that a
+genuinely hard instance family cannot live at bounded treewidth unless
+quasipolynomial is the truth. Bounded treewidth is well studied for
+qualitative objectives (Obdr\v{z}\'alek for parity games; Fearnley and
+Schewe; Chatterjee, {\L}acki, Ibsen-Jensen and Pavlogiannis for
+constant-treewidth Markov decision processes; all from memory,
+unchecked), where the interface between two parts is a finite type; for
+the quantitative value of a two-player stochastic game the interface is
+a vector of reals, and we know of no polynomial or quasipolynomial
+algorithm in the literature, so \Cref{thm:qp} is new here and a candidate
+rediscovery. The grid search, rounding and recovery were implemented here
+and returned the exact values on random stopping games with a frozen
+feedback set, alongside the route's own implementation of the modulator
+and treewidth algorithms.
+
+\begin{remark}[The tables explode at pathwidth four]\label{rem:fold-width}
+For the family $P_D$ of \Cref{thm:fold}, on $6D+2$ vertices, the response
+of the part $V\setminus\{u,t_0,t_1\}$ to the single free parameter
+$\varphi_u$ has at $F_D$ exactly $2^{D}$ affine pieces, the optimal pairs
+on the $2^{D}$ intervals being pairwise distinct (exact, $D\le8$); and
+$\operatorname{tw}(P_D)=\operatorname{pw}(P_D)=2,3,3,4$ for $D=1,2,3,4$, with $\operatorname{pw}(P_D)\le4$ for every
+$D$ by an explicit path decomposition and $\operatorname{pw}(P_D)>3$ for $4\le D\le8$
+(the route's exhaustive computations, re-verified by its auditors). So no
+bound $\mathrm{poly}(N,\operatorname{tw})$ on the number of pieces holds: at treewidth
+four the exact response tables of a decomposition have $2^{\Omega(N)}$
+pieces, and every dynamic programme that stores them is exponential. The
+route also shows that a chain of identical gadgets reading no terminal
+cannot fold twice, and asks whether the explosion already occurs at
+pathwidth three; nothing in this document depends on the answer.
+\end{remark}
+
+\begin{proposition}[A family in the modulator class and in none of the six]\label{prop:modulator-family}
+For $n\ge3$ let $M_n$ have Max vertices $h,x_1,\dots,x_n$, Min vertices
+$y_1,\dots,y_n$, average vertices $b_1,\dots,b_n,c_1,\dots,c_{2n}$, and
+edges $h\to(x_1,c_{2n})$, $x_i\to(b_i,c_{n+i})$, $b_i\to(y_i,c_1)$,
+$y_i\to(x_{i+1},b_i)$ with $x_{n+1}:=h$, $c_j\to(o_j,c_{j+1})$ for
+$j<2n$ with $o_j=c_1$ for $j<n$, $t_1$ for $j=n$, $t_0$ for $n<j<2n$, and
+$c_{2n}\to(t_0,t_1)$; so $N=5n+3$, $a=3n$, and the $c$-part is $G_n$ of
+\Cref{thm:vi-lower}. Then $M_n$ is stopping, every vertex is reachable
+from $h$, $\val(h)=\tfrac12+2^{-(n+1)}$, and: $\mu_{\max}(M_n)=1$ with
+$X=\{h\}$, freezing $h$ leaving no cycle through a Max vertex, so
+\Cref{thm:modulator} solves it in polynomial time; its feedback vertex
+number is at least $n+1$, by the $n+1$ disjoint two-cycles
+$y_i\to b_i\to y_i$ and $c_1\to c_2\to c_1$; $a=3(N-3)/5$, so
+\Cref{thm:few-avg} gives only $2^{\Omega(N)}$; the cycle
+$h\to x_1\to b_1\to y_1\to\dots\to y_n\to h$ carries all three kinds, so
+\Cref{thm:kacyclic} does not apply; and $H(M_n)$ is one strongly connected
+component on all $n+1$ Max vertices, so \Cref{thm:bounded-components}
+gives only $2^{\Omega(N)}$. (Stopping, reachability, $\val(h)$ and the
+Max-cycle claim re-verified here for $n\le5$.)
+\end{proposition}
+
+\begin{proof}
+Inspection of the edges, and exact computation for the value.
+\end{proof}
+
+What is missing is one amortisation statement: \emph{the $O(B^{k+1})$
+payoff vectors at which a separator node queries its children during one
+search can be answered in total time polynomially related to the time to
+answer one of them.} That would make \Cref{thm:qp} polynomial,
+$N^{f(k)}$; the other route to it, a bound on the number of pieces of the
+response, is closed by \Cref{rem:fold-width}. And, as for the escape class
+(\Cref{rem:escape-class}), the class of \Cref{thm:modulator} contains no
+instance that is hard for a mechanism of \Cref{sec:gap}: the families of
+this document are all of width at most four and were never hard to solve.
 
 \section{The structure of the optimal set}\label{sec:structure}
 
@@ -3226,6 +3535,22 @@ first visit as $h'(v\to u)\,\mathcal{N}'(u,u)$, and
 $\mathcal{N}'(u,u)=\bigl(1-h(b\to u)\bigr)^{-1}$ by the previous
 paragraph; since $h'=h$, the claim follows.
 \end{proof}
+\begin{corollary}[A self-reading vertex switches exactly at its loop value]\label{cor:selfread}
+Let $G$ be one-player stopping, $\sigma$ a Max strategy, $p\in\Vmax$ with
+$a=\sigma(p)$, $b=\bar\sigma(p)$, $h:=h(b\to p)<1$ the probability that
+the $\sigma$-chain from $b$ visits $p$, and $\ell$ the value of $b$
+conditioned on never visiting $p$. Then
+$\val_\sigma(b)=h\val_\sigma(a)+(1-h)\ell$, $p$ is strictly switchable
+at $\sigma$ iff $\ell>\val_\sigma(a)$, and then $\val_{\sigma[p]}(p)=\ell$.
+\end{corollary}
+
+\begin{proof}
+Condition on the first visit to $p$, where the strong Markov property and
+$\val_\sigma(p)=\val_\sigma(a)$ give the first term; $1-h>0$ makes the
+two inequalities equivalent; and \Cref{thm:impedance} at $v=p$, where
+$h(p\to p)=1$, gives $\val_{\sigma[p]}(p)-\val_\sigma(a)=(\val_\sigma(b)-\val_\sigma(a))/(1-h)=\ell-\val_\sigma(a)$.
+\end{proof}
+
 
 \begin{remark}\label{rem:impedance}
 The identity is classical and is named here only for the electrical
@@ -3647,6 +3972,20 @@ $\val_{\sigma_t}(\sigma_{t'}(v))>\val_{\sigma_t}(\sigma_t(v))$ lies in
 $S_t$, since $\sigma_{t'}(v)$ is then the successor
 $\bar\sigma_t(v)$.
 \end{proof}
+\begin{corollary}[No return to an isolated configuration]\label{cor:isolated}
+Let $\sigma_0,\dots,\sigma_L$ be an all-switches run on a stopping SSG
+with $S_t=\sigma_t\oplus\sigma_{t+1}$. If $S_t\subseteq W\subseteq\Vmax$
+then $\sigma_{t'}|_W\ne\sigma_t|_W$ for every $t'>t$. In particular a
+vertex that switches alone never switches again, and a sub-game on $W$
+that runs in isolation for a single round is never reset to that local
+configuration and re-run.
+\end{corollary}
+
+\begin{proof}
+\Cref{cor:no-return} gives $\Delta(\sigma_t,\sigma_{t'})\cap S_t\ne\emptyset$
+and $S_t\subseteq W$.
+\end{proof}
+
 
 \begin{corollary}[Forward law]\label{cor:law-b}
 For all $0\le t<t'\le L-1$ we have
@@ -3801,6 +4140,49 @@ values at all twelve original vertices at every step. The value vectors
 increase strictly, and the six switched sets satisfy
 \Cref{cor:no-return,cor:law-b,cor:antichain}.
 \end{proof}
+\begin{proposition}[Damping cannot remove a tie at value zero]\label{prop:zero-ties}
+Let $G^{\flat}$ be obtained from an SSG $G$ by replacing each edge $u\to w$
+by a damping chain of \Cref{def:damping} of arbitrary, edge-dependent
+length $k_e\ge0$, delivering $w$ with probability $1-2^{-k_e}$ and $t_0$
+otherwise. Then for every Max strategy $\sigma$ the zero set of
+$\val^{G^{\flat}}_\sigma$ on $V(G)$ is the zero set $Z_\sigma$ of
+$\val^{G}_\sigma$, the greatest $\sigma$-trap of \Cref{def:trap}, which
+depends on no probability; so every incidence tied at the value $0$ in
+$G$ stays tied in $G^{\flat}$, and no such perturbation makes $B'$ of
+\Cref{prop:overshoot-small} nondegenerate, all ten of its ties being ties
+at $0$.
+\end{proposition}
+
+\begin{proof}
+By \Cref{lem:trap} the zero set of $\val_\sigma$ is the greatest
+$\sigma$-trap, so it suffices to show that the greatest $\sigma$-trap
+$Z^{\flat}$ of $G^{\flat}$ meets $V(G)$ in $Z$. Adjoining to $Z$ the chain
+vertices of every edge whose head lies in $Z$ gives a $\sigma$-trap of
+$G^{\flat}$ ($t_0\in Z$, and a chain vertex's two successors are the head
+and the next chain vertex or $t_0$), so $Z\subseteq Z^{\flat}$; conversely
+$Z^{\flat}\cap V(G)$ is a $\sigma$-trap of $G$, since an average vertex of
+a trap keeps both successors, so a chain in $Z^{\flat}$ carries its head
+into $Z^{\flat}$. A tie at $0$ has both heads in $Z$, and both chain heads
+then carry the value $0$ in $G^{\flat}$.
+\end{proof}
+
+\begin{proposition}[A nondegenerate game with the same run]\label{prop:nondeg-overshoot}
+Replace the edge in slot $k\in\{0,1\}$ of vertex $v$ of $B'$ by a chain of
+$j_{v,k}$ average vertices delivering its head with probability
+$1-2^{-7}-2^{-j_{v,k}}$, $t_0$ with probability $2^{-7}$ and $t_1$ with
+probability $2^{-j_{v,k}}$, where
+$(j_{v,0},j_{v,1})_{v=0,\dots,11}=(8,11),(11,9),(12,9),(12,8),(11,12),(13,8),(9,9),(9,11),(8,8),(11,10),(13,11),(8,8)$.
+The result is a stopping one-player SSG on $253$ vertices with the same
+four Max vertices, nondegenerate --- none of its $64$ incidences is tied
+--- whose improvement orientation is the Holt--Klee acyclic unique sink
+orientation $(12,15,14,13,0,11,10,9,4,3,2,1,8,5,7,6)$ of height $6$ and
+whose all-switches run from $\sigma_0=(1,1,1,0)$ is again
+$\{0,3\},\{0,1,2\},\{0,1\},\{1\},\{2\},\{3\}$, exactly as in
+\Cref{prop:overshoot-small}: the degenerate witness there has a
+nondegenerate realisation with the same run. (Exact computation of the
+round-$15$ verification route, re-verified by its auditors.)
+\end{proposition}
+
 
 \begin{remark}\label{rem:allsw-laws}
 The three laws are genuine constraints and they are not enough. Write
@@ -7918,6 +8300,94 @@ print for parity games and what is open here is only its behaviour on
 stopping SSGs, which \Cref{thm:readout} begins to calibrate; we do not
 know of a published family separating either rule from all-switches.
 \end{remark}
+\begin{lemma}[Same-successor bias]\label{lem:same-successor}
+Let $v\in\Vmax$ have successors $p\in\Vmax$ and $q\in\Vavg$ with the same
+successor pair $\{a,b\}$, as every $v_i$ of the ladder $L_n$ of
+\Cref{thm:ladder} has. Then $\val^{\tau}(p)\ge\val^{\tau}(q)$ for every
+Min strategy $\tau$, with equality iff $\val^{\tau}(a)=\val^{\tau}(b)$; so
+the strict variant of \Cref{def:bsi} never endorses the switch of $v$ from
+$p$ to $q$, the veto variant endorses it only at a tie, and the switch from
+$q$ to $p$ is endorsed whenever it is improving. Moreover $p\to q$ is
+$\val_\sigma$-improving at $v$ iff $p$ itself is strictly switchable at
+$\sigma$.
+\end{lemma}
+
+\begin{proof}
+$\val^{\tau}$ is the value of the game with Min frozen, so
+$\val^{\tau}(p)=\max\{\val^{\tau}(a),\val^{\tau}(b)\}$ and
+$\val^{\tau}(q)$ is the mean; a maximum dominates a mean, with equality
+only when the arguments agree. For the last claim,
+$\val_\sigma(p)=\val_\sigma(\sigma(p))$ and $\val_\sigma(q)$ is the mean
+of $\val_\sigma(a),\val_\sigma(b)$ with $\sigma(p)\in\{a,b\}$.
+\end{proof}
+
+\begin{proposition}[Normalisation preserves BSI]\label{prop:bsi-normal}
+Let $N'(G)$ be the bipartite normal form of \Cref{lem:normalform} with its
+bijections $\sigma\mapsto\tilde\sigma$, $\tau\mapsto\tilde\tau$. Then
+$\val_{\tilde\sigma}=\val_\sigma$ and $\val^{\tilde\tau}=\val^{\tau}$ on
+$V(G)$, the two gadget vertices replacing an edge $(v,u)$ taking the value
+of $u$; hence $S$, $S^{\tau}$, $C_{\max}$ and $C_{\min}$ coincide in both
+variants, and the BSI runs on $(G,\sigma_0,\tau_0)$ and on
+$(N'(G),\tilde\sigma_0,\tilde\tau_0)$ have the same length and pass through
+corresponding pairs. The same holds for the $k$-blinding normalisation
+$N_k$ of \Cref{def:kblind}.
+\end{proposition}
+
+\begin{proof}
+\Cref{lem:normalform}(iii) is the statement for $\val_\sigma$. The gadget
+uses only average vertices and is inserted at exactly the edges whose
+endpoints are both controlled, a condition invariant under exchanging the
+players and the sinks, so $N'(\bar G)=\overline{N'(G)}$, and
+\Cref{lem:normalform}(iii) applied to $\bar G$, carried back by
+\Cref{lem:duality}, is the statement for $\val^{\tau}$; each test of
+\Cref{def:bsi} compares two numbers that are unchanged. For $N_k$ use
+\Cref{lem:kblind}(ii).
+\end{proof}
+
+\begin{proposition}[A Min vertex switched four times]\label{prop:q16}
+Let $Q_{16}$ be the stopping game with eight Max vertices $c_1,\dots,c_8$
+and eight Min vertices $c_9,\dots,c_{16}$ whose actions are the following
+rows, in $64$-ths over $c_1,\dots,c_{16},t_1$, the remaining mass on $t_0$
+(every row leaks, so \Cref{lem:dyadic-row} realises the game on at most
+$258$ vertices):
+\[
+\begin{array}{r@{\ }l@{\qquad}l}
+  c_{1}\ (\max): & \{c_{1}\!:\!1,\ c_{5}\!:\!1,\ c_{10}\!:\!1\} & \{c_{7}\!:\!1,\ c_{16}\!:\!1\}\\
+  c_{2}\ (\max): & \{c_{4}\!:\!19,\ c_{8}\!:\!2\} & \{c_{2}\!:\!28,\ c_{5}\!:\!1,\ c_{12}\!:\!1\}\\
+  c_{3}\ (\max): & \{c_{14}\!:\!1,\ t_1\!:\!1\} & \{c_{3}\!:\!2,\ c_{7}\!:\!26,\ c_{9}\!:\!1,\ c_{15}\!:\!1\}\\
+  c_{4}\ (\max): & \{c_{2}\!:\!40,\ c_{4}\!:\!1,\ c_{9}\!:\!3\} & \{c_{5}\!:\!1,\ c_{8}\!:\!1,\ c_{16}\!:\!7\}\\
+  c_{5}\ (\max): & \{c_{2}\!:\!16,\ c_{9}\!:\!1,\ c_{12}\!:\!1\} & \{c_{3}\!:\!56,\ c_{4}\!:\!2,\ c_{12}\!:\!1\}\\
+  c_{6}\ (\max): & \{c_{14}\!:\!19\} & \{c_{3}\!:\!17,\ c_{9}\!:\!17\}\\
+  c_{7}\ (\max): & \{c_{3}\!:\!19,\ c_{6}\!:\!18,\ c_{14}\!:\!2,\ c_{16}\!:\!1\} & \{c_{4}\!:\!3,\ c_{13}\!:\!48\}\\
+  c_{8}\ (\max): & \{c_{1}\!:\!1,\ c_{11}\!:\!1,\ c_{12}\!:\!1\} & \{c_{5}\!:\!1,\ c_{11}\!:\!12,\ c_{14}\!:\!1,\ c_{16}\!:\!1\}\\
+  c_{9}\ (\min): & \{c_{9}\!:\!1,\ t_1\!:\!35\} & \{c_{1}\!:\!2,\ c_{15}\!:\!1\}\\
+  c_{10}\ (\min): & \{c_{9}\!:\!1,\ c_{11}\!:\!60\} & \{c_{5}\!:\!1,\ c_{6}\!:\!1,\ c_{9}\!:\!2,\ c_{11}\!:\!5,\ c_{15}\!:\!1,\ c_{16}\!:\!8\}\\
+  c_{11}\ (\min): & \{c_{3}\!:\!1,\ c_{8}\!:\!26\} & \{c_{9}\!:\!10,\ c_{13}\!:\!47\}\\
+  c_{12}\ (\min): & \{c_{1}\!:\!32,\ c_{10}\!:\!1\} & \{c_{5}\!:\!1\}\\
+  c_{13}\ (\min): & \{c_{5}\!:\!1,\ c_{9}\!:\!1,\ c_{14}\!:\!15,\ c_{15}\!:\!24\} & \{c_{5}\!:\!5,\ c_{6}\!:\!16,\ c_{16}\!:\!2\}\\
+  c_{14}\ (\min): & \{c_{7}\!:\!1,\ c_{9}\!:\!9,\ c_{13}\!:\!1\} & \{c_{2}\!:\!1,\ c_{9}\!:\!1,\ c_{15}\!:\!26\}\\
+  c_{15}\ (\min): & \{c_{9}\!:\!16,\ c_{11}\!:\!6\} & \{c_{7}\!:\!43,\ c_{15}\!:\!1,\ t_1\!:\!13\}\\
+  c_{16}\ (\min): & \{c_{8}\!:\!4,\ c_{13}\!:\!11,\ c_{15}\!:\!1\} & \{c_{5}\!:\!4,\ c_{8}\!:\!15,\ c_{11}\!:\!4,\ c_{13}\!:\!1\}
+\end{array}
+\]
+From $\sigma_0=(0,0,1,1,0,0,1,0)$ and $\tau_0=(0,0,1,1,1,1,0,1)$ the veto
+variant of \Cref{def:bsi} takes five rounds, with
+$(C_{\max},C_{\min})=(\emptyset,\{9,10,11,16\})$, $(\{3\},\{10,12,13\})$,
+$(\{5,6,7\},\{10,11\})$, $(\{2,8\},\{10\})$, $(\{4\},\emptyset)$: the Min
+vertex $c_{10}$ is switched four times, $c_{8}$ twice, and the run halts
+at $\val_\sigma=\val^{\tau}=w^{\ast}$. The strict variant from the same
+start also takes five rounds and switches every vertex at most once: three
+of the four reversals of $c_{10}$ are ties of $\val_\sigma$ at $c_{10}$
+that the veto variant accepts and the strict one refuses. (Reproduced here
+from the printed rows, $\val_\sigma$ and $\val^{\tau}$ as componentwise
+extrema over all $2^{8}$ counter-strategies.)
+\end{proposition}
+
+This is the two-player counterpart of \Cref{prop:leapfrog}: reversals at
+one vertex are cheap under the veto variant because a tie of the guide is
+accepted, and \Cref{thm:bsi-tracks} bounds only the strictly endorsed
+switches within a block.
+
 
 \begin{proposition}[Stopping is necessary]\label{prop:bsi-nonstopping}
 For the SSG on non-sinks $0,\dots,5$ with $t_0=6$, $t_1=7$, types
@@ -12926,7 +13396,12 @@ family inside it and outside all four combinatorial ones
 a polynomially bounded common denominator, solved in $O(N^{2}D^{2})$ with
 no advance knowledge of $D$ (\Cref{thm:few-denominator}) --- a class read
 off the answer and not the presentation, which \Cref{prop:fv-family}
-shows lies inside none of the five; and, in general, a
+shows lies inside none of the five; the games with a bounded
+modulator number, solved in $N^{O(\mu)}$ by a fixed-point search over a
+frozen set of $\mu$ vertices, with $M_n$ a family inside that class and
+outside every other (\Cref{thm:modulator,prop:modulator-family}), and the
+games of bounded treewidth, solved in quasipolynomial time
+(\Cref{thm:qp}); and, in general, a
 Las~Vegas algorithm of expected time $e^{2\sqrt n}\,\mathrm{poly}(N)$
 obtained from a full, tie-robust analysis of Ludwig's random-facet
 strategy improvement, the specialisation of the Kalai and
