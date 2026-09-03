@@ -11,6 +11,8 @@ The repository holds two kinds of artefact:
 | `*.tex` (repo root) | the prose proof, compiled to PDF with `latexmk` |
 | `lean/` | a Lean 4 + Mathlib project for machine-checking the argument; `SSGProof/Blowup.lean` formalises `thm:blowup` of `frontier.tex` (core library only, no `sorry`, standard axioms) |
 | `scripts/setup-env.sh` | one-shot environment setup |
+| `scripts/round15-verify/` | the root agent's exact-arithmetic re-verifications of the round-15 claims integrated into `frontier.tex` (see its README) |
+| `rounds/` | per-round records: workflow scripts, journals, and the structured route/audit results (`rounds/round15/results/`) |
 | `Makefile` | build entry points |
 
 ## Quick start
