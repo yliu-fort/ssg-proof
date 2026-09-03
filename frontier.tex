@@ -3013,8 +3013,10 @@ $H[X{:=}\theta]\in\mathcal P$ for every $\theta$. If $\mathcal P$ is
 solved exactly in time $p(n,\beta)$ on payoffs of bit-size $\beta$, then
 $\val_H$ is computed exactly in time
 $O((B+2)^{\mu}p(n,O(B))+\mathrm{poly}(n,B))$ with
-$B=O(a+\log N+\log\Delta)$, so for a stopping SSG in time
-$N^{O(\mu)}p(N,O(N))$; the algorithm ends by checking $T_Hw=w$ exactly,
+$B=O(a+\log N+\log\Delta)$, given the modulator $X$, so for a stopping
+SSG in time $N^{O(\mu)}p(N,O(N))$, a bound that survives finding $X$ by
+trying all $N^{\mu}$ candidate sets when membership of $\mathcal P$ is
+decidable in polynomial time, as it is for the classes named below; the algorithm ends by checking $T_Hw=w$ exactly,
 which certifies the output because a \emph{stopping} game has a unique
 fixed point --- on a non-stopping game the same check can pass at a
 wrong vector, as its auditor exhibited, so the stopping hypothesis is not
@@ -3080,9 +3082,14 @@ If $G$ has no directed cycle among its non-terminals, backward induction
 solves it; if $n\le2(k+1)$, brute force over positional pairs does
 (\Cref{lem:payoff-transfer}(b)); if $\Gamma(G)$ is disconnected, each
 component is successor-closed up to terminals and is solved separately
-(\Cref{lem:successor-closed}). Otherwise the centroid argument on the
-decomposition tree gives a bag $X$, $|X|\le k+1$, such that every
-component $C_i$ of $\Gamma(G)-X$ has at most $n/2$ vertices, and every
+(\Cref{lem:successor-closed}). Otherwise there is a bag $X$, $|X|\le k+1$,
+such that every component $C_i$ of $\Gamma(G)-X$ has at most $n/2$
+vertices: from any node of the decomposition tree move to the neighbour
+whose side carries more than $n/2$ non-terminals outside the current bag
+--- at most one neighbour can --- until there is none, which happens
+because the count of the side moved into strictly decreases; every
+component of $\Gamma(G)-X$ then lies on one side of one edge at $X$. And
+every
 successor of a vertex of $C_i$ lies in $C_i\cup X$ or is a terminal; so
 for $\theta\in[0,1]^{X}$ the game on $C_i$ with $X$ frozen at $\theta$ is
 stopping (\Cref{lem:cut-sign}), has at most $n/2$ non-terminals and
@@ -5865,10 +5872,14 @@ No stopping SSG with $\Vmin=\emptyset$, degenerate or not, has as its
 all-switches run the bottom-antipodal walk
 $13,18,12,16,9,17,1,6,0,4,5$ of $B^{2}$ in the representative of
 \Cref{prop:b2-realised} translated by $1$. So the one Min vertex of that
-realisation is necessary for the walk, not only for the orientation:
-the $m=5$ analogue of what \Cref{thm:no-seven} does for
-\Cref{cor:seven-two-player}, and out of reach of the height argument,
-the walk having length $10\le11=h^{\ast}_{\mathrm{HK}}(5)$.
+realisation is necessary for its walk, not only for its orientation.
+This is out of reach of the height argument, the walk having length
+$10\le11=h^{\ast}_{\mathrm{HK}}(5)$, and it rests, through
+\Cref{lem:tie-perturb}, on Holt and Klee's theorem. It is narrower than
+\Cref{thm:no-seven}: $B^{2}$ has four bottom-antipodal walks of length
+$10$ and only this one is excluded, so a degenerate one-player game whose
+corner resolution is $B^{2}$ with a run from another start is not ruled
+out.
 \end{theorem}
 
 \begin{proof}
