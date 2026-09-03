@@ -23,3 +23,10 @@ Min strategies).
   checks recorded in the paper as "reproduced here" for prop:b2-realised,
   prop:m3-realised, prop:oneplayer-runs, lem:stack, lem:seven-flat,
   lem:rise-bound / cor:peak-sharp, thm:top and rem:bsi-br.
+- `tw_check.py` — the grid Tarski search + rounding + continued-fraction
+  recovery of sec:width on random stopping games with a frozen feedback set
+  (thm:modulator's chain), 25/25 exact.
+- `mn_check.py` — the family M_n (prop:modulator-family): stopping,
+  reachability, val(h), the Max-cycle claim.
+- `q16_check.py` — Q_16 (prop:q16) from its printed rows: both BSI variants.
+- `glaw.py` — the three-law ceiling g(m)=1,2,4,7,12 (rem:flat).
