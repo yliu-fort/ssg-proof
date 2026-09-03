@@ -2795,16 +2795,18 @@ $A(C_0)=n+2$; no descent path is longer, and the tie at $X_0$ is the only
 freedom in $\sigma^\ast$ and does not lower the count, so
 $d(\mathrm{FV}_2(n))=n+2$.
 \end{proof}
-\begin{proposition}[The few-denominator class contains stalls]\label{prop:fv-stall}
-The families $\mathrm{FV}(n)$ and $\mathrm{FV}_2(n)$, $n\ge3$, have
-$D(G)=3$ and are solved by \Cref{thm:few-denominator} in $O(N^{2})$
-operations; yet, seeded with $Z_0,Z_1$ and read in both directions of
+\begin{proposition}[The few-denominator class contains vacuous stalls]\label{prop:fv-stall}
+The families $\mathrm{FV}(n)$ and $\mathrm{FV}_2(n)$ have $D(G)=3$ and
+are solved by \Cref{thm:few-denominator} in $O(N^{2})$ operations; yet
+for $n=3,4,5$, seeded with $Z_0,Z_1$ and read in both directions of
 \Cref{rem:own-successor} at every controlled vertex, the slack calculus of
 \Cref{def:slack}, its min-plus closure of \Cref{def:trans-slack} and the
 one-shot transport test of \Cref{def:transport} never fire on them, at any
 round, while the value-simulation preorder of \Cref{def:simorder} decides
 every controlled vertex and the seeded hybrid of \Cref{sec:hybrid} does so
-by round three.
+by round three. (The argument below is a schema whose three finite checks
+were carried out for $n=3,4,5$; the statement for every $n$ is not
+proved.)
 \end{proposition}
 
 \begin{proof}
@@ -2826,14 +2828,18 @@ $F(W)\ge W$, $\Theta\ge\tfrac12\Psi$ and $D_K\ge W+t\Psi$ give by
 induction $D_{K+j}\ge W+t2^{-j}\Psi$ for all $j$, so $D_k>W$ on $S$ for
 ever, and every entry the test reads either lies in $S$ with $W=0$ or has
 $W\ge0$: neither direction fires. (Exact for $n=3,4,5$ and both variants,
-by the round-$15$ verification route.)
+by the round-$15$ verification route, confirmed by its auditor.)
 \end{proof}
 
 So, unlike the escape class (\Cref{rem:escape-class}), the few-denominator
-class contains stalls of the mechanisms M2, M2T and M4; but every stall it
-is known to contain is vacuous, no controlled vertex of the instance being
-value-distinguishing, so the decision the mechanism fails to make carries
-no information. Whether the class contains a stall with a
+class contains instances on which the mechanisms M2, M2T and M4 are silent
+for ever; but these are not stalls in the sense of the open question of
+\Cref{rem:alphabet-compare}: every controlled vertex of $\mathrm{FV}(n)$
+has two successors of equal value, exactly the case in which
+\Cref{def:decision-rule} licenses abstention, so the decision the
+mechanism fails to make carries no information, and M6 and \Cref{def:bsi}
+--- which halts at once on these families --- are untouched. Whether the
+class contains a stall with a
 value-distinguishing vertex is open and is a different question: a small
 denominator makes every value gap at least $1/D(G)$, but
 \Cref{thm:slack-vi-upper} converts a gap into a firing round only through
@@ -8379,7 +8385,8 @@ successor pair $\{a,b\}$, as every $v_i$ of the ladder $L_n$ of
 Min strategy $\tau$, with equality iff $\val^{\tau}(a)=\val^{\tau}(b)$; so
 the strict variant of \Cref{def:bsi} never endorses the switch of $v$ from
 $p$ to $q$, the veto variant endorses it only at a tie, and the switch from
-$q$ to $p$ is endorsed whenever it is improving. Moreover $p\to q$ is
+$q$ to $p$, when improving, is endorsed by the veto variant always and by
+the strict variant unless $\val^{\tau}(a)=\val^{\tau}(b)$. Moreover $p\to q$ is
 $\val_\sigma$-improving at $v$ iff $p$ itself is strictly switchable at
 $\sigma$.
 \end{lemma}
@@ -8420,8 +8427,9 @@ players and the sinks, so $N'(\bar G)=\overline{N'(G)}$, and
 Let $Q_{16}$ be the stopping game with eight Max vertices $c_1,\dots,c_8$
 and eight Min vertices $c_9,\dots,c_{16}$ whose actions are the following
 rows, in $64$-ths over $c_1,\dots,c_{16},t_1$, the remaining mass on $t_0$
-(every row leaks, so \Cref{lem:dyadic-row} realises the game on at most
-$258$ vertices):
+(every row leaks, so \Cref{lem:dyadic-row} realises the game; with the
+targets of each row laid on the leaves in vertex-index order it has $288$
+vertices, a count its auditor reproduced):
 \[
 \begin{array}{r@{\ }l@{\qquad}l}
   c_{1}\ (\max): & \{c_{1}\!:\!1,\ c_{5}\!:\!1,\ c_{10}\!:\!1\} & \{c_{7}\!:\!1,\ c_{16}\!:\!1\}\\
