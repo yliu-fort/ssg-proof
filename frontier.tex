@@ -196,7 +196,10 @@ orientations of the occupancy polytope, hence Holt--Klee
 (\Cref{cor:seven-two-player}), and ties do not help at $m=4$
 (\Cref{thm:no-seven}); the first blow-up level, and a layer translated by
 a single coordinate, are realised by one-player games on $58$ and $100$
-vertices (\Cref{rem:blowup-measured}); and the two-player cube of
+vertices, and the second level by a two-player game on $138$ vertices with
+one Min vertex (\Cref{rem:blowup-measured,prop:b2-realised}), so the
+smallest open instance of the pivot is the third level; and the
+two-player cube of
 $G^{\sharp}$ is Holt--Klee of height $5$, with the non-Holt--Klee
 height-$7$ orientation as its sink projection (\Cref{prop:gsharp-bigcube}).
 
@@ -4633,12 +4636,12 @@ fifty-three average, two sinks), found by the integer search of
 \Cref{prop:auso-seven}'s kind and verified from the game; it is Holt--Klee,
 as \Cref{prop:oneplayer-lp} requires. The second level, of height $10$ at
 dimension $5$, is not Holt--Klee, so any realisation needs Min vertices
-or ties (\Cref{prop:oneplayer-lp}, \Cref{rem:oneplayer-lp}), and it is the
-smallest instance on which the translation is genuine; our
-searches for it, with two or three Min vertices, did not converge, but the
-same searches also failed to re-find the known walks of $G^{\sharp}$ and
-of a one-player height-$6$ game within the same budget, so that is not
-evidence.
+or ties (\Cref{prop:oneplayer-lp}, \Cref{rem:oneplayer-lp}); it is
+realised, with one Min vertex, in \Cref{prop:b2-realised} below. (Blind
+searches for it, with two or three Min vertices, had not converged, and
+had also failed to re-find the known walks of $G^{\sharp}$ and of a
+one-player height-$6$ game within the same budget; the realisation was
+found by design, not by search.)
 
 A translated layer is realised at inner dimension two. The blow-up
 depends on the pair $(s,u)$, and a height-$2$ orientation $s$ of the
@@ -4673,6 +4676,51 @@ earlier step. Not formalised are the identification of $(0,0,u)$ as the
 sink and the numerical corollaries. It is the first result of this
 document to be formalised.
 \end{remark}
+
+\begin{proposition}[The second level is realised, by two players]\label{prop:b2-realised}
+There is a nondegenerate stopping SSG on $138$ vertices --- five Max, one
+Min, $130$ average and the two sinks --- whose improvement outmap is
+exactly the second level $B^{2}=B(B(s_1))$ of \Cref{thm:blowup} seeded at
+the one-cube, namely
+\[
+  (7,4,5,2,0,1,3,6,24,9,27,14,31,28,29,10,16,25,19,30,23,20,21,26,8,17,11,22,15,12,13,18)
+\]
+in the coordinates (seed, $\alpha_1$, $\beta_1$, $\alpha_2$, $\beta_2$),
+an acyclic unique sink orientation of the $5$-cube of bottom-antipodal
+height $10$ that is not Holt--Klee; its all-switches run from $\sigma=12$
+is $12,19,13,17,8,16,0,7,1,5,4$. Writing $c_1,\dots,c_5$ for the Max and
+$c_6$ for the Min vertex, its harmonic normal form, as multiples of
+$\tfrac1{512}$ over the targets $(c_1,\dots,c_6,t_1)$ with the remaining
+mass going to $t_0$, is
+\[
+ \begin{array}{r@{\quad}l@{\qquad}l}
+  c_1: & (12,461,36,0,0,0,0)     & (276,0,0,0,127,0,47)\\
+  c_2: & (0,0,509,0,0,0,0)       & (0,83,0,0,320,0,12)\\
+  c_3: & (0,0,0,0,0,460,43)      & (267,187,0,0,56,0,0)\\
+  c_4: & (0,0,0,0,502,0,8)       & (71,293,23,0,0,0,0)\\
+  c_5: & (0,0,0,509,0,0,0)       & (0,0,0,0,0,419,1)\\
+  c_6: & (472,0,0,0,0,0,0)       & (0,493,0,0,16,0,1).
+ \end{array}
+\]
+Every row sum is below $512$, so every action leaks to $t_0$ and the game
+is stopping.
+\end{proposition}
+
+\begin{proof}
+The game was designed by the round-$15$ gadget route --- the inner three
+Max vertices carry the first level, the outer pair the parity rule of
+\Cref{thm:blowup}, and the Min vertex performs the layer-$(0,0)$
+translation --- and its rows were fixed by exact linear programming over
+the normal form. We verified it from the explicit game: the greatest trap
+is empty (\Cref{lem:trapchar}); the $64$ profile values were computed by
+exact elimination and $\val_\sigma$ taken as the minimum over the two Min
+strategies; no incidence is tied; the outmap is the displayed one, a
+unique sink orientation, acyclic, of height $10$, on which the
+unit-vertex-capacity flow test fails; and along the run the value vector
+increases at every step. The normal form above reproduces the outmap on
+its own. A second realisation, at denominator $2^{10}$ on $155$ vertices,
+is recorded in the repository.
+\end{proof}
 
 \begin{remark}[What a game would have to read]\label{rem:blowup-realise}
 \Cref{thm:blowup} sharpens the realisability question of
@@ -4718,16 +4766,21 @@ problem that we have not carried out. The substitutes we did try ---
 exchanging the sink payoffs, thresholds on monotone quantities, the
 switchability of the previous level's outer vertices --- give heights
 $4,10,16,23,30$, at most $4,6,8$ and at most $4,8,10$ respectively in the
-same rule family, that is linear growth. So the question is whether the weight-swapping gadget exists \emph{at
-additive size per level}: if it does, an SSG-realisable family of
+same rule family, that is linear growth. \Cref{prop:b2-realised} shows the gadget exists at the second level, at
+a cost of two Max vertices, one Min vertex and three further bits of
+precision over the first. So the question is whether every level can be
+added at \emph{additive} cost --- $O(1)$ controlled vertices and $O(1)$
+bits of precision per level, so that level $k$ has $O(k)$ controlled
+vertices and dyadic probabilities of denominator $2^{O(k)}$, hence
+polynomially many average vertices: if so, an SSG-realisable family of
 exponential bottom-antipodal height on polynomially many vertices exists
-and the pivot of \Cref{rem:auso-size} is settled --- a gadget costing
-$N\mapsto N^{c}$ per level would not do, by \Cref{prop:auso-size}; if it
-does not, nothing follows about other constructions, since
+and the pivot of \Cref{rem:auso-size} is settled, whereas a cost of
+$N\mapsto N^{c}$ per level would not do, by \Cref{prop:auso-size}. The
+third level, dimension $7$ and height $22$, is the smallest open instance.
+Nothing here proves or refutes the additive regime beyond one step, and
+nothing follows from a failure about other constructions, since
 \Cref{lem:hstar-super} builds tall orientations with no translated layer
-at all, and the anti-value observation above is a heuristic about one
-substitution rather than a theorem, as the realised translated layer of
-\Cref{rem:blowup-measured} already shows. A datum on the negative side: the linear-programming orientation of the Klee--Minty cube, on which
+at all. A datum on the negative side: the linear-programming orientation of the Klee--Minty cube, on which
 Dantzig's rule is exponential, has bottom-antipodal height exactly $d$ in
 every dimension $d\le12$, exact arithmetic again.
 \end{remark}
@@ -11515,10 +11568,12 @@ one-player game, nondegenerate --- one-player orientations are
 Holt--Klee, \Cref{prop:oneplayer-lp,cor:seven-two-player} --- or not
 (\Cref{thm:no-seven}); ties buy a one-player run at most one round per
 Max vertex (\Cref{thm:zero-timer}); the first blow-up level and a layer
-translated by a single coordinate are realised by one-player games
-(\Cref{rem:blowup-measured}), while the second level is the smallest open
-instance and \Cref{rem:blowup-realise} states what a game realising it
-would have to compute. Bidirectional improvement and its one-sided form,
+translated by a single coordinate are realised by one-player games and the
+second level by a two-player game on $138$ vertices
+(\Cref{rem:blowup-measured,prop:b2-realised}), so the third level is the
+smallest open instance, and \Cref{rem:blowup-realise} states the question
+that remains: whether each further level costs only a constant number of
+controlled vertices and of bits. Bidirectional improvement and its one-sided form,
 best-response restart, are covered by no barrier here and have no known
 superpolynomial family (\Cref{def:bsi,thm:bsi-nostall,prop:bsi-br}); the
 window barrier covers rules solving $O(N^{\alpha})$ average vertices for
