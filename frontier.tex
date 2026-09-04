@@ -3627,12 +3627,146 @@ other means. The path statement itself is standard --- it is the short
 path to the sink of an acyclic unique sink orientation, and the
 policy-iteration fact that improving towards a fixed optimal policy takes
 at most $n$ single switches --- and is proved here only to keep the
-document self-contained.
+document self-contained. The same holds against algorithms free to
+evaluate strategies that are not improvements of one another: an
+optimal strategy is found, with a certificate, from $|C|+2$ evaluations
+chosen adaptively (\Cref{thm:eval-queries}).
 \end{corollary}
 
 \begin{proof}
 Immediate from \Cref{thm:short-path}.
 \end{proof}
+
+\begin{theorem}[An optimal strategy is found from $|C|+2$ evaluations]\label{thm:eval-queries}
+Let $G$ be a stopping SSG with $C:=\Vmax\cup\Vmin$. An \emph{evaluation
+algorithm} is given only the controlled skeleton of $G$ --- the vertices
+of $C$, their owners, and the names of their two successors, with the
+information which names coincide and which are sinks, but nothing about
+$\Vavg$ --- and may query a Max strategy $\sigma$ to receive
+$\val_\sigma$ at $C$ and at every successor of a vertex of $C$; one query
+is one polynomial-time evaluation (\Cref{thm:eval-stopfree}), and the
+algorithm is not required to run in polynomial time between queries.
+Let $d(G)$ be the dimension of the affine hull of
+$\{\val_\sigma|_C:\sigma\in\{0,1\}^{\Vmax}\}$, at most $|C|$. Then the
+following algorithm outputs an optimal Max strategy of $G$, with a
+certificate, after at most $d(G)+2\le|C|+2$ queries: \emph{keep the list
+$D$ of answers; choose any harmonic system on the skeleton consistent
+with $D$ --- substochastic rows $(q_{v,a},p_{v,a})$ over $C$ with no
+nonempty $U\subseteq C$ in which every vertex has a full-mass action
+supported in $U$, and with $q_{v,a}+p_{v,a}\cdot\val_\sigma|_C=\val_\sigma(v^{(a)})$
+for every recorded $\sigma$ --- let $\hat w$ be the fixed point of its
+Shapley operator and $\hat\sigma$ a Max strategy greedy at $\hat w$;
+query $\hat\sigma$; if the answer has $S_{\hat\sigma}=\emptyset$, output
+$\hat\sigma$, otherwise record it and repeat.} A consistent system
+satisfying the stopping condition always exists: the barycentre of each
+row's consistency polytope, since a full-mass set tight at a relative
+interior point would be tight on the whole polytope, the game's own rows
+included. For the oracle that evaluates a positional \emph{pair} the
+same algorithm, with a greedy pair in place of $\hat\sigma$ and the
+halting test that no controlled vertex is strictly switchable, needs at
+most $d_\pi(G)+2\le|C|+2$ queries, $d_\pi(G)$ the dimension of the
+affine hull of all $2^{|C|}$ profile values on $C$ --- not $d(G)+2$,
+which the route claimed and which fails on a five-vertex game (its
+correctness auditor).
+\end{theorem}
+
+\begin{proof}
+The harmonic normal form of $G$ over $C$ --- the first-passage laws of
+the actions onto $C\cup\{t_1\}$, \Cref{lem:readout} with both players'
+vertices as the pinned set --- is a harmonic system in the above sense
+(a full-mass set $U$ would be a trap with the average vertices between,
+against \Cref{lem:trapchar}) and is consistent with every $D$, since by
+optional stopping $\val_\sigma(v^{(a)})=q_{v,a}+p_{v,a}\cdot\val_\sigma|_C$;
+so the choice is from a nonempty set. Every operator of a harmonic system
+has exactly one fixed point (\Cref{lem:survival-contract}, whose argument
+applies to any finite family of substochastic first-passage rows over
+$C$), so $\hat w$ exists, and a strategy greedy at $\hat w$ has $\hat w$
+as its value in the hypothesis with no strictly switchable Max vertex
+there. The halting test is applied to the true answer, so
+\Cref{lem:local-global} makes the output optimal. For the count write
+$u(x):=(1,x)\in\mathbb R^{1+C}$ and $V_t$ for the span of the $u(x)$ over
+the recorded values $x=\val_\sigma|_C$. Consistency says exactly that
+each row of the hypothesis differs from the true row by a vector
+orthogonal to $V_t$. If a query $\hat\sigma$ does not halt and its true
+value $x:=\val_{\hat\sigma}|_C$ had $u(x)\in V_t$, then hypothesis and
+truth would agree on every row at $x$, so $x$ would be a fixed point of
+the hypothesis's operator frozen at $\hat\sigma$, hence its unique value
+there, with the true appeals --- and the hypothesis's strictly switchable
+set at $\hat\sigma$, empty by construction, would be the true one, so the
+query would halt. Hence every non-halting answer raises $\dim V_t$ by
+one; as every recorded $x$ lies in an affine space of dimension $d(G)$,
+$\dim V_t\le d(G)+1$, so there are at most $d(G)+1$ non-halting queries.
+\end{proof}
+
+\begin{proposition}[Evaluations are not free: the hidden decision path]\label{prop:hdp-eval}
+For $m\ge1$ and $z\in\{0,1\}^{m}$ let $\mathrm{HDP}_m(z)$ be the one-player
+stopping SSG on $6m$ non-sinks with $\Vmax=\{v_1,\dots,v_m\}$ in which $v_j$
+points at two average vertices $e^{j}_0,e^{j}_1$ of its own, the same names
+for every $z$; $e^{j}_{z_j}$ leads to the gadget $b\to(t_1,t_0)$ of value
+$\tfrac12$ when $j=1$ and to $b\to(v_{j-1},x)$, $x\to(t_0,y)$,
+$y\to(t_1,t_0)$, of first-passage law $(\tfrac18;\tfrac12e_{v_{j-1}})$,
+when $j\ge2$; $e^{j}_{1-z_j}$ leads to $c\to(t_0,s)$, $s\to(t_1,t_0)$, of
+value $\tfrac14$ (unused block vertices point at $t_0$). All $2^{m}$
+members have one controlled skeleton and $\Opt(\mathrm{HDP}_m(z))=\{z\}$;
+writing $i$ for the first index at which $\sigma$ differs from $z$
+($m+1$ if none), the answer to $\sigma$ is $\val_\sigma(v_j)=\tfrac14+2^{-j-1}$
+for $j<i$ and $\tfrac14$ for $j\ge i$, with $S_\sigma=\{v_i\}$, so it
+reveals $z_1,\dots,z_i$ and nothing else. Hence every deterministic
+evaluation algorithm needs $m=|\Vmax|$ queries on the family, $m$ suffice,
+and a zero-error randomised one needs $m/\log_2(m+1)$ in expectation on a
+uniform member. Two caveats belong to the statement: the members are
+pairwise isomorphic, so \Cref{prob:main} is constant on the family and
+the bound concerns naming an optimal strategy only; and for $j>i$ the two
+successors of $v_j$ tie, so the family is degenerate, and nothing is
+claimed for the nondegenerate class of \Cref{def:improvement-uso}.
+\end{proposition}
+
+\begin{proof}
+Stopping by \Cref{lem:trapchar}, deleting $y,s$, then $x,c$, then $b$,
+then every $v_j$. The value restriction is the fixed point of
+$x_j=\tfrac18+x_{j-1}/2$ ($\tfrac12$ at $j=1$) where $\sigma_j=z_j$ and
+$x_j=\tfrac14$ where not; a mismatch pins $\tfrac14$ and
+$\tfrac18+\tfrac18=\tfrac14$ propagates it, which gives the display and the
+appeals, whence $S_\sigma=\{v_i\}$ and $\Opt=\{z\}$. Querying the known
+prefix padded with zeros extends it by at least one bit per query, so $m$
+suffice. An adversary keeps a prefix $p$, answers a query by the first
+index where $\sigma$ leaves $p$, or extends $p$ by $1-\sigma_{|p|+1}$ if
+$\sigma$ agrees with it; every extension of $p$ is consistent with all
+answers, and after fewer than $m$ queries two extensions with different
+optima remain. Fixing the random string of a randomised algorithm gives a
+decision tree of branching at most $b:=m+1$ with $L:=2^{m}$ leaves, of
+average depth at least $\log_bL=m/\log_2(m+1)$: by induction on the tree
+$\sum_{\text{leaves}}b^{-d_i}\le1$, and then the arithmetic--geometric
+mean inequality gives $b^{-\frac1L\sum_id_i}\le\frac1L\sum_ib^{-d_i}\le\frac1L$. (Rebuilt from this definition for
+$m\le5$ and every $z$, all claims exact,
+\texttt{scripts/round17-verify/hdp\_verify.py}.)
+\end{proof}
+
+\begin{remark}\label{rem:eval-queries}
+\Cref{thm:eval-queries} is the adaptive, data-only form of
+\Cref{cor:selection}: the short route to the sink is not only short but
+findable from the answers alone, by an algorithm that never sees an
+average vertex, at the price that solving the hypothesis --- an SSG on
+the same controlled set --- is what the algorithm does between queries;
+so it is a statement about information, charges for the operation that is
+polynomial and gives the hard one away, and is no step towards
+\textsc{(Poly-Rule)}. Producing in polynomial time a strategy optimal for
+\emph{some} harmonic system consistent with the data is target-equivalent
+once the data has full rank, since then the only consistent system is the
+game's own. What it does settle is what the exponential lower bounds of
+this document are: bounds on the rounds of a fixed rule, never on the
+information a rule collects, since every family of \Cref{thm:ladder},
+\Cref{cor:slack-stalls}, \Cref{thm:wedge-proved}, \Cref{thm:hybrid-lower}
+and \Cref{thm:cv-lower} is solved by $|C|+2$ evaluations (the propagation
+calculi among them are not evaluation algorithms, so for them the
+comparison is of different quantities), and a family of exponential
+bottom-antipodal height on polynomially many vertices
+(\Cref{rem:blowup-realise}) would defeat all-switches without being an
+informational obstacle. The round-$17$ query-model route, which proved
+this; its auditors reproduced Algorithm E on every family named, on the
+$136$-, $194$- and $344$-vertex games of the repository ($5$, $5$ and $4$
+queries) and on $300$ random two-player games, always within $|C|+2$.
+\end{remark}
 
 \Cref{thm:short-path} guarantees that a short improving path exists; it
 does not say that a natural rule follows one. The most natural rule does
@@ -6342,7 +6476,21 @@ nothing follows from a failure about other constructions; note that
 --- $c(v_1)=z$ off the first block's sink is what makes the two heights
 add rather than maximise --- and that it grows only linearly. A datum on the negative side: the linear-programming orientation of the Klee--Minty cube, on which
 Dantzig's rule is exponential, has bottom-antipodal height exactly $d$ in
-every dimension $d\le12$, exact arithmetic again.
+every dimension $d\le12$, exact arithmetic again. Two oracles, finally:
+an algorithm that reads only the orientation (the strictly switchable
+set at each queried strategy) is weaker than one that reads the values ---
+already at $m=3$, where every acyclic unique sink orientation is realised
+(\Cref{prop:m3-realised,prop:m3-one-min}) and naming the sink of an
+unknown one of the $728$ from out-set queries alone costs exactly $4$ in
+the worst case (exact minimax, \texttt{scripts/round17-verify/dout3.py};
+$3$ once the algorithm is told which realisation's skeleton it faces, the
+route's correctness auditor), while by \Cref{thm:eval-queries} $|C|+2$
+value queries always suffice; whether
+the outmap-query complexity of the SSG-realisable orientations is
+superlinear is open (for arbitrary unique sink orientations a
+superlinear deterministic bound is Schurr and Szab\'o's, from memory,
+unchecked), and it is the information-theoretic form of the question
+this remark asks.
 \end{remark}
 
 \begin{remark}[One-player realisability at $m=4$, measured]\label{rem:hk-survey}
@@ -9008,6 +9156,23 @@ sharpest form of \Cref{cor:selection}: not merely that a short route
 exists while a natural rule misses it, but that the rule can miss a
 one-step route by an exponential margin, and that no scalar read off the
 start vertex distinguishes the two.
+\end{remark}
+
+\begin{remark}[A run stops informing after $|C|+1$ rounds]\label{rem:run-informs}
+The rank argument of \Cref{thm:eval-queries} applies to \emph{any}
+sequence of strategies, a run of any rule: with
+$R_s:=\operatorname{span}\{(1,\val_{\sigma^{r}}|_C):r\le s\}$, the vector
+$(1,\val_{\sigma^{s}}|_C)$ lies outside $R_{s-1}$ for at most $d(G)+1\le|C|+1$
+indices $s$, and at every other index the value vector and all its
+appeals are already determined, every harmonic system consistent with the
+earlier answers predicting them exactly. On the least-index run of $L_6$,
+$64$ strategies long, exactly $7$ rounds carry information and the other
+$57$ are predicted, values and appeals, by any system consistent with the
+first seven ($L_3,\dots,L_6$: $4,5,6,7$ informative rounds out of
+$8,16,32,64$; the round-$17$ query-model route, exact arithmetic). An
+exponentially long run spends all but $|C|+1$ of its rounds recomputing
+consequences of what its first few evaluations implied; the rule cannot
+see that, because it reads only the orientation.
 \end{remark}
 
 The ladder is in fact extremal, and the reason is the sharp denominator

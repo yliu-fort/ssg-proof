@@ -1,0 +1,119 @@
+{
+ "target": "Round-17 route \"variational\" -- Energy functionals and reversibility: a variational characterisation of the value and the class it solves",
+ "sound": true,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "vr:hessian / vr:convexity / vr:variational / vr:optdir",
+   "defect": "The whole convexity block is the textbook monotone-LCP dictionary applied to prop:lcp, which the paper already owns; each of the four is three to four lines from prop:lcp plus the q_v display the paper prints immediately after thm:transport-objective. THE THREE LINES for vr:hessian and vr:convexity: (1) in prop:lcp's notation at base beta = 0, z_v w_v = eps_v^2 (y_v - f_{v,0}(y))(y_v - f_{v,1}(y)) = q_v, so the route's q IS the LCP complementarity gap z^T w = z^T(Mz+q); (2) prop:lcp says y -> z is an affine bijection and M = E R_1 R_0^{-1} E, so the Hessian of q in y is the congruence R_0^T (EME) R_0 symmetrised, i.e. B = sym(R_0^T R_1); (3) a quadratic is convex iff its Hessian is PSD and congruence preserves PSD, so B >= 0 iff M + M^T >= 0, and polarisation ab = ((a+b)/2)^2 - ((a-b)/2)^2 applied rowwise is the 'difference of two energies'. THE THREE LINES for vr:optdir: (1) prop:lcp(b) says the complementary basic solution at S = beta xor pi is the image of y_pi, with w_v = 0 on S and z_v = 0 off S; (2) hence (z-z')_v (w-w')_v = 0 unless v is in S sym-diff S' = {v : pi(v) != pi'(v)}; (3) (z-z')^T(w-w') = d^T B d with d = y_{pi'} - y_pi, and its nonnegativity is exactly monotonicity of M. The route attributes the underlying equivalence (Cottle-Pang-Stone) in prior_art but still reports these as results of class new-object/new-relation.",
+   "evidence": "frontier.tex l.8035 prop:lcp (M = E(I-Q_bar-beta)(I-Q_beta)^{-1}E, P-matrix, complementary basic solutions = y_pi, free variable sign = s_C); l.14254, the paragraph after thm:transport-objective, which prints q_v(x) = (x(v)-x(v^(0)))(x(v)-x(v^(1))) = 0 and calls the branch among 2^{|C|} of them 'the difficulty'; def:lasserre-two builds its relaxation on the same q_v."
+  },
+  {
+   "severity": "major",
+   "result_name": "vr:convexity / vr:variational / vr:gap (the class R and its stated gap)",
+   "defect": "R is exactly the handicap-zero slice of the LCP route the paper surveys and closes in rem:lcp. rem:lcp records that interior-point methods solve LCP(M,q) in O((1+kappa) sqrt(n) L) iterations for a sufficient matrix of handicap kappa; the handicap of a sufficient matrix is 0 precisely when M is positive semidefinite, so on R the bound rem:lcp cites is already polynomial. The route's stated GAP ('convex quadratic programming is in P', Kozlov-Tarasov-Khachiyan) therefore misidentifies what is missing: the algorithmic half of R was already surveyed and set aside by the paper as 'not ours and closed', and no fifth import of a different kind is needed to see that R is polynomial modulo prior art. What is actually missing is content for R, not an algorithm for it.",
+   "evidence": "frontier.tex l.14395-14413 rem:lcp: 'interior-point methods solve LCP(M,q) in O((1+kappa) sqrt n L) iterations when M is sufficient with handicap kappa, so a polynomially bounded handicap would decide prob:main. We do not develop this, because it is not ours and it is closed.'"
+  },
+  {
+   "severity": "major",
+   "result_name": "vr:content",
+   "defect": "The membership list is uninformative, and its non-trivial-looking half is either the route's own trivial clause (a) or already printed in the paper. I recomputed every listed member exactly: H_m (m = 1..6), G_8, S and S_r (r = 1..4) all have |C| = 1, so their membership in R is precisely vr:content(a) ('|C| <= 1 implies G in R') and carries no information; WD (five triples) and CC (five pairs) have |C| = 2; the only members with |C| = Theta(N) are the ladder and RC(k), which are one-player, hence in the paper's own polynomial classes. So R has NO verified member outside the trivially tractable regime -- which is the vacuity test this round applies to any proposed class. The route half-concedes this in its gap field, but vr:content(c) as written reads as if R contained the paper's hard families in a load-bearing sense.",
+   "evidence": "My independent exact recomputation (/tmp/claude-1000/-data-ssg-proof/5cc7fb9d-035b-424b-bca6-ec769216aeb1/scratchpad/audit/chk5.py, built from the root16 harness generators wd.py, cc.py, myinst.py, not from the route's code): WD(1,2,3) |C|=2 in R; WD(2,2,4),(2,3,5),(3,4,6),(2,5,7) |C|=2 in R; CC(1,2),(2,2),(2,3),(3,3),(4,4) |C|=2 in R; H_1..H_6 |C|=1 in R; G8, S, S_1..S_4 |C|=1 in R; ladder L_2..L_6 in R."
+  },
+  {
+   "severity": "major",
+   "result_name": "vr:content (novelty search miss)",
+   "defect": "Two of the route's membership facts are already printed in frontier.tex, in the paragraph the route itself quotes half of. The paragraph after prop:seven-k1 says both (i) thm:cyclic-uso's game has M+M^T positive definite (with the same seven principal minors the route reproduces) AND (ii) 'G# and the one-player realisations of rem:blowup-measured have positive handicap at every base profile' -- and positive handicap is exactly 'not PSD', i.e. outside R, at every base. The one-player realisations of rem:blowup-measured are the 58-vertex level-one game and the 100-vertex m=4 game, which are two of the four instances vr:content(d) reports as outside R. The route's why_not_implied quotes sentence (i) and calls it 'one datum with no class', and never mentions sentence (ii), which pre-empts its own outside-R list and shows the base-profile sweep had already been done.",
+   "evidence": "frontier.tex l.8433-8443; I confirmed the dictionary independently: for /data/ssg-proof/scripts/blowup/B1_game.json (58 vertices) my B = [[1585/2048,-1431/4096,-2733/8192],[-1431/4096,337/512,-1505/8192],[-2733/8192,-1505/8192,1461/4096]] with det B = -277907957/68719476736 < 0, i.e. outside R, agreeing with the paper's 'positive handicap at every base profile'."
+  },
+  {
+   "severity": "major",
+   "result_name": "vr:convexity (base independence clause)",
+   "defect": "'M_beta + M_beta^T >= 0 for some, equivalently for every, base profile' is the classical invariance of positive semidefiniteness (equivalently of the handicap, which is 0 exactly on PSD matrices) under principal pivot transforms: changing the base profile on a set S IS the principal pivot transform on S. The paper itself cites that invariance as known prior art. The route presents the clause as new mathematics closing something the paper's phrase 'at its all-zero base' leaves open, and its prior_art section does not attribute it.",
+   "evidence": "frontier.tex l.14612 (rem:lcp): 'the invariance of the handicap under principal pivot transforms, and the characterisation of the LCPs solvable by a single linear programme, are older still'. prop:lcp(b) makes the base-change a principal pivot transform explicitly: the complementary basic solution with z free on S is the image of y_{beta xor S}."
+  },
+  {
+   "severity": "minor",
+   "result_name": "vr:rev-vacuous",
+   "defect": "This is lem:splice(a) run backwards, three lines. lem:splice(a) deletes an AVERAGE vertex whose two successors coincide, preserving stopping, all val_sigma and val by the fixed-point-extension argument; vr:rev-vacuous(b),(c) inserts a MAX vertex whose two successors coincide and reproves the identical statements by the identical argument, plus the immediate remark that such a vertex is never in S_sigma. Separately, the 'reversibility of the chance part' the construction achieves is obtained by leaving the chance part with no interior transitions at all -- every average vertex's successors are now controlled -- so it is a definitional dodge rather than a hypothesis being satisfied. The route says so itself, which is why this is minor and not major.",
+   "evidence": "frontier.tex lem:splice(a) at l.9284 and its proof at l.9303-9317 (extension by hat-y(c) := y(u), traps correspond, values unchanged, same for T_sigma); lem:normalform(ii),(iii),(iv) at l.9149 already packages exactly the trap/value/run-preservation triple for the dual insertion."
+  },
+  {
+   "severity": "note",
+   "result_name": "vr:hessian (naming)",
+   "defect": "The paper already has an 'energy identity' with a different meaning: thm:energy, sum over Vavg of N_v Delta_v^2 = 4 w*(v_0)(1 - w*(v_0)), where Delta_v is the value gap at an AVERAGE vertex and N_v the expected visits. Calling the complementarity form's Hessian decomposition 'the energy identity' in the same document would collide with it; the two objects are unrelated.",
+   "evidence": "frontier.tex l.3926 thm:energy, in sec:composition."
+  },
+  {
+   "severity": "note",
+   "result_name": "vr:content(b) (NCX_game)",
+   "defect": "The route's README describes NCX_game.json as 'nondegenerate'; it is not -- two of the four (sigma, i) incidences are ties, so it is degenerate in the sense of def:improvement-uso. The reported result statement claims only that both Max vertices are value-distinguishing (true at w*), so only the README is wrong and nothing in vr:content depends on it.",
+   "evidence": "My exact recomputation of NCX_game.json (kinds avg,max,max,avg; succ 0->(1,3), 1->(t1,2), 2->(0,3), 3->(t0,2)): w* on C = (1, 2/3), B = [[1,-5/8],[-5/8,3/8]], leading minors 1 and -1/64, tie count 2 over the four strategies, outmap (0,1,2,1)."
+  },
+  {
+   "severity": "note",
+   "result_name": "vr:convex-long and vr:ceiling (positive verification)",
+   "defect": "No defect -- recorded because these are the route's only load-bearing new objects and I re-verified them from the game files with an independently written exact solver (values by componentwise construction, not by greedy policy iteration; trap-based stopping test; first-passage matrices by exact elimination on the average part; Sylvester minors on B). Both games are exactly as claimed in every particular.",
+   "evidence": "CVX4_game.json: 48 vertices, 3 max / 43 avg, greatest trap empty, T w* = w* on all 48, w* on C = (229/288, 7/8, 117/128), B = [[351/512,-69/1024,-123/256],[-69/1024,23/32,-533/1024],[-123/256,-533/1024,31/32]], leading minors 351/512, 511911/1048576, 47018781/536870912 all > 0, 0 ties, longest all-switches run 4 from (0,0,1) through (1,1,0),(1,0,1),(1,0,0),(0,0,0), outmap (0,1,3,6,7,4,5,2), normal-form denominators dividing 32. CVX6_game.json: 127 vertices, 4 max / 121 avg, trap empty, T w* = w* on all 127, B minors 7625/16384, 47542061/268435456, 939760988311/17592186044416, 2290930799522897/1152921504606846976 all > 0, 0 ties, longest run 6 from (0,1,0,0) with switch sets {1,3},{0,2,3},{2,3},{2},{0,1},{0}, outmap (5,8,10,11,9,12,14,15,13,4,7,6,2,3,1,0), denominators dividing 128, all 125 non-sinks reachable from vertex 0."
+  }
+ ],
+ "novelty_table": [
+  {
+   "result_name": "vr:hessian",
+   "closest_label": "prop:lcp",
+   "class": "restatement"
+  },
+  {
+   "result_name": "vr:convexity",
+   "closest_label": "prop:lcp",
+   "class": "restatement"
+  },
+  {
+   "result_name": "vr:variational",
+   "closest_label": "thm:transport-objective",
+   "class": "restatement"
+  },
+  {
+   "result_name": "vr:optdir",
+   "closest_label": "prop:lcp",
+   "class": "restatement"
+  },
+  {
+   "result_name": "vr:convex-long and vr:ceiling (CVX4, CVX6)",
+   "closest_label": "prop:seven-k1 (the paragraph following it) with cor:hstar-one",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "vr:content",
+   "closest_label": "prop:seven-k1 (the paragraph following it)",
+   "class": "measurement-only"
+  },
+  {
+   "result_name": "vr:rev-trivial",
+   "closest_label": "lem:trapchar",
+   "class": "new-object"
+  },
+  {
+   "result_name": "vr:rev-vacuous",
+   "closest_label": "lem:splice",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement declared by the route: q >= 0 on Q(G), zero only at w*",
+   "closest_label": "thm:transport-objective",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement declared by the route: the concave complementarity-gap objective",
+   "closest_label": "thm:transport-objective",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement declared by the route: |C| <= 1 is easy",
+   "closest_label": "prop:hybrid-onectrl",
+   "class": "restatement"
+  }
+ ],
+ "verdict": "VERDICT: new-theorem, but only on the narrowest possible reading, and the headline as written is not supportable. Two results survive independent scrutiny; the four that carry the headline are the textbook monotone-LCP dictionary applied to an object the paper already owns.\n\n1. DID THE ROUTE CHANGE THE OBJECT? No. The object is prop:lcp's matrix M written in the paper's own harmonic normal form and symmetrised: B = sym((I-P_0)^T(I-P_1)) is the congruence R_0^T (EME) R_0, and the \"energy\" q is the LCP complementarity gap z^T w, i.e. the sum of the very forms q_v the paper prints after thm:transport-objective and builds def:lasserre-two on. The collapse to prop:lcp IS proved (that is what vr:convexity(b)<=>(d) says), which rule 0 of this round grants as a result -- but it is a proved collapse onto a route the paper explicitly surveyed and closed in rem:lcp, and the route presents it as an equivalence theorem rather than as a collapse. The first-passage data (P_0, P_1, Delta = P_1 - P_0) is also not new: Delta's rows are exactly def:signdef's vectors d^v, so the \"new\" spectral condition ||Delta (I - Pbar)^{-1}||_2 <= 2 is a norm bound on the paper's own sign-definiteness data. The second object, reversibility, IS new to the paper -- and the route proves it is unusable.\n\n2. WHAT IS ACTUALLY NEW. (a) CVX4 (48 vertices, 3 Max) and CVX6 (127 vertices, 4 Max): two nondegenerate one-player stopping games with B strictly positive definite -- handicap zero -- whose all-switches runs have length 4 and 6, attaining h*_1(3) and h*_1(4). I rebuilt both from the game files with my own exact solver and every stated number is right (stopping, T w* = w*, the exact minors, zero ties, the runs, the switch sets, the outmaps, dyadic denominators 2^5 and 2^7, full reachability). Since the paper's own realisation of the SAME orientation (0,1,3,6,7,4,5,2), the 58-vertex game of rem:blowup-measured, has det B < 0 (I recomputed it), one AUSO has both a handicap-zero and a positive-handicap realisation: monotonicity of the LCP is not a property of the improvement orientation and imposes no bound on the bottom-antipodal height at m <= 4. That is a genuine, if narrow, contribution to the question rem:auso-size and the paragraph after prop:seven-k1 pose, \"which such matrices occur\". (b) vr:rev-trivial: profile-reversibility forces the non-sink edge relation to be symmetric, every component to be a path, and every component to carry at most one controlled vertex -- a correct proof (I checked all three steps, including the sink-successor case in (b) and the self-loop case in (c)) and a legitimate door-closing collapse.\n\n3. IS IT CIRCULAR OR VACUOUS? Not circular -- vr:variational's objective is computable from the instance with no profile named, which is a real difference from thm:transport-objective's 2^{|C|} linear objectives. But the class R is vacuous by this round's own test: it has no verified member outside the trivially tractable regime. Every listed member is either |C| = 1 (H_m, G_8, S, S_r -- so their membership is the route's own clause (a) and says nothing), |C| = 2 (WD, CC), or one-player with |C| = Theta(N) (the ladder, RC(k)); the only two-player members are |C| <= 3. And R is algorithmically vacuous relative to the paper: it is exactly the handicap-zero slice on which rem:lcp's cited interior-point bound O((1+kappa) sqrt(n) L) is already polynomial -- the paper's \"closed and not ours\" route -- so naming R as a tenth class would add a class the paper cannot prove polynomial by its own means and cannot show contains anything it does not already solve.\n\n4. THE REAL REMAINING GAP, stated more precisely than the route states it: not \"convex quadratic programming is in P\" (rem:lcp already records an interior-point bound that is polynomial at handicap zero, and declines to import it), but -- does R contain a stopping game whose subgame reachable from v_0 lies outside all nine of the paper's tractable classes, i.e. is R anything more than a poly-time-decidable label on games the paper already solves?\n\n5. INTEGRATION: MIXED -- integrating the LaTeX as submitted would make the paper WORSE; integrating two extracts would make it slightly BETTER. WORTH INTEGRATING: (i) vr:convex-long and vr:ceiling, as one proposition with the two normal forms, placed in the paragraph after prop:seven-k1 that already says \"the handicap of rem:lcp is no constraint either\" and phrased in the paper's own vocabulary (handicap zero / M + M^T positive semidefinite), not under a new class name -- it strictly extends that paragraph from the cyclic two-player game to the tall one-player runs, and adds the one-AUSO-two-realisations point; both games verified here. (ii) Five lines of vr:convexity as a REMARK in the same place: B = sym(R_0^T R_1) is invariant under relabelling a vertex's two actions, so \"positive definite at its all-zero base\" may be replaced by \"at every base\" without computation, which is the principal-pivot invariance rem:lcp already cites -- this repairs a genuinely loose phrase in the paper and should carry that attribution. (iii) vr:rev-trivial as a short remark, with vr:rev-vacuous compressed to one sentence pointing at lem:splice(a). NOT WORTH INTEGRATING: vr:hessian, vr:variational and vr:optdir as theorems (restatements of prop:lcp plus attributed textbook LCP theory, and vr:optdir is additionally inert on a class where the problem is convex anyway); the class R under a name (no content, no algorithm within the four imports, a tenth class the paper would have to caveat twice); vr:content's membership tables (trivial where they are not already printed); and the word \"energy\", which collides with thm:energy."
+}
