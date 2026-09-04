@@ -78,10 +78,10 @@ assert ok and not pd
 # membership of the paper's stalls
 def show(name, g):
     C, rows, B = Bmatrix(g); ok, pd = psd(B); print(f'  {name}: |C|={len(C)}, in R: {ok} (positive definite: {pd})'); return ok
+def unpack(r): return r[0] if isinstance(r, tuple) else r
 res = {}
 res['G8'] = show('G_8', unpack(myinst.G8())); res['S'] = show('S', unpack(myinst.S())); res['S_3'] = show('S_3', unpack(myinst.S_r(3)))
 for m in (3, 4, 5): res[f'H_{m}'] = show(f'H_{m}', unpack(myinst.H_m(m)))
-def unpack(r): return r[0] if isinstance(r, tuple) else r
 res['CC(2,2)'] = show('CC(2,2)', unpack(CCMOD.CC(2, 2))); res['CC(3,4)'] = show('CC(3,4)', unpack(CCMOD.CC(3, 4)))
 res['R'] = show('R (prop:own-stall)', G(['min','min','avg','avg','max','avg','min','min'], [(2,5),(5,3),(5,2),(0,9),(0,8),(9,8),(0,8),(5,2)]))
 res['W7'] = show('7-vertex stall', G(['avg','min','avg','max','max'], [(2,6),(3,6),(5,0),(0,5),(1,2)]))
