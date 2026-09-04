@@ -6720,7 +6720,10 @@ weight $2$ and $3$, to which this argument does not apply; but \emph{(P)}
 fails for $B^{1}$, $B^{2}$ and $B^{3}$ themselves (exact arithmetic), so
 by \Cref{cor:blowup-parity} $B(B^{k},z)$ fails Holt--Klee for $k=1,2,3$,
 every $z$ and every choice of $u$. Whether \emph{(P)} fails at every level
-is not proved.
+is not proved. All of this concerns the parity readout of
+\Cref{thm:blowup}; with the outer pair driven by another readout the
+blow-up can double and stay Holt--Klee, at $m=4$ and $m=5$
+(\Cref{prop:blowup-readout,prop:hk-doubling-measured}).
 \end{corollary}
 
 \begin{proof}
@@ -6802,16 +6805,18 @@ Holt--Klee property were recomputed here in exact arithmetic.
 \begin{array}{l|ccccccc}
 m & 1 & 2 & 3 & 4 & 5 & 6 & 7\\ \hline
 h^{\ast}(m) & 1 & 2 & 4 & 7 & 12 & \ge16 & \ge26\\
-h^{\ast}_{\mathrm{HK}}(m) & 1 & 2 & 4 & 6 & 11 & \ge12 & \ge13\\
-h^{\ast}_{\mathrm{LP}}(m) & 1 & 2 & 4 & 6 & \ge10 & \ge12 & \ge12\\
-h^{\ast}_{1}(m) & 1 & 2 & 4 & 6 & \ge10 & \ge12 & \ge12
+h^{\ast}_{\mathrm{HK}}(m) & 1 & 2 & 4 & 6 & 11 & \ge14 & \ge20\\
+h^{\ast}_{\mathrm{LP}}(m) & 1 & 2 & 4 & 6 & \ge10 & \ge12 & \ge13\\
+h^{\ast}_{1}(m) & 1 & 2 & 4 & 6 & \ge10 & \ge12 & \ge13
 \end{array}
 \]
 The first row is \Cref{prop:auso-census,prop:hstar-five,thm:blowup}; the
-second \Cref{prop:auso-census,prop:hkfive}, and at $m=6,7$ the product of
+second \Cref{prop:auso-census,prop:hkfive} and, at $m=6,7$, the explicit
+orientations of \Cref{prop:hk-records}, with $h^{\ast}_{\mathrm{HK}}(m)\ge m+13$
+for $m\ge7$ by the sink lift of \Cref{prop:sink-lift} (the product of
 \Cref{lem:hstar-super} taken with the height-$11$ witness of
 \Cref{prop:hkfive} as its \emph{first} block, the $1$-cube as its second
-and $z=1$, which is Holt--Klee of height $12$, and once more $13$
+and $z=1$ gives only $12$, and once more $13$
 (verified here; with the blocks in the other order the product has height
 $12$ but is not Holt--Klee, and with Holt--Klee factors of maximal
 Holt--Klee height --- the realised height-$6$ class at $m=4$, the
@@ -6825,9 +6830,11 @@ $h^{\ast}_{1}\le h^{\ast}_{\mathrm{LP}}\le h^{\ast}_{\mathrm{HK}}$
 (\Cref{prop:oneplayer-lp}) and the monotonicity of both in $m$ (the game
 of \Cref{prop:oneplayer-runs} adjoining a Max vertex over $t_0$ and a
 fresh coin stays nondegenerate), the lower bounds being what a search
-found and not claimed tight; beyond the table, $h^{\ast}_{1}(8)\ge13$
+found and not claimed tight, the $m=7$ entries of the last two rows
+coming from the plus-one law of \Cref{prop:oneplayer-plus-one}; beyond
+the table, $h^{\ast}_{1}(8)\ge13$, $h^{\ast}_{1}(m)\ge m+6$ for $m\ge6$
 and $h^{\ast}_{1}(7k)\ge12k$ for every $k$
-(\Cref{prop:hstar-one-eight,cor:stack-family}). The one-player ceiling is strictly
+(\Cref{prop:hstar-one-eight,prop:oneplayer-plus-one,cor:stack-family}). The one-player ceiling is strictly
 below $h^{\ast}$ at $m=4$; at $m\ge5$ the last three rows are lower
 bounds only, so the table does not yet distinguish
 $h^{\ast}_{1}(m)\approx2m$ from $h^{\ast}_{1}(m)\approx c^{m}$; whether
@@ -6835,6 +6842,416 @@ $h^{\ast}_{1}$ grows superpolynomially, and is attained on $m^{O(1)}$
 vertices, is the one-player half of the pivot, which is Melekopoglou and
 Condon's question (\Cref{rem:ladder}).
 \end{remark}
+
+\subsubsection*{Gluing facets, the sink lift, and the Holt--Klee ceiling at $m=6,7$}
+
+The round-$16$ Holt--Klee route raised the second row of
+\Cref{rem:four-ceilings} at $m=6,7$, proved a ``plus one per dimension''
+law for the Holt--Klee row and, by a one-player gadget, for the one-player
+row, and showed that the blow-up doubles while
+staying Holt--Klee once its outer pair reads something other than the
+parity --- at $m=4$ and $m=5$, where a readout-free necessary condition
+then stops the iteration.
+
+\begin{lemma}[The facet decomposition of a cube orientation]\label{lem:facet-gluing}
+Write the vertices of the $(m+1)$-cube as $(v,b)$ with $v\in\{0,1\}^{m}$,
+$b\in\{0,1\}$, the new direction being $m$. For orientations $s_0,s_1$ of
+the $m$-cube and $\varphi:\{0,1\}^{m}\to\{0,1\}$ put
+\[
+  (s_0\!*\!s_1\!*\!\varphi)(v,b)\ :=\ s_b(v)\ \cup\ \{m\ :\ \varphi(v)\ne b\}.
+\]
+Every orientation of the $(m+1)$-cube is $s_0\!*\!s_1\!*\!\varphi$ for a
+unique triple, $s_b$ being its restriction to the facet $\{x_m=b\}$ and
+$\varphi(v)=1$ meaning that the edge in direction $m$ at $v$ points away
+from the facet $\{x_m=0\}$. Let
+\[
+ E(s_0,s_1):=\bigl\{\{v,w\}: v\ne w,\ (s_0(v)\oplus s_1(w))\cap(v\oplus w)=\emptyset
+   \ \text{ or }\ (s_0(w)\oplus s_1(v))\cap(v\oplus w)=\emptyset\bigr\}.
+\]
+Then $s_0\!*\!s_1\!*\!\varphi$ is a unique sink orientation if and only if
+$s_0$ and $s_1$ are unique sink orientations and $\varphi$ is constant on
+every connected component of $E(s_0,s_1)$. If $s_0=s_1$ then
+$E(s_0,s_1)=\emptyset$ and every $\varphi$ is admissible. Moreover the
+bottom-antipodal step is
+\[
+  (v,b)\ \longmapsto\ \bigl(v\oplus s_b(v),\ \varphi(v)\bigr),
+\]
+so the chart used at time $t+1$ is $\varphi$ of the vertex at time $t$.
+\end{lemma}
+
+\begin{proof}
+Apply the Szab\'o--Welzl condition of \Cref{def:improvement-uso} to each
+pair. Two vertices in one facet are separated exactly when that facet's
+orientation is a unique sink orientation. For $(v,0)$ and $(v,1)$ the
+direction-$m$ bits are $[\varphi(v)\ne0]$ and $[\varphi(v)\ne1]$, which
+always differ. For $(v,0)$ and $(w,1)$ with $v\ne w$ the symmetric
+difference meets $(v\oplus w)\cup\{m\}$ in the bit $m$ exactly when
+$\varphi(v)=\varphi(w)$, and inside $v\oplus w$ exactly when
+$(s_0(v)\oplus s_1(w))\cap(v\oplus w)\ne\emptyset$; the pair $(w,0)$,
+$(v,1)$ gives the transposed condition. So the only failures are pairs
+$\{v,w\}\in E$ with $\varphi(v)\ne\varphi(w)$. When $s_0=s_1=s$ the
+Szab\'o--Welzl condition for $s$ makes both intersections nonempty, so $E$
+is empty. The step formula: the outer bit of $(v,b)$ is out exactly when
+$\varphi(v)\ne b$, and $b\oplus[\varphi(v)\ne b]=\varphi(v)$.
+\end{proof}
+
+\begin{theorem}[The sink lift: $h^{\ast}_{\mathrm{HK}}(m+1)\ge h^{\ast}_{\mathrm{HK}}(m)+1$]\label{prop:sink-lift}
+Let $s$ be an acyclic unique sink orientation of the $m$-cube with sink $o$
+and bottom-antipodal height $h$, and let
+$L(s):=s\!*\!s\!*\!\mathbf 1_{\{o\}}$ be the orientation of the
+$(m+1)$-cube with $s$ on both facets and the new edge at $v$ pointing away
+from the facet $\{x_m=0\}$ exactly at $v=o$. Then
+\begin{enumerate}
+\item[(i)] $L(s)$ is an acyclic unique sink orientation with sink $(o,1)$
+and bottom-antipodal height exactly $h+1$;
+\item[(ii)] $L(s)$ is Holt--Klee if and only if $s$ is.
+\end{enumerate}
+Consequently $h^{\ast}_{\mathrm{HK}}(m+1)\ge h^{\ast}_{\mathrm{HK}}(m)+1$
+and $h^{\ast}(m+1)\ge h^{\ast}(m)+1$ for every $m$. Up to relabelling the
+new coordinate, $L(s)$ is the product of \Cref{lem:hstar-super} with the
+$1$-cube as second block and $z=1$, so (i) is that lemma; what is new is
+(ii), that this one product preserves Holt--Klee in both directions.
+\end{theorem}
+
+\begin{proof}
+$L(s)$ is a unique sink orientation by \Cref{lem:facet-gluing}, the two
+facets being equal. Acyclicity: every edge in a direction $<m$ projects to
+an edge of $s$ and every edge in direction $m$ projects to a loop, so a
+directed cycle projects to a closed directed walk of the acyclic digraph
+of $s$, which is constant; the cycle then lies in one fibre
+$\{v\}\times\{0,1\}$ and would need $\varphi(v)=1$ and $\varphi(v)=0$. The
+sink: $s(o)=\emptyset$ and the direction-$m$ edge at $(o,1)$ is in, since
+$\varphi(o)=1=b$.
+
+Height. By \Cref{lem:facet-gluing} the step is
+$(v,b)\mapsto(v\oplus s(v),\varphi(v))$, so the first coordinate performs
+the bottom-antipodal walk of $s$ whatever $b$ does; from a start with
+$h(v_0)=h$ it reaches $o$ after $h$ steps, with $b=\varphi(v_{h-1})=0$
+because $v_{h-1}\ne o$, and one further step goes to $(o,1)$, which is the
+sink. So the height is $h+1$, and it is not more because the first
+coordinate is autonomous.
+
+Holt--Klee. A facet of a Holt--Klee orientation is Holt--Klee, which gives
+one direction. For the other, let $F$ be a face of the $m$-cube of
+dimension $d\ge1$, so that $F\times\{0,1\}$ is a face of dimension $d+1$;
+faces contained in a facet are copies of faces of $s$ and are Holt--Klee
+by hypothesis. Let $a$ be the source and $z$ the sink of $s$ on $F$; note
+that $o$, having no out-edge at all, is the sink of every face containing
+it. Fix $d$ internally vertex-disjoint monotone $a\to z$ paths
+$P_1,\dots,P_d$ in $F$, which Holt--Klee supplies; at most one of them is
+a single edge, and we index so that $P_1$ is that one if it occurs.
+
+\emph{Case $o\notin F$.} Then $\varphi\equiv0$ on $F$ and every edge in
+direction $m$ points from $(v,1)$ to $(v,0)$; the source of
+$F\times\{0,1\}$ is $(a,1)$ and its sink is $(z,0)$. Take
+\[
+\begin{aligned}
+ Q_1&:(a,1)\to(a,0)\to[P_1\ \text{below}]\to(z,0), &
+ Q_2&:(a,1)\to[P_1\ \text{above}]\to(z,1)\to(z,0),\\
+ Q_{i+1}&:(a,1)\to[P_i\ \text{above, as far as } w_i]\to(w_i,0)\to[P_i\ \text{below}]\to(z,0)
+   &&(2\le i\le d),
+\end{aligned}
+\]
+where $w_i$ is an interior vertex of $P_i$, which exists because
+$P_2,\dots,P_d$ have length at least $2$. These are $d+1$ monotone paths;
+$Q_1$ and $Q_2$ use $P_1$ in different copies, $Q_{i+1}$ uses only
+interior vertices of $P_i$ in the two copies together with $(w_i,0)$, and
+$w_i\notin\{a,z\}$, so they are internally vertex-disjoint.
+
+\emph{Case $o\in F$.} Then $z=o$, $\varphi=\mathbf 1_{\{o\}}$ on $F$, the
+edge in direction $m$ points up at $o$ and down elsewhere, the source is
+$(a,1)$ and the sink is $(o,1)$. Take the $d$ paths
+$(a,1)\to[P_i\ \text{above}]\to(o,1)$ together with
+$(a,1)\to(a,0)\to[P_1\ \text{below}]\to(o,0)\to(o,1)$: again $d+1$
+monotone, internally vertex-disjoint paths.
+\end{proof}
+
+\begin{proposition}[$h^{\ast}_{\mathrm{HK}}(6)\ge14$ and $h^{\ast}_{\mathrm{HK}}(7)\ge20$]\label{prop:hk-records}
+The outmap
+\[
+\begin{aligned}
+ s_6=(&5,10,15,4,9,14,11,8,13,6,7,12,1,0,2,3,\\
+      &48,17,51,50,54,61,60,55,30,25,24,59,26,53,52,63,\\
+      &32,49,35,34,38,45,44,39,62,57,56,43,58,37,36,47,\\
+      &16,33,19,18,22,29,28,23,46,41,40,27,42,21,20,31)
+\end{aligned}
+\]
+of the $6$-cube and
+\[
+\begin{aligned}
+ s_7=(&7,4,21,6,10,11,17,24,29,12,31,14,3,0,25,2,\\
+      &23,18,5,20,19,22,8,9,15,28,13,30,27,26,1,16,\\
+      &56,113,43,42,102,117,100,103,98,121,32,99,46,127,44,125,\\
+      &41,40,54,51,116,101,50,119,48,97,58,59,62,109,60,111,\\
+      &120,81,107,106,70,85,68,71,66,89,96,67,110,95,108,93,\\
+      &105,104,118,115,84,69,114,87,112,65,122,123,126,77,124,79,\\
+      &88,49,75,74,38,53,36,39,34,57,64,35,78,63,76,61,\\
+      &73,72,86,83,52,37,82,55,80,33,90,91,94,45,92,47)
+\end{aligned}
+\]
+of the $7$-cube are acyclic unique sink orientations satisfying Holt--Klee
+on every face, of bottom-antipodal heights $14$ and $20$; the maximal
+walks are
+\[
+ 21,40,22,42,18,33,16,32,0,5,11,7,15,12,13
+\]
+for $s_6$ (sink $13$; also from $29,53,61$) and
+\[
+ 45,82,36,66,41,80,57,88,40,74,42,10,21,3,5,14,23,30,31,15,13
+\]
+for $s_7$ (sink $13$; also from $47,109,111$). Hence
+\[
+  h^{\ast}_{\mathrm{HK}}(6)\ \ge\ 14,\qquad
+  h^{\ast}_{\mathrm{HK}}(7)\ \ge\ 20,
+\]
+and with \Cref{prop:sink-lift},
+$h^{\ast}_{\mathrm{HK}}(m)\ge m+13$ for every $m\ge7$. An intermediate
+record found by a different method, and kept because its shape is
+informative, is the Holt--Klee orientation of the
+$7$-cube of height $17$
+\[
+\begin{aligned}
+ (&64,29,31,94,12,51,34,25,8,53,54,55,52,59,42,49,\\
+  &28,3,38,9,26,5,24,7,48,15,46,33,36,11,50,13,\\
+  &44,45,62,63,40,19,10,41,32,23,2,1,6,27,20,21,\\
+  &60,61,14,47,58,43,56,57,22,35,17,16,18,37,4,39,\\
+  &0,65,67,30,71,76,93,98,79,72,73,118,75,116,101,106,\\
+  &95,92,89,102,115,90,77,88,87,112,117,110,123,100,113,114,\\
+  &127,108,125,126,105,104,107,74,103,96,97,66,99,70,85,84,\\
+  &109,124,111,78,83,122,121,120,119,86,81,80,91,82,69,68),
+\end{aligned}
+\]
+whose maximal walk is
+$68,3,93,57,26,52,14,36,12,56,46,58,43,42,40,8,0,64$ and whose two facets
+are Holt--Klee orientations of the $6$-cube of height $13$ with a common
+sink.
+\end{proposition}
+
+\begin{proof}
+Finite computations, made twice in independent implementations (a C engine
+and a Python one): the Szab\'o--Welzl condition on all pairs, acyclicity by
+depth-first search, the bottom-antipodal heights of all $2^{m}$ starts,
+and Holt--Klee by a unit vertex-capacity maximum flow on every face of
+dimension at least two ($3^{6}=729$ and $3^{7}=2187$ faces). The
+Holt--Klee test was validated on the twelve unique sink orientations of the
+$2$-cube, on the $656$ Holt--Klee orientations of the $3$-cube
+(\Cref{prop:auso-census}) and on the non-Holt--Klee outmap of
+$G^{\sharp}$, where it reproduces the witness $3$-face
+$\{x_1,x_2,x_4\}$ at bitmask $4$ of \Cref{cor:seven-two-player}.
+\end{proof}
+
+\begin{proposition}[The generalised blow-up: an arbitrary readout]\label{prop:blowup-readout}
+For an orientation $s$ of the $m$-cube, $z\in\{0,1\}^{m}$ and a
+\emph{readout} $\varphi:\{0,1\}^{m}\to\{0,1\}$ let $B_\varphi(s,z)$ be the
+outmap of the $(m+2)$-cube given by the table of \Cref{thm:blowup} with
+$\varphi(v)$ in place of the parity of $h(v)$. Then:
+\begin{enumerate}
+\item[(a)] If $s$ is an acyclic unique sink orientation then so is
+$B_\varphi(s,z)$, for \emph{every} $z$ and every $\varphi$ (the
+generality that the Lean formalisation of \Cref{thm:blowup} proves,
+recorded here in the readout reading).
+\item[(b)] If $\varphi$ alternates along a bottom-antipodal walk of $s$
+from a vertex $u$ of height $h$ to the sink $o$, and $z=o\oplus u$, then
+$B_\varphi(s,z)$ has height at least $2h+2$, with equality when $u$ has
+maximal height (\Cref{prop:blowup-height}); for a non-maximal $u$ the
+height can exceed $2h+2$ (exhaustively at $m=3$, the route's auditor).
+\item[(c)] $B_\varphi(s,z)$ is Holt--Klee only if, for every $2$-face $F$
+of $s$, $\varphi$ is unbalanced on $F$ or $\varphi(\mathrm{src}F)\ne
+\varphi(\mathrm{snk}F)$ \emph{(P$_\varphi$)}, and the translation
+condition \emph{(T)} of \Cref{lem:blowup-faces} holds; \emph{(T)} does not
+involve $\varphi$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) The Szab\'o--Welzl condition. Two vertices in one layer are separated
+by the layer's inner orientation. For two vertices in different layers with
+the same inner $v$, the outer outmaps of \Cref{thm:blowup} differ on the
+layer difference in all eight cases. For different layers and different
+inner vertices, the same check leaves only the pairs of layers
+$\{(1,0),(0,1)\}$, $\{(1,0),(1,1)\}$ and $\{(0,1),(1,1)\}$ at one readout
+combination each, and there both layers carry $s$, which separates them.
+Acyclicity: the inner coordinate moves only along edges of the acyclic
+$s$ or of the acyclic $s(\cdot\oplus z)$, so any directed cycle has
+constant inner vertex and lies in the $2$-face of layers, whose
+orientation has the sink $(0,0)$ and is not a directed cycle.
+(b) The layer dynamics of the table sends $(1,0)\mapsto(0,1)$ at
+$\varphi=0$ and $(0,1)\mapsto(1,0)$ at $\varphi=1$, and drops to $(0,0)$
+in the two remaining cases; so an alternating readout keeps the walk in
+the layers $(1,0),(0,1)$ for the $h$ steps of the inner walk and for one
+more, then enters $(0,0)$, where the inner map is $s(\cdot\oplus z)$ and
+the inner vertex $o$ reads as $o\oplus z=u$, so the inner walk runs again,
+$h$ steps. Total $2h+2$.
+(c) The $3$-faces of $B_\varphi$ listed in \Cref{lem:blowup-faces} are
+stacks with $\varphi$, with $1-\varphi$, and (twice) with the constant
+$0$; \Cref{lem:stack}, which we re-verified here over all $192$ and all
+$144$ pairs, gives the two conditions, and Holt--Klee is inherited by
+faces.
+\end{proof}
+
+\begin{proposition}[The readout-free obstruction $(T^{\ast})$]\label{prop:tstar}
+For an orientation $s$ of the $m$-cube and $z\in\{0,1\}^{m}$ let
+\[
+  D(s,z)\ :=\ \bigl(s(\cdot\oplus z)\bigr)\!*\!s\!*\!\mathbf 0
+\]
+be the orientation of the $(m+1)$-cube with $s(\cdot\oplus z)$ on the
+facet $\{x_m=0\}$, $s$ on the facet $\{x_m=1\}$ and every edge in
+direction $m$ pointing towards the facet $\{x_m=0\}$. If $B_\varphi(s,z)$
+is Holt--Klee for even one readout $\varphi$, then $D(s,z)$ is Holt--Klee.
+Restricted to $2$-faces this is exactly condition \emph{(T)} of
+\Cref{lem:blowup-faces}; at higher dimensions it is strictly stronger.
+Like \Cref{thm:deformed-flat}, this closes a construction avenue and is
+not a barrier in the sense of \Cref{sec:gap}: it constrains one rule for
+building orientations and covers none of the mechanisms M1--M6 or
+\Cref{def:bsi}.
+\end{proposition}
+
+\begin{proof}
+By the table of \Cref{thm:blowup} the outer coordinate $\alpha$ lies in
+$O_{10}$ for both readout values and in no $O_{00}$, so every
+$\alpha$-edge between the layers $(1,0)$ and $(0,0)$ points towards
+$(0,0)$, whatever $\varphi$ is; and the inner parts on those two layers
+are $s$ and $s(\cdot\oplus z)$. Hence for every face $F$ of the $m$-cube
+the face of $B_\varphi(s,z)$ on the directions of $F$ together with
+$\alpha$, taken at $\beta=0$, is isomorphic to the corresponding face of
+$D(s,z)$; Holt--Klee is inherited by faces. The $2$-face case is
+\Cref{lem:stack}(b), which is \emph{(T)}. Strictness: for the seed
+$s$ of \Cref{prop:hk-doubling-measured}(d) below at $m=5$ with $z=21$ all $80$
+$2$-faces satisfy \emph{(T)} while $D(s,21)$ fails Holt--Klee already on a
+$4$-face, and correspondingly no readout makes $B_\varphi(s,21)$
+Holt--Klee: the failing faces are the two $4$-faces on
+$\{x_0,x_3,x_4,\alpha\}$ and $\{x_0,x_3,x_4,\beta\}$ at the origin and the
+$5$-face containing them, for every readout that satisfies
+\emph{(P$_\varphi$)}.
+\end{proof}
+
+\begin{proposition}[The blow-up doubles once, with a non-parity readout]\label{prop:hk-doubling-measured}
+\begin{enumerate}
+\item[(a)] Over all $728$ acyclic unique sink orientations $s$ of the
+$3$-cube, all $8$ translations $z$ and all $256$ readouts $\varphi$
+--- $1\,490\,944$ orientations of the $5$-cube --- the greatest
+bottom-antipodal height of a Holt--Klee $B_\varphi(s,z)$ is $8$: heights
+$9$ and $10=2h^{\ast}(3)+2$ are attained, by $9216$ of the orientations,
+but by no Holt--Klee one (the route, reproduced exhaustively by its
+auditor).
+\item[(b)] At $m=4$ it is attained. For the Holt--Klee seed
+\[
+  s=(0,1,3,2,6,13,12,7,14,9,8,11,10,5,4,15)
+\]
+of the $4$-cube, of height $6$ with sink $o=0$ and maximal vertices
+$\{5,13\}$, and $z=o\oplus13=13$, the readout $\varphi$ with support
+$\{1,8,9,10,12\}$ makes $B_\varphi(s,z)$ a Holt--Klee acyclic unique sink
+orientation of the $6$-cube of height $14=2\cdot6+2=
+2h^{\ast}_{\mathrm{HK}}(4)+2$; it is the orientation $s_6$ of
+\Cref{prop:hk-records}. Taking $\varphi$ to be the parity of the inner
+height and flipping it at the \emph{other} maximal vertex $5$ also works.
+So the obstruction of \Cref{cor:blowup-parity} is an obstruction to the
+parity readout only.
+\item[(c)] At $m=5$ it is attained again, at height $9$ rather than at
+the ceiling $11$. For the Holt--Klee seed
+\[
+ s^{(5)}=(24,17,11,10,6,21,4,7,2,25,0,3,14,31,12,29,
+          9,8,22,19,20,5,18,23,16,1,26,27,30,13,28,15)
+\]
+of the $5$-cube, of height $9$ with sink $o=10$, and $u=13$ (of height
+$9$), $z=o\oplus u=7$, the readout $\varphi$ with support
+\[
+ \{0,2,3,10,12,14,16,17,18,19,22,24,26,27,28,30\}
+\]
+makes $B_\varphi(s^{(5)},7)$ a Holt--Klee acyclic unique sink orientation
+of the $7$-cube of height $20=2\cdot9+2$; it is the orientation $s_7$ of
+\Cref{prop:hk-records}. Three seeds pass $(T^{\ast})$ with $h(u)=9$ and
+between them yield $96$ such readouts.
+\item[(d)] The two conditions are of different strength, and only
+$(T^{\ast})$ is predictive. Of the $785$ Holt--Klee classes of the
+$4$-cube of height $5$ or $6$, exactly $506$ admit a $z=o\oplus u$
+satisfying \emph{(T)} and $4$ admit one with $h(u)=6$; enumerating all
+$2^{16}$ readouts over those four gives exactly $36$ Holt--Klee blow-ups
+of height $14$. At $m=5$, of $85\,671$ Holt--Klee orientations produced by
+the facet search, $6\,274$ pass \emph{(T)} for some $z=o\oplus u$, with
+$h(u)$ up to $9$; the seed
+\[
+ (8,25,7,2,5,6,3,4,1,0,11,10,14,15,13,12,
+  16,9,19,18,22,23,28,21,24,17,27,26,30,29,20,31)
+\]
+with $z=21$, $u=28$, $h(u)=8$ passes \emph{(T)} on all $80$ of its
+$2$-faces, satisfies \emph{(P$_\varphi$)} for a readout, and yet admits
+no Holt--Klee blow-up at all: $D(s,21)$ fails Holt--Klee on the $4$-face
+$\{x_0,x_3,x_4,x_5\}$ at the origin, and every \emph{(P)}-feasible readout
+leaves a defect of exactly three faces of $B_\varphi(s,21)$, the two
+$4$-faces on $\{x_0,x_3,x_4,\alpha\}$ and $\{x_0,x_3,x_4,\beta\}$ at the
+origin and the $5$-face containing them. Only $188$ of the $85\,671$ pass
+$(T^{\ast})$ with $h(u)\ge6$, and just $3$ with $h(u)=9$.
+\item[(e)] The chain stops there on our material. None of the $36$
+height-$14$ orientations of the $6$-cube of (b), none of $502$ Holt--Klee
+orientations of the $6$-cube of height $13$, and none of the $96$
+height-$20$ orientations of the $7$-cube of (c) admits a translation
+passing $(T^{\ast})$ with $h(u)\ge9$ (resp.\ $\ge14$); so none of them can
+be blown up again, whatever the readout.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Exhaustive computations with the verified engine of
+\Cref{prop:hk-records}; (a) is a complete scan of the stated space;
+\emph{(T)} is tested on all $\binom m2 2^{m-2}$ $2$-faces and
+$(T^{\ast})$ by one Holt--Klee test on the $(m+1)$-cube. In (b) and (c)
+the readouts were checked from the definition of $B_\varphi$ and the
+resulting orientations independently re-verified in a second
+implementation.
+\end{proof}
+
+\begin{theorem}[One player: $h^{\ast}_{1}(m+1)\ge h^{\ast}_{1}(m)+1$]\label{prop:oneplayer-plus-one}
+Let $G$ be a stopping SSG with $\Vmin=\emptyset$, $|\Vmax|=m$, and an
+all-switches run $\sigma_0,\dots,\sigma_L$ with $L\ge1$. Then there is a
+stopping SSG $G'$ with $\Vmin=\emptyset$ and $|\Vmax|=m+1$ whose
+all-switches run from an explicit start has length $L+1$; if $G$ is
+nondegenerate then $G'$ can be taken nondegenerate. Hence
+$h^{\ast}_{1}(m+1)\ge h^{\ast}_{1}(m)+1$. With
+$h^{\ast}_{1}(6)\ge12$ of \Cref{prop:oneplayer-runs},
+\[
+  h^{\ast}_{1}(m)\ \ge\ m+6\qquad(m\ge6),
+\]
+so in particular $h^{\ast}_{1}(7)\ge13$, and since the witnesses are
+nondegenerate one-player games, \Cref{prop:oneplayer-lp} gives
+$h^{\ast}_{\mathrm{LP}}(m)\ge m+6$ for $m\ge6$ as well --- numerical
+bounds along these witnesses, not a law for the LP ceiling: whether
+$L(s)$ of \Cref{prop:sink-lift} is a linear-programming orientation
+whenever $s$ is, is open. (Asymptotically \Cref{cor:stack-family}'s
+$h^{\ast}_{1}(7k)\ge12k$ is stronger; the gain here is one row at a time
+and every $m$.)
+\end{theorem}
+
+\begin{proof}
+Work in the harmonic normal form of \Cref{prop:oneplayer-runs}. The value
+vectors of a run are pairwise distinct and nondecreasing
+(\Cref{lem:switch}, \Cref{lem:flat-class}), so some $x_j\in\Vmax$ has
+$\val_{\sigma_{L-1}}(x_j)<\val_{\sigma_L}(x_j)$. Fix
+$\varepsilon:=2^{-D_0}$ with $D_0$ large enough that
+$(1-\varepsilon)\val_{\sigma_{L-1}}(x_j)<(1-\varepsilon)\val_{\sigma_L}(x_j)$
+still holds, and choose a dyadic $\theta$ strictly between them; by
+\Cref{lem:denominator-sharp} two distinct values of $G$ differ by at least
+$2^{-2a}$, so $\theta$ of denominator $2^{2a+2}$ exists. Adjoin one Max
+vertex $y$ with the two rows
+\[
+  (y,0):\ p=0,\ q=\theta,\qquad (y,1):\ p=(1-\varepsilon)e_j,\ q=0,
+\]
+and leave every old row unchanged, with a zero entry in the new
+coordinate; by \Cref{lem:dyadic-row} the two rows are realised by chains
+of average vertices, and every row still leaks, so $G'$ is stopping. No
+old vertex sees $y$, so $\val_\sigma$ on $\Vmax(G)$ and the switchable
+sets of the old vertices are unchanged. Start at $\sigma_0$ with
+$\sigma_0(y)=0$. For $t<L$ the alternative at $y$ has value
+$(1-\varepsilon)\val_{\sigma_t}(x_j)\le
+(1-\varepsilon)\val_{\sigma_{L-1}}(x_j)<\theta$, so $y$ is not switchable
+and the run is that of $G$; at $\sigma_L$ the old switchable set is empty
+while the alternative at $y$ has value
+$(1-\varepsilon)\val_{\sigma_L}(x_j)>\theta$, so $S_{\sigma_L}=\{y\}$ and
+the run continues one round. Nondegeneracy: $\theta$ ranges over an
+interval of length at least $2^{-2a-1}$, so it may be chosen dyadic of
+denominator $2^{K}$ with $K>2a+m+1$ to avoid the finitely many numbers
+$(1-\varepsilon)\val_\sigma(x_j)$.
+\end{proof}
 
 \subsection{One player: Howard's rule with two actions, sign-definite games, and stacking}\label{sec:oneplayer-howard}
 
@@ -7063,11 +7480,12 @@ $\sup_{m_0}h^{\ast}_{1}(m_0)/(m_0+1)$: stacking is capped by its best
 block and can never by itself make $h^{\ast}_{1}$ superlinear. And since
 $\mathrm{ST}(2)$ is nondegenerate, \Cref{prop:oneplayer-lp} makes its
 orientation Holt--Klee, so $h^{\ast}_{\mathrm{HK}}(14)\ge h^{\ast}_{\mathrm{LP}}(14)\ge24$
---- the first block-doubling of a Holt--Klee height at the sizes where
+--- weaker than the $27$ that the sink lift of \Cref{prop:sink-lift} gives
+from $h^{\ast}_{\mathrm{HK}}(7)\ge20$, but obtained where
 \Cref{lem:hstar-super}'s abstract product leaves the Holt--Klee class
-(\Cref{rem:four-ceilings}); the two constructions add heights by
-different means, the product by a conditional translation and the stack
-by a freezing bias that keeps every copy alive.
+(\Cref{rem:four-ceilings}); the constructions add heights by different
+means, the product by a conditional translation, the lift by one
+coordinate, and the stack by a freezing bias that keeps every copy alive.
 \end{corollary}
 
 \begin{proof}
