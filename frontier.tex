@@ -14762,6 +14762,40 @@ weak where the problem is hard. It is evidence that it is weak already
 where the problem is easy.
 \end{remark}
 
+\begin{remark}[The linear lift in the choice variables fails one level later]\label{rem:choice-lift}
+The round-$17$ convex-lift route applied the other standard hierarchy to
+the same system: write each controlled row as
+$x(v)=y_vx(v^{(0)})+(1-y_v)x(v^{(1)})$ with a choice variable
+$y_v\in[0,1]$ and take the level-$j$ Sherali--Adams
+(reformulation--linearisation) lift $R_j(G)$ over the choice variables, a
+linear programme of size $N^{O(j)}$ whose level zero is $Q(G)$ itself
+(Sherali and Adams, from memory, unchecked; the level-one set is Balas'
+disjunctive closure $\bigcap_{v\in C}\operatorname{conv}(F_v^{0}\cup F_v^{1})$
+of the faces $F_v^{i}:=\{x\in Q(G):x(v)=x(v^{(i)})\}$). Level one is not
+exact, and $W_{14}$ is again the witness: in the coordinates
+$u=(x(v_1),x(v_2),x(v_3))$ the point
+$u=(\tfrac35,\tfrac{23}{40},\tfrac{11}{20})$ lies in $R_1(W_{14})$, being
+$\tfrac{13}{20}(\tfrac8{13},\tfrac8{13},\tfrac7{13})+\tfrac7{20}(\tfrac47,\tfrac12,\tfrac47)$
+with the two points tight at the two actions of $v_1$, and
+$\tfrac45(\tfrac12,\tfrac12,\tfrac{15}{32})+\tfrac15(1,\tfrac78,\tfrac78)$
+with the two points tight at both actions of $v_2$ and of $v_3$, all five
+in $\tilde Q(W_{14})$; so $\max_{R_1}x(v_1)\ge\tfrac35>\tfrac12=w^\ast(v_1)$,
+strictly between the transport bound $1$ and the value (the route reports
+the maximum as exactly $\tfrac35$ and level two as exact; the certificate
+was re-verified here, \texttt{scripts/round17-verify/cl\_verify.py}).
+Joining $W_{14}$ to its dual under the gadget of
+\Cref{thm:compare-equivalence} makes the level-one interval at the root
+$[\tfrac9{20},\tfrac{11}{20}]$, straddling the threshold: the two-sided
+failure the second paragraph above asks for, on a $27$-vertex game that is
+two one-player games. What the hierarchy does prove --- $\max_{R_j}x=w^\ast$
+once $j\ge\min(|\Vmax|,\rho_{\max}+1)$ and $\min_{R_j}x=w^\ast$ once
+$j\ge\min(|\Vmin|,\rho_{\min}+1)$, with $\rho$ the number of controlled
+vertices of that player whose successor difference changes sign on $Q(G)$
+--- is dominated by enumerating the $2^{\rho}$ choices of the smaller side
+and solving one-player games, so no class comes of it, and exactness at
+any fixed level is target-equivalent and is not conjectured.
+\end{remark}
+
 \begin{remark}[The complementarity route, and why we do not pursue it]\label{rem:lcp}
 The same fixed-point system is a linear complementarity problem, and its
 matrix is a $P$-matrix; interior-point methods solve $\mathrm{LCP}(M,q)$ in
@@ -14852,11 +14886,21 @@ by \Cref{thm:transport-sound}, and the right-hand side is $0$ at an optimal
 successor. Hence $\operatorname{Sep}(v,v^{(i)})<0$ \emph{proves} $v^{(i)}$ is
 not optimal and therefore decides $v$; at $v\in\Vmin$ the same holds with the
 inequalities reversed. The pair test $\operatorname{Sep}(v^{(0)},v^{(1)})$ is
-strictly weaker, and the difference is not marginal: on $S$ above the pair test
+a different test, and the two are incomparable. In one direction the
+difference is not marginal: on $S$ above the pair test
 returns $+\tfrac18$ in both directions while $\operatorname{Sep}(v,b)=-\tfrac18$
 decides $v$ outright, and on the family $S_r$ of \Cref{thm:transport-barrier}
 the pair test returns $2^{-r-2}>0$ while $\operatorname{Sep}(v,b_0)=-2^{-r-2}<0$
-for every $r$, verified exactly for $r=2,\dots,5$.
+for every $r$, verified exactly for $r=2,\dots,5$. In the other direction, on
+the ten-vertex game $R$ of \Cref{prop:own-stall} every own-successor
+separator is $0$ while the non-strict pair test ---
+$\operatorname{Sep}(v^{(0)},v^{(1)})\le0$ or
+$\operatorname{Sep}(v^{(1)},v^{(0)})\le0$, sound by \Cref{thm:transport-sound}
+and naming an optimal successor --- decides all three value-distinguishing
+controlled vertices, through the rows $x\ge0$ and $x(6)\le0$ that pin one
+successor at a sink or in $Z_0$ (the round-$17$ convex-lift audit,
+correcting an earlier ``strictly weaker'' here; recomputed,
+\texttt{scripts/round17-verify/pairtest.py}).
 
 The principle is not confined to linear programmes, and for a mechanism that
 propagates two-sided facts there are two ways to fire. At $v\in\Vmax$:
@@ -14909,8 +14953,10 @@ $w^\ast=(\tfrac12,\tfrac12,\tfrac12,\tfrac34,\tfrac12,\tfrac12,0,\tfrac12)$,
 $Z_0=\{6,t_0\}$ and $Z_1=\{t_1\}$, the value-distinguishing controlled vertices
 are $1$, $4$ and $6$, and the own-successor test of \Cref{rem:own-successor},
 run over $Q(R;L,U)$ with the free seed $U:=0$ on $Z_0$ and $L:=1$ on $Z_1$,
-returns $0$ at all six of the relevant separators. So it decides no controlled
-vertex, and the decision rule built from \Cref{def:transport} stalls on $R$.
+returns $0$ at all six of the relevant separators. So that reading decides no
+controlled vertex; the non-strict pair test does decide all three
+(\Cref{rem:own-successor}), so $R$ stalls the own-successor reading only,
+and the seven-vertex game of \Cref{rem:own-stall} stalls both.
 \end{proposition}
 
 \begin{proof}
@@ -14942,11 +14988,22 @@ negative, so no vertex is decided.
 \end{proof}
 
 \begin{remark}\label{rem:own-stall}
-\Cref{prop:own-stall} restores, with the correct test, what
-\Cref{prop:transport-stalls} was originally asserting and
-\Cref{rem:own-successor} took away: the transport certificate alone, even read
-in the strongest way and seeded with everything that is free, is not a decision
-rule. The mechanism of the stall is visible in the proof and is the same
+\Cref{prop:own-stall} is a stall of the own-successor reading, not of the
+certificate: read as the non-strict pair test, the same programme decides
+every value-distinguishing vertex of $R$ (\Cref{rem:own-successor}). What
+\Cref{prop:transport-stalls} was originally asserting --- that the transport
+certificate alone, read in both ways and seeded with everything that is
+free, is not a decision rule --- is restored by a smaller game: on the
+stopping SSG with $\Vavg=\{0,2\}$, $\Vmin=\{1\}$, $\Vmax=\{3,4\}$,
+$0\to(2,t_1)$, $1\to(3,t_1)$, $2\to(t_0,0)$, $3\to(0,t_0)$, $4\to(1,2)$,
+$w^\ast=(\tfrac23,\tfrac23,\tfrac13,\tfrac23,\tfrac23)$, $Z_0=\{t_0\}$,
+$Z_1=\{t_1\}$, the average rows pin $x(0)=\tfrac23$ and $x(2)=\tfrac13$, and
+at the value-distinguishing Max vertex $4$ both own-successor separators
+are $0$ (attained at $x(4)=x(1)=\tfrac23$ and at $x(4)=x(2)=\tfrac13$,
+$x(1)=0$) while $x(1)-x(2)$ ranges over $(-\tfrac13,\tfrac23)$, so the pair
+test is silent as well; vertices $1$ and $3$ are decided (the round-$17$
+convex-lift audit, recomputed here). The mechanism of the stall is visible
+in the proof of \Cref{prop:own-stall} and is the same
 non-convexity the whole section turns on. At a Min vertex $Q(G)$ imposes only
 $x(v)\le x(v^{(i)})$, so $x(v)$ can be pushed \emph{down} to touch either
 successor, and the programme cannot see which one attains the minimum; at
@@ -15031,10 +15088,12 @@ wrong. What is exponentially hard here is \emph{ordering the two successors
 against each other}. Deciding the vertex is not: by \Cref{rem:own-successor},
 $\operatorname{Sep}(v,b_0)=-2^{-r-2}<0$ on every $S_r$, so the unseeded
 certificate decides $v$ in one linear program. The complementarity recorded
-above is real and is about the pair test. A decision stall does exist, but it
-takes a different instance: \Cref{prop:own-stall} exhibits one, on ten
-vertices, at which the own-successor test seeded with $Z_0$ and $Z_1$ decides
-nothing.
+above is real and is about the pair test. A stall of the own-successor test
+does exist, but it takes a different instance: \Cref{prop:own-stall} exhibits
+one, on ten vertices, at which that test seeded with $Z_0$ and $Z_1$ decides
+nothing --- while the pair test decides everything there, the two readings
+being incomparable --- and \Cref{rem:own-stall} exhibits a seven-vertex game
+that stalls both.
 \end{remark}
 
 
@@ -17498,7 +17557,10 @@ its seed to localise the value to within $2^{-\Theta(N)}$. It is a pair test
 that fails, not the mechanism: \Cref{rem:own-successor} observes that at a Max
 vertex the row $x(v)\ge x(v^{(i)})$ is already in $Q(G)$, so a negative
 $\operatorname{Sep}(v,v^{(i)})$ decides $v$ outright, and it is negative on
-every instance in question.
+every instance in question; the two readings are incomparable, the
+own-successor separators vanishing on $R$ of \Cref{prop:own-stall} where the
+pair test decides, and a seven-vertex game stalls both
+(\Cref{rem:own-stall}).
 
 Since the two failures are complementary, the two mechanisms are coupled
 in \Cref{sec:hybrid}, and the coupling is a feedback loop rather than a
