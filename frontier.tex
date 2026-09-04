@@ -243,10 +243,12 @@ $\beta$-coordinate, so that one doubling with a mixed-sign rest readout is
 all that remains of that route (\Cref{thm:escape-no-beta,cor:escape-m3});
 the height of every blow-up is exactly $2h+2$
 (\Cref{prop:blowup-height}). The one-player ceiling is
-$1,2,4,6$ for $m\le4$ and at least $10,12,13$ at $m=5,6,7$, the Holt--Klee
+$1,2,4,6$ for $m\le4$, at least $11$ at $m=5$ --- exactly $11$ for
+nondegenerate games, where it meets the Holt--Klee ceiling --- and at
+least $12,13$ at $m=6,7$, the Holt--Klee
 ceiling $1,2,4,6,11$ and at least $14,20$ at $m=6,7$, both rows growing by
 at least one per dimension
-(\Cref{cor:hstar-one,prop:hstar-one-five,prop:hk-records,prop:sink-lift,rem:four-ceilings}),
+(\Cref{cor:hstar-one,prop:hstar-one-eleven,prop:hk-records,prop:sink-lift,rem:four-ceilings}),
 and the one-player row exceeds the trivial one by a constant factor:
 stacking copies of a block behind a freezing bias gives one-player games
 with $7k$ Max vertices and runs of length $12k$, a construction whose
@@ -6789,8 +6791,19 @@ non-Holt--Klee classes of height $6$ all failed, as
 \Cref{prop:oneplayer-lp} demands; of $60$ random Holt--Klee classes of
 height $5$ and $60$ of heights $3$ and $4$, all but five were realised
 within the same budget. At $m=4$, then, Holt--Klee appears to be the
-whole condition for one-player realisability; this is a measurement, and
-the five unresolved classes are the place to look for a further law.
+whole condition for one-player realisability; this is a measurement. The
+round-$18$ beyond-Holt--Klee route extended it to all $6113$ Holt--Klee
+classes of the $4$-cube, realising $5951$ by exact dyadic systems ($5794$
+at denominator $1024$) and leaving $162$ unresolved, of heights $2$ to $5$
+--- $12$, $56$, $69$, $25$ --- and none of height $6$; a failed search is
+not a result, and the smallest candidate for a further law is the
+Holt--Klee class $(8,9,10,11,13,12,14,15,7,6,4,5,3,2,1,0)$ of height $2$.
+The same route found the height-$11$ five-state witness of
+\Cref{prop:hstar-one-eleven} by a walk through realised orientations, and
+its walk towards a Holt--Klee height-$13$ class of the $6$-cube, and towards
+the height-$14$ blow-up of \Cref{prop:hk-doubling-measured}(b), was cut
+short by its budget: $h^{\ast}_{1}(6)\ge13$ and the one-player doubling
+remain open.
 \end{remark}
 
 \subsection{Ties in one-player games}\label{sec:ties}
@@ -7509,8 +7522,8 @@ Holt--Klee property were recomputed here in exact arithmetic.
 m & 1 & 2 & 3 & 4 & 5 & 6 & 7\\ \hline
 h^{\ast}(m) & 1 & 2 & 4 & 7 & 12 & \ge16 & \ge26\\
 h^{\ast}_{\mathrm{HK}}(m) & 1 & 2 & 4 & 6 & 11 & \ge14 & \ge20\\
-h^{\ast}_{\mathrm{LP}}(m) & 1 & 2 & 4 & 6 & \ge10 & \ge12 & \ge13\\
-h^{\ast}_{1}(m) & 1 & 2 & 4 & 6 & \ge10 & \ge12 & \ge13
+h^{\ast}_{\mathrm{LP}}(m) & 1 & 2 & 4 & 6 & 11 & \ge12 & \ge13\\
+h^{\ast}_{1}(m) & 1 & 2 & 4 & 6 & \ge11 & \ge12 & \ge13
 \end{array}
 \]
 The first row is \Cref{prop:auso-census,prop:hstar-five,thm:blowup}; the
@@ -7528,7 +7541,7 @@ products at block dimensions $(4,4)$, $(4,5)$, $(5,4)$ and $(5,5)$ all
 fail Holt--Klee on a $3$-face (the route's auditor, reproduced by this
 round's), so \Cref{lem:hstar-super} preserves Holt--Klee for some pairs
 of factors and not others and no doubling follows); the last two rows are
-\Cref{cor:hstar-one,prop:oneplayer-runs,prop:hstar-one-five} together with
+\Cref{cor:hstar-one,prop:oneplayer-runs,prop:hstar-one-five,prop:hstar-one-eleven} together with
 $h^{\ast,\mathrm{nd}}_{1}\le h^{\ast}_{\mathrm{LP}}\le h^{\ast}_{\mathrm{HK}}$
 for the ceiling $h^{\ast,\mathrm{nd}}_{1}$ over \emph{nondegenerate}
 one-player games (\Cref{prop:oneplayer-lp} needs nondegeneracy;
@@ -7544,9 +7557,11 @@ fresh coin stays nondegenerate), the lower bounds being what a search
 found and not claimed tight, the $m=7$ entries of the last two rows
 coming from the plus-one law of \Cref{prop:oneplayer-plus-one}; beyond
 the table, $h^{\ast}_{1}(8)\ge13$, $h^{\ast}_{1}(m)\ge m+6$ for $m\ge6$
-and $h^{\ast}_{1}(7k)\ge12k$ for every $k$
-(\Cref{prop:hstar-one-eight,prop:oneplayer-plus-one,cor:stack-family}). The one-player ceiling is strictly
-below $h^{\ast}$ at $m=4$; at $m\ge5$ the last three rows are lower
+$h^{\ast}_{1}(7k)\ge12k$ and $h^{\ast}_{1}(6k-1)\ge11k$ for every $k$
+(\Cref{prop:hstar-one-eight,prop:oneplayer-plus-one,cor:stack-family,prop:hstar-one-eleven}).
+The one-player ceiling is strictly below $h^{\ast}$ at $m=4$, and so is
+the nondegenerate one at $m=5$, where it equals the two rows above it
+(\Cref{prop:hstar-one-eleven}); at $m\ge6$ the last three rows are lower
 bounds only, so the table does not yet distinguish
 $h^{\ast}_{1}(m)\approx2m$ from $h^{\ast}_{1}(m)\approx c^{m}$; whether
 $h^{\ast}_{1}$ grows superpolynomially, and is attained on $m^{O(1)}$
@@ -8206,7 +8221,9 @@ is balanced and stacked, while copy $1$, which nothing perturbs, may be
 degenerate. Writing $h^{\ast,\mathrm{nd}}_{1}$ for the ceiling over
 nondegenerate one-player games, this gives
 $h^{\ast}_{1}(m_1+m_2+1)\ge h^{\ast}_{1}(m_1)+h^{\ast,\mathrm{nd}}_{1}(m_2)$
-and $\liminf_m h^{\ast}_{1}(m)/m\ge\sup_{m_0}h^{\ast,\mathrm{nd}}_{1}(m_0)/(m_0+1)$.
+and $\liminf_m h^{\ast}_{1}(m)/m\ge\sup_{m_0}h^{\ast,\mathrm{nd}}_{1}(m_0)/(m_0+1)$
+--- at least $\tfrac{11}{6}$ once the five-state block of
+\Cref{prop:hstar-one-eleven} is stacked.
 Superadditivity of $h^{\ast}_{1}$ itself --- which by Fekete's lemma would
 make $\lim_m h^{\ast}_{1}(m)/m$ exist --- is \emph{not} established: the
 stacked game need not be nondegenerate, \Cref{thm:stack} excluding ties
@@ -8285,6 +8302,75 @@ and solves the resulting $6\times6$ rational system. All $32$ starting strategie
 tried; $10$ is the maximum, and the other eleven facets of the $m=6$ record give
 $5,6,6,6,6,6,6,7,8,8,6$. The orientation was checked to be a USO, acyclic, tie-free
 and Holt--Klee (the max-flow test of \Cref{prop:hkfive}).
+\end{proof}
+
+\begin{proposition}[$h^{\ast,\mathrm{nd}}_{1}(5)=h^{\ast}_{\mathrm{LP}}(5)=h^{\ast}_{\mathrm{HK}}(5)=11$]\label{prop:hstar-one-eleven}
+The one-player readout system on five states with denominator $2^{13}$,
+written as $(p^{v,a}_{x_0},\dots,p^{v,a}_{x_4}\,|\,q^{v,a})$ in units of
+$2^{-13}$ with the remaining mass going to $t_0$,
+\[
+ \begin{array}{r@{\quad}l@{\qquad}l}
+  x_0: & (0,0,2,0,5501\,|\,2213) & (0,0,7873,0,6\,|\,63)\\
+  x_1: & (7790,0,4,390,2\,|\,3) & (0,0,0,1,8187\,|\,0)\\
+  x_2: & (7470,0,0,0,0\,|\,287) & (9,1367,0,6808,0\,|\,4)\\
+  x_3: & (0,2923,0,0,0\,|\,3818) & (0,498,5,0,7680\,|\,5)\\
+  x_4: & (0,7887,0,233,0\,|\,0) & (1,0,8072,5,0\,|\,111)
+ \end{array}
+\]
+--- every row substochastic with $p^{v,a}_v=0$ and a strict leak --- is,
+by \Cref{lem:dyadic-row}, the harmonic normal form of a nondegenerate
+one-player stopping SSG on $260$ vertices ($5$ Max, $253$ average) whose
+improvement orientation is
+\[
+ s=(8,7,22,5,12,17,19,18,4,25,27,26,16,29,30,31,
+    20,23,10,21,24,3,14,9,28,15,6,13,2,11,1,0),
+\]
+an acyclic Holt--Klee unique sink orientation of the $5$-cube of
+bottom-antipodal height $11$, its walk from $\sigma=10$ being
+$10,17,6,21,22,24,4,8,12,28,30,31$ with switched sets
+$\{0,1,3,4\},\{0,1,2,4\},\{0,1,4\},\{0,1\},\{1,2,3\},\{2,3,4\},\{2,3\},\{2\},\{4\},\{1\},\{0\}$.
+Since $h^{\ast,\mathrm{nd}}_{1}\le h^{\ast}_{\mathrm{LP}}\le h^{\ast}_{\mathrm{HK}}$
+(\Cref{prop:oneplayer-lp}) and $h^{\ast}_{\mathrm{HK}}(5)=11$
+(\Cref{prop:hkfive}), the nondegenerate one-player ceiling, the LP
+ceiling and the Holt--Klee ceiling coincide at $m=5$, against
+$h^{\ast}(5)=12$ --- so $h^{\ast,\mathrm{nd}}_{1}=h^{\ast}_{\mathrm{HK}}$ at
+every $m\le5$, although the survey of \Cref{rem:hk-survey} suggests the
+realisable classes are a proper subset of the Holt--Klee ones ---; the
+ceiling $h^{\ast}_{1}$ over games with ties allowed rises to at least
+$11$, the entry $\ge10$ of \Cref{prop:hstar-one-five} is not tight, and
+$h^{\ast}_{1}(m)\ge m+6$ for every $m\ge5$ (\Cref{prop:oneplayer-plus-one}). The class of $s$ is not the orbit of the
+height-$11$ witness of \Cref{prop:hkfive}: a second Holt--Klee class of
+height $11$, and the one that is realised; its ten facets have heights
+$5,5,5,5,5,5,6,6,6,6$, all at most $h^{\ast}_{1}(4)=6$
+(\Cref{cor:hstar-one}). Every row leaks, so the system is nondegenerate
+with $g_{\min}>0$ and $\rho<1$, \Cref{lem:balance} balances it on six
+states and \Cref{thm:stack} stacks it: $h^{\ast}_{1}(6k-1)\ge11k$ for every
+$k\ge1$ and $\liminf_m h^{\ast}_{1}(m)/m\ge\tfrac{11}{6}>\tfrac{12}{7}$,
+by \Cref{cor:stack-family} with the five-state block.
+\end{proposition}
+
+\begin{proof}
+The system was found by a guided walk inside the realisable class (the
+round-$18$ beyond-Holt--Klee route): from a realised orientation with a
+readout system realising it, enumerate the single edge reversals that are
+Holt--Klee acyclic unique sink orientations, order them by outmap distance
+to a target, and move to the first that a warm-started optimisation of
+the smallest switching margin over the $50$ row parameters re-realises;
+started at the height-$10$ witness of \Cref{prop:hstar-one-five} and
+aimed at a height-$11$ class, it arrived in $76$ steps, every one of them
+realised, and the rounded system was verified from the game. Verified
+from the game, in exact arithmetic, by the route's two evaluators and
+here (\texttt{scripts/round18-verify/oc\_verify.py},
+\texttt{H11\_m5\_GAME.json}): the greatest trap is empty; the printed rows
+are the game's first-passage laws over the Max vertices and $t_1$; the
+$32$ value vectors give the outmap $s$ with least margin
+$580908876268806955/409811754332034205696$ and no tie; $s$ is a unique
+sink orientation, acyclic, Holt--Klee by the max-flow test of
+\Cref{prop:hkfive}, of height $11$ along the stated walk; and the value
+vector is nondecreasing along the run. The stacking clause is
+\Cref{cor:stack-family}'s $h^{\ast}_{1}(m_1+m_2+1)\ge h^{\ast}_{1}(m_1)+h^{\ast,\mathrm{nd}}_{1}(m_2)$
+at $m_2=5$, inducted from $h^{\ast}_{1}(5)\ge11$, and its $\liminf$
+clause at $m_0=5$.
 \end{proof}
 
 \begin{proposition}[$h^{\ast}_{1}(8)\ge13$]\label{prop:hstar-one-eight}
@@ -18385,13 +18471,17 @@ rest readout survives (\Cref{thm:escape-no-beta,cor:escape-m3}) --- and
 that remains: whether each further level costs only a constant number of
 controlled vertices and of bits; the height of a blow-up is exactly
 $2h+2$ (\Cref{prop:blowup-height}); and its walk needs the Min vertex
-(\Cref{thm:b2-walk}). The one-player ceiling reads $1,2,4,6,\ge10,\ge12,\ge13$
+(\Cref{thm:b2-walk}). The one-player ceiling reads $1,2,4,6,\ge11,\ge12,\ge13$
+--- the $m=5$ entry a $260$-vertex nondegenerate game found by a guided
+walk through realised orientations, which makes the nondegenerate ceiling
+equal to the Holt--Klee one at every $m\le5$ (\Cref{prop:hstar-one-eleven}) ---
 and the Holt--Klee ceiling $1,2,4,6,11,\ge14,\ge20$
 (\Cref{rem:four-ceilings}), both growing by at least one per dimension
 (\Cref{prop:sink-lift,prop:oneplayer-plus-one}); stacking copies of a
 block behind a freezing bias gives one-player games with $7k$ Max
-vertices and runs of length $12k$, so the one-player ceiling exceeds
-$|\Vmax|$ by a constant factor, though the run of a stack never exceeds,
+vertices and runs of length $12k$, and with $6k-1$ Max vertices and runs
+of length $11k$, so the one-player ceiling exceeds $|\Vmax|$ by a
+constant factor, though the run of a stack never exceeds,
 per state, that of its best block (\Cref{thm:stack,cor:stack-family}); the blow-up
 doubles and stays Holt--Klee at $m=4,5$ when its outer pair reads a
 non-parity signal, and a readout-free condition stops the iteration on
