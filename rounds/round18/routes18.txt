@@ -1,0 +1,512 @@
+
+=====ROUTE drive-line|The drive line of a driven block: the orientations a block presents along its drive, what a doubling translate costs on it, and the escape shape at the third level
+THE OBJECT: the DRIVE LINE of a driven block. A driven block (def:pinned)
+is a harmonic normal form on m Max and k Min vertices whose rows may read,
+with nonnegative weights, one external coordinate beta (the drive); frozen
+at y_beta = t it is a stopping game with improvement outmap s_B(t) on the
+m-cube. The drive line is the step function t -> s_B(t) on [0,1]; its
+FENCES are the values of t at which some incidence (sigma, v) ties. The
+paper prints two exact fences of the level-two block {c1,c2,c3,c6} driven
+by y_{c5} (rem:pinned-escape: outmap B^1 on [0, 47723619/255897160) and
+B^1(. xor e_{beta_1}) on (1175936917/2026652880, 10168377/16341335)) and
+proves everything it knows about the PINNED shape: prop:pinned-level
+(C1)-(C5), lem:pinned-upclosed, thm:pinned-no-translate,
+cor:pinned-no-doubling (pinned on pinned cannot present a doubling
+translate z in {8,10,24,26} of B^2, so B^3 is out of that shape's reach;
+best doubly pinned 7-cube height 16, realised 12 by prop:b3-outer),
+rem:pinned-escape (the escape: an outer vertex whose REST action reads the
+block, so the switchability condition becomes a difference of two monotone
+functionals and lem:pinned-upclosed says nothing; and THE QUESTION: can a
+driven block that is NOT pinned present B^2 at one drive and B^2(. xor z)
+at another for a doubling z?). Read also prop:b2-realised, rem:b2-anatomy,
+rem:blowup-measured, prop:blowup-readout, prop:parity-readable, thm:blowup,
+prop:blowup-height, rem:blowup-realise (the pivot's open question and the
+anti-value obstruction), thm:readout-realise, lem:readout, lem:dyadic-row,
+thm:min-count, cor:b2-min, prop:xor, lem:switch, lem:crossing. Round-17
+realisation-space route: ${R17}/r17-realisation-space/ (read-only), its
+result ${REPO}/rounds/round17/results/07_*.json and audits 11_*, 18_*;
+the round-16 b3-level route ${R17}/b3-level/; the game files
+${REPO}/scripts/round16-verify/TB_GAME_D10.json (194 vertices),
+${REPO}/scripts/round17-verify/B2_pin137_GAME.json, ${REPO}/scripts/blowup/.
+
+WHAT TO PROVE:
+ (A) THE DRIVE LINE AS AN OBJECT. Under a fixed inner strategy sigma the
+     block's values are nondecreasing functions of t (affine when k = 0;
+     a minimum over Min's responses in general -- concave piecewise
+     affine). PROVE: (a) the number of fences is at most (a function of m,
+     k and the denominator you make explicit), each fence a rational of
+     bounded denominator; (b) at a fence where exactly one incidence
+     ties, the orientation changes by the flip of exactly ONE edge of the
+     cube (use lem:switch: the sign of the gain at sigma equals the sign at
+     sigma[v]); (c) hence consecutive orientations on a drive line are at
+     edge-flip distance one when fences are simple, and the edge-flip
+     distance between s_B(t) and s_B(t') is at most the number of fences in
+     between; (d) which single-edge flips preserve USO/acyclicity (the flip
+     must keep a unique sink on every face: characterise the flippable
+     edges of an AUSO -- this is where Holt-Klee-type laws enter for k = 0
+     via prop:oneplayer-lp).
+ (B) THE DOUBLING QUESTION. For s = B^2 and each z in {8,10,24,26}, COMPUTE
+     the edge-flip distance between B^2 and B^2(. xor z) exactly, and the
+     minimum number of fences a drive line from one to the other needs
+     under (A)(d) (a shortest path in the flip graph of AUSOs of the
+     5-cube restricted to the realisable ones -- state exactly which
+     restriction you use). PROVE the resulting lower bound on the number
+     of fences and translate it, via (A)(a), into a lower bound on the size
+     (m, k, bits) of a driven block that presents both -- or prove that no
+     bound follows and say why. The realisation-space route claimed (its
+     rs:where(ii)) that the pin-drive branch needs at least two Min
+     vertices: check what it proved and whether your bound is sharper.
+ (C) THE ESCAPE SHAPE. Write down the level theorem for the shape
+     rem:pinned-escape names (an outer vertex whose rest action reads the
+     block as well as its partner): the analogue of prop:pinned-level with
+     Theta_u, Theta_w replaced by monotone functionals of the block
+     values, i.e. the sign conditions a game of that shape must satisfy at
+     every inner strategy for its outmap to be B_phi(s, z). At m = 3, with
+     the level-two block, that is a semialgebraic feasibility problem; for
+     a fixed value configuration it is an exact linear programme. DECIDE
+     it: feasible -> build the game by lem:dyadic-row and verify it from
+     the game with ${REPO}/scripts/round16-verify/sparse_verify.py (USO,
+     acyclic, outmap, height, run); infeasible -> the exact infeasibility
+     certificates for the named shape with the reason the linearisation is
+     exact for that support pattern. "We searched and found nothing" is
+     not a result.
+ (D) B^3. If the escape shape works from level two to level three, produce
+     the 7-cube game (height 22, verified from the game). If it does not,
+     the drive-line theorem of (A)-(B) and the level theorem of (C) are the
+     deliverable, and you must say exactly which shapes are now excluded.
+DELIVERABLE: theorems about drive lines (fences, single flips, the doubling
+lower bound), the escape shape's level theorem, a decision at m = 3.
+Labels prefixed dl:.
+
+=====ROUTE one-player-envelope|The upper envelope of monotone rational functions: is the one-player stopping-probability path superpolynomial, and can the tent itinerary drive an all-switches run
+THE OBJECT: for a ONE-PLAYER stopping SSG the value w_rho = max_sigma
+y^sigma_rho of the stopping-probability path (def:discount-path: every step
+survives with probability rho) is the UPPER ENVELOPE of 2^m rational
+functions of rho, each of degree <= n, each nondecreasing in rho, pairwise
+crossing at most 2n times; the number of breakpoints B(G) is the
+complexity of that envelope. The paper knows (read first): def:discount-path,
+rem:discount-path, prop:discount-fold (BP(D), D Max and D Min, exactly
+2^D - 1 breakpoints, the tent map's itinerary), rem:discount-fold (THE GAP,
+stated exactly: "there are c > 0 and one-player stopping SSGs G_n on n
+vertices with at least 2^{cn} breakpoints -- or its negation"; the fold
+needs a Min vertex because every one-player value is a nonnegative
+combination of the sink payoffs; the P_D transplant with a two-vertex seed),
+prop:one-vertex-path (OS(R): one Max vertex, ANY dyadic breakpoint set R,
+Omega(sqrt(N / log N)) reversals of one vertex, the difference of the two
+options is 2^{K_0 - K} rho^K prod(rho - r_i)), cor:two-homotopies (the
+path returns to pairs it left, so it is not the bias homotopy nor the
+shadow-vertex path, which cannot), sec:bias (thm:lemke-homotopy,
+prop:bias-shadow: on one player the bias path is the shadow-vertex path of
+the occupancy polytope), prop:oneplayer-lp (X(G)), thm:ladder and
+rem:ladder (Melekopoglou-Condon: Howard's rule with two actions is the
+one-player half of the pivot), thm:fold, prop:leapfrog, rem:grid-per-vertex,
+thm:opt-subcube, lem:switch. Round-17 code: ${R17}/r17-parametric-path/
+(read-only); result ${REPO}/rounds/round17/results/03_*.json, audits 06_*,
+10_*; the root's bp_verify.py, pd_discount.py in
+${REPO}/scripts/round17-verify/.
+
+WHAT TO PROVE:
+ (A) THE ENVELOPE. State exactly the class of functions {y^sigma_rho}:
+     rational of degree <= n, nondecreasing, y^sigma_rho = rho (I - rho
+     Q_sigma)^{-1} b_sigma, pairwise crossing at most 2n times. PROVE from
+     first principles the best upper bound on B(G) you can for one player
+     in terms of n and m (the Davenport-Schinzel bound lambda_{2n}(2^m) is
+     prior art, from memory, unchecked -- prove what you use; note that
+     the 2^m functions are NOT arbitrary: they are the values of the
+     vertices of ONE polytope X(G) under a parametric objective/constraint
+     -- exploit that: is the path a parametric-LP path in rho, and which
+     kind?).
+ (B) THE LOWER BOUND, decided. Either a one-player family with 2^{Omega(n)}
+     breakpoints, verified exactly at >= 5 sizes with the growth law
+     PROVED, or a polynomial upper bound on B(G) for one player (proved;
+     it must be superlinear by prop:one-vertex-path). What a Max vertex
+     SEES is the difference of its two options, a difference of two
+     nondecreasing rational functions of rho -- prop:one-vertex-path's
+     mechanism makes any dyadic polynomial rho^K (Q_+ - Q_-) with Q_+/-
+     nonnegative appear at one vertex. The obstacle to compounding is that
+     the k-th vertex's difference depends on the (k-1)-th vertex's CHOICE
+     (so it is piecewise), and every piece is monotone. PROVE whether
+     chains of such vertices can multiply breakpoints (an exponential
+     family) or whether monotonicity caps the total (a theorem: e.g. each
+     Max vertex reverses at most poly(n) times because ...; note
+     prop:one-vertex-path already gives Omega(sqrt(N/log N)) reversals at
+     ONE vertex, so the cap cannot be O(1)).
+ (C) THE TENT AS A DRIVER OF A RUN -- the only attack on the all-switches
+     side of the pivot in this round. On BP(D) the optimal pair follows the
+     tent map's itinerary as rho increases; along an all-switches run all
+     values increase (lem:switch). Is there a stopping SSG in which an
+     all-switches run VISITS the 2^D pairs of BP(D)'s path in order -- a
+     game containing a "clock" vertex whose value rises along the run and
+     plays the role of rho for a BP(D)-like block? Formulate exactly what
+     the block must present to the clock and what the clock must present
+     to the block (a driven block in the sense of def:pinned, driven by the
+     clock; the tent alternation of the tied pair (F_d, G_d) is a Max and a
+     Min vertex reading the same pair -- along a run Min best-responds
+     instantly). PROVE either a construction (a superpolynomial all-switches
+     family: check every step against prop:auso-size, thm:min-count,
+     lem:switch, rem:blowup-realise's anti-value obstruction -- an inner
+     vertex would need to see a DEcreasing function of another value,
+     which no SSG value is) or the obstruction as a theorem ("no run
+     follows the discount path because ..."), which is equally a result.
+ (D) SUPPORT ONLY (not results): M1-M6 and all-switches measured on BP(D);
+     the row 'BP(D): bias homotopy at most |C|, stopping-probability path
+     2^{|C|/2} - 1' for rem:bias-families if you PROVE the first half.
+DELIVERABLE: the envelope bound (A) proved; (B) decided or (C) decided.
+Labels prefixed ue:.
+
+=====ROUTE eval-decision|The decision version of the evaluation-query model: how many strategy evaluations decide val(v0) >= 1/2 on a nondegenerate family with one skeleton, and what the rank-deficient relaxation is
+THE OBJECT: the query complexity of the DECISION problem in the evaluation
+model of thm:eval-queries. Read first: thm:eval-queries (the algorithm is
+given the controlled skeleton -- C, owners, successor names, which names
+coincide, which are sinks -- may query a Max strategy sigma to receive
+val_sigma on C and on the successors of C, pays one per query, is not
+charged for computation between queries; d(G) + 2 <= |C| + 2 queries NAME
+an optimal strategy by the rank argument), rem:eval-queries (the relaxation
+"produce a strategy optimal for SOME harmonic system consistent with the
+data" is target-equivalent once the data has full rank), prop:hdp-eval
+(HDP_m: m queries are needed to name the optimum; but its members are
+pairwise isomorphic -- the decision bit is constant -- and degenerate),
+rem:run-informs, rem:blowup-realise's last paragraph (outmap queries: 4 at
+m = 3; 3 given the skeleton), cor:selection, thm:compare-equivalence,
+thm:decide-one-bit, prop:no-halving, thm:top, thm:order-determines,
+rem:order-unique, prop:bracket, def:improvement-uso, prop:allsw-auso,
+lem:readout, lem:readout-reduce, thm:readout-realise, lem:survival-contract,
+lem:dyadic-row. Round-17 code: ${R17}/r17-query-model/ (read-only), result
+${REPO}/rounds/round17/results/14_*.json, audits 16_*, 20_*; the root's
+hdp_verify.py, dout3.py in ${REPO}/scripts/round17-verify/.
+
+THE HONEST QUESTION (the round-17 route's own next step 3): is the
+evaluation-query complexity of DECIDING val(v0) >= 1/2 more than O(1) on a
+NONDEGENERATE family with one skeleton whose members lie on both sides of
+1/2?
+
+WHAT TO PROVE:
+ (A) THE ADVERSARY. A family of nondegenerate stopping SSGs (no tied
+     incidence (sigma, i)) sharing one controlled skeleton, with val(v0)
+     >= 1/2 on some members and < 1/2 on others, on which every
+     deterministic evaluation algorithm needs Omega(|C|) queries (or
+     Omega(log |C|), or any superconstant bound you can prove) to output
+     the bit. The adversary answers each query with a val_sigma consistent
+     with SOME member: by lem:readout the members are harmonic systems --
+     substochastic rows over C -- and a dyadic system is a game by
+     lem:dyadic-row, so the adversary may reason over systems provided
+     every one it commits to is dyadic, stopping and nondegenerate. The
+     difficulty: one query returns |C| + (number of successors) numbers,
+     and the members must agree on the answers to the first queries while
+     disagreeing on the bit; design a HIDDEN-ROW family in which the bit is
+     determined by rows that the early queries do not read (each query
+     reads the rows of the chosen actions only, through the fixed point),
+     and PROVE the bound with the full accounting of what an answer reveals
+     (rem:run-informs: an answer adds at most one dimension to the affine
+     hull, but a decision needs only one bit -- so the rank argument does
+     not give a lower bound; you need an adversary).
+ (B) THE UPPER BOUND. Is the decision complexity O(1) on a natural class
+     (one Max vertex? |C| <= 2? one-player?) and Theta(|C|) in general, or
+     is it between? A theorem with matching bounds up to constants is the
+     ideal; a proved separation between naming (Theta(|C|) by
+     thm:eval-queries and prop:hdp-eval) and deciding is a new-relation
+     result either way.
+ (C) RANDOMISED: the zero-error randomised decision complexity on your
+     family (prop:hdp-eval has m / log(m + 1) for naming).
+ (D) THE RELAXATION. K(D) := the set of harmonic systems over the skeleton
+     consistent with the data D (per row a polytope: the consistency
+     equations q + p . val_sigma|_C = val_sigma(v^(a)) are linear in the
+     row). At rank r < full, K(D) is not a point. PROVE the status of the
+     problem "is the bit [val(v0) >= 1/2] constant on K(D)?" and of "output
+     the bit if it is constant": polynomial (an algorithm, proved), or
+     target-equivalent (a reduction from prob:main -- e.g. any game is a
+     member of K(D) for D = empty, so the empty-data case is the target;
+     the question is at rank r >= 1 whether the linear equations help),
+     or a barrier (the bit is a nonlinear function of the rows, the set of
+     systems with val(v0) >= 1/2 is semialgebraic -- what exactly is its
+     structure inside a product of polytopes?). This is the new object of
+     the route; make it precise and prove one theorem about it.
+DELIVERABLE: the family and the lower bound as a theorem with the adversary
+argument; the relaxation's status as a theorem. Labels prefixed ed:.
+
+=====ROUTE convex-class|The handicap-zero class: a first-principles polynomial algorithm on it, a two-player member outside the eight classes, and the convex cutting plane as a seventh mechanism
+THE OBJECT: the class R := {stopping SSGs whose harmonic normal form over
+C := Vmax u Vmin has B := (1/2)(R_0^T R_1 + R_1^T R_0) positive
+semidefinite, R_a := I - P_a, P_a the first-passage rows of action a} --
+equivalently, whose complementarity sum q(x) := sum_{v in C} (x(v) -
+x(v^(0)))(x(v) - x(v^(1))) is CONVEX on the affine hull of Q(G), where it
+is nonnegative with unique zero w* (rem:handicap-base: the Hessian is 2B,
+base independence by principal-pivot invariance, the criterion ||(P_1 -
+P_0)(I - (P_0 + P_1)/2)^{-1}||_2 <= 2; prop:handicap-zero-ceiling: R
+attains the one-player ceiling at m <= 4 and handicap is not a property of
+the orientation). Read also: thm:transport-objective (w* a vertex of Q(G);
+the complementarity forms printed after it), prop:lcp (P-matrix), rem:lcp
+(interior point on sufficient matrices: imported, closed, not ours),
+sec:transport (Q(G), lem:transport-exact, thm:transport-sound,
+thm:transport-barrier), sec:hybrid (thm:hybrid-complete,
+thm:hybrid-convex-barrier: nested convex SETS as certificates),
+thm:convex-barrier-both, rem:signdef / thm:signdef (the sign-definite
+games: also convex-but-not-proved-polynomial), lem:round-recover (exact
+recovery from precision 2^{-O(a)}), thm:contraction, thm:one-player (the LP
+-- proved in the paper, so an LP solve is an allowed subroutine),
+thm:few-avg ... thm:qp (the eight classes plus quasipolynomial treewidth)
+and prop:fv-family / prop:modulator-family (the standard for separating a
+class from the others: an explicit family, structural parameters checked on
+the subgame REACHABLE from v0). Round-17 variational route:
+${R17}/r17-variational/ (read-only), result
+${REPO}/rounds/round17/results/17_*.json, audits 19_*, 22_*; the root's
+vr_verify.py and CVX4_GAME.json, CVX6_GAME.json, NCX_GAME.json in
+${REPO}/scripts/round17-verify/.
+
+WHAT TO PROVE (any one of (A), (B), (C) proved is the route's result):
+ (A) A FIRST-PRINCIPLES POLYNOMIAL ALGORITHM ON R. Minimise q over Q(G)
+     exactly in time poly(N, a) WITHOUT importing ellipsoid, interior
+     point or convex-QP results (they would be a fifth import). Available:
+     q(x) - q(w*) >= (x - w*)^T B (x - w*) + grad q(w*) . (x - w*) -- check
+     the sign of the first-order term on Q(G) --; lem:round-recover (an
+     approximation within 2^{-2a-O(1)} recovers w* exactly, values having
+     denominator <= 2^a); LP solves over Q(G) (thm:one-player's LP, or the
+     transport LP) as unit steps. Candidates: (i) Frank-Wolfe with away
+     steps -- linear convergence with rate governed by lambda_min(B) and
+     the pyramidal width of Q(G): PROVE lower bounds 2^{-poly(N)} on both
+     (lambda_min(B) > 0 is not given by B >= 0; on R with B singular the
+     method may stall -- handle it) or exhibit their failure; (ii)
+     projected/conditional gradient with exact rational line search; (iii)
+     Lemke on the monotone LCP of the KKT system (sec:bias's machinery) --
+     is Lemke polynomial on MONOTONE LCPs with this structure? Deliver a
+     THEOREM "on R the problem is solved in poly(N, a) time by ..." with
+     every step proved, or the exact gap in one sentence.
+ (B) A TWO-PLAYER MEMBER OUTSIDE THE EIGHT CLASSES. A family in R with
+     min(m, k) = Theta(N), both players present in proportion, verified on
+     the reachable subgame to lie outside thm:few-avg, thm:few-escape,
+     thm:kacyclic, thm:bounded-components, thm:escape-class,
+     thm:few-denominator, thm:modulator, thm:qp (and the trivial min(m,k)
+     = O(log N)). The round-17 members were |C| <= 3 or one-player. B >= 0
+     is a semidefinite condition on the rows: design blocks whose
+     composition PRESERVES it -- disjoint union (block-diagonal B: trivial,
+     but the union must stay outside the classes), the stack of thm:stack,
+     substitution of a gate (lem:gate) -- and PROVE the preservation. Also
+     PROVE or REFUTE closure of R under def:damping (766/766 measured in
+     round 17; the quadratic in the damping parameter is not sign-definite
+     in general).
+ (C) M7, THE CONVEX CUT. On R, for any x in Q(G): grad q(x) . (y - x) <=
+     -q(x) is valid for y = w* (convexity and q(w*) = 0). PROVE it is a
+     sound cutting plane, DEFINE the mechanism (the transport LP over Q(G)
+     intersected with the accumulated cuts, deciding a controlled vertex by
+     all three readings of the standing rule, Z-seeded, at most poly(N)
+     cuts per round), and PROVE its relation to thm:hybrid-convex-barrier
+     (whose certificates are nested convex SETS: does a chain of sets
+     bound a mechanism that also uses a convex FUNCTION's tangent cuts?
+     If not, the method does not cover M7 and you must find M7's own
+     barrier or its own polynomial bound). Then compute B for the paper's
+     stalls (H_m, CC, WD, CV, BC, R of prop:own-stall, G*, the 7-vertex
+     both-readings stall) to see which are in R, and run M7 on those (exact
+     arithmetic) as SUPPORT for a theorem about it, not as a result.
+ (D) NOT results: the Hessian identity, convexity on R, base independence,
+     the two membership facts -- the paper has them.
+DELIVERABLE: a theorem from (A), (B) or (C) of novelty new-object or
+new-relation; if (A) and (B) both succeed, R is the ninth polynomial class.
+Labels prefixed hz:.
+
+=====ROUTE weakest-oracle|The hierarchy of partial-information oracles: which fragments of the value order are target-equivalent and which are polynomial
+THE OBJECT: the hierarchy, under polynomial-time reduction, of ORACLE
+FRAGMENTS of the value order of a stopping SSG. The paper proves
+target-equivalence for: comparing two named vertices
+(thm:compare-equivalence), two named AVERAGE vertices (prop:no-halving(b)),
+naming the top average vertex (thm:top, one oracle call, by reference and
+boost chains), deciding one named controlled vertex (cor:wrong-equivalence),
+a sound non-stalling decision rule that picks its own vertex
+(def:decision-rule, thm:decide-one-bit), a guide (rem:bsi), a bracket for a
+named vertex (prop:bracket(d)), a polynomial-size superset of the alphabet
+(rem:alphabet-equivalence), naming an optimal profile
+(thm:transport-objective); and the full order on Vavg u {t0,t1} is a unique
+O(a log a)-bit certificate (thm:order-determines, rem:order-unique). What is
+NOT settled is the WEAKEST fragment that is still target-equivalent and the
+STRONGEST that is polynomial. Read the above, plus thm:alphabet-iteration,
+cor:grid-iteration, thm:few-denominator, thm:contraction (rate 1 - 2^{-a}),
+thm:vi-lower, lem:round-recover, lem:denominator-sharp, thm:stopping-transform
+(its cost, which every reduction must account for), def:simorder (Z_0, Z_1),
+thm:kacyclic, prop:locality. Round-17 order-lattice route (dead-end, but its
+next step 1 is this route's Q1): ${R17}/r17-order-lattice/ (read-only),
+result ${REPO}/rounds/round17/results/02_*.json.
+
+THE FRAGMENTS (prove theorems about at least Q1 and Q3, and one of Q2/Q4):
+ (Q1) ANY-COMPARISON. Given a stopping SSG after the free Z_0, Z_1 sweeps
+      (so every remaining non-sink value is in (0,1)), output SOME pair
+      (x, y) of average vertices with w*(x) > w*(y), or "all equal". The
+      algorithm CHOOSES the pair. Polynomial (an algorithm that always
+      finds a provable strict comparison -- e.g. is there always an
+      average vertex whose value is provably below another's by a local
+      argument once Z_0, Z_1 are removed? prop:locality says no rule
+      deciding a NAMED vertex reads a bounded radius; that does not cover
+      a free choice), or target-equivalent (an adversary reduction: from
+      a comparison instance (p, q) build a game in which EVERY strict
+      comparison among average vertices reveals the answer -- thm:top's
+      reference and boost chains are the tools, and its proof must be read
+      carefully since there the oracle also chooses).
+ (Q2) ANY-DECISION versus Q1: thm:decide-one-bit already makes the free-
+      choice controlled-vertex rule target-equivalent; reduce Q2 to Q1 or
+      separate them (a game where a strict average comparison is easy but
+      no controlled vertex is decidable from it).
+ (Q3) THE epsilon-ORDER. The order of the average values up to epsilon =
+      2^{-c}: pairs with |w*(x) - w*(y)| < epsilon may be answered
+      arbitrarily. For which c is it polynomial and for which target-
+      equivalent? Value iteration with rounding gives it for c = O(log N)
+      with a = O(log N) only; thm:contraction's rate 1 - 2^{-a} makes the
+      generic bound exponential; lem:round-recover makes c >= 2a + O(1) the
+      target. PROVE the dichotomy or the hierarchy exactly: e.g. "the
+      epsilon-order is target-equivalent for every epsilon <= 2^{-ca} and
+      polynomial for epsilon >= ..." with the threshold located, by a
+      reduction that amplifies gaps (thm:top's boost chains double a gap
+      per average vertex -- so an epsilon-oracle at epsilon = 2^{-c} plus
+      c boost vertices decides exact comparisons? Check whether that makes
+      EVERY epsilon = 2^{-O(1)} target-equivalent, which would be a clean
+      new-relation theorem: "no approximation of the order helps").
+ (Q4) THE ORDER ON A SET. The order among a named set S of average vertices:
+      |S| = 2 is target-equivalent; is the order along a fixed simple PATH
+      or CYCLE of the graph, or among the average successors of ONE
+      controlled vertex (b of rem:order-unique(ii)), or among the vertices
+      of one SCC, polynomial or target-equivalent?
+WHAT COUNTS: theorems "fragment F is polynomial-time equivalent to
+prob:main" (both reductions, from first principles, the stopping
+transformation's cost accounted) or "F is polynomial" (an algorithm,
+proved), for Q1, Q3 and one of Q2/Q4, plus the map of the hierarchy (which
+fragments are equivalent to each other) as a theorem. A fragment proved
+polynomial that no class of the paper implies is new-object; a fragment
+proved target-equivalent by a genuinely new reduction is new-relation. Do
+not restate thm:top / prop:no-halving / thm:decide-one-bit -- cite them.
+Labels prefixed wo:.
+
+=====ROUTE beyond-holt-klee|The LP orientations of occupancy polytopes: a necessary condition for one-player realisability beyond Holt-Klee, and h*_1(5) in {10, 11}
+THE OBJECT: the class OCC_m of orientations of the m-cube that are LP
+orientations of an OCCUPANCY POLYTOPE: by prop:oneplayer-lp, for a
+nondegenerate one-player stopping SSG with harmonic normal form (p^{v,a},
+q^{v,a}) (first-passage laws of action a at v onto Vmax and onto t1),
+X(G) := {y in R^{2m}_{>=0} : sum_a y_{w,a} - sum_{v,a} p^{v,a}_w y_{v,a} = 1
+(w in Vmax)} is a simple m-polytope with the cube's graph, whose vertices
+are y^sigma = (I - P_sigma^T)^{-1} 1 supported on sigma, and the objective
+sum q^{v,a} y_{v,a} orients its graph as the improvement orientation s_G.
+Every member is Holt-Klee (the import), whence h*_1 <= h*_LP <= h*_HK; the
+ceilings (rem:four-ceilings, nondegenerate): h*_1 = 1,2,4,6,>=10,>=12,>=13;
+h*_HK = 1,2,4,6,11,>=14,>=20 (prop:hkfive: h*_HK(5) = 11, exhaustive, with
+the height-11 witness printed). At m = 3, OCC_3 = HK_3 (prop:m3-realised);
+at m = 4 every HK class of height 6 is realised by a one-player game
+(rem:hk-survey, measured; five HK classes of heights 3-5 unresolved). Read:
+prop:oneplayer-lp and its proof, cor:seven-two-player, prop:hkfive,
+rem:hk-survey, prop:hstar-one-five (h*_1(5) >= 10), cor:hstar-one,
+prop:oneplayer-plus-one, prop:sink-lift, prop:hk-records,
+prop:hk-doubling-measured, prop:tstar, thm:no-seven, sec:ties,
+thm:readout-realise, lem:readout, def:reduced-rows, prop:rows-turn,
+lem:crossing, thm:stack, cor:stack-family, prop:oneplayer-census-small,
+rem:oneplayer-dictionary, sec:oneplayer-howard, rem:ladder (the one-player
+pivot: Howard's rule with two actions per state, Melekopoglou-Condon), the
+laws thm:peak-law, lem:monotone-law, lem:rise-bound, thm:switch-count,
+cor:no-return, cor:law-u, prop:closed-now-or-never, thm:impedance. Prior art
+from memory (flag unchecked): LP-realisable unique sink orientations are a
+proper subclass of the Holt-Klee ones from dimension 4 on (Morris; Gaertner
+et al.); Holt-Klee is necessary, not sufficient; Develin on LP orientations
+of cubes. Tools: ${SCRATCH}/solo/my_D.py (Holt-Klee by max-flow),
+${SCRATCH}/solo/census/, AP_m4_k0_*.json (one-player readout systems at
+m = 4), ${SCRATCH}/root16/normform.py, auso.py; the round-16 routes
+hk-doubling and one-player-howard under ${R17}/.
+
+WHAT TO PROVE:
+ (A) A NECESSARY CONDITION BEYOND HOLT-KLEE. X(G) is not an arbitrary
+     simple polytope with the cube's graph: its facets are y_{v,a} >= 0,
+     its vertex coordinates are expected visit counts >= 1, the rows are
+     first-passage laws (substochastic, with q^{v,a} + sum_w p^{v,a}_w <=
+     1), and the objective is the total value sum_v val_sigma(v). PROVE
+     what that structure forces on s_G that Holt-Klee on the abstract cube
+     does not: candidates are the paper's own run laws (thm:peak-law,
+     lem:monotone-law, lem:rise-bound, thm:switch-count, cor:law-u,
+     prop:closed-now-or-never) -- DECIDE for each whether it is implied by
+     Holt-Klee/AUSO axioms on the abstract cube (then it is not a new law
+     of OCC_m) or not (then it is, and you must EXHIBIT a Holt-Klee AUSO
+     violating it: that is the first "law beyond Holt-Klee" for one player,
+     a new-relation result). Other candidates: a sign condition on the
+     values of 2-faces (lem:crossing), a shelling/ordering condition on
+     the LP orientation of a polytope whose vertices are all >= 1 in every
+     coordinate, the fact that the objective vector has entries in [0,1].
+ (B) h*_1(5). Decide whether the height-11 Holt-Klee class of prop:hkfive is
+     in OCC_5: realise it by a one-player game (an affine dyadic readout
+     system, thm:readout-realise(b) with r = 1, built into a game by
+     lem:dyadic-row and verified FROM THE GAME: nondegenerate, stopping,
+     outmap, height 11) or PROVE it is not (by the law of (A), or by an
+     exact infeasibility of the realisation conditions -- 32 x 5 sign
+     conditions on the rows, polynomial after substituting val_sigma;
+     for each support pattern the conditions are linear: state why your
+     case split is exhaustive). Either way h*_1(5) in {10, 11} moves; a
+     failed search is not a result, an exhaustive exact case split is.
+ (C) THE ONE-PLAYER PIVOT. If (A) yields a law, PROVE whether it bounds
+     h*_1(m) polynomially (that would settle Melekopoglou-Condon's question
+     for Howard's rule with two actions, positively -- check every step
+     against thm:ladder, prop:leapfrog, thm:stack, and the fact that
+     h*_1(m) >= m + O(1) grows) or whether OCC_m still contains blow-up-
+     like doublings (prop:hk-doubling-measured: the blow-up doubles and
+     stays Holt-Klee at m = 4, 5 with a non-parity readout -- are those
+     doublings in OCC_m? If they are, and the doubling iterates in OCC_m,
+     that is the pivot's one-player half, a new-theorem of the first
+     rank; if (T*) of prop:tstar stops them, PROVE why in terms of X(G)).
+DELIVERABLE: the law in (A) as a theorem with a Holt-Klee orientation
+outside it; (B) decided; (C) stated exactly with what is proved.
+Labels prefixed oc:.
+
+=====ROUTE rlt-two|The level-two choice lift: an integrality gap engineered from the level-one obstruction, or an exactness theorem on a named class
+THE OBJECT: the level-j Sherali-Adams (reformulation-linearisation) lift
+R_j(G) over the CHOICE variables y_v in [0,1], x(v) = y_v x(v^(0)) + (1 -
+y_v) x(v^(1)) at every controlled v (rem:choice-lift: level zero is Q(G);
+level one is Balas' disjunctive closure of the faces F_v^i := {x in Q(G) :
+x(v) = x(v^(i))}, a linear programme of size N^{O(j)} at level j; level one
+FAILS on W_14 with a five-point certificate, max_{R_1} x(v_1) >= 3/5 > 1/2;
+the round-17 route measured level two exact on everything it tried). Read
+the round-17 convex-lift route's results and its audits' corrections
+(${REPO}/rounds/round17/results/05_*.json, 09_*, 21_*; code
+${R17}/r17-convex-lift/, read-only; the root's cl_verify.py and
+DW_GAME.json in ${REPO}/scripts/round17-verify/): cl:barrier (level-one
+exactness when fewer than three Max vertices REVERSE -- false at j = 0 as
+stated, corrected by the audits; read the corrected form), cl:collapse's
+directional bounds (first exact level >= min(m, max(1, rho_max)), the
+audit's sharpening), cl:union (disjoint unions do not raise the level),
+cl:rigid (= the pair test, a restatement). Read also thm:lasserre-vacuous
+(the degree-two SOS lift of Q(G) is a different object and vacuous),
+sec:transport (Q(G), thm:transport-sound), thm:hybrid-complete,
+thm:modulator (N^{O(mu)} for the freezing-modulator number mu: is the first
+exact level the modulator number in disguise? the route did not settle it),
+lem:dyadic-row, def:wedge, def:cv, def:bc, prop:own-stall (R),
+prop:simorder-stalls (G_8, G*), thm:ladder, def:ladder.
+
+THE STATEMENT AT STAKE: there is a stopping SSG G and a vertex v with
+max_{x in R_2(G)} x(v) > w*(v). Its negation ("level two is exact on every
+stopping game") is TARGET-EQUIVALENT (an exact rational LP of size N^{O(1)})
+and is not to be conjectured; so the route's task is the gap, or a proved
+EXACTNESS THEOREM ON A NAMED CLASS (new-relation: e.g. "R_j is exact when at
+most j controlled vertices reverse on every controlled cycle", or "R_k is
+exact for k = the number of Min vertices" -- then the lift is thm:modulator
+in disguise and you must PROVE the identity or the difference).
+
+WHAT TO DO:
+ (A) EXACT LEVELS, computed and proved. Write the level-two constraints
+     explicitly (products of pairs of choice variables with every row of
+     Q(G), McCormick bounds, consistency of pair marginals) and solve the
+     level-two LP EXACTLY (fractions; ${SCRATCH}/root16/mylp.py, lp.py are
+     exact two-phase simplex -- the LP has O(N^2 |C|^2) variables, so
+     restrict to the reduced rows over C by lem:readout-reduce / the
+     harmonic normal form, and say why that is exact) on: W_14, G_8, G*,
+     R, H_m (m = 3,4,5), WD(2j,j,j+4) (j = 2,3,4), CV(e,s) (three sizes),
+     BC(e,s) (three sizes), the ladder L_n, the 7-vertex both-readings
+     stall. Report the first exact level of each, and PROVE the pattern
+     you see (a theorem, with its hypothesis exactly stated).
+ (B) ENGINEER THE LEVEL-TWO GAP. The level-one certificate on W_14 dies at
+     level two because the pair pattern "v_1 chooses v_2, v_2 chooses the
+     feedback" is infeasible in Q(G), closing a controlled cycle of gain <
+     1 with two vertices on it (the route's diagnosis). So: at least three
+     reversing Max and three reversing Min vertices (cl:barrier as
+     corrected), every controlled cycle of length >= 3 (all pair patterns
+     feasible), some TRIPLE pattern infeasible while all pair marginals
+     are consistent. Set it up as an exact feasibility problem in the
+     rows (alternating: rows <-> level-two moment vector, both halves
+     linear) WITH the structural constraint built in, over dyadic reduced
+     data; if a candidate appears, BUILD THE GAME by lem:dyadic-row and
+     verify the gap by the exact level-two LP from the GAME, not from a
+     normal form. Record exactly what was tried if nothing is found; that
+     record is not a result, (A)'s theorem is.
+ (C) If the gap is found: does R_j need j -> infinity (a family with the
+     first exact level growing), and what is the relation to
+     thm:modulator? If an exactness theorem is proved instead: is its class
+     inside thm:modulator's, or new?
+Labels prefixed rl:.
