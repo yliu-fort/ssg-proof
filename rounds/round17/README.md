@@ -28,6 +28,13 @@ lines). All 22 agents on Opus 5. Scheduled launch 2026-09-04 03:51 UTC.
   where the harness (`root16/`, `solo/`, `myver/`) and
   `round17/inventory.txt` live; the routes' `r17-<key>/` and the audits'
   `r17-audit-*` directories are created there.
+- 04:00–06:2x UTC: all 22 agents ran to completion on the first launch
+  (no API outage, no usage-limit cut): the paper audit at 04:43, the seven
+  routes between 04:54 and 06:00, the fourteen audits between 05:05 and
+  06:2x. The root agent verified every load-bearing claim of every route in
+  exact arithmetic before integration (`scripts/round17-verify/`), applied
+  each route only after both its audits, and integrated in batches A–I
+  (below); the abstract and summary were updated last (batch H).
 
 ## Outcomes
 
@@ -67,3 +74,61 @@ total; the measured rows of `prop:cv-measured`; `prop:q16`'s revised counts;
 | `oracle-barrier` | 05:19 UTC | new-barrier | in progress: the route's BC(2,5), BC(3,5), BC(4,5) games loaded, $w^*$, the gap $2^{-s}$ at $v_0$ and the seeds confirmed; the root's own slack calculus, min-plus closure and `def:ratio`, Z-seeded, both clauses of `rem:own-successor` at $v_0,v_1,v_2$ (`bc_light.py`, 40 rounds): on BC(2,5) M2 first fires at $v_0$ at round 39 (clause ii) and M2T at round 21, M6 never; on BC(3,5) and BC(4,5) all three silent through 40 rounds --- far beyond the certificate's $K+1=2,5,11$, as a lower bound should be; the full hybrid with the transport LP (`bc_verify.py`) running with few rounds; the root's own `def:simorder` fixed point relates none of the twelve test pairs at $v_0,v_1,v_2$ on all three sizes (`bc_m1.py`) | novelty: NOT sound as framed, verdict new-barrier earned by BC(e,s) alone (the model $\mathfrak D$ cannot produce the coinductive preorder, so "M1 is a member" is false; the M1-seeding clause of the lower bound is measured, not proved; `ob:no-permanent` and `ob:m1-grade` restatements; `ob:edge` is `thm:seed-dichotomy`); integrate the BC subsection, the multiplicative certificate theorem and a one-sentence remark after `def:slack`; correctness: one major (the same false membership of M1 in the model), no fatal --- the family, the certificate chain, the lower bound's quantities, the frames and the round counts all reproduced from the statements at six sizes; minors: $K$ not $K+1$, the chain description, the $K_\sharp$ diagonal-pair step, soundness omitted from the certificate theorem's conclusion, the linear-fractional vertex step unproved, `prop:ratio-closure`'s min-times closure not in the repertoire (measured silent 16 rounds) | batch F, commit below: `sec:bc` before `sec:wedge` (def, values, the local-matching block, the lift-reduction lemma, the certificate, the lower bound with the M1 clause demoted to measured, a measured remark), `lem:ratio-sign`/`thm:convex-barrier-both` after `thm:hybrid-convex-barrier`, `rem:slack-grade` after `def:slack` |
 | `query-model` | 05:44 UTC | new-theorem | the rank argument of `qm:eval` (each non-halting evaluation adds a dimension to the span of the answers, so $d(G)+2\le\lvert C\rvert+2$ evaluations suffice) checked by hand; `dout3.py`: the deterministic outmap-query complexity of the 3-cube AUSO class recomputed by exact minimax, $4$ (and $1,2$ at $m=1,2$); `hdp_verify.py`: $\mathrm{HDP}_m$ rebuilt from the definition for $m\le5$, every claim of `thm:qm-hdp`(a),(b) reproduced | novelty: sound, verdict new-theorem "by the letter, only just" (`cor:qm-nobarrier` restates `cor:selection`/`rem:ladder`; the model charges the cheap step; `thm:qm-hdp`'s family is degenerate and its members isomorphic; `def:qm-dim` does no work); integrate `thm:qm-eval` after `cor:selection` citing `lem:readout`/`lem:survival-contract`, `cor:qm-runs` as a remark on `rem:ladder`, HDP only with both caveats in the statement, one sentence in `rem:blowup-realise` with the Schurr--Szabo qualifier; correctness: NOT sound as submitted but the central theorem holds (the profile-oracle clause's bound is $d_\pi+2$, not $d+2$; $Q_{\mathrm{out}}=4$ is $3$ once the skeleton is given; the certificate-free halting claim, `cor:qm-theta`'s quantifier, the tree-depth import and the non-closed hypothesis set all repaired in the text) | batch G, commit below: `thm:eval-queries`, `prop:hdp-eval`, `rem:eval-queries` after `cor:selection`; `rem:run-informs` after `rem:ladder`; a clause in `cor:selection`; a sentence at the end of `rem:blowup-realise` |
 | `variational` | 06:00 UTC | new-theorem | `vr_verify.py`: the Hessian $B$ of the complementarity form computed from the harmonic normal form over $C$; the identity $d^TBd=\lvert(I-\bar P)d\rvert^2-\tfrac14\lvert\Delta d\rvert^2$ on 60 random stopping games; CVX4 (48 vertices) and CVX6 (127 vertices) rebuilt from the game files: stopping, no tie, runs 4 and 6 (the one-player ceilings at $m=3,4$), $B$ positive definite with the printed entries and minors, CVX4's outmap the first blow-up level; NCX outside $\mathcal R$ ($\det B=-1/64$), the cyclic game inside with the printed $B$, $L_4$ inside, $W_{14}$ outside | novelty: sound, verdict new-theorem "on the narrowest reading" (the Hessian, convexity, Dirichlet and improvement-direction results are the monotone-LCP dictionary on `prop:lcp`; the class $\mathcal R$ is `rem:lcp`'s handicap-zero slice with no member outside the tractable regime; two membership facts already printed after `prop:seven-k1`; `vr:rev-vacuous` is `lem:splice`(a) backwards); keep CVX4/CVX6 as one proposition after `prop:seven-k1` in the paper's handicap vocabulary, the base-independence as a five-line remark with the principal-pivot attribution, `vr:rev-trivial` as a short remark; correctness: pending | batch I (redrafted): one proposition and two remarks |
+
+## What the round changed, in one paragraph
+
+Seven object-changing routes; every one returned, and every one was cut
+hard by its audits. Two corrections to the paper itself came out of the
+audits: the round-16 paper audit's seven majors (batch A), and the
+discovery, by the convex-lift audit, that the paper's standing rule "the
+pair test is strictly weaker" was false --- the two readings of the
+transport certificate are incomparable, and a seven-vertex game stalls
+both (batch D). The genuinely new mathematics that survived: the
+stopping-probability path, exponentially long by the tent map and not the
+bias homotopy (batch C, `prop:discount-fold`); $\mathrm{BC}(e,s)$, the
+first family on which the simulation preorder and every propagation
+calculus, in both registers, are silent $2^{\Omega(N)}$ rounds while one
+policy evaluation decides it, with the certificate method extended to the
+multiplicative register (batch F, `sec:bc`, `thm:convex-barrier-both`);
+the pinned shape's level theorem and the proof that pinning once more on
+top of the outer half of the third level cannot reach $B^{3}$ (batch E,
+`cor:pinned-no-doubling`); an optimal strategy from $|C|+2$ adaptively
+chosen evaluations, so every exponential lower bound in the paper is a
+bound on rounds, not information (batch G, `thm:eval-queries`); handicap
+zero attaining the one-player ceiling at $m\le4$ (batch I); and smaller
+items --- the unique consistent order and the antipodal 3-cycle on the
+paper's own instance (batch B), the Sherali--Adams lift failing at level
+one (batch D). The pivot is unmoved: no superpolynomial all-switches
+family, no realisation of $B^{3}$, and the one shape that reached its
+outer half is now proved unable to go further.
+
+## Where the next round should start
+
+1. The third level: the escape shape named in `rem:pinned-escape` (an
+   outer vertex whose rest action reads the block), and the question every
+   route to $B^{3}$ now runs through --- a driven block that is not pinned
+   presenting $B^{2}$ at one drive and $B^{2}(\cdot\oplus z)$ at another for
+   a doubling $z\in\{8,10,24,26\}$.
+2. $\mathrm{BC}(e,s)$ defeats M1 and M2--M6 but not M3; the M3 half of
+   `rem:wedge`'s open item is still the superpolynomial all-switches
+   family (`thm:seed-dichotomy`). The M1-seeding clause of `thm:bc-lower`
+   is measured, not proved.
+3. The one-player discount path: is it superpolynomial for one player
+   (`rem:discount-fold`'s gap)?
+4. The decision version of the evaluation-query model: is more than $O(1)$
+   evaluations needed to decide $\val(v_0)\ge\tfrac12$ on a nondegenerate
+   family with one skeleton?
+5. The standing rule for future audit prompts must say: test both
+   readings of the transport certificate (own-successor, both clauses, and
+   the non-strict pair test), all Z-seeded.
+
+## Integration commits
+
+`120bc54` batch A (the paper audit's 7 majors and 11 minors); `63ba9de`
+batch C (the stopping-probability path); `b7c4d61` batch B (orders as
+certificates, the antipodal 3-cycle); `2499e7c` + `a639b05` batch F and
+F2 ($\mathrm{BC}(e,s)$, the two-register certificate theorem, the
+$\{0,1\}$-grade remark); `282f1c9` batch E (the pinned shape and the
+no-doubling corollary); `3412ce9` batch G (evaluation queries); `19027be`
+batch D (the Sherali--Adams remark and the pair-test correction);
+batch I and batch H: see the end of this file.
