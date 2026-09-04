@@ -1,0 +1,104 @@
+{
+ "target": "Round-18 route \"drive-line\": the drive line of a driven block (combed-flip walk), the doubling cost at the second level, and the escape shape's level theorem \u2014 CORRECTNESS audit",
+ "sound": true,
+ "confidence": "high",
+ "verdict": "Nothing fatal or major survives; sound = true. I rebuilt every numerical claim from the STATEMENTS and the paper's printed normal forms (not from the route's code) in exact rational arithmetic, and every one reproduced, several node-for-node.\n\nWHAT I REBUILT AND CONFIRMED.\n(1) dl:flippable. Proof reconstructed and correct, including the \"only if\" direction (taking J = {v,w} in the face condition forces A\\{v} = B). Verified EXHAUSTIVELY: m=2, 12 USOs / 48 flips, 0 violations; m=3, 744 USOs (728 acyclic) / 8928 flips, 0 violations; clause (b) on all 4176 combed flips of the 728 AUSOs of the 3-cube, 0 violations. Independently on non-combed-walk-generated orientations: all 80 single-edge flips of B^2, 60 sampled 4-cube USOs (1920 flips), 240 product 5-cube USOs (19200 flips) \u2014 0 violations. The sign clause is correct (sgn(T_z) = (-1)^{2^{m-1}} = +1 for m>=2); the dl:sign congruence holds over all 66 and all 276396 pairs at m=2,3, as claimed, and is honestly flagged open beyond.\n(2) dl:drive-flip. Proof reconstructed and correct.\n(3) dl:fences. Bounds re-derived by hand: 2^m((m+1)2^k-1) = 56 for the level-two block (the route quotes the looser 64 = (m+1)2^{m+k}); 2^{(D+1)(n+1)} = 2^50 = 1.126e15 against the true largest fence denominator 48259671705.\n(4) dl:b2-line. Fully reproduced from the printed normal form of prop:b2-realised: 14 maximal cells in exactly the printed order, the 13 fences to the last digit (47723619/255897160 ... 2267378637/2318632595), and \u2014 stronger than the route states \u2014 exactly 13 points of [0,1] carry ANY tied incidence, so no fence is missed under the route's own def dl:def. At each of the 13, the tied set is exactly one edge pair {(sigma,v),(sigma^e_v,v)}, the two value vectors coincide exactly, exactly one edge reverses, and that edge is combed on BOTH sides; every cell is an acyclic USO. d(B^1, B^1(.+4)) = 8 and the translate is cell 8, so the passage is a geodesic. The first, eighth and ninth fences are the three printed in rem:pinned-escape. My val_sigma was cross-checked as the exact Shapley fixed point (0 failures at 14x8 points) and against float least-fixed-point iteration (agreement to 1e-15).\n(5) dl:b2-distance. 17 combed edges of 80; d = 42, 52, 32, 44; sgn = +1 for B^2 and all 31 translates, every d even. Every search reproduces node-for-node: z=8 monotone path of length 42 (10753 nodes); z=24 acyclic 1620 / 69761 / 1418276; z=26 acyclic 81 / 19777 / 841073; USO-only 4357 / 183291 and 129 / 35869.\n(6) dl:escape-level. Algebra re-derived line by line: the three drive fixed points, |c|_1 < 1 and the map into [0,1] both following from the leaks, and each of the eight switchability conditions converted into a drive comparison by the strict monotonicity of c.y_sigma(t) + d - t. It reproduces the WHOLE outmap B^2 at all 8x4 = 32 (sigma, layer) pairs from the 138-vertex normal form, with Theta_w = 2036/3313, Theta_u = 2048/3313; and the outer part of prop:b3-outer at all 32 inner strategies with Theta_u = 2048/4093, Theta_w = 2046/4093. I also rebuilt the 194-vertex game from its printed rows: height 12, run 44,83,45,81,40,80,32,71,33,69,36,68,4 \u2014 the paper's exactly. The asserted step \"the block is the frozen block at the drive y_beta\" is properly covered by lem:readout(b) (the Min minimisation is inside F_{v,a}); I additionally checked the monotone argument that makes the drive fixed point the true min over tau.\n(7) dl:tournament / dl:no-beta-translate. The blow-up-table readings for (zeta_alpha,zeta_beta) = (0,1) and (1,1) are correct; the four complementarity laws hold in the table at both parities and survive every translation, so P, Q, R are well defined. Independently, testing complementarity + tournament directly on the four targets gives 5 and 3 violations for z=24, 26 with (alpha,beta) = (alpha_2,beta_2) and 0 for z=8, 10 \u2014 exactly the route's dichotomy.\n(8) dl:escape-mixed and dl:escape-updown. Proofs reconstructed and correct (rho strictly decreasing under R_alpha - C_alpha <= 0 against P = 1 and S = 0; concavity of rho plus the monotone comparison of the w01 fixed points under R_alpha >= C_alpha).\n(9) dl:m3-decision. (b): the eight per-sigma drive-line value sets are exactly {0,1,5,7}, {0,1,4,6}, {3,4,5,7}, {2,4,5,6}, {0,1,5,7}, {0,1,3,4}, {2,3,5,7}, {1,2,3,6} as claimed, and z=10 fails at sigma in {0,2,3,5,7} on layer (0,0) and {1,4,5,6} on layer (1,0) \u2014 all nine checks reproduce. (c): the per-sigma windows reproduce (sigma=3: B^1 on [0,0.37820) u (0.62225,0.72485), the translate on (0.37820,0.62225); sigma=6: B^1 on [0,0.18650), the translate on (0.53445,0.83705); sigma=1: [0,0.4814) and [0.51532,0.72485) as printed in dl:two-sided), the forcing of w00(3), w01(3), w00(6), w01(6) into [0, 6856791/18130160) is correct, and y_6 <= y_3 componentwise holds on the whole of [0, 23232377303/48259671705], checked at every breakpoint of both piecewise-affine curves. The 8 even<=odd and 5 odd<=even comparable pairs are exactly the listed ones.\n\nSTANDING-RULE AND EQUIVALENCE CHECKS. The route claims no decision rule, switching rule, algorithm, polynomial class, barrier or stall, so the three-readings standing rule (own-successor (i), (ii), the non-strict pair test, Z-seeded) is not engaged and there is nothing to re-run against the paper's definitions; no oracle is assumed anywhere, so none of thm:compare-equivalence, thm:decide-one-bit, prop:no-halving, cor:wrong-equivalence, rem:transport-objective, rem:bsi, thm:top, thm:gap-equivalence is silently invoked. No fifth imported theorem is used (the Szabo-Welzl outmap condition is the paper's own lem:sw, re-used with attribution). No dict-literal row collapse, no greedy policy iteration (I took the componentwise min over ALL tau and asserted single-tau attainment, which held at every point tested), sinks pinned, no unreachable-vertex or non-dyadic-witness issue: both witnesses are the paper's own built games and I rebuilt them from the rows.\n\nCITATIONS. Every cited label exists and says what the route says it says: lem:crossing (a law about 2-faces of a game's orientation, nothing about modifying an abstract orientation), rem:pinned-escape (prints the two windows and asks the open question, no fence law), rem:b2-anatomy, cor:pinned-no-doubling, prop:pinned-level, lem:pinned-upclosed, thm:pinned-no-translate, lem:flat-class(a), lem:readout(b), prop:allsw-auso, thm:blowup. The honesty note on dl:fences is accurate: rs:drive of the round-17 realisation-space route does contain (a)-(d), and \"rs:drive\" occurs 0 times in frontier.tex.\n\nTWO STRENGTHENINGS MY REPRODUCTION PRODUCED, both closing the route's second gap. (i) The monotone combed-flip search from B^2 to B^2(.+10) through acyclic USOs COMPLETES with no path, at 1096515 nodes \u2014 the route stopped it at 300001 and reported it undecided; so D_acyclic(B^2, B^2(.+10)) >= 54. (ii) The 2-increasing-flip searches WITHOUT the acyclicity requirement also complete with no path: 3490938 nodes for z=24 and 1475740 for z=26. So the route's stated D >= 38 and D >= 50 are true for the USO-only D as well \u2014 they were simply not established by the computations the route reports (see finding 1).\n\nVERDICT SUPPORT. dl:flippable (proved, new object), dl:drive-flip (proved, new relation), dl:escape-level (proved, new object) and dl:no-beta-translate (refuted, new relation) all survive; the route's claim of new-theorem is supported on correctness grounds. Novelty is the other audit's lens; I checked only that the cited closest labels say what the route reports.",
+ "findings": [
+  {
+   "severity": "minor",
+   "result_name": "dl:b2-distance",
+   "defect": "The structured return states \"D(B^2, B^2(.xor 24)) >= 38 and D(B^2, B^2(.xor 26)) >= 50\", where D is defined in dl:flippable(c) as the least number of combed flips carrying s to s' THROUGH UNIQUE SINK ORIENTATIONS. The searches the route reports as establishing \"no path with at most 2 increasing flips\" were run with acyclicity required at every intermediate; without acyclicity the route reports only the 0- and 1-increasing-flip searches, which give D >= 36 and D >= 48. So as written the two numbers are not supported by the reported evidence: the symbol D is silently switched to the acyclicity-restricted distance. The paste-ready LaTeX does NOT make this claim (dl:b2-distance there states only the monotone non-existence and concludes \"at least 34\" and \"at least 46\" fences), so the defect is confined to the structured return and would not propagate into frontier.tex.",
+   "evidence": "Reproduced the route's acyclic searches node-for-node (z=24: 1620 / 69761 / 1418276 nodes at maxup 0/1/2; z=26: 81 / 19777 / 841073) and its USO-only searches (4357 / 183291 and 129 / 35869 at maxup 0/1). I then ran the missing USO-only maxup=2 searches myself: z=26 completes with no path at 1475740 nodes, z=24 at 3490938 nodes (my first attempt with a 3e6 budget was cut short at 3000001). So both bounds are TRUE for the USO-only D, but only after the computation the route did not run. Fix: either state the bounds for the acyclicity-restricted distance (write D_A), or cite the two USO-only maxup=2 searches. Code: search.py, search2.py, search3.py in the audit directory."
+  },
+  {
+   "severity": "minor",
+   "result_name": "dl:m3-decision (c)",
+   "defect": "The justifying clause \"on [0, 23232377303/48259671705] -- which contains every drive the conditions allow\" (identical in the LaTeX as \"[0, 4814/10000], which contains every drive the conditions allow\") is FALSE. The very conditions used force w10(3) into (6856791/18130160, 1175936917/2026652880) = (0.37820, 0.58024) and w10(6) into (0.53445, 0.83705), both of which leave the stated interval. The conclusion is unaffected, because dl:escape-updown only reads y_sigma at w01(6), w01(3) and w00(3), and those three ARE forced into [0, 6856791/18130160); the JSON's argument field states this correctly (\"force all four drives into [0, 0.37819...)\"), so it is the statement sentence, not the mathematics, that is wrong.",
+   "evidence": "Recomputed the per-sigma windows exactly: at sigma=3 the block has outmap value B^1(3)=6 exactly on [0, 6856791/18130160) u (10168377/16341335, 315968817/435909343) and value B^1(3+4)=2 exactly on (6856791/18130160, 1175936917/2026652880); at sigma=6, value 5 on [0, 47723619/255897160) and value 3 on (4449774213/8325926890, 315968817/435909343). P=1 rules out the upper w00-window at sigma=3, which is what actually confines w00(3), w01(3) below 6856791/18130160. Separately I verified y_6 <= y_3 componentwise at every breakpoint of both curves on the whole of [0, 23232377303/48259671705], so the wider interval claim itself is true \u2014 only \"contains every drive\" is not. Code: ycmp.py."
+  },
+  {
+   "severity": "minor",
+   "result_name": "dl:updown-general (in the LaTeX; cited in next_steps 2)",
+   "defect": "The remark contrasts \"the walk pair (4,3)\" with \"the non-walk pair (6,3)\". (6,3) IS a bottom-antipodal step of B^1: B^1(6) = 5 and 6 xor 5 = 3, with h(6) = 4, h(3) = 3, so 6 -> 3 -> 5 -> 1 -> 0 is a length-4 bottom-antipodal walk of B^1 exactly like 4 -> 3 -> 5 -> 1 -> 0. The remark's walk/non-walk contrast, and with it the suggestion that a block-free argument would need a non-walk pair, is therefore wrong.",
+   "evidence": "B^1 = (0,1,3,6,7,4,5,2), heights (0,1,2,3,4,2,4,3): both 4 and 6 are maximal-height vertices and both have bottom-antipodal successor 3. The substantive claim of the remark \u2014 that the walk pair from 4 does not extend, y_4 not <= y_3 already at t = 3/10 \u2014 reproduces: y_4 = (0.267274, 0.268773, 0.270357, 0.246393), y_3 = (0.360593, 0.251748, 0.311949, 0.253734), and the second coordinate breaks the comparison. Code: misc.py."
+  },
+  {
+   "severity": "minor",
+   "result_name": "dl:fences (c)",
+   "defect": "The proof ends \"and det K != 0 because the tie is isolated on the cell\". Isolation is not a consequence of the proposition's stated hypotheses (dyadic rows of denominator 2^D, leak); if the margin of (sigma,v) vanishes identically on a tau-cell then K is singular and the conclusion \"every fence is a rational p/q with 0 < q <= 2^{(n+1)(D+1)}\" fails for that fence (it is a whole interval). GAP, in one sentence: 'the proposition needs the hypothesis that the block is nondegenerate off a finite subset of [0,1] (equivalently, that no margin vanishes identically on a tau-cell), or its conclusion restricted to isolated fences.'",
+   "evidence": "Statement and proof read from /tmp/claude-1000/-data-ssg-proof/296b18c1-9dc5-4a0b-94cf-9bde3946ecfe/scratchpad/r18-drive-line/dl_results.tex lines 57-90; the hypothesis list is \"a driven block with n = m+k controlled vertices whose rows are dyadic of denominator 2^D and leak\", with no nondegeneracy clause. On the level-two block the hypothesis does hold \u2014 my exact enumeration found no tau-cell on which a margin vanishes identically (13 isolated tie points in [0,1], code ties.py) \u2014 so the instance verification is unaffected."
+  },
+  {
+   "severity": "minor",
+   "result_name": "dl:m3-decision (verification field) vs dl:two-sided (LaTeX)",
+   "defect": "The two deliverables describe the SAME parameter exploration incompatibly: the structured return says \"several thousand multistart local optimisations in floats\" while the LaTeX (dl:two-sided) says \"an exact-arithmetic search over the sixteen parameters ... run from several thousand random starts\". Only one can be right, and the two carry different evidential weight. (Also: the listed parameters (A, A', Dhat, ehat, D_1, e_1, R_beta, q'_B) are 17 numbers over a 4-vertex block, not 16.) Nothing depends on it \u2014 both texts correctly mark it \"measured, not a result\" \u2014 but the record should be made consistent before integration.",
+   "evidence": "structured return, dl:m3-decision verification field, versus dl_results.tex lines 455-477. Over the block {c1,c2,c3,c6}: Dhat, D_1, R_beta are 4-vectors (12 numbers) plus A, A', ehat, e_1, q'_B (5) = 17."
+  },
+  {
+   "severity": "note",
+   "result_name": "dl:no-beta-translate",
+   "defect": "Scope of the shape, which the headline (\"NO escape extension of ANY block ... for any A, A', any readouts ... and ANY BLOCK\") does not spell out. dl:escape's definition fixes A, A' > 0, alpha's rest action NOT reading beta, beta's rest action NOT reading alpha, and \u2014 implicitly \u2014 identifies the game's alpha with the cube's alpha-coordinate. The last identification matters, since a realisation is free to let the block read whichever of the two outer vertices it likes. Not a defect: I checked it and the exclusion is robust, and the check also yields a strengthening the route does not state.",
+   "evidence": "Testing the four complementarity laws plus the tournament directly on the targets (shape.py): for z=24 the pair (alpha,beta) = (alpha_2,beta_2) gives 5 tournament violations of type (1,0,1) and the swapped (beta_2,alpha_2) gives 3, and for z=26, 5 and 3 \u2014 so both are dead whichever outer vertex the block reads. For z=8 and z=10 the direct order passes with 0 violations while the SWAPPED order gives 3 violations of type (0,1,0), so the case the route leaves open is exactly the direct order, which is what its gap sentence says. Worth adding to the paper: over any block, an escape whose drive is the vertex the orientation calls alpha_2 is excluded for all four doubling z. I also note that allowing alpha's rest action to read y_beta does not break the derivation (the same elimination gives a Dhat-analogue), but allowing beta's rest action to read y_alpha does \u2014 w01 would then differ between (0,1) and (1,1) and the three-drive picture collapses; that shape is genuinely outside the theorem."
+  },
+  {
+   "severity": "note",
+   "result_name": "dl:escape-level (why_not_implied)",
+   "defect": "The non-implication line says prop:pinned-level's \"(C5) is 'the block frozen at the layer's drive has outmap s', which is false in the escape shape\". prop:pinned-level's (C5) already reads pointwise (\"the block's outmap at that layer's drive is s(sigma xor z) at sigma on the layer (0,0) and s(sigma) on the other three\"), and rem:b2-anatomy already records that off the layer (0,0) the drive varies with sigma and \"the other three layers realise B^1 through the feedback ... and not as a frozen system\". So that particular contrast is overstated; the genuine novelty (three drive functions w00, w10, w01, the four bits, and a layer-(0,0) drive that is no longer a constant) is untouched.",
+   "evidence": "frontier.tex l.6259-6304 (prop:pinned-level, clause (C5)) and l.5912-5948 (rem:b2-anatomy). My computation confirms the pointwise phenomenon is already present in the pinned game: at layer (1,0) of prop:b2-realised the drives w10(sigma) = 0.346013, 0.274328, 0.057137, 0.102420, 0, 0.229945, 0.047424, 0.102705 straddle the first fence 0.186496, so sigma = 0, 1, 5 read cell 1 and the others cell 0, yet the diagonal selection is B^1 throughout. Code: level.py."
+  },
+  {
+   "severity": "note",
+   "result_name": "dl:def / dl:tie / dl:drive-flip (model)",
+   "defect": "A driven block \"frozen at y_beta = t\" for a real t is not literally an SSG of def:ssg (out-degree two, fair coins) unless t and the induced rows are dyadic, yet prop:allsw-auso, lem:flat-class and lem:switch are invoked for it. The route inherits this from def:pinned, which already says \"frozen at y_beta = t it is a stopping game\", so it introduces nothing new; but at integration one sentence (\"read t as a third sink of payoff t; lem:gen-comparison allows arbitrary sink payoffs, and thm:eval-stopfree evaluates there\") would close it. Note also that the fences of dl:b2-line are rationals with denominators up to 4.8e10, so the games at the fences are not dyadic.",
+   "evidence": "frontier.tex l.6243-6248 (def:pinned) and l.4844-4870 (prop:allsw-auso, stated for a nondegenerate stopping G with two sinks); dl_results.tex l.21-56."
+  },
+  {
+   "severity": "note",
+   "result_name": "dl:b2-distance (the route's second gap)",
+   "defect": "Not a defect \u2014 a strengthening. The route reports \"z = 10: the monotone search was cut short at 300001 nodes and is reported as undecided\". My reproduction of the same search COMPLETES: there is no distance-decreasing combed-flip path from B^2 to B^2(.xor 10) through acyclic unique sink orientations, exhausted at 1096515 nodes. Hence D_acyclic(B^2, B^2(.xor 10)) >= 54 (d = 52), and the second half of the route's gap sentence can be struck.",
+   "evidence": "search2.py in the audit directory, line 'z=10 maxup=0 acyclic=True: result=False nodes=1096515 (d=52)'. Same DFS-with-memoisation-on-(state, up-count) as for the other targets, which reproduced the route's node counts exactly on all six of its reported searches."
+  }
+ ],
+ "novelty_table": [
+  {
+   "result_name": "dl:flippable",
+   "closest_label": "lem:crossing",
+   "class": "new-object"
+  },
+  {
+   "result_name": "dl:drive-flip",
+   "closest_label": "rem:pinned-escape",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "dl:fences",
+   "closest_label": "rem:b2-anatomy",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "dl:b2-line",
+   "closest_label": "rem:pinned-escape",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "dl:b2-distance",
+   "closest_label": "cor:pinned-no-doubling",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "dl:escape-level",
+   "closest_label": "prop:pinned-level",
+   "class": "new-object"
+  },
+  {
+   "result_name": "dl:no-beta-translate",
+   "closest_label": "thm:pinned-no-translate",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "dl:escape-mixed / dl:escape-updown / dl:m3-decision",
+   "closest_label": "lem:pinned-upclosed",
+   "class": "new-relation"
+  }
+ ]
+}

@@ -237,7 +237,10 @@ walk no one-player game has (\Cref{thm:b2-walk}), so the smallest open
 instance of the pivot is the third level, of which the outer half is
 realised on $194$ vertices while the translated layer remains unrealised
 (\Cref{prop:b3-outer}) and out of reach of the pinned shape that realised
-the outer half, which provably cannot double (\Cref{cor:pinned-no-doubling});
+the outer half, which provably cannot double (\Cref{cor:pinned-no-doubling}),
+and of the escape shape beyond it for the two doublings carrying its
+$\beta$-coordinate, so that one doubling with a mixed-sign rest readout is
+all that remains of that route (\Cref{thm:escape-no-beta,cor:escape-m3});
 the height of every blow-up is exactly $2h+2$
 (\Cref{prop:blowup-height}). The one-player ceiling is
 $1,2,4,6$ for $m\le4$ and at least $10,12,13$ at $m=5,6,7$, the Holt--Klee
@@ -6449,11 +6452,243 @@ $\{c_1,c_2,c_3,c_6\}$ driven by $y_{c_5}$ has outmap $B^{1}$ exactly on
 $[0,\tfrac{47723619}{255897160})$ and $B^{1}(\cdot\oplus e_{\beta_1})$
 exactly on $(\tfrac{1175936917}{2026652880},\tfrac{10168377}{16341335})$,
 the fences that \Cref{rem:b2-anatomy} measured on a grid (the route's
-auditor confirmed them consistent); and $B^{2}$ is realised by a game on
+auditor confirmed them consistent). The whole drive line of that block
+has $14$ cells and $13$ fences, at
+$\tfrac{47723619}{255897160}$, $\tfrac{6856791}{18130160}$,
+$\tfrac{23232377303}{48259671705}$, $\tfrac{1368077078}{2659981905}$,
+$\tfrac{3079758983}{5976346345}$, $\tfrac{4449774213}{8325926890}$,
+$\tfrac{747670031}{1324418625}$, $\tfrac{1175936917}{2026652880}$,
+$\tfrac{10168377}{16341335}$, $\tfrac{315968817}{435909343}$,
+$\tfrac{1070103399}{1278421945}$, $\tfrac{16114985061}{18836958955}$,
+$\tfrac{2267378637}{2318632595}$; at every fence exactly one edge of the
+$3$-cube ties and reverses, and a single-edge reversal of a unique sink
+orientation stays one exactly when the two endpoints have the same
+bottom-antipodal successor (checked exhaustively at $m\le3$), so the
+block passes from $B^{1}$ to $B^{1}(\cdot\oplus e_{\beta_1})$ in exactly
+the $8$ fences that their $8$ differing edges require (the fourteen cells
+by the round-$17$ realisation-space correctness audit, the fences and
+their simplicity by the round-$18$ drive-line route; recomputed here from
+the normal form, \texttt{scripts/round18-verify/dl\_line.py},
+\texttt{dl\_verify.py}). The doubling translates of $B^{2}$ differ from it
+in $42,52,32,44$ edges for $z=8,10,24,26$; that count binds nothing, a
+five-Max block having room for far more fences. And $B^{2}$ is realised by a game on
 $137$ vertices, one fewer than \Cref{prop:b2-realised}, with the same
 block and readouts and the pin $(A,A',q_A)=(\tfrac{500}{512},\tfrac{511}{512},\tfrac8{512})$,
 verified here from the game (\texttt{scripts/round17-verify/B2\_pin137\_GAME.json}).
 \end{remark}
+
+The escape named above was taken up by the round-$18$ drive-line route:
+its level theorem is the extension of \Cref{prop:pinned-level} in which
+the layer-$(0,0)$ drive moves with the inner strategy, and its first
+consequence closes two of the four doubling corners for every block.
+
+\begin{definition}[Escape extension]\label{def:escape}
+An \emph{escape extension} of a driven block $\mathfrak B$ with drive
+$\beta$ is the game on $C\cup\{\alpha,\beta\}$, $\alpha,\beta\in\Vmax$, with
+\[
+ \alpha:\ (0)\ A\,y_\beta+C_\alpha\!\cdot\!y+q_A,\quad(1)\ R_\alpha\!\cdot\!y+q'_A;
+ \qquad
+ \beta:\ (0)\ A'y_\alpha+C_\beta\!\cdot\!y+q_B,\quad(1)\ R_\beta\!\cdot\!y+q'_B,
+\]
+$A,A'>0$, $C_\alpha,C_\beta,R_\alpha,R_\beta\ge0$, every row substochastic
+with a strict leak, and no row of $\mathfrak B$ reading $\alpha$: the shape
+of \Cref{rem:pinned-escape}, in which the rest actions of the outer pair
+read the block as well as each other. \Cref{def:pinned} is the case
+$C_\alpha=C_\beta=0$.
+\end{definition}
+
+\begin{theorem}[The level theorem for the escape shape]\label{thm:escape-level}
+Let $G$ be a nondegenerate stopping escape extension, $\Delta:=1-AA'>0$,
+$\widehat D:=(A'C_\alpha+C_\beta)/\Delta$, $\widehat e:=(A'q_A+q_B)/\Delta$,
+$D_1:=A'R_\alpha+C_\beta$, $e_1:=A'q'_A+q_B$. For an inner strategy $\sigma$
+let $y_\sigma(t)$ be the block's values at the drive $t$ (the block
+frozen at $y_\beta=t$, read with $t$ as a third sink payoff,
+\Cref{lem:gen-comparison}), let $\Phi_\sigma(c,d)$ be the unique
+$t\in[0,1]$ with $t=c\cdot y_\sigma(t)+d$
+--- unique because $c\ge0$, $|c|_1<1$ and $y_\sigma$ is nondecreasing with
+slope at most $1$ --- and put
+\[
+ w_{00}(\sigma):=\Phi_\sigma(\widehat D,\widehat e),\quad
+ w_{10}(\sigma):=\Phi_\sigma(D_1,e_1),\quad
+ w_{01}(\sigma):=\Phi_\sigma(R_\beta,q'_B),\quad
+ \rho(\sigma,t):=(R_\alpha-C_\alpha)\cdot y_\sigma(t)+(q'_A-q_A)-At .
+\]
+Then the drive $y_\beta$ equals $w_{00},w_{10},w_{01},w_{01}$ on the layers
+$(\sigma_\alpha,\sigma_\beta)=(0,0),(1,0),(0,1),(1,1)$; the inner part of
+the improvement outmap at $(\sigma,L)$ is $s_{\mathfrak B}(w_L(\sigma))(\sigma)$,
+a selection from the block's orientations at three drives rather than
+one frozen orientation; and the outer part is given by the four bits
+$P:=[w_{00}<w_{10}]$, $Q:=[w_{00}<w_{01}]$, $R:=[w_{10}<w_{01}]$,
+$S:=[\rho(\sigma,w_{01}(\sigma))>0]$ through
+\[
+ O_{(0,0)}=(P,Q),\quad O_{(1,0)}=(1-P,R),\quad O_{(0,1)}=(S,1-Q),\quad
+ O_{(1,1)}=(1-S,1-R),
+\]
+a pair listing whether $\alpha$, resp.\ $\beta$, is switchable.
+\Cref{prop:pinned-level} is the case $\widehat D=0$, where
+$w_{00}\equiv\widehat e=\Theta_w$ and (C1)--(C4) are the four bits. Both
+published realisations are pinned, so the theorem's new regime --- a
+layer-$(0,0)$ drive that moves with the inner strategy --- is proved and
+not measured; in the pinned case it returns $\Theta_w=\tfrac{2036}{3313}$,
+$\Theta_u=\tfrac{2048}{3313}$ and the whole outmap $B^{2}$ of the
+$138$-vertex game of \Cref{prop:b2-realised} from the three drives and
+$\rho$ (the round-$18$ drive-line route; recomputed here,
+\texttt{scripts/round18-verify/dl\_escape.py}).
+\end{theorem}
+
+\begin{proof}
+Freezing the outer pair at a layer leaves a system in $(y_\alpha,y_\beta)$
+whose block input is $y_\sigma(y_\beta)$, no block row reading $\alpha$
+(\Cref{lem:readout}). At $(0,0)$, $y_\alpha=Ay_\beta+C_\alpha y+q_A$ and
+$y_\beta=A'y_\alpha+C_\beta y+q_B$ give
+$y_\beta=\widehat D\cdot y+\widehat e$; at $(1,0)$,
+$y_\beta=A'(R_\alpha y+q'_A)+C_\beta y+q_B=D_1\cdot y+e_1$; at $(0,1)$ and
+$(1,1)$, $y_\beta=R_\beta y+q'_B$. Uniqueness of the fixed points: the map
+$t\mapsto c\cdot y_\sigma(t)+d$ is nondecreasing with slope at most
+$|c|_1\sup\|y'_\sigma\|_\infty<1$, as
+$y'_\sigma=(I-P)^{-1}r\le(I-P)^{-1}(\bbone-P\bbone)=\bbone$. For the outer
+bits: $\alpha$ switchable at $(0,0)$ is $R_\alpha y+q'_A>y_\alpha$;
+multiplying by $A'>0$ and adding $C_\beta y+q_B$ gives
+$D_1\cdot y+e_1>w_{00}$ at $y=y_\sigma(w_{00})$, i.e.\ $w_{00}<w_{10}$
+(a nondecreasing map of slope below one exceeds $t$ exactly below its
+fixed point). $\alpha$ switchable at $(1,0)$ is
+$Aw_{10}+C_\alpha y+q_A>R_\alpha y+q'_A$, which after the same manipulation
+is $\Delta(\widehat D\cdot y+\widehat e)>\Delta w_{10}$, i.e.\ $w_{10}<w_{00}$.
+$\beta$ switchable at $(0,0)$, resp.\ $(1,0)$, is $R_\beta y+q'_B>w_{00}$,
+resp.\ $>w_{10}$, i.e.\ $w_{00}<w_{01}$, resp.\ $w_{10}<w_{01}$; at $(0,1)$
+it is $A'y_\alpha+C_\beta y+q_B>w_{01}$ with $y_\alpha=Aw_{01}+C_\alpha y+q_A$,
+i.e.\ $w_{00}>w_{01}$, and at $(1,1)$ it is $D_1\cdot y+e_1>w_{01}$, i.e.\
+$w_{10}>w_{01}$. Finally $\alpha$ at $(0,1)$ and $(1,1)$ compares
+$R_\alpha y+q'_A$ with $Aw_{01}+C_\alpha y+q_A$, whose difference is
+$\rho(\sigma,w_{01})$.
+\end{proof}
+
+\begin{theorem}[No outer pair of this kind realises a translate by its $\beta$-coordinate]\label{thm:escape-no-beta}
+Let $G$ be a nondegenerate stopping SSG with two Max vertices $\alpha,\beta$
+outside a block $\mathfrak B$ such that no block row reads $\alpha$,
+$\beta$'s action $1$ reads only the block and constants, and $\beta$'s
+action $0$ reads $\alpha$ with positive weight (the escape extensions of
+\Cref{def:escape} and the pinned extensions of \Cref{def:pinned} among
+them; $\alpha$'s rows are arbitrary). Let $\varphi$ take the value $0$
+somewhere --- as the parity of the bottom-antipodal height does, at the
+sink --- and let $\zeta=(w,\zeta_\alpha,\zeta_\beta)$ with $\zeta_\beta=1$.
+Then $B_\varphi(s,z')(\cdot\oplus\zeta)$ is not the improvement outmap of
+$G$, for any block, any rows and any $s,z'$. In particular, of the four
+doubling translations $z\in\{8,10,24,26\}$ of \Cref{cor:pinned-no-doubling},
+the two with a nonzero $\beta_2$-component, $z=24$ and $z=26$, are
+excluded for the escape shape as for the pinned one when the block's drive
+is the vertex the orientation calls $\beta_2$; and since every doubling
+$z$ has a nonzero $\alpha_2$-component, an outer pair whose drive is the
+vertex called $\alpha_2$ is excluded for all four (the route's correctness
+auditor, who also tested the three bits directly on the four target
+outmaps: with the roles exchanged $z=8$ and $z=10$ violate the tournament
+at three inner strategies each).
+\end{theorem}
+
+\begin{proof}
+Fix an inner strategy $\sigma$ and write $w_L$ for the value of $\beta$ on
+the layer $L$ of the outer square. On the layers $(0,1)$ and $(1,1)$ the
+vertex $\beta$ plays its action $1$, which reads only the block, and the
+block reads only $\beta$ among the two: the drive solves the same equation
+$t=R_\beta\cdot y_\sigma(t)+q'_B$ on both, so $w_{01}=w_{11}$. By
+\Cref{lem:switch} an improving switch raises every value, so along each
+edge of the outer square $y_\beta$ is nondecreasing in the improving
+direction, and with nondegeneracy strictly: $P:=[\alpha$ switchable at
+$(0,0)]=[w_{00}<w_{10}]$, $Q:=[\beta$ switchable at $(0,0)]=[w_{00}<w_{01}]$
+and $R:=[\beta$ switchable at $(1,0)]=[w_{10}<w_{01}]$ are the three
+pairwise comparisons of $w_{00},w_{10},w_{01}$, the reverse inequality
+holding when the bit is $0$; so $(P,Q,R)\notin\{(1,0,1),(0,1,0)\}$ unless
+$w_{00}=w_{10}=w_{01}$, and then $\beta$'s action $0$, read at the same block
+values on the layers $(0,0)$ and $(1,0)$, gives $A'y_\alpha(0,0)=A'y_\alpha(1,0)$,
+so $\alpha$'s two actions tie at that drive, against nondegeneracy. Now
+read the outer part of the target at the layer $L$ off the table of
+\Cref{thm:blowup} at the layer $L\oplus(\zeta_\alpha,\zeta_\beta)$, with
+$\tilde\varphi(\sigma):=\varphi(\sigma\oplus w)$. If
+$(\zeta_\alpha,\zeta_\beta)=(0,1)$ then $P=[\tilde\varphi=1]$, $Q=1$,
+$R=[\tilde\varphi=1]$, which is $(0,1,0)$ wherever $\tilde\varphi=0$; if
+$(1,1)$ then $P=[\tilde\varphi=0]$, $Q=[\tilde\varphi=1]$, $R=1$, which is
+$(1,0,1)$ there. (The round-$18$ drive-line route proved this for escape
+extensions through \Cref{thm:escape-level}; its novelty auditor observed
+that $\alpha$'s rows play no part. The exclusion is not vacuous: all four
+translates are acyclic unique sink orientations, so \Cref{prop:allsw-auso}
+does not exclude them, and the violating pattern $(P,Q,R,S)=(1,0,1,1)$ at
+five inner strategies of $z=24$ and of $z=26$ is one an acyclic outer
+square permits.)
+\end{proof}
+
+\begin{theorem}[The escape must be genuinely mixed, or an up-closedness returns]\label{thm:escape-mixed}
+Let $G$ be a nondegenerate stopping escape extension whose outmap is
+$B_\varphi(s,z')(\cdot\oplus\zeta)$ with $\zeta_\alpha=1$, $\zeta_\beta=0$,
+and let $\tilde\varphi$ take the value $1$ somewhere. Then:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $R_\alpha-C_\alpha$ has a strictly negative component;
+\item if $R_\alpha-C_\alpha\ge0$ componentwise (the pinned shape has
+      $C_\alpha=0$), then for inner strategies $\sigma,\sigma'$ with
+      $y_\sigma(t)\le y_{\sigma'}(t)$ componentwise for every $t$ between
+      $w_{01}(\sigma)$, $w_{01}(\sigma')$ and $w_{00}(\sigma')$,
+      $\tilde\varphi(\sigma)=0$ forces $\tilde\varphi(\sigma')=0$: the set
+      $\{\tilde\varphi=0\}$ is up-closed for the block's pointwise value
+      order.
+\end{enumerate}
+So either the rest action of $\alpha$ reads some block vertex strictly more
+than its switch action and some other strictly less, or the block's value
+order is constrained as in \Cref{lem:pinned-upclosed}.
+\end{theorem}
+
+\begin{proof}
+By the table of \Cref{thm:blowup} at the layer $L\oplus(1,0)$, $P\equiv1$,
+$R\equiv0$ and $Q=S=[\tilde\varphi=0]$: $w_{01}<w_{10}$ and $w_{00}<w_{10}$
+everywhere, $w_{00}<w_{01}$ exactly where $\tilde\varphi=0$, and
+$\rho(\cdot,w_{01})>0$ exactly there. (a) If $R_\alpha-C_\alpha\le0$ then
+$\rho(\sigma,\cdot)$ is strictly decreasing, $y_\sigma$ being nondecreasing;
+but at a $\sigma$ with $\tilde\varphi(\sigma)=1$ one needs
+$\rho(\sigma,w_{01})<0$, $w_{01}<w_{00}$ and $\rho(\sigma,w_{00})>0$ (the
+last is $P=1$), so $\rho$ increases across $[w_{01},w_{00}]$. (b) With
+$R_\alpha-C_\alpha\ge0$ and $y_\sigma$ concave and nondecreasing in $t$
+(a componentwise minimum of nondecreasing affine maps, \Cref{lem:readout}),
+$\rho(\sigma,\cdot)$ is concave and $\rho(\sigma,\cdot)\le\rho(\sigma',\cdot)$
+wherever $y_\sigma\le y_{\sigma'}$. If $\tilde\varphi(\sigma)=0$ and
+$\tilde\varphi(\sigma')=1$ then $\rho(\sigma',w_{01}(\sigma))\ge\rho(\sigma,w_{01}(\sigma))>0$,
+$w_{01}(\sigma)\le w_{01}(\sigma')$ because $R_\beta\ge0$,
+$\rho(\sigma',w_{01}(\sigma'))<0$, and $\rho(\sigma',w_{00}(\sigma'))>0$
+with $w_{01}(\sigma')<w_{00}(\sigma')$: positive, negative, positive at
+three increasing arguments, impossible for a concave function.
+\end{proof}
+
+\begin{corollary}[The decision at $m=3$ over the level-two block]\label{cor:escape-m3}
+Let the block be $\{c_1,c_2,c_3,c_6\}$ of \Cref{prop:b2-realised}, driven
+by $y_{c_5}$ and reading no other outer coordinate, and let the target be
+$B^{2}(\cdot\oplus z)$ for a doubling $z\in\{8,10,24,26\}$, with
+$(\alpha,\beta)=(\alpha_2,\beta_2)$. Then $z=24$ and $z=26$ are excluded
+for every escape extension of every block (\Cref{thm:escape-no-beta});
+$z=10$ is excluded over this block for an inner reason --- the layer
+$(0,0)$ demands the inner orientation $B^{1}(\sigma\oplus e_{\alpha_1})$ at
+$\sigma$, which at $\sigma=0$ is the value $3$, taken by no cell of the
+block's drive line at $\sigma=0$ (the values there are $0,1,5,7$), and the
+layer $(1,0)$ fails at $\sigma=1$ likewise; and $z=8$ is excluded over
+this block for every escape extension with $R_\alpha\ge C_\alpha$: the
+conditions force the three drives $w_{01}(6)$, $w_{01}(3)$, $w_{00}(3)$
+that \Cref{thm:escape-mixed}(b) reads below $\tfrac{6856791}{18130160}$,
+and on the whole of $[0,\tfrac{23232377303}{48259671705}]$ one has
+$y_6\le y_3$ componentwise while the parity is even at $6$ and odd at $3$
+(seven further pairs $(2,1),(2,3),(2,7),(4,1),(5,1),(6,1),(6,7)$ do the
+same). What is
+not decided is $z=8$ with $R_\alpha-C_\alpha$ mixed in sign --- the one
+case \Cref{thm:escape-mixed} leaves, in which $\rho(\sigma,\cdot)$ need not
+be concave and the comparison fails --- and, beyond this block, a driven
+three-Max block that reads the level-three drive or is not the published
+one. On the window above the block's eight value curves have eight
+comparable pairs with the parity even below odd and five with it odd below
+even, so $\{\tilde\varphi=0\}$ is neither up- nor down-closed there, which
+is what makes the block a candidate at all: the pinned shape needs one
+closure (\Cref{lem:pinned-upclosed}) and the degenerate escapes $R_\beta=0$
+and $\widehat D=0$ the other. A floating-point search over the seventeen parameters of
+\Cref{thm:escape-level} from several thousand starts did not reach
+feasibility for $z=8$, the residual sitting at the inner strategy
+$\sigma=1$; a search is not a proof. (The route; the drive-line values,
+the nine failures for $z=10$ and the eight comparable pairs on the whole
+window recomputed here, \texttt{scripts/round18-verify/dl\_line.py}.)
+\end{corollary}
 
 \begin{remark}[What a game would have to read]\label{rem:blowup-realise}
 \Cref{thm:blowup} sharpens the realisability question of
@@ -17899,7 +18134,10 @@ second level by a two-player game on $138$ vertices
 smallest open instance --- its outer half is realised on $194$ vertices,
 its translated layer remains unrealised (\Cref{prop:b3-outer}) and out
 of reach of the pinned shape, which cannot double
-(\Cref{cor:pinned-no-doubling}) --- and
+(\Cref{cor:pinned-no-doubling}), while the escape shape whose outer rest
+actions read the block cannot realise a translate carrying its
+$\beta$-coordinate, so of the four doublings only $z=8$ with a mixed-sign
+rest readout survives (\Cref{thm:escape-no-beta,cor:escape-m3}) --- and
 \Cref{rem:blowup-realise} states the question
 that remains: whether each further level costs only a constant number of
 controlled vertices and of bits; the height of a blow-up is exactly
