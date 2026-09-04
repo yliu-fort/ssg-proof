@@ -7491,12 +7491,18 @@ coordinate, and the stack by a freezing bias that keeps every copy alive.
 \begin{proof}
 \Cref{lem:balance} and \Cref{thm:stack}; the parameters are
 $\rho=4095/4096$, $\nu=2^{-20}$, $\mu_1=2^{-12}$,
-$\epsilon=g_{\min}/(2^{24}g_{\max})$, $\mu_{j+1}=2^{-31}\mu_j$ and $\Theta_{j+1}$ the
-dyadic truncation of $x^{+}_{j+1}-\epsilon\Gamma_{j+1}$; each $\Theta_j$ and $\mu_j$
+$\epsilon=g_{\min}/(2^{24}g_{\max})$, $\mu_{j+1}=2^{-31}\mu_j$ and $\Theta_{j+1}$ a
+dyadic number in $[x^{+}_{j+1}-\epsilon\Gamma_{j+1},\,x^{+}_{j+1}-\tfrac12\epsilon\Gamma_{j+1}]$
+--- rounded \emph{up}, since the freezing inequality of \Cref{thm:stack} is
+tight at $x^{+}_{j+1}-\epsilon\Gamma_{j+1}$ and the interval for $\mu_j$ has
+ratio $2$, which absorbs the rounding (the route's auditor); each $\Theta_j$ and $\mu_j$
 needs $O(j)$ bits, so \Cref{lem:dyadic-row} gives $O((7k)^2\cdot O(k))=O(k^{3})$
 average vertices. For the last clause take copy $1$ to be the unpadded first game (no
 bias is attached to copy $1$, so it needs no balancing) and copies $2,\dots$ to be
-balanced copies of the second.
+balanced copies of the second: the balance hypothesis of \Cref{thm:stack} is used
+only for the copies $j\ge2$, which read one state of the previous copy, so the
+proof goes through unchanged (rebuilt and confirmed at $13,20,27$ states with
+runs $24,36,48$ by the route's auditor).
 \end{proof}
 
 \begin{remark}[What was computed]\label{rem:stack-measured}
