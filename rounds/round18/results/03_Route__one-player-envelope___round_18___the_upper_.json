@@ -1,0 +1,115 @@
+{
+ "target": "Route \"one-player-envelope\" (round 18): the upper envelope of first-passage generating functions; OF(D)/OFC(D,k) as one-player stopping-probability-path families; ue:pgf, ue:onefold, ue:cheb, ue:linearise+ue:cascade, ue:path-not-run.",
+ "sound": true,
+ "confidence": "high",
+ "verdict": "DEAD-END under this round's rubric, with one item worth integrating and one much better result the route left on the table.\n\nWHAT I VERIFIED INDEPENDENTLY (my own builder, exact Fractions, /tmp/claude-1000/-data-ssg-proof/296b18c1-9dc5-4a0b-94cf-9bde3946ecfe/scratchpad/r18-audit-one-player-envelope-novelty/{chk.py,chk2.py,fold1.py,fold2.py}). psi_d = 2T^d(rho)-1 on OF(D) at eight rationals, D<=6, from my own successor lists: exact. Breakpoint structure at D<=7: 2^{D+1} intervals, all itineraries distinct, every consecutive pair at Hamming distance 1, exactly one tie at each of the 2^{D+1}-1 grid points, switched level = D - nu_2(k): exact. OFC_{0_3,2_2,2_3,3_4}.json rebuilt from their JSON: psi_d = 2T^d(u_0)-1 with u_0 = (1+Tt_k)/2 at five rationals each, e_0 = (rho/2)^K with K = 7,5,7,10, Vmin empty: exact. ue:pgf(d)'s Min witness: 8/125, 1/8, 9/50 against chord 61/500, non-convex: exact. The mathematics is correct; this is not a correctness complaint.\n\nDID THE ROUTE CHANGE THE OBJECT? No. Its object -- \"the upper envelope of the 2^m first-passage generating functions y^sigma_rho\", equivalently the branch of lambda x = Lx -- is def:discount-path's family y^pi_rho = rho(I-rho Q_pi)^{-1} b_pi under the substitution lambda = 1/rho and the (classical, self-attributed) observation that the resolvent series is a probability generating function. The paper already owns the object, the parametrisation, the greedy criterion, the degree bound, the monotonicity, the (n+1)|C|2^{|C|} ceiling and the \"parameter in the matrix, so the basis can return\" reading (rem:discount-path, cor:two-homotopies). The collapse is noticed and honestly declared in the route's restatements field; it is not proved to be anything more than a renaming.\n\nWHAT IS ACTUALLY NEW. Exactly one thing: a one-player fold. rem:fold says of thm:fold's device that \"one Max and one Min vertex sharing the same two successors compute max and min of the same pair ... which is the whole device\". That sentence is now false, and the route shows why: a Max vertex and an AVERAGE vertex over the same pair give max and mean, 2max-(a+b) = |a-b|, and the minus sign is supplied downstream by the difference of the two options of the next Max vertex. Re-tuning the constant chain from ratio 1/4 to 1/8 (three halvings instead of one, 9 vertices per level instead of 10) turns BP(D) into a Vmin-empty family with the same tent dynamics. That is a genuine correction of the paper's own reading of its flagship device.\n\nWHY IT IS STILL A DEAD END. (1) OF(D) separates nothing BP(D) did not. Both are acyclic, hence in thm:avg-acyclic's class; the schema they refute -- a continuation that follows the optimal pair of G_rho -- contains none of M1-M6, all-switches, def:bsi or R_BR, and rem:discount-fold already records exactly that. The only added content is the player count, and the rate in N is WORSE than what the paper already has (2^{(N+3)/9} against P_D-with-seed's 2^{(N-3)/6} at rem:discount-fold). (2) The route's own two negative results prove its line cannot reach the pivot -- and both are restatements: ue:path-not-run is cor:law-u with Delta_j = S_t, and ue:cascade is thm:component-bound's proof, whose numeric consequence on OF(D) is strictly weaker than what thm:bounded-components already gives (OF(D) is acyclic, so every SCC of H(G) is a singleton, OF(D) in K_1, L <= |Vmax| = D+1, against the route's D+2). (3) Three of the five reported results are restatements and the fourth (ue:cheb) refines the polynomial factor of an already-dead schema. Under the round's rule 3 -- new-theorem requires a proved result of class new-object or new-relation -- there is none: ue:onefold is a proved STRENGTHENING of prop:discount-fold (same conclusion, hypothesis weakened to Vmin = empty). If the root agent judges a lower-bound family to be a \"new object\" (as BC(e,s), CV(e,s), WD(e,j,m) were treated in rounds 16-17), the verdict rises to new-theorem (weak); I name that boundary rather than hide it, but I do not think it survives, because those families each defeated named mechanisms and this one defeats nothing new.\n\nTHE ROUTE'S REAL REMAINING GAP, stated more precisely than the route states it. The route's gap field asks for an O(k) seed to close an O(m sqrt n) factor inside a schema the paper had already killed; that is not the gap. The gap is: a one-player construction in which the fold's absolute value is fed back into its own drive, so that the alternating sign sequence is produced by the val_sigma of successive strategies along an improvement run rather than by a sweep of an external parameter -- the route has now proved that a fold driven from outside is a cascade (ue:cascade = thm:component-bound) and that the path's own visiting order is never a run (cor:law-u), and it produces nothing whatever about the feedback case, which is where the pivot lives.\n\nTHE RESULT THE ROUTE SHOULD HAVE REPORTED (verified by me, not by the route). The device is not tied to the damping parameter, and undamped it gives a ONE-PLAYER analogue of thm:fold in fifteen lines. Take X0 -> (u,u), Y0 -> (t1,t0), F0 = max(X0,Y0), H0 = avg(X0,Y0); per level d >= 1: S-chain S^a_d -> (S_{d-1},t0), S^b_d -> (S^a_d,t0), S_d -> (S^b_d,t0) with S_0 := t1; X_d -> (F_{d-1},t0), Y_d -> (H_{d-1},S_d), F_d = max(X_d,Y_d) in Vmax, H_d = avg(X_d,Y_d). Then phi_d = |phi_{d-1}|/4 - 8^{-d}/2, psi_d = 2|psi_{d-1}|-1, psi_0 = 2theta-1, and I measured the frozen-payoff response map R_{u,F_D}(theta) to have exactly 2^D + 1 affine pieces with pairwise distinct slopes for D = 1..8, on 7D+3 non-sinks plus u and the two sinks -- 2^{(N-5)/7} pieces with Vmin EMPTY, against thm:fold's 2^{(N-2)/6} with D Max and D Min. Its level interface is the three vertices {F_{d-1},H_{d-1},S_{d-1}}, so bounded pathwidth is plausible (I did not compute it). That would upgrade rem:fold-width -- which is load-bearing for thm:qp's amortisation gap -- from \"two-player games of pathwidth four\" to \"MDPs of bounded width\", and would also give one-player versions of prop:leapfrog's device wherever the paper spends a Min vertex on an absolute value. This is worth more than the breakpoint count and the route listed it only as next-step (3).\n\nINTEGRATE / DO NOT INTEGRATE. Integrate ue:onefold, compressed to a proposition plus a six-line proof placed inside or immediately after rem:discount-fold, together with the one-line correction to rem:fold (\"the second controlled vertex is not needed: an average vertex over the same pair gives the mean, and 2max-(a+b) = |a-b|\"). Integrate ue:path-not-run as ONE SENTENCE inside rem:discount-fold, not as a theorem: \"the path is never an all-switches run, since level d's switched set repeats 2^d times and cor:law-u makes the switched sets of a run pairwise distinct\". Do not integrate ue:pgf, ue:linearise or ue:cascade as numbered results -- three new labels for rem:discount-path, the definition of val_sigma, and thm:component-bound would make the paper worse; at most one clause of ue:pgf survives (rho -> w_rho is convex with one player and need not be with one Min vertex, four-vertex witness), and it supports nothing. ue:cheb is worth one sentence in the same remark (\"with a Chebyshev seed the count is k(2^m-1) on 9(m-1)+O(k^2) vertices, so Omega(sqrt n)2^m <= B*(n,m) <= (n+1)m2^m\"), not a proposition. Net: about two-thirds of a page of real content in a five-result submission.",
+ "novelty_table": [
+  {
+   "result_name": "ue:onefold -- a one-player fold; the stopping-probability path is exponential with one player",
+   "closest_label": "prop:discount-fold",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "ue:cheb -- a Chebyshev seed and the two-sided bound on B*(n,m)",
+   "closest_label": "prop:one-vertex-path",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "ue:path-not-run -- no all-switches run follows the stopping-probability path",
+   "closest_label": "cor:law-u",
+   "class": "restatement"
+  },
+  {
+   "result_name": "ue:linearise + ue:cascade -- a frozen strategy linearises the fold; a driven block lengthens no run",
+   "closest_label": "thm:component-bound",
+   "class": "restatement"
+  },
+  {
+   "result_name": "ue:pgf -- the damped family is the family of first-passage generating functions; the one-player envelope is convex",
+   "closest_label": "rem:discount-path",
+   "class": "restatement"
+  },
+  {
+   "result_name": "declared restatement: monotonicity, degree and greedy-criterion clauses of ue:pgf",
+   "closest_label": "rem:discount-path",
+   "class": "restatement"
+  },
+  {
+   "result_name": "declared restatement: the general half of ue:cascade (projection of a run to a successor-closed subgame)",
+   "closest_label": "thm:component-bound",
+   "class": "restatement"
+  },
+  {
+   "result_name": "declared restatement: the path is neither the bias homotopy nor a shadow-vertex path",
+   "closest_label": "cor:two-homotopies",
+   "class": "restatement"
+  },
+  {
+   "result_name": "declared restatement: OF(D) and OFC(D,k) are acyclic, hence in a polynomial class",
+   "closest_label": "thm:avg-acyclic",
+   "class": "restatement"
+  }
+ ],
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "ue:path-not-run",
+   "defect": "Reported as a result of class new-relation; it is a restatement of cor:law-u, and its only substantive instantiation follows in three lines from prop:discount-fold plus cor:law-u.",
+   "evidence": "The general statement is cor:law-u with Delta_j renamed: along an all-switches run sigma_{t+1} = sigma_t[S_t], so sigma_t xor sigma_{t+1} = S_t, and cor:law-u (l.5059) says S_0..S_L are pairwise distinct; a repeated Delta_j therefore cannot occur. The three lines for BP(D): prop:discount-fold (l.15314) already states 'the single vertex F_D reverses 2^{D-1} times' and 'exactly two vertices tie at every breakpoint', so the switched set {F_D,G_D} repeats 2^{D-1} times; cor:law-u forbids that; hence the path is not a run. Clause (b) is the singleton case (there are only m singletons in Vmax) and clause (c) is immediate from Opt being a single strategy per interval. The route's own proof in ue.tex is three lines long."
+  },
+  {
+   "severity": "major",
+   "result_name": "ue:linearise + ue:cascade",
+   "defect": "Reported with closest_label thm:fold while the route's own restatements field names thm:component-bound as the source of its general half; and its headline numeric claim is strictly weaker than an existing theorem applied to the same family.",
+   "evidence": "thm:component-bound's proof (l.4586ff) already contains verbatim 'R(C) is closed under successors ... val_sigma restricted to R(C) is computed inside it and depends only on sigma|_{D(C)}' and 'from time T on the restriction evolves autonomously and deterministically' -- which is exactly ue:cascade(iii). OF(D) is acyclic (I verified the topological order exists), so every SCC of the Max-reachability digraph H(G) (def:maxreach, l.4576) is a singleton, OF(D) lies in K_1, and thm:bounded-components gives all-switches L <= |Vmax|(2^1-1)/1 = D+1 -- better than ue:cascade(ii)'s D+2, and consistent with the route's own measured 1,1,2,3,3,4,5 at D=0..6. ue:linearise itself is val_sigma computed by backward induction with the max replaced by the chosen branch."
+  },
+  {
+   "severity": "major",
+   "result_name": "ue:pgf",
+   "defect": "Reported as a result of class new-relation; clauses (a) and (b) are rem:discount-path plus a classical identity the route itself attributes to Feller, and the eigenproblem paragraph is cor:two-homotopies (also declared in the route's own restatements). Only (c) and (d) are new, and they support nothing else in the submission.",
+   "evidence": "rem:discount-path (l.1040-1064) already gives det(I - rho Q_pi) > 0, the degree-at-most-n numerator by Cramer, the greedy criterion, rho -> w_rho nondecreasing with w_rho -> val, and the bound B(G) <= (n+1)|C|2^{|C|} -- which is derived there from exactly the same fact ue:pgf(b) advertises as sharpened, that the adjacent-pair difference is a polynomial of degree at most n+1 over a positive denominator. The 'parameter on the diagonal, so the basis can return' reading is cor:two-homotopies (l.9098-9120), which the route lists as a restatement while still reporting ue:pgf as a result."
+  },
+  {
+   "severity": "major",
+   "result_name": "route object",
+   "defect": "The route did not change the mathematical object (rule 0). Its object is def:discount-path's family under lambda = 1/rho plus the classical resolvent-as-generating-function identity; the collapse is observed, not proved to carry content.",
+   "evidence": "def:discount-path (l.1025) defines y^pi_rho = rho(I - rho Q_pi)^{-1} b_pi, Opt(rho), the path and B(G); rem:discount-path supplies the structure theory the route re-derives. The 'upper envelope' is w_rho = max_sigma y^sigma_rho for Vmin empty, which is thm:lfp-general applied to the damped game. Davenport-Schinzel complexity, the one genuinely different lens the object would license, is explicitly not used (the route says so)."
+  },
+  {
+   "severity": "major",
+   "result_name": "ue:onefold (significance)",
+   "defect": "The family separates no mechanism that prop:discount-fold's BP(D) did not, so the barrier model is unchanged; the added content is the player count alone, and the rate in N is worse than the paper's existing family.",
+   "evidence": "OF(D) is acyclic (verified), hence in thm:avg-acyclic's class and solved by backward induction, and one-player, hence also in thm:one-player's class; the schema it refutes -- a continuation following the optimal pair of G_rho -- contains none of M1-M6, all-switches, def:bsi or R_BR, which rem:discount-fold (l.15406-15425) already records for BP(D). In N the count is 2^{(N+3)/9}-1 against the 2^{(N-3)/6}-1 that rem:discount-fold already reports for P_D read as a discount game with a two-vertex seed on 6D+3 vertices."
+  },
+  {
+   "severity": "minor",
+   "result_name": "ue:onefold-cor(b) (in ue.tex, not in the results list)",
+   "defect": "Contains a false clause.",
+   "evidence": "'B is not bounded by any function of n alone, nor of m alone' -- the first half is false: rem:discount-path gives B(G) <= (n+1)|C|2^{|C|} <= (n+1)n2^n, a function of n alone. The correct statement is prop:one-vertex-path's, 'B(G) is bounded by no function of |C|', which is the second half."
+  },
+  {
+   "severity": "minor",
+   "result_name": "ue:onefold (headline attribution)",
+   "defect": "Mis-cites its own foil: the headline says it 'closes the gap stated at rem:discount-fold and refutes the reason given there for needing two players'. rem:discount-fold states no such gap and gives no such reason.",
+   "evidence": "I read rem:discount-fold in full (l.15387-15430) and grepped l.15300-15432 for 'one player'/'one-player'/'Vmin': the only hits are prop:discount-fold's G_d in Vmin and the auditor's 14-vertex one-player degenerate-breakpoint game. The one-player question appears only in the round-17 ADDENDUM of this round's briefing, not in the paper. The paper claim that IS refuted is rem:fold (l.15298-15301), 'one Max and one Min vertex sharing the same two successors ... which is the whole device'; the route should cite that instead, and integration must amend rem:fold rather than rem:discount-fold."
+  },
+  {
+   "severity": "minor",
+   "result_name": "ue:multiplier",
+   "defect": "The route's argument field asserts 'The multiplier 2 is forced (ue:multiplier)', but ue:multiplier is a remark that quantifies only over 'a cascade of the above shape', an unformalised class; no GAP is marked.",
+   "evidence": "ue.tex, ue:multiplier: 'the coefficients must agree, or the term x_{d-1}+y_{d-1} survives' is a restriction to a shape, not a derivation. The route's own next_steps concedes 'whether some other shape -- several Max vertices per level, or a block that is not levelled -- beats it is open', which contradicts the unqualified 'forced' in the argument field."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prior art",
+   "defect": "The one-player statement is precisely 'how many critical discount factors can a two-action MDP have', a classical object in the MDP literature, and the route claims a first without recalling that literature at all; the risk of an unattributed rediscovery is real.",
+   "evidence": "From memory, unchecked against the sources and with no web access: the piecewise-constancy of the optimal policy of a discounted MDP in the discount factor, the critical discount factors, and the Blackwell discount factor are standard objects (Blackwell; Veinott's sensitive-discount criteria; Miller-Veinott), and the paper itself already attributes the sensitive-discount step at a breakpoint to them at rem:discount-fold. The route's prior_art field lists Chebyshev, the tent map, Feller's generating functions, Davenport-Schinzel and the advantage identity, but nothing on how many times a discounted MDP's optimal policy can change -- exactly the statement of its headline. The two-player case (BP(D), P_D) had no such exposure; the one-player case does."
+  },
+  {
+   "severity": "note",
+   "result_name": "the result not reported",
+   "defect": "The route's device yields a one-player analogue of thm:fold immediately, which is worth more than the breakpoint count, and the route left it as next-step (3).",
+   "evidence": "I built it and verified it in exact rational arithmetic (fold2.py): X0 -> (u,u), Y0 -> (t1,t0), F0 = max(X0,Y0) in Vmax, H0 = avg(X0,Y0); per level S^a_d -> (S_{d-1},t0), S^b_d -> (S^a_d,t0), S_d -> (S^b_d,t0) with S_0 := t1, X_d -> (F_{d-1},t0), Y_d -> (H_{d-1},S_d), F_d = max(X_d,Y_d), H_d = avg(X_d,Y_d). Then phi_d = |phi_{d-1}|/4 - 8^{-d}/2 and psi_d = 2|psi_{d-1}|-1 with psi_0 = 2theta-1, and the frozen-payoff response map R_{u,F_D} has exactly 2^D + 1 affine pieces with pairwise distinct slopes, measured at D = 1..8 on 7D+3 non-sinks plus u: 2^{(N-5)/7} pieces with Vmin EMPTY, against thm:fold's 2^{(N-2)/6} with D Max and D Min vertices. The level interface is the three vertices {F_{d-1},H_{d-1},S_{d-1}}, so bounded pathwidth is plausible (not computed). This would strengthen rem:fold-width -- load-bearing for thm:qp's amortisation gap -- from two-player games of pathwidth four to MDPs."
+  }
+ ]
+}

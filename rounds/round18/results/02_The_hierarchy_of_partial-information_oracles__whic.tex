@@ -1,0 +1,501 @@
+% ---------------------------------------------------------------------------
+% Round 18, route "weakest-oracle": the hierarchy of partial-information
+% oracles.  Paste-ready; labels prefixed wo:.  Intended home: after
+% \Cref{prop:bracket} in \Cref{sec:selection}.
+% Full file: /tmp/claude-1000/-data-ssg-proof/296b18c1-9dc5-4a0b-94cf-9bde3946ecfe/scratchpad/r18-weakest-oracle/wo.tex
+% ---------------------------------------------------------------------------
+
+\subsection{Which fragments of the value order are free}\label{sec:wo}
+
+\Cref{thm:compare-equivalence,thm:order-determines,prop:no-halving,%
+cor:wrong-equivalence,thm:top,prop:bracket,thm:decide-one-bit,%
+rem:alphabet-equivalence} all say the same thing about \emph{named} data: one
+comparison between two named vertices, the name of the top average vertex, one
+named controlled vertex resolved, a bracket at a named vertex --- each is the
+whole problem. This subsection asks what happens when the name is not given:
+when the algorithm may choose \emph{which} comparison to report, and when the
+comparison need only be right up to a slack $\varepsilon$. The answers separate:
+free choice collapses the difficulty completely, and slack does not.
+
+\begin{definition}[Order fragments]\label{def:wo-fragments}
+Throughout, $\varepsilon:\mathbb N\to(0,1]$ is nonincreasing, computable in
+time $\mathrm{poly}(N)$ and satisfies $\log_2(1/\varepsilon(N))\le
+\mathrm{poly}(N)$; we write $\varepsilon$ for $\varepsilon(N)$. Call a stopping
+SSG \emph{reduced} if every non-sink value lies in $(0,1)$; by
+\Cref{prop:qualitative} the property is decidable, and the reduction --- delete
+$\{\val=0\}\cup\{\val=1\}$ and redirect the edges into them to $t_0$, $t_1$ ---
+is performed in $O(N^{3})$ arithmetic-free steps and changes no surviving value
+(\Cref{thm:top}). The fragments, all on stopping SSGs:
+\begin{itemize}[leftmargin=2.2em]
+\item[(\textsc{Any})] \textsc{Any-Comparison}: input a reduced $G$; output a
+  pair $(x,y)\in\Vavg^{2}$ with $w^\ast(x)>w^\ast(y)$, or the symbol $=$,
+  which asserts that $w^\ast$ is constant on $\Vavg$.
+\item[(\textsc{Any}$_S$)] \textsc{Any-Comparison} on a named set: input a
+  reduced $G$ and $S\subseteq\Vavg$; output a pair inside $S$ with
+  $w^\ast(x)>w^\ast(y)$, or $=$, asserting $w^\ast$ constant on $S$.
+\item[(\textsc{Ord}$_\varepsilon$)] the \emph{$\varepsilon$-order}: input a
+  stopping $G$; output a total preorder $\sqsubseteq$ on
+  $\Vavg\cup\{t_0,t_1\}$ such that $w^\ast(x)\ge w^\ast(y)+\varepsilon$ implies
+  $x\sqsupset y$. (Pairs closer than $\varepsilon$ may be ordered either way.)
+\item[(\textsc{App}$_\varepsilon$)] input a stopping $G$; output rationals
+  $\hat w(v)$ with $|\hat w(v)-w^\ast(v)|\le\varepsilon$ for all $v$.
+\item[(\textsc{Gap}$_\varepsilon$)] input a stopping $G$ and $v$; output
+  $b\in\{0,1\}$ with $b=1\Rightarrow w^\ast(v)\ge\tfrac12-\varepsilon$ and
+  $b=0\Rightarrow w^\ast(v)\le\tfrac12+\varepsilon$.
+\end{itemize}
+\emph{Target-equivalent} means polynomial-time equivalent to \Cref{prob:main}:
+a polynomial-time algorithm for the fragment yields one for \Cref{prob:main},
+and conversely.
+\end{definition}
+
+\subsubsection*{The free block structure}
+
+\begin{definition}[The sink-adjacent layer]\label{def:wo-blocks}
+For a reduced $G$ put
+\[
+  \mathrm H:=\{v\in\Vavg:\ t_1\in\{v^{(0)},v^{(1)}\}\ \text{and the other successor is a non-sink}\},
+\]
+\[
+  \mathrm M:=\{v\in\Vavg:\ \{v^{(0)},v^{(1)}\}=\{t_0,t_1\}\},\qquad
+  \mathrm L:=\{v\in\Vavg:\ t_0\in\{v^{(0)},v^{(1)}\}\ \text{and the other successor is a non-sink}\}.
+\]
+The three sets are disjoint, computed by one pass over the edge list, and no
+$v\in\Vavg$ has both successors equal to the same sink (its value would be $0$
+or $1$).
+\end{definition}
+
+\begin{lemma}[The extreme letters are sink-adjacent]\label{lem:wo-extreme}
+Let $G$ be reduced with at least one non-sink, and let
+$\lambda_{\max}$ (resp.\ $\lambda_{\min}$) be the largest (smallest) value of a
+non-sink. Then some $v\in\Vavg$ with $w^\ast(v)=\lambda_{\max}$ has $t_1$ as a
+successor, and some $v\in\Vavg$ with $w^\ast(v)=\lambda_{\min}$ has $t_0$ as a
+successor. In particular $\mathrm H\cup\mathrm M\ne\emptyset$ and
+$\mathrm L\cup\mathrm M\ne\emptyset$.
+\end{lemma}
+
+\begin{proof}
+Put $S:=\{v\ \text{non-sink}:w^\ast(v)=\lambda_{\max}\}$, which is nonempty and
+contains no sink, $\lambda_{\max}\in(0,1)$. Suppose no average vertex of $S$
+has $t_1$ as a successor. Every non-sink has value $\le\lambda_{\max}$ and
+$w^\ast(t_0)=0<\lambda_{\max}<1=w^\ast(t_1)$, so a successor of value
+$>\lambda_{\max}$ is $t_1$ and a successor of value $\lambda_{\max}$ is a
+non-sink of $S$. For $v\in S\cap\Vavg$ neither successor is $t_1$ by
+hypothesis, so both have value $\le\lambda_{\max}$ while their mean is
+$\lambda_{\max}$; hence both have value $\lambda_{\max}$ and both lie in $S$.
+For $v\in S\cap\Vmax$ the maximum $\lambda_{\max}$ is attained at a successor,
+which therefore lies in $S$; for $v\in S\cap\Vmin$ the minimum is attained,
+likewise. So $S$ is a nonempty trap and $G$ is not stopping
+(\Cref{lem:trapchar}) --- a contradiction. The witness $v$ has $t_1$ as one
+successor; the other is a non-sink ($v\in\mathrm H$) or $t_0$
+($v\in\mathrm M$), the case of two $t_1$'s being excluded by $w^\ast(v)<1$.
+The statement at $\lambda_{\min}$ is the same argument with the roles of the
+sinks exchanged, or \Cref{lem:duality}.
+\end{proof}
+
+\begin{theorem}[\textsc{Any-Comparison} is free]\label{thm:wo-free-pair}
+Let $G$ be a reduced stopping SSG.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $w^\ast>\tfrac12$ on $\mathrm H$, $w^\ast=\tfrac12$ on $\mathrm M$ and
+  $w^\ast<\tfrac12$ on $\mathrm L$.
+\item If $\mathrm H=\mathrm L=\emptyset$ then $w^\ast\equiv\tfrac12$ on the
+  non-sinks.
+\item Consequently the following algorithm solves \textsc{Any} in $O(N)$ steps
+  after the edge list is read: compute $\mathrm H,\mathrm M,\mathrm L$; if
+  $\mathrm H\ne\emptyset$ output $(v,z)$ with $v\in\mathrm H$,
+  $z\in\mathrm L\cup\mathrm M$; else if $\mathrm L\ne\emptyset$ output $(v,z)$
+  with $v\in\mathrm M$, $z\in\mathrm L$; else output $=$. Both branches are
+  legitimate by \Cref{lem:wo-extreme}, and the pair returned is separated by
+  $\tfrac12$.
+\item The pair returned is decided by a bracket in the sense of
+  \Cref{def:bracket}: with $x:=T^{N}(\bbone_{\{t_1\}})$ and
+  $y:=T^{N}(\bbone-\bbone_{\{t_0\}})$ one has $x\le Tx$, $Ty\le y$ and
+  $x(v)>y(z)$ for the pair $(v,z)$ of (c); $x$ and $y$ cost $O(N^{2})$
+  arithmetic operations.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) For $v\in\mathrm H$ with successors $t_1$ and a non-sink $u$,
+$w^\ast(v)=\tfrac12(1+w^\ast(u))>\tfrac12$ because $w^\ast(u)>0$; dually on
+$\mathrm L$; and $\mathrm M$ is immediate.
+
+(b) If $\mathrm H=\emptyset$ then the witness of \Cref{lem:wo-extreme} at
+$\lambda_{\max}$ lies in $\mathrm M$, so $\lambda_{\max}=\tfrac12$ by (a); if
+$\mathrm L=\emptyset$ then $\lambda_{\min}=\tfrac12$; together
+$w^\ast\equiv\tfrac12$ off the sinks.
+
+(c) If $\mathrm H\ne\emptyset$ then $\mathrm L\cup\mathrm M\ne\emptyset$ by
+\Cref{lem:wo-extreme}, and $w^\ast(v)>\tfrac12\ge w^\ast(z)$ by (a). If
+$\mathrm H=\emptyset\ne\mathrm L$ then $\mathrm H\cup\mathrm M\ne\emptyset$
+forces $\mathrm M\ne\emptyset$ and $w^\ast(v)=\tfrac12>w^\ast(z)$. Otherwise
+$\mathrm H=\mathrm L=\emptyset$ and $=$ is correct by (b).
+
+(d) $\bbone_{\{t_1\}}\le T\bbone_{\{t_1\}}$ and monotonicity of $T$ make the
+iterates increase, so $x\le Tx$, and $x\le w^\ast$ by \Cref{cor:comparison};
+dually for $y$. By \Cref{prop:qualitative}(a) the support of
+$T^{j}(\bbone_{\{t_1\}})$ is the $j$-th iterate of the least fixed point
+computing $\{\val>0\}$, which stabilises within $N$ steps; so $x>0$ on every
+non-sink of the reduced game, whence $x(v)=\tfrac12(1+x(u))>\tfrac12$ for
+$v\in\mathrm H$, and $x(v)=\tfrac12$ for $v\in\mathrm M$. Dually $y<1$ on the
+non-sinks, $y(z)<\tfrac12$ for $z\in\mathrm L$ and $y(z)=\tfrac12$ for
+$z\in\mathrm M$. In both branches of (c) this gives $x(v)>y(z)$.
+\end{proof}
+
+\begin{theorem}[Naming the set restores the difficulty]\label{thm:wo-any-set}
+For every fixed $s\ge2$, the fragment \textsc{Any}$_S$ restricted to inputs
+with $|S|=s$ is target-equivalent to \Cref{prob:main}. This holds already for
+sets $S$ contained in the single free block $\mathrm H$ --- the block on which
+\Cref{thm:wo-free-pair} returns no comparison at all.
+\end{theorem}
+
+\begin{proof}
+If \Cref{prob:main} is in $\mathsf P$ then $w^\ast$ is computable in polynomial
+time by \Cref{thm:compare-equivalence}, and the fragment is answered by
+inspection. Conversely let $G$ be stopping and $p,q$ two vertices; by
+\Cref{thm:compare-equivalence,prop:no-halving}(b) it suffices to decide
+$w^\ast(p)\ge w^\ast(q)$. Reduce $G$; if $p$ or $q$ is deleted the comparison
+is already decided, so assume $G$ reduced and $p,q$ non-sinks. Adjoin $s$ fresh
+average vertices
+\[
+  P_1,\dots,P_{s-1}\to(t_1,p),\qquad Q\to(t_1,q),
+\]
+and put $S:=\{P_1,\dots,P_{s-1},Q\}$. Nothing old points at a new vertex, so
+all old values are unchanged and the enlarged game is stopping (each new vertex
+has a sink successor, so lies in no trap). Moreover
+$w^\ast(P_i)=\tfrac12(1+w^\ast(p))$ for every $i$ and
+$w^\ast(Q)=\tfrac12(1+w^\ast(q))$, so all the $P_i$ are tied and
+$S\subseteq\mathrm H$. A strict pair inside $S$ is therefore of the form
+$(P_i,Q)$ --- which happens exactly when $w^\ast(p)>w^\ast(q)$ --- or $(Q,P_i)$
+--- exactly when $w^\ast(p)<w^\ast(q)$; and the answer $=$ occurs exactly when
+$w^\ast(p)=w^\ast(q)$. One call decides the comparison.
+\end{proof}
+
+\begin{remark}[Where the boundary runs]\label{rem:wo-boundary}
+\Cref{thm:wo-free-pair,thm:wo-any-set} bracket the fragment exactly. The datum
+that is free is the three-block order $\mathrm H\succ\mathrm M\succ\mathrm L$
+on the sink-adjacent average vertices, and it is free because
+\Cref{lem:wo-extreme} forbids a stopping game from hiding both of its extreme
+letters: \emph{no reduced game is flat}, and the only flat one is
+$w^\ast\equiv\tfrac12$. Every refinement is the whole problem: refining inside
+$\mathrm H$ is \Cref{thm:wo-any-set}; comparing two named vertices is
+\Cref{prop:no-halving}(b); naming a maximiser is \Cref{thm:top}. The free
+algorithm returns a pair separated by the threshold $\tfrac12$ itself, which is
+the sharpest form the free datum can take, since $\mathrm M$ realises
+$\tfrac12$ exactly. Note also what \Cref{thm:wo-free-pair} does \emph{not} do:
+it does not produce a strict comparison from \Cref{def:simorder}. The
+simulation preorder $\preceq$ is sound for $\le$ only, and $z\preceq v$ holds
+for every $z\in\mathrm L$ and $v\in\mathrm H$ through the (match) clause with
+the bijection $t_0\mapsto u$, $y\mapsto t_1$; strictness is exactly the extra
+content, and it comes from $w^\ast>0$ off $Z_0$, i.e.\ from the sweeps.
+\end{remark}
+
+\subsubsection*{One free comparison entails no controlled decision}
+
+\begin{definition}[The witness pair $\mathrm{FB}(L)$]\label{def:wo-fb}
+For $L\ge3$ let $\mathrm{FB}(L)^{\pm}$ be the following stopping SSGs with
+$2L+4$ non-sinks, $N=2L+6$. Two chains of average vertices,
+\[
+  p_i\to(z^{+}_i,p_{i+1})\ (i<L),\quad p_L\to(z^{+}_L,t_0),\qquad
+  q_i\to(z^{-}_i,q_{i+1})\ (i<L),\quad q_L\to(z^{-}_L,t_0),
+\]
+realise $w^\ast(p_1)=\tfrac12+2^{-L}$ (bits $1\,0^{L-2}\,1$) and
+$w^\ast(q_1)=\tfrac12-2^{-L}$ (bits $0\,1^{L-1}$), where $z_i=t_1$ for a $1$
+bit and $t_0$ for a $0$ bit. Adjoin $m\to(t_0,t_1)$, $B\to(m,m)$,
+$A\to(p_1,m)$ in $\mathrm{FB}(L)^{+}$ and $A\to(q_1,m)$ in
+$\mathrm{FB}(L)^{-}$, all average, and one Max vertex $v\to(A,B)$.
+\end{definition}
+
+\begin{proposition}[The free datum is blind]\label{prop:wo-free-blind}
+$\mathrm{FB}(L)^{+}$ and $\mathrm{FB}(L)^{-}$ are reduced stopping SSGs on the
+same vertex set, of the same kinds, differing in exactly one edge (the first
+out-edge of $A$). They have the same blocks
+$(\mathrm H,\mathrm M,\mathrm L)$, of sizes $(L-1,3,L-1)$, hence the same
+output of \Cref{thm:wo-free-pair}, hence the same value of every
+free datum computed from the sink-adjacent layer. Yet
+\[
+  w^\ast(A)-w^\ast(B)=+2^{-(L+1)}\ \text{in }\mathrm{FB}(L)^{+},\qquad
+  =-2^{-(L+1)}\ \text{in }\mathrm{FB}(L)^{-},
+\]
+so the unique Max vertex $v$ is value-distinguishing in both and its two
+answers are opposite. They are not isomorphic: their value multisets differ.
+Consequently no sound decision rule (\Cref{def:decision-rule}) can compute its
+answer from the free three-block datum, and, since \textsc{Any} is solvable in
+linear time (\Cref{thm:wo-free-pair}) while a sound non-stalling decision rule
+is target-equivalent (\Cref{thm:decide-one-bit}), \textsc{Any-Decision} reduces
+to \textsc{Any-Comparison} only if \Cref{prob:main} is in $\mathsf P$.
+\end{proposition}
+
+\begin{proof}
+The chains are acyclic with a sink successor at every vertex, $m$, $B$, $A$ and
+$v$ reach a sink, so both games are stopping and back-substitution gives the
+chain values $w^\ast(p_1)=\tfrac12+2^{-L}$, $w^\ast(q_1)=\tfrac12-2^{-L}$, all
+chain values lying in $(0,1)$; $w^\ast(m)=w^\ast(B)=\tfrac12$ and
+$w^\ast(A)=\tfrac12(w^\ast(p_1\text{ or }q_1)+\tfrac12)=\tfrac12\pm2^{-(L+1)}$.
+The two chains occur in \emph{both} games, and only the head chosen by $A$
+differs, so the sink-adjacent layer and its classification are literally
+identical: $\mathrm M=\{m,p_L,q_L\}$, $\mathrm H=\{p_1,q_2,\dots,q_{L-1}\}$,
+$\mathrm L=\{p_2,\dots,p_{L-1},q_1\}$, and $A,B,v$ are not sink-adjacent. The
+value multiset differs in the single entry $w^\ast(A)$.
+\end{proof}
+
+\begin{remark}[On the document's own stalls]\label{rem:wo-stalls}
+The blindness is not an artefact of $\mathrm{FB}$. On every stalling family of
+this document the free pair exists --- it is produced in linear time --- and at
+every value-distinguishing controlled vertex the two successors lie in the same
+free class or outside the layer, so the free datum separates none of them:
+computed exactly, on $H_m$ ($m=3,4,5$) the pair is $(c_m,c_{m+1})$ with values
+$\tfrac12+2^{-(m+1)}>2^{-m}$ while the Max vertex has successors of classes
+interior$/\mathrm M$; on $\mathrm{WD}(3,2,5)$ and $\mathrm{WD}(2,3,6)$ the pair
+has values $\tfrac34>\tfrac38$ while both Max vertices have both successors
+interior; on $\mathrm{CC}(1,2)$, $\mathrm{CC}(2,2)$, $\mathrm{CC}(2,3)$
+likewise; on $S$ and $S_2$ the pair is $(\tfrac12,\tfrac14)$ and the Max vertex
+has successors of classes $\mathrm M/$interior; on $G_8$ the pair is
+$(\tfrac35,\tfrac15)$ and the Max vertex has successors interior$/\mathrm M$.
+On $\mathrm{WD}(1,2,3)$ the free algorithm returns $=$, and indeed every value
+of the reduced game is $\tfrac12$ and no controlled vertex distinguishes
+values.
+\end{remark}
+
+\subsubsection*{The $\varepsilon$-order ladder}
+
+\begin{theorem}[The ladder, and its two ends]\label{thm:wo-eps-ladder}
+Let $\varepsilon$ be as in \Cref{def:wo-fragments}.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{(Equivalences.)} $\textsc{Ord}_\varepsilon$,
+  $\textsc{App}_{\varepsilon}$ and $\textsc{Gap}_{\varepsilon}$ are
+  polynomial-time interreducible up to a constant factor in $\varepsilon$:
+  \[
+   \textsc{Ord}_\varepsilon\Rightarrow\textsc{App}_{3\varepsilon/2},\qquad
+   \textsc{App}_\varepsilon\Rightarrow\textsc{Ord}_{3\varepsilon},\qquad
+   \textsc{Ord}_\varepsilon\Rightarrow\textsc{Gap}_{\varepsilon},\qquad
+   \textsc{Gap}_{\varepsilon}\Rightarrow\textsc{App}_{3\varepsilon}
+  \]
+  (so $\textsc{Ord}_\varepsilon\Rightarrow\textsc{Ord}_{9\varepsilon/2}$ around
+  the cycle, which is no loss, the ladder being monotone in $\varepsilon$).
+  The first and last use $O(\log(1/\varepsilon))$ adaptive queries per vertex on
+  games larger by $O(\log(1/\varepsilon))$ vertices; the second is one
+  computation and the third one query.
+\item \emph{(The equivalent end.)} For every fixed $\gamma\in(0,1]$, if
+  $\varepsilon(N)\le2^{-N^{\gamma}}$ then $\textsc{Ord}_\varepsilon$ is
+  target-equivalent, by a reduction making a single oracle call.
+\item \emph{(The polynomial end.)} If $\varepsilon(N)>1-2^{-(N-2)}$ --- in
+  particular if $\varepsilon\equiv1$ --- then
+  $\textsc{Ord}_\varepsilon$ is solved in $O(N^{3})$ arithmetic-free steps: the
+  preorder $Z_1\cup\{t_1\}\sqsupset(\text{everything else})\sqsupset
+  Z_0\cup\{t_0\}$ of \Cref{prop:qualitative} is $\varepsilon$-faithful.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) \emph{$\textsc{Ord}_\varepsilon\Rightarrow\textsc{App}_{3\varepsilon/2}$.}
+Fix $v$ and maintain a dyadic interval $[\ell,h]\ni w^\ast(v)$, initially
+$[0,1]$. Given $\ell<h$ with $h-\ell>3\varepsilon$, put $r:=(\ell+h)/2$,
+adjoin to $G$ a fresh average vertex $v'\to(v,v)$ and a chain of
+$\lceil\log_2(1/\varepsilon)\rceil+2$ average vertices whose head $c$ has
+$w^\ast(c)=r$ (the chain of \Cref{thm:compare-equivalence}; $r$ is dyadic of
+that bit-length), and query the oracle. Nothing old points at the new
+vertices, so no old value moves and the game stays stopping;
+$w^\ast(v')=w^\ast(v)$ by \Cref{lem:splice}(a). If the returned preorder has
+$v'\sqsupseteq c$ then $w^\ast(v)>r-\varepsilon$, since otherwise
+$w^\ast(c)-w^\ast(v')\ge\varepsilon$ would force $c\sqsupset v'$; set
+$\ell:=\max(\ell,r-\varepsilon)$. Otherwise $c\sqsupset v'$, so
+$w^\ast(v)<r+\varepsilon$; set $h:=\min(h,r+\varepsilon)$. Each round replaces
+the width $W$ by at most $W/2+\varepsilon$, so after
+$\lceil\log_2(1/\varepsilon)\rceil+2$ rounds $W\le3\varepsilon$ and the
+midpoint is within $3\varepsilon/2$ of $w^\ast(v)$. (The queries are on games
+of $N+O(\log(1/\varepsilon))$ vertices, where $\varepsilon$ is no larger, the
+function being nonincreasing.)
+
+\emph{$\textsc{App}_{\varepsilon}\Rightarrow\textsc{Ord}_{3\varepsilon}$.}
+Sort $\Vavg\cup\{t_0,t_1\}$ by $\hat w$, ties tied. If
+$w^\ast(x)-w^\ast(y)\ge3\varepsilon$ then
+$\hat w(x)-\hat w(y)\ge3\varepsilon-2\varepsilon=\varepsilon>0$, so $x$ is
+placed strictly above $y$.
+
+\emph{$\textsc{Ord}_\varepsilon\Rightarrow\textsc{Gap}_\varepsilon$.} Adjoin
+$m\to(t_0,t_1)$ and $v'\to(v,v)$ and query once: answer $1$ iff
+$v'\sqsupseteq m$. If $w^\ast(v)<\tfrac12-\varepsilon$ then
+$w^\ast(m)-w^\ast(v')>\varepsilon$ forces $m\sqsupset v'$, so the answer $1$
+implies $w^\ast(v)\ge\tfrac12-\varepsilon$; dually for $0$.
+
+\emph{$\textsc{Gap}_\varepsilon\Rightarrow\textsc{App}_{3\varepsilon}$.} Same
+binary search, with the query at $r$ implemented on the disjoint union of $G$,
+its dual $\bar G$ of \Cref{lem:duality} and the chain of value $r$, through the
+fresh average vertex $s\to(v,\bar c)$ with
+$w^\ast(s)=\tfrac12(1+w^\ast(v)-r)$ (\Cref{lem:duality}; $v$ and the chain
+head are not sinks, splicing them if necessary): the oracle's bit at $s$ is
+correct whenever $|w^\ast(v)-r|\ge2\varepsilon$, so the width obeys
+$W\mapsto W/2+2\varepsilon$, one stops at $W\le6\varepsilon$ and the midpoint
+is within $3\varepsilon$.
+
+(b) Let $(G,v_0)$ be an instance of \Cref{prob:main} on $n$ vertices with $a$
+average vertices, $n\ge7$. Build the stopping game $G_m$ and the threshold
+chain of value $\theta=\tfrac12-3/(8D)$, $D=2^{\lceil3a/2\rceil}$, of
+\Cref{thm:compare-equivalence}: there $\val_G(v_0)\ge\tfrac12$ if and only if
+$\val_{G_m}(v_0)\ge\theta$, and the two quantities differ by at least
+$1/(8D)=2^{-\lceil3a/2\rceil-3}\ge2^{-2n}$ (as $a\le n$ and $n\ge7$). Reduce; if $v_0$ or the chain head
+is deleted the instance is decided. Splice both to average vertices as in
+\Cref{prop:no-halving}(b) and pad with fresh average vertices $\to(t_0,t_1)$
+until the game has $N'\ge\lceil(2n)^{1/\gamma}\rceil$ vertices (pad by nothing
+if it is already that large; the game built so far has $O(n^{2})$ vertices, so
+$N'=\mathrm{poly}(n)$ for fixed $\gamma$). The pad vertices all have value
+$\tfrac12$ and none is a successor of anything old, so no value moves and the
+game stays stopping. Then
+$\varepsilon(N')\le2^{-(N')^{\gamma}}\le2^{-2n}$, $\varepsilon$ being
+nonincreasing, so the two spliced vertices
+are $\varepsilon$-separated unless equal, and a single query decides:
+$p'\sqsupseteq q'$ if and only if $\val_{G_m}(v_0)\ge\theta$. The converse
+direction is immediate: if \Cref{prob:main} is in $\mathsf P$ then $w^\ast$ is
+computable and its own order is returned.
+
+(c) By \Cref{lem:denominator-sharp} a nonzero value is at least $2^{-a}$ and a
+value below $1$ is at most $1-2^{-a}$, and $a\le N-2$. If
+$w^\ast(x)-w^\ast(y)\ge\varepsilon>1-2^{-(N-2)}\ge1-2^{-a}$ then $w^\ast(x)>1-2^{-a}$ and
+$w^\ast(y)<2^{-a}$, so $w^\ast(x)=1$ and $w^\ast(y)=0$, and the displayed
+preorder --- computed by \Cref{prop:qualitative} without arithmetic --- orders
+the pair correctly.
+\end{proof}
+
+\begin{remark}[What (b) and (c) leave]\label{rem:wo-ladder}
+The two ends are exponentially close to the two trivial ends of the range: the
+fragment is target-equivalent for $\varepsilon\le2^{-N^{\gamma}}$, every fixed
+$\gamma>0$ --- in particular for $\varepsilon=2^{-N^{0.01}}$, which is far
+above the $4^{-a}$ that the value gaps alone would suggest, the padding of (b)
+being what buys the exponent --- and it is polynomial only within $2^{-a}$ of
+$\varepsilon=1$. Between them nothing here decides, and the reason is exact:
+by (a) the whole ladder is the \emph{approximation} ladder, so an
+$\varepsilon$-order oracle at a larger $\varepsilon$ becomes usable only
+through a reduction that increases the gap carried by the instance, and
+\Cref{prop:wo-gate-lipschitz} below shows that the mechanism the structure
+theory offers for that --- plugging the instance into a context --- buys a
+factor $s$ for $s$ vertices and nothing more.
+\end{remark}
+
+\begin{proposition}[The gate Lipschitz bound, without
+admissibility]\label{prop:wo-gate-lipschitz}
+Let $H$ be a context on $s$ vertices with calls (\Cref{def:gate}), $G$ a
+stopping SSG with $p=\val_G(v_0)$, $q=\val_{G^{\mathrm{rev}}}(v_0)$, and
+suppose $H\langle G\rangle$ is stopping for one, hence (the gate actions having
+$(p,q)$-independent support) for every, pair in $(0,1)^{2}$. Then for
+$p,p'\in[\tfrac14,\tfrac34]$ and every $v\in V_H$
+\[
+  \bigl|\val_{H^{p',q}}(v)-\val_{H^{p,q}}(v)\bigr|\ \le\ \tfrac43(s+3)\,|p'-p|,
+\]
+and the same in $q$. This is the bound of \Cref{rem:no-amplification} with its
+admissibility hypothesis removed: the proof there needs only that the induced
+chain on $V_H$ is absorbing, which the composition being stopping already
+gives. The removal is not cosmetic. The one context that does amplify ---
+$\mathrm{RUIN}(K)$: states $1,\dots,K$, state $i$ a call with $t_1$-exit
+$i+1$ and $t_0$-exit $i-1$, state $0=t_0$, state $K+1=t_1$, start
+$\lceil K/2\rceil$ --- has its calls on a directed cycle and is \emph{not}
+admissible, while $\mathrm{RUIN}(K)\langle G\rangle$ is stopping and
+\[
+  \val\bigl(\mathrm{RUIN}(K)\langle G\rangle\bigr)
+  =\frac{1-r^{\lceil K/2\rceil}}{1-r^{K+1}},\qquad r=\frac{1-p}{p},
+\]
+whose derivative at $p=\tfrac12$ is $(K+1)/2$. So amplification of a gap
+$\delta$ to a constant is possible, costs $\Theta(1/\delta)$ context vertices,
+and the bound above is tight within a factor $\tfrac83$.
+\end{proposition}
+
+\begin{proof}
+A \emph{selection} assigns to every controlled vertex and every gate of
+$H^{p,q}$ one of its two actions; there are finitely many, each giving an
+absorbing chain (the supports do not depend on $p,q$, so
+\Cref{prop:qualitative} makes absorption a support property, and the
+composition is stopping) and hence a value $V_{\alpha}(p)$ that is a rational
+function of $p$ on $(0,1)$, with
+$\partial V_{\alpha}/\partial p=\sum_g N_g\Delta_g$, the sum over the gates
+whose selected action uses $p$, $N_g$ the expected number of visits and
+$\Delta_g$ the difference of the values at the gate's two exits (differentiate
+the first-passage decomposition $V=\sum_g N_g(\cdot)$). The value
+$\val_{H^{p,q}}(v)$ equals $V_\alpha(p)$ for the optimal selection, so it is
+continuous and piecewise rational in $p$, and on each maximal interval where
+one $\alpha$ is optimal its derivative is $\partial V_\alpha/\partial p$
+evaluated at the optimal chain; integrating over the finitely many pieces gives
+the Lipschitz bound from the pointwise one. Along the chain of an optimal
+$\alpha$ the process $M_t:=V_{\alpha}(X_t)$ is a bounded martingale absorbed in
+$\{0,1\}$; at a
+gate its increment is $+(1-p)\Delta_g$ with probability $p$ and $-p\Delta_g$
+with probability $1-p$, of conditional mean absolute value
+$2p(1-p)|\Delta_g|$, and at an average vertex $\tfrac12|\Delta_v|$. Integrating
+the crossing counts over the level as in \Cref{thm:energy} gives
+$\sum_v N_v\,\mathbb E|{\rm incr}_v|\le r/2+1$ with $r+1$ the number of
+distinct values of $V_{\alpha}$, at most $s+2$; hence
+$\sum_gN_g|\Delta_g|\le(s+3)/(4p(1-p))\le\tfrac43(s+3)$ on
+$[\tfrac14,\tfrac34]$, which is the pointwise bound used above. For $\mathrm{RUIN}$: the composition is stopping (each copy
+is left almost surely and the induced walk on $\{0,\dots,K+1\}$ is absorbed),
+and by \Cref{lem:gate} its value at state $i$ satisfies
+$x_i=(1-p)x_{i-1}+px_{i+1}$ with $x_0=0$, $x_{K+1}=1$, which is the displayed
+ruin probability; differentiating at $p=\tfrac12$, where $x_i=i/(K+1)$, gives
+$(K+1)/2$.
+\end{proof}
+
+\begin{corollary}[A coarse order oracle is blind on
+compositions]\label{cor:wo-context-blind}
+Let $H$ be a context on $s$ vertices, $\varepsilon\in(0,1)$ and
+$\rho:=3\varepsilon/(16(s+3))$. Let $G,G_0$ be stopping games whose gate data
+satisfy $|p-p_0|+|q-q_0|\le\rho$, all four numbers in $[\tfrac14,\tfrac34]$.
+Then the assignment
+\[
+  \mathrm{rk}(x):=\Bigl\lfloor\tfrac{2}{\varepsilon}\val_{H^{p_0,q_0}}(x)\Bigr\rfloor\ (x\in V_H),
+  \qquad
+  \mathrm{rk}(u):=\Bigl\lfloor\tfrac{2}{\varepsilon}\val_{H\langle G\rangle}(u)\Bigr\rfloor\ (u\ \text{inside a copy}),
+\]
+is an $\varepsilon$-faithful order of $H\langle G\rangle$ whose restriction to
+$V_H$ depends only on $(H,p_0,q_0)$. Hence an adversarial
+$\textsc{Ord}_\varepsilon$ oracle may answer every composition query
+identically for all $G$ in a window of width $\rho$, and a reduction that
+reaches its input only by composition and reads only the order induced on the
+context cannot separate two instances whose values differ by less than
+$3\varepsilon/(16(s+3))$ --- while the instances of \Cref{prob:main} differ by
+$2^{-a}$.
+\end{corollary}
+
+\begin{proof}
+By \Cref{prop:wo-gate-lipschitz}, $|\val_{H^{p_0,q_0}}(x)-\val_{H\langle
+G\rangle}(x)|\le\tfrac43(s+3)\rho=\varepsilon/4$ for $x\in V_H$
+(\Cref{lem:gate} identifies $\val_{H\langle G\rangle}$ on $V_H$ with
+$\val_{H^{p,q}}$). Write $w$ for $\val_{H\langle G\rangle}$. If
+$w(x)-w(y)\ge\varepsilon$ with $x,y\in V_H$ then the $p_0$-values differ by at
+least $\varepsilon/2$ and the floors of $2\cdot(\cdot)/\varepsilon$ differ; if
+$x,y$ are both inside copies the floors differ because
+$2w(x)/\varepsilon\ge2w(y)/\varepsilon+2$; and if $x\in V_H$ and $u$ is inside
+a copy, $\mathrm{rk}(x)$ differs from $\lfloor2w(x)/\varepsilon\rfloor$ by at
+most $1$, which the slack of $2$ absorbs. In all cases
+$\mathrm{rk}(x)>\mathrm{rk}(y)$.
+\end{proof}
+
+\begin{remark}[The map, and what is open]\label{rem:wo-map}
+Collecting: \textsc{Any} is linear (\Cref{thm:wo-free-pair});
+\textsc{Any}$_S$ for every named $S$ with $|S|\ge2$, the comparison of two
+named vertices (\Cref{prop:no-halving}(b)), \textsc{Top} (\Cref{thm:top}),
+one bit per round (\Cref{thm:decide-one-bit}), a bracket at a named vertex
+(\Cref{prop:bracket}(d)), a guide (\Cref{rem:bsi}), the order on the successor
+set $B$ of \Cref{rem:order-unique}(ii) and $\textsc{Ord}_\varepsilon$ for
+$\varepsilon\le2^{-N^{\gamma}}$ are all target-equivalent;
+$\textsc{Ord}_\varepsilon$ for $\varepsilon>1-2^{-(N-2)}$ is the qualitative
+sweep.
+Three questions the map leaves open, stated exactly.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{Chains.} Is there a polynomial-time algorithm which, given a
+  reduced stopping SSG, outputs three average vertices $x,y,z$ with
+  $w^\ast(x)>w^\ast(y)>w^\ast(z)$ or asserts correctly that no such triple
+  exists? (Two are free by \Cref{thm:wo-free-pair}; the game
+  $c_1\to(t_1,d)$, $c_2\to(t_0,d)$, $d\to(c_1,c_2)$ with
+  $w^\ast=(\tfrac34,\tfrac14,\tfrac12)$ shows the free layer need not contain
+  the triple.)
+\item \emph{The middle of the ladder.} Is $\textsc{Ord}_\varepsilon$
+  target-equivalent for $\varepsilon=N^{-1}$, or for $\varepsilon=\tfrac14$?
+  By \Cref{thm:wo-eps-ladder}(a) this is exactly the question whether
+  \Cref{prob:main} reduces in polynomial time to its own promise version with
+  gap $\varepsilon$.
+\item \emph{Amplification outside composition.} Is there a polynomial-time map
+  sending a stopping $G$ with two vertices $p,q$ to a stopping $G'$ with two
+  average vertices $p',q'$ such that
+  $\operatorname{sign}(w^\ast(p')-w^\ast(q'))=\operatorname{sign}(w^\ast(p)-w^\ast(q))$
+  and $|w^\ast(p')-w^\ast(q')|\ge1/\mathrm{poly}(|G'|)$ whenever the left side
+  is nonzero? \Cref{prop:wo-gate-lipschitz} refutes every such map that reaches
+  $G$ only through composition.
+\end{enumerate}
+\end{remark}

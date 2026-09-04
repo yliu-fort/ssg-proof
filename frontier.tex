@@ -141,8 +141,9 @@ for a complementary reason, to order the two successors on a seven-vertex game
 ordering the two successors is a different test from deciding the vertex,
 the two readings being incomparable, and that on that game and on the
 whole family behind it the certificate decides the vertex at once, while
-on the ten-vertex $R$ only the pair reading does and a seven-vertex game
-stalls both (\Cref{rem:own-stall}). Because those two failures are
+on the ten-vertex $R$ only the pair reading decides the vertices outside
+the free seed, and a seven-vertex game keeps one vertex silent under all
+three readings until two others are decided (\Cref{rem:own-stall}). Because those two failures are
 complementary, we couple the slack calculus and the transport programme into a feedback loop
 (\Cref{sec:hybrid}): the non-convex halves of the controlled rows, which
 a linear programme must drop, are exactly what the slack clauses supply,
@@ -3779,8 +3780,8 @@ calculi among them are not evaluation algorithms, so for them the
 comparison is of different quantities), and a family of exponential
 bottom-antipodal height on polynomially many vertices
 (\Cref{rem:blowup-realise}) would defeat all-switches without being an
-informational obstacle. The round-$17$ query-model route, which proved
-this; its auditors reproduced Algorithm E on every family named, on the
+informational obstacle. The round-$17$ query-model route proved this,
+and its auditors reproduced Algorithm E on every family named, on the
 $136$-, $194$- and $344$-vertex games of the repository ($5$, $5$ and $4$
 queries) and on $300$ random two-player games, always within $|C|+2$.
 \end{remark}
@@ -6353,10 +6354,9 @@ not closed under one of those steps, against \Cref{lem:pinned-upclosed}.
 \begin{corollary}[Pinned on pinned does not reach $B^{3}$]\label{cor:pinned-no-doubling}
 Call a game \emph{doubly pinned} when it is a pinned extension of a block
 that is itself a nondegenerate stopping pinned extension whose two pin
-rows read only each other and constants, so neither the new outer pair
-nor the drive --- the shape one obtains by pinning once more on top of
-\Cref{prop:b3-outer}, whose inner pin rows read only $c_4$, $c_5$ and
-$t_1$. No doubly
+rows read only each other and constants, so that they read neither the
+new outer pair nor the drive --- the shape of \Cref{prop:b3-outer} itself,
+whose inner pin rows read only $c_4$, $c_5$ and $t_1$. No doubly
 pinned game has improvement outmap $B_\varphi(B^{2},z)$, for any readout
 $\varphi$, when $z$ has a nonzero component on $(\alpha_2,\beta_2)$. Since
 the height of $B_\varphi(B^{2},z)$ is at most $10+2+h_{B^{2}}(4\oplus z)$
@@ -6369,8 +6369,9 @@ $B^{2}$ all differ from its sink $4$ in the $\alpha_2$ bit, every doubling
 translation --- $z\in\{8,10,24,26\}$, and in particular the $\alpha_2$ of
 $B^{3}=B(B^{2})$ (\Cref{rem:blowup-measured}) --- is excluded: the third
 level of height $22$ is out of the shape's reach, the best height a doubly
-pinned $7$-cube can have is $10+2+\max\{h_{B^{2}}(4\oplus z):z\
-\text{purely inner}\}=16$, and \Cref{prop:b3-outer} realises $12$.
+pinned $7$-cube whose outmap is a blow-up $B_\varphi(B^{2},z)$ can have is
+$10+2+\max\{h_{B^{2}}(4\oplus z):z\ \text{purely inner}\}=16$, and
+\Cref{prop:b3-outer} realises $12$.
 \end{corollary}
 
 \begin{proof}
@@ -6493,16 +6494,18 @@ nothing follows from a failure about other constructions; note that
 --- $c(v_1)=z$ off the first block's sink is what makes the two heights
 add rather than maximise --- and that it grows only linearly. A datum on the negative side: the linear-programming orientation of the Klee--Minty cube, on which
 Dantzig's rule is exponential, has bottom-antipodal height exactly $d$ in
-every dimension $d\le12$, exact arithmetic again. Two oracles, finally:
-an algorithm that reads only the orientation (the strictly switchable
-set at each queried strategy) is weaker than one that reads the values ---
-already at $m=3$, where every acyclic unique sink orientation is realised
-(\Cref{prop:m3-realised,prop:m3-one-min}) and naming the sink of an
+every dimension $d\le12$, exact arithmetic again. Two oracles, finally,
+separated by nothing here: an algorithm that reads only the orientation
+(the strictly switchable set at each queried strategy) against one that
+reads the values. At $m=3$, where every acyclic unique sink orientation is
+realised (\Cref{prop:m3-realised,prop:m3-one-min}), naming the sink of an
 unknown one of the $728$ from out-set queries alone costs exactly $4$ in
 the worst case (exact minimax, \texttt{scripts/round17-verify/dout3.py};
 $3$ once the algorithm is told which realisation's skeleton it faces, the
-route's correctness auditor), while by \Cref{thm:eval-queries} $|C|+2$
-value queries always suffice; whether
+route's correctness auditor), while by \Cref{thm:eval-queries} $|C|+2\ge5$
+value queries always suffice, so on that data the orientation oracle is the
+cheaper of the two (the round-$18$ paper audit, correcting a claim of the
+opposite here); whether
 the outmap-query complexity of the SSG-realisable orientations is
 superlinear is open (for arbitrary unique sink orientations a
 superlinear deterministic bound is Schurr and Szab\'o's, from memory,
@@ -7992,7 +7995,8 @@ re-verified here from its game file,
 \texttt{scripts/round16-verify/ST1\_GAME.json}: no tied incidence, a
 unique sink orientation, acyclic, height $12$; $\mathrm{ST}(2)$'s game file
 is not recorded here, and its run of $24$ was recomputed through its exact
-first-passage normal form over all $2^{14}$ starts, \texttt{st2\_nf.py}). The construction is the first
+first-passage normal form over all $2^{14}$ starts,
+\texttt{scripts/round16-verify/st2\_nf.py}). The construction is the first
 family of one-player stopping SSGs whose all-switches run exceeds $|\Vmax|$ by a
 constant factor: the previous record families, $\mathrm{RC}(k)$ and the ladder, both
 have $L=|\Vmax|$, and \Cref{cor:gate}'s attained example has $L=|\Vmax|+2$.
@@ -11267,9 +11271,10 @@ orientation (\Cref{def:profile-orientation}) --- both players switching at
 once every vertex whose owner strictly prefers its other action, the
 two-player form of all-switches --- cycles on the instance above: flipping
 the printed out-sets gives $(0,0,1)\to(1,0,0)\to(0,1,0)\to(0,0,1)$, a
-directed triangle, while the other two profiles converge to the sink. So
+directed triangle, while $(1,1,1)$ goes straight to the sink and the
+remaining three profiles enter the cycle, six of eight in all. So
 the attribution to Condon above is now an owned instance (the round-$17$
-order-lattice route, recomputed here from a $23$-vertex game realising the
+order-lattice route, recomputed here from a $25$-vertex game ($23$ non-sinks) realising the
 normal form, \texttt{scripts/round17-verify/OL3\_GAME.json}). With at most
 two controlled vertices the antipodal walk cannot cycle: a cycle through
 all four profiles of the square would flip one coordinate per step, leaving
@@ -11284,7 +11289,7 @@ values'' of \Cref{rem:order-unique} becomes after one step (the decode
 then compares the ranks of the two successors, which are ordered as their
 values are), so that iteration cycles too. Without that separation the
 iteration can cycle even with two controlled vertices, since the decode
-then looks one controlled step ahead: on the eight-vertex stopping game
+then looks one controlled step ahead: on the ten-vertex stopping game (eight non-sinks)
 $v\to(u,p_4)$, $u\to(p_2,p_7)$, $p_2\to(t_0,p_5)$, $p_3\to(p_5,p_4)$,
 $p_4\to(v,p_6)$, $p_5\to(t_1,t_0)$, $p_6\to(v,t_0)$, $p_7\to(p_3,v)$ with
 $v\in\Vmax$, $u\in\Vmin$, it alternates between the profiles $(1,0)$ and
@@ -11970,7 +11975,9 @@ $x(v)=x(\text{chosen successor})=D(v)$, hence $x(v)=\max_ix(v^{(i)})$ at
 $\Vmax$ and $\min_i$ at $\Vmin$, so $Tx=x$ and $x=w^\ast$
 (\Cref{thm:contraction}). The certificate of \Cref{thm:order-determines}
 is therefore unique --- \textsc{SSG-Value} lies in $\mathrm{UP}\cap\mathrm{coUP}$
-with a witness of $O(a\log a)$ bits --- which changes nothing
+with a witness of $O(a\log a)$ bits, a membership known before this
+document (from memory, unchecked), the witness here being the order ---
+which changes nothing
 algorithmically (the remark after \Cref{prop:bracket}); iterating
 ``decode, then re-sort'' from an arbitrary preorder is not an algorithm
 either (\Cref{rem:cyclic-antipodal}).
@@ -13186,7 +13193,9 @@ and $1$ otherwise, one round of the clauses above applied to $\chi_R$ and
 rounded up to $\{0,1\}$ is the indicator of $\mathcal F(R)$ with the
 diagonal adjoined, $\mathcal F$ the operator of \Cref{def:simorder} --- in
 $\{0,1\}$ a minimum is $0$ iff some argument is, a maximum or a mean iff
-both are, which is exactly clauses (i)--(iii) --- and the greatest fixed
+both are, which is exactly clauses (i)--(iii) provided both composites
+of the two one-sided clauses are among the clauses and the minimum is
+taken, as the calculus is run --- and the greatest fixed
 point of that iteration from the all-related relation is $\preceq$. So
 \Cref{def:simorder} is this calculus over $\{0,1\}$ read coinductively,
 and \Cref{def:slack} is the same clause set over the dyadic grades read
@@ -14904,11 +14913,12 @@ Joining $W_{14}$ to its dual under the gadget of
 \Cref{thm:compare-equivalence} makes the level-one interval at the root
 $[\tfrac9{20},\tfrac{11}{20}]$, straddling the threshold: the two-sided
 failure the second paragraph above asks for, on a $27$-vertex game that is
-two one-player games. What the hierarchy does prove --- $\max_{R_j}x=w^\ast$
-once $j\ge\min(|\Vmax|,\rho_{\max}+1)$ and $\min_{R_j}x=w^\ast$ once
-$j\ge\min(|\Vmin|,\rho_{\min}+1)$, with $\rho$ the number of controlled
-vertices of that player whose successor difference changes sign on $Q(G)$
---- is dominated by enumerating the $2^{\rho}$ choices of the smaller side
+two one-player games. What the route reported the hierarchy to give ---
+$\max_{R_j}x=w^\ast$ once $j\ge\min(|\Vmax|,\rho_{\max}+1)$ and
+$\min_{R_j}x=w^\ast$ once $j\ge\min(|\Vmin|,\rho_{\min}+1)$, with $\rho$ the
+number of controlled vertices of that player whose successor difference
+changes sign on $Q(G)$ --- it did not prove, and it is recorded here as a
+claim; it would in any case be dominated by enumerating the $2^{\rho}$ choices of the smaller side
 and solving one-player games, so no class comes of it, and exactness at
 any fixed level is target-equivalent and is not conjectured.
 \end{remark}
@@ -15009,8 +15019,8 @@ returns $+\tfrac18$ in both directions while $\operatorname{Sep}(v,b)=-\tfrac18$
 decides $v$ outright, and on the family $S_r$ of \Cref{thm:transport-barrier}
 the pair test returns $2^{-r-2}>0$ while $\operatorname{Sep}(v,b_0)=-2^{-r-2}<0$
 for every $r$, verified exactly for $r=2,\dots,5$. In the other direction, on
-the ten-vertex game $R$ of \Cref{prop:own-stall} every own-successor
-separator is $0$ while the non-strict pair test ---
+the ten-vertex game $R$ of \Cref{prop:own-stall} every clause-(ii)
+separator is $0$, clause (i) firing only at the vertex the seed pins, while the non-strict pair test ---
 $\operatorname{Sep}(v^{(0)},v^{(1)})\le0$ or
 $\operatorname{Sep}(v^{(1)},v^{(0)})\le0$, sound by \Cref{thm:transport-sound}
 and naming an optimal successor --- decides all three value-distinguishing
@@ -15033,8 +15043,9 @@ the slack calculus whether $\Delta_k(v,v^{(i)})\le0$ or
 $\Delta_k(v^{(i)},v)<0$; note that (i) is non-strict, and so is the pair test's
 $\operatorname{Sep}(v^{(0)},v^{(1)})\le0$; both decide. For \Cref{def:transport} only (ii) is
 available, in the form $\operatorname{Sep}(v,v^{(i)})<0$ displayed above: the
-Max row makes $\operatorname{Sep}(v^{(i)},v)\ge0$ always, so (i) can never
-fire there. Both directions dualise at $\Vmin$.
+Max row makes $\operatorname{Sep}(v^{(i)},v)\ge0$ always, so (i) fires there
+exactly when the seeded polytope forces $x(v)=x(v^{(i)})$, as the free seed
+does at every controlled vertex of $Z_0\cup Z_1$. Both directions dualise at $\Vmin$.
 
 We accordingly re-examined the other negative results of this document against
 this test, in both directions, and they survive. On $G_8$ the simulation
@@ -15070,10 +15081,13 @@ $w^\ast=(\tfrac12,\tfrac12,\tfrac12,\tfrac34,\tfrac12,\tfrac12,0,\tfrac12)$,
 $Z_0=\{6,t_0\}$ and $Z_1=\{t_1\}$, the value-distinguishing controlled vertices
 are $1$, $4$ and $6$, and the own-successor test of \Cref{rem:own-successor},
 run over $Q(R;L,U)$ with the free seed $U:=0$ on $Z_0$ and $L:=1$ on $Z_1$,
-returns $0$ at all six of the relevant separators. So that reading decides no
-controlled vertex; the non-strict pair test does decide all three
-(\Cref{rem:own-successor}), so $R$ stalls the own-successor reading only,
-and the seven-vertex game of \Cref{rem:own-stall} stalls both.
+returns $0$ at all six clause-(ii) separators, and its clause (i) fires only
+at $6$, which the free seed $Z_0$ already pins to $0$. So that reading decides
+no controlled vertex outside the free seed; the non-strict pair test does
+decide all three (\Cref{rem:own-successor}), so $R$ stalls the own-successor
+reading only, at its two value-distinguishing vertices outside $Z_0$, and the
+seven-vertex game of \Cref{rem:own-stall} keeps one vertex silent under both
+readings.
 \end{proposition}
 
 \begin{proof}
@@ -15101,7 +15115,11 @@ $\le0$ by the Min rows and both met at the second point; at the Max vertex $4$
 they are $\max\{x(0)-x(4)\}$ and $\max\{-x(4)\}$, both $\le0$ by the Max rows
 and both met at the first; and at the Min vertex $6$ they are
 $\max\{x(6)-x(0)\}$ and $\max\{x(6)\}$, and $x(6)=0$ throughout. None is
-negative, so no vertex is decided.
+negative, so clause (ii) decides no vertex; clause (i) ---
+$\max\{x(v)-x(v^{(i)})\}\le0$ at a Min vertex --- fires at $6$ alone, where
+$x(6)=0=x(t_0)$ throughout: its separators are $\tfrac12,\tfrac34$ at $1$,
+$1,1$ at $4$ and $\tfrac12,0$ at $6$ (the round-$18$ paper audit; recomputed,
+\texttt{scripts/round18-verify/own\_r.py}).
 \end{proof}
 
 \begin{remark}\label{rem:own-stall}
@@ -15109,17 +15127,27 @@ negative, so no vertex is decided.
 certificate: read as the non-strict pair test, the same programme decides
 every value-distinguishing vertex of $R$ (\Cref{rem:own-successor}). What
 \Cref{prop:transport-stalls} was originally asserting --- that the transport
-certificate alone, read in both ways and seeded with everything that is
-free, is not a decision rule --- is restored by a smaller game: on the
+certificate alone, read in all three ways and seeded with everything that is
+free, is not a decision rule --- is \emph{not} restored by the smaller game
+below, which is a silence at one vertex and not a stall of the rule: on the
 stopping SSG with $\Vavg=\{0,2\}$, $\Vmin=\{1\}$, $\Vmax=\{3,4\}$,
 $0\to(2,t_1)$, $1\to(3,t_1)$, $2\to(t_0,0)$, $3\to(0,t_0)$, $4\to(1,2)$,
 $w^\ast=(\tfrac23,\tfrac23,\tfrac13,\tfrac23,\tfrac23)$, $Z_0=\{t_0\}$,
 $Z_1=\{t_1\}$, the average rows pin $x(0)=\tfrac23$ and $x(2)=\tfrac13$, and
-at the value-distinguishing Max vertex $4$ both own-successor separators
+at the value-distinguishing Max vertex $4$ both clause-(ii) separators
 are $0$ (attained at $x(4)=x(1)=\tfrac23$ and at $x(4)=x(2)=\tfrac13$,
-$x(1)=0$) while $x(1)-x(2)$ ranges over $(-\tfrac13,\tfrac23)$, so the pair
-test is silent as well; vertices $1$ and $3$ are decided (the round-$17$
-convex-lift audit, recomputed here). The mechanism of the stall is visible
+$x(1)=0$), the clause-(i) separators are $1$ and $\tfrac23$, and $x(1)-x(2)$
+ranges over $[-\tfrac13,\tfrac23]$, so all three readings are silent there;
+but in the same round vertex $3$ is decided by clause (ii)
+($\operatorname{Sep}(3,t_0)=-\tfrac23$) and vertex $1$ by the pair test
+($\operatorname{Sep}(3,t_1)=0$), and once those two are retyped as in
+\Cref{thm:decide-one-bit} the certificate decides $4$ as well
+($\operatorname{Sep}(4,2)=-\tfrac13$): the rule, iterated, solves the game
+in two rounds, and a stall proper --- every reading silent at every
+value-distinguishing vertex of a stopping game --- is exhibited nowhere in
+this document (the round-$17$ convex-lift audit found the game, the
+round-$18$ paper audit its two decided vertices; recomputed,
+\texttt{scripts/round18-verify/own\_r.py}). The mechanism of the silence is visible
 in the proof of \Cref{prop:own-stall} and is the same
 non-convexity the whole section turns on. At a Min vertex $Q(G)$ imposes only
 $x(v)\le x(v^{(i)})$, so $x(v)$ can be pushed \emph{down} to touch either
@@ -15208,9 +15236,9 @@ certificate decides $v$ in one linear program. The complementarity recorded
 above is real and is about the pair test. A stall of the own-successor test
 does exist, but it takes a different instance: \Cref{prop:own-stall} exhibits
 one, on ten vertices, at which that test seeded with $Z_0$ and $Z_1$ decides
-nothing --- while the pair test decides everything there, the two readings
-being incomparable --- and \Cref{rem:own-stall} exhibits a seven-vertex game
-that stalls both.
+nothing outside the seed --- while the pair test decides everything there,
+the two readings being incomparable --- and \Cref{rem:own-stall} exhibits a
+seven-vertex game with one vertex silent under both.
 \end{remark}
 
 
@@ -15984,8 +16012,8 @@ $\Lambda(P_k)(x,y)\le0$ by \Cref{lem:ratio-sign} and setting $\Delta(x,y):=0$
 preserves the invariant at that entry; symmetrically in the other
 direction.
 
-The last sentence is the reporting rule of \Cref{thm:convex-barrier-both} applied to a
-state satisfying the invariant.
+The last sentence is the reporting rule --- the three readings of
+\Cref{rem:own-successor} --- applied to a state satisfying the invariant.
 \end{proof}
 
 \begin{remark}\label{rem:convex-barrier-both}
@@ -16418,8 +16446,8 @@ tested. The multiplicative calculus of \Cref{def:ratio} is the one
 propagating mechanism the family does not stall: with both clauses of
 \Cref{rem:own-successor} it fires at $v_0$ through clause~(ii),
 $R_k(d_1,v_0)<1$, at rounds $12,22,39,74,141$ at $s=4$ ($e=1,\dots,5$)
-and $10,16,26,44$ at $s=3$ ($e=1,\dots,4$) --- about twice the hybrid's
-count, doubling with it, and far below $M2$'s
+and $10,16,26,44$ at $s=3$ ($e=1,\dots,4$) --- between two and three times
+the hybrid's count, doubling with it, and far below $M2$'s
 (computed twice, from two independent implementations of \Cref{def:ratio}).
 At $v_1$ and $v_2$ the hybrid never fires, by \Cref{thm:cv-lower} itself.
 Against this, the
@@ -17073,7 +17101,9 @@ $N=105$, $99$, $79$ ($93$, $144$, $49$ rounds). Both audits rebuilt the
 family from the definition and reproduced all of it. Here, with the
 harness's own implementations of the calculi seeded with $Z_0,Z_1$ and
 both clauses of \Cref{rem:own-successor} at every controlled vertex
-(\texttt{scripts/round17-verify/bc\_light.py}, \texttt{bc\_m1.py}): on
+(\texttt{scripts/round17-verify/bc\_light.py}, \texttt{bc\_m1.py}, on the
+game files \texttt{BC\_\{2,3,4\}\_5.json} archived there, with the harness
+of \texttt{scripts/harness/}): on
 $\mathrm{BC}(2,5)$ the slack calculus first fires at $v_0$ at round $39$
 and its closure at round $21$, both by clause (ii), the ratio calculus
 never within $40$ rounds; on $\mathrm{BC}(3,5)$ and $\mathrm{BC}(4,5)$
@@ -17623,10 +17653,11 @@ attaining the one-player ceiling at $m\le4$
 the slack, transitive, transport and hybrid mechanisms for a proved
 $2^{\Omega(N)}$ rounds while the seeded calculus and the simulation
 preorder decide it at once (\Cref{thm:wedge-proved,rem:wedge}); beyond it,
-$\mathrm{BC}(e,s)$ of \Cref{sec:bc} keeps the simulation preorder and every
-propagation mechanism, in both registers and in any combination, silent
-for a proved $2^{\Omega(N)}$ operator applications at its one
-value-distinguishing vertex while one policy evaluation decides it
+$\mathrm{BC}(e,s)$ of \Cref{sec:bc} keeps every propagation mechanism, in
+both registers and in any combination, silent for a proved
+$2^{\Omega(N)}$ operator applications at its one value-distinguishing
+vertex, the simulation preorder silent outright, and their combination
+silent as long by measurement, while one policy evaluation decides it
 (\Cref{thm:bc-lower}), so what is exponentially separated there is the
 propagation side from one linear solve.
 
@@ -17691,8 +17722,8 @@ vertex the row $x(v)\ge x(v^{(i)})$ is already in $Q(G)$, so a negative
 $\operatorname{Sep}(v,v^{(i)})$ decides $v$ outright, and it is negative on
 every instance in question; the two readings are incomparable, the
 own-successor separators vanishing on $R$ of \Cref{prop:own-stall} where the
-pair test decides, and a seven-vertex game stalls both
-(\Cref{rem:own-stall}).
+pair test decides, and a seven-vertex game keeps one vertex silent under
+both until two others are decided (\Cref{rem:own-stall}).
 
 Since the two failures are complementary, the two mechanisms are coupled
 in \Cref{sec:hybrid}, and the coupling is a feedback loop rather than a
