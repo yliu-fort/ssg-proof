@@ -5778,7 +5778,8 @@ translate $B^{1}(\cdot\oplus e_2)=(7,4,5,2,0,1,3,6)$, exactly. Off the
 layer $(0,0)$ the drive $t$ ranges over $[0,0.3476\ldots]$, beyond the
 window in which the frozen block still has outmap $B^{1}$ (measured: the
 block has $B^{1}$ on a grid up to $0.186$ and the translate on a window
-round $0.6145$ with fences $0.5802\ldots$ and $0.6222\ldots$), so the other
+round $0.6145$ with fences $0.5802\ldots$ and $0.6222\ldots$; the exact
+fences are in \Cref{rem:pinned-escape}), so the other
 three layers realise $B^{1}$ through the feedback between $y_{c_5}$ and
 the inner values and not as a frozen system. \Cref{lem:layer-order} says
 why the pinned layer can sit above the others at all, and the one-player
@@ -6072,6 +6073,210 @@ no incidence is tied, the outmap is the displayed orientation, a unique sink
 orientation, acyclic, of height $12$, and the value vector increases at every
 vertex along the run.
 \end{proposition}
+
+The round-$17$ realisation-space route wrote down the shape shared by
+\Cref{prop:b3-outer} and by the outer pair of \Cref{prop:b2-realised}, proved
+exactly when a game of that shape realises one blow-up level, and proved
+that the shape cannot be iterated: pinned on top of pinned, it cannot double.
+Like \Cref{prop:tstar} and \Cref{thm:deformed-flat} this closes a
+construction avenue and is not a barrier in the sense of \Cref{sec:gap}; it
+covers none of the mechanisms M1--M6 or \Cref{def:bsi}.
+
+\begin{definition}[Driven blocks and the pinned shape]\label{def:pinned}
+A \emph{driven block} $\mathfrak B$ is a harmonic normal form on Max
+vertices $x_1,\dots,x_m$ and $k$ Min vertices whose rows may read, with
+nonnegative weights, one external coordinate $\beta$ (the \emph{drive});
+frozen at $y_\beta=t$ it is a stopping game with improvement outmap
+$s_{\mathfrak B}(t)$ on the $m$-cube. Its \emph{pinned extension} by
+$(A,A',q_A,q_B,R_\alpha,R_\beta)$ --- $A,A'\in(0,1)$, $q_A,q_B\ge0$,
+$R_\alpha,R_\beta$ substochastic affine readouts of the block's values ---
+is the game on $C\cup\{\alpha,\beta\}$ with $\alpha,\beta\in\Vmax$ and
+\[
+ \alpha:\ (0)\ Ay_\beta+q_A,\quad(1)\ R_\alpha;\qquad
+ \beta:\ (0)\ A'y_\alpha+q_B,\quad(1)\ R_\beta,
+\]
+no row of $\mathfrak B$ reading $\alpha$. Put $\Theta_u:=(Aq_B+q_A)/(1-AA')$
+and $\Theta_w:=A'\Theta_u+q_B$. The game of \Cref{prop:b3-outer} is the
+pinned extension of the level-two game with $A=\tfrac{1021}{1024}$,
+$A'=\tfrac{1023}{1024}$, $q_A=\tfrac1{512}$, $q_B=0$, and the level-two
+game is itself a pinned extension of its inner block $\{c_1,c_2,c_3,c_6\}$
+by the pair $(c_4,c_5)$ with $(A,A',q_A,q_B)=(\tfrac{502}{512},\tfrac{509}{512},\tfrac8{512},0)$
+(\Cref{rem:b2-anatomy}); that inner block, whose only closed two-cycle
+would have to lie among $c_1,c_2,c_3$ and does not, is not itself pinned.
+\end{definition}
+
+\begin{proposition}[The level theorem for the pinned shape]\label{prop:pinned-level}
+Let $G$ be a nondegenerate stopping pinned extension. On the layer
+$(\sigma_\alpha,\sigma_\beta)=(0,0)$ one has $y_\alpha=\Theta_u$ and
+$y_\beta=\Theta_w$ at every inner strategy $\sigma$, so the block is frozen
+at the drive $\Theta_w$ there; on the other layers $y_\beta=A'R_\alpha+q_B$
+at $(1,0)$ and $y_\beta=R_\beta$ at $(0,1),(1,1)$, read at that layer's
+block values. Writing $a:=R_\alpha$, $b:=R_\beta$ at the layer's block
+values, the improvement outmap of $G$ is $B_\varphi(s,z)$ of
+\Cref{prop:blowup-readout} if and only if, for every inner $\sigma$,
+\begin{align*}
+ &\text{(C1)}\quad a<\Theta_u \ \text{ at } L\in\{(0,0),(1,0)\}; &
+ &\text{(C2)}\quad b<\Theta_w \ \text{ at } L\in\{(0,0),(0,1)\};\\
+ &\text{(C3)}\quad a-Ab-q_A>0\iff\varphi(\sigma)=1 \ \text{ at } L\in\{(0,1),(1,1)\}; &
+ &\text{(C4)}\quad b-A'a-q_B>0\iff\varphi(\sigma)=0 \ \text{ at } L\in\{(1,0),(1,1)\};
+\end{align*}
+and (C5) the block's outmap at that layer's drive is $s(\sigma\oplus z)$ at
+$\sigma$ on the layer $(0,0)$ and $s(\sigma)$ on the other three. With
+$\Phi:=a-Ab-q_A$ and $\Psi:=b-A'a-q_B$, (C1) is $\Phi+A\Psi<0$ and (C2) is
+$\Psi+A'\Phi<0$, so the outer part is the demand that one difference of two
+substochastic readouts read $\varphi$ with a margin; and the drives off the
+layer $(0,0)$ lie strictly below $\Theta_w$ (\Cref{lem:layer-order}, and
+directly from (C1), (C2) at the layers $(1,0)$, $(0,1)$).
+\end{proposition}
+
+\begin{proof}
+Freezing the outer pair at $(0,0)$ leaves $y_\alpha=Ay_\beta+q_A$,
+$y_\beta=A'y_\alpha+q_B$, whose unique solution is $(\Theta_u,\Theta_w)$,
+independent of the block since no block row reads $\alpha$; at $(1,0)$,
+$y_\alpha=R_\alpha$ and $y_\beta=A'R_\alpha+q_B$; at $(0,1)$ and $(1,1)$,
+$y_\beta=R_\beta$. Write $G_\alpha=1$ when action $1$ of $\alpha$ is the
+better one at the current values, likewise $G_\beta$; $\alpha$ is switchable
+iff $G_\alpha\ne\sigma_\alpha$. The table of \Cref{thm:blowup}, with
+$\varphi$ in place of the parity, says layer by layer
+$G_\alpha=\sigma_\beta\wedge[\varphi=1]$ and
+$G_\beta=\sigma_\alpha\wedge[\varphi=0]$. Substituting the four layers'
+values turns these eight demands into (C1)--(C4): at $(0,0)$ and $(1,0)$
+the $\alpha$-comparison is $a\lessgtr\Theta_u$ in both cases, since
+$a<A(A'a+q_B)+q_A$ iff $a(1-AA')<Aq_B+q_A$; at $(0,1)$ and $(1,1)$ it is
+$a\lessgtr Ab+q_A$; dually for $\beta$. The inner coordinates give (C5),
+the outmap of a block vertex being read at the block's values, which by
+\Cref{lem:readout} are those of the block frozen at the layer's drive. The
+last clauses: $\Phi+A\Psi=(1-AA')(a-\Theta_u)$ and
+$\Psi+A'\Phi=(1-AA')(b-\Theta_w)$; and (C1) gives $A'a+q_B<\Theta_w$, (C2)
+gives $b<\Theta_w$.
+\end{proof}
+
+\begin{lemma}[On the pinned layer an outer switchable set is up-closed]\label{lem:pinned-upclosed}
+Let $H$ be a nondegenerate stopping pinned extension of a block
+$\mathfrak B_0$ and, for $x\in\{\alpha,\beta\}$, let $E_x$ be the set of
+inner strategies $\sigma$ at which $x$ is switchable on the layer $(0,0)$.
+Then $E_x$ is up-closed for the componentwise order on the value vectors
+of $\mathfrak B_0$ frozen at $\Theta_w$; in particular it is closed under
+the improving switches, single or simultaneous, of $s_{\mathfrak B_0}(\Theta_w)$.
+\end{lemma}
+
+\begin{proof}
+On the layer $(0,0)$ the outer values are the constants $\Theta_u$,
+$\Theta_w$ (\Cref{prop:pinned-level}), so $\alpha$ is switchable at
+$(\sigma,(0,0))$ iff $R_\alpha(\val_\sigma)>\Theta_u$, and $\beta$ iff
+$R_\beta(\val_\sigma)>\Theta_w$, with $\val_\sigma$ the block's value vector
+at $\Theta_w$. A readout is $y\mapsto p\cdot y+r\Theta_w+q$ with
+$p,r,q\ge0$, hence nondecreasing in $y$; and an improving switch of Max in
+the stopping block raises $\val_\sigma$ componentwise (\Cref{lem:switch}).
+\end{proof}
+
+\begin{theorem}[No pinned extension realises a translate by its own outer pair]\label{thm:pinned-no-translate}
+Let $s$ be an acyclic unique sink orientation of the $m$-cube of height
+$h\ge2$, let $\psi$ alternate along a bottom-antipodal walk of $s$ of
+length $h$ (what \Cref{prop:blowup-readout}(b) asks of a readout), let
+$z'\in\{0,1\}^{m}$, and let $\zeta\in\{0,1\}^{m+2}$ have a nonzero
+component on $\alpha$ or on $\beta$. Then $B_\psi(s,z')(\cdot\oplus\zeta)$
+is the improvement outmap of no nondegenerate stopping pinned extension
+with outer pair $(\alpha,\beta)$ --- for any pin, any readouts and any block.
+\end{theorem}
+
+\begin{proof}
+Write $\zeta=(w,\zeta_\alpha,\zeta_\beta)$ and let $T$ be the displayed
+outmap. On the layer $(0,0)$ its inner part is that of $B_\psi(s,z')$ on
+the layer $(\zeta_\alpha,\zeta_\beta)\ne(0,0)$ read at $v\oplus w$, namely
+$s(\cdot\oplus w)$; by \Cref{prop:pinned-level}(C5) that is the block's
+orientation at $\Theta_w$, whose bottom-antipodal walks are the
+$w$-translates of those of $s$, along which $\psi(\cdot\oplus w)$
+alternates. Its outer part on that layer is
+$O_{(\zeta_\alpha,\zeta_\beta)}(v\oplus w)$ from the table of
+\Cref{thm:blowup}: at $(1,0)$, $E_\alpha$ is everything and
+$E_\beta=\{\psi(\cdot\oplus w)\ \text{even}\}$; at $(0,1)$,
+$E_\alpha=\{\text{odd}\}$ and $E_\beta$ is everything; at $(1,1)$,
+$E_\alpha=\{\text{even}\}$, $E_\beta=\{\text{odd}\}$. A walk of length
+$h\ge2$ along which $\psi$ alternates contains a step from an even vertex
+to an odd one and a step from an odd vertex to an even one; in each of the
+three cases one of $E_\alpha,E_\beta$ is a nontrivial parity class and is
+not closed under one of those steps, against \Cref{lem:pinned-upclosed}.
+\end{proof}
+
+\begin{corollary}[Pinned on pinned does not reach $B^{3}$]\label{cor:pinned-no-doubling}
+Call a game \emph{doubly pinned} when it is a pinned extension of a block
+that is itself a nondegenerate stopping pinned extension whose two pin
+rows read only each other and constants, so neither the new outer pair
+nor the drive --- the shape one obtains by pinning once more on top of
+\Cref{prop:b3-outer}, whose inner pin rows read only $c_4$, $c_5$ and
+$t_1$. No doubly
+pinned game has improvement outmap $B_\varphi(B^{2},z)$, for any readout
+$\varphi$, when $z$ has a nonzero component on $(\alpha_2,\beta_2)$. Since
+the height of $B_\varphi(B^{2},z)$ is at most $10+2+h_{B^{2}}(4\oplus z)$
+for every readout $\varphi$ --- off the layer $(0,0)$ each
+bottom-antipodal step lowers the inner height by one, at the inner sink
+the outer square allows at most two further steps, and the layer $(0,0)$
+contributes $h_{B^{2}}(4\oplus z)$; with the parity readout this is the
+exact value of \Cref{prop:blowup-height} --- and the maximal vertices $12,14,28,30$ of
+$B^{2}$ all differ from its sink $4$ in the $\alpha_2$ bit, every doubling
+translation --- $z\in\{8,10,24,26\}$, and in particular the $\alpha_2$ of
+$B^{3}=B(B^{2})$ (\Cref{rem:blowup-measured}) --- is excluded: the third
+level of height $22$ is out of the shape's reach, the best height a doubly
+pinned $7$-cube can have is $10+2+\max\{h_{B^{2}}(4\oplus z):z\
+\text{purely inner}\}=16$, and \Cref{prop:b3-outer} realises $12$.
+\end{corollary}
+
+\begin{proof}
+Let the inner block $\mathfrak B$ be a pinned extension of $\mathfrak B_0$
+with pin pair $(p,q)$, some pair of the five coordinates. Its pin rows
+read only each other and constants, so at every drive the layer
+$\{p=q=0\}$ of $\mathfrak B$ carries the constant outer values
+$(\Theta_u,\Theta_w)$ of $\mathfrak B$'s own pin --- were the pin rows to
+read the drive, those values would move with the inner strategy through
+the drive at the upper layers, and the monotonicity argument would not
+apply (the route's correctness auditor) --- and \Cref{lem:pinned-upclosed}
+applies to $\mathfrak B$ at every drive: the
+switchable sets of $p$ and $q$ on that layer are closed under the improving
+switches of $\mathfrak B_0$ there. By \Cref{prop:pinned-level}(C5) for the
+outer game, $\mathfrak B$ presents $B^{2}$ itself at the drives of the three
+upper layers and $B^{2}(\cdot\oplus z)$ at $\Theta_w$. First, $(p,q)$ must
+be $(\alpha_2,\beta_2)$: over the ten pairs of coordinates of $B^{2}$ and
+the layer in which the pair rests, $(\alpha_2,\beta_2)$ is the only one at
+which no switchable set of $p$ or $q$ contains a vertex that an improving
+single switch of the other three coordinates leaves (exhaustive;
+\texttt{scripts/round17-verify/rs\_upclosed.py}: $12,3,5,9,1,7,9,6,6$
+violations for the other nine pairs). Second, with $(p,q)=(\alpha_2,\beta_2)$
+the translate $B^{2}(\cdot\oplus z)$ presented at $\Theta_w$ is
+$B_\psi(B^{1},e_{\beta_1})(\cdot\oplus z)$ with $\psi$ the parity of the
+inner height, which alternates along the walk of $B^{1}$ of length $4$, so
+\Cref{thm:pinned-no-translate} forbids every $z$ with a nonzero component
+on $(\alpha_2,\beta_2)$ (the same exhaustive check finds $3,3,5,5$
+violations at $(\alpha_2,\beta_2)$ for $z=8,10,24,26$). The cube arithmetic
+is as stated: over purely inner $z$ the largest $h_{B^{2}}(4\oplus z)$ is $4$.
+\end{proof}
+
+\begin{remark}[Where the obstruction sits, and what it leaves open]\label{rem:pinned-escape}
+The obstruction is at the outer pair, not at the block, and it is
+shape-specific. Two published facts sit outside the shape: the level-two
+game itself is singly pinned, its inner block having no pin pair
+(\Cref{def:pinned}), and the one-player game of \Cref{prop:xor}
+translates a layer with non-constant outer values (\Cref{rem:b2-anatomy});
+so the doubling that \emph{is} realised, from level one to level two, is
+not one the corollary speaks about. The escape it names is explicit: let
+the rest action of an outer vertex read the block as well as its partner,
+so that on the layer $(0,0)$ its value is a monotone function of the
+block's values rather than a constant and the switchability condition
+becomes a difference of two monotone functionals; \Cref{lem:pinned-upclosed}
+then says nothing. Whether a driven block that is not pinned can present
+$B^{2}$ at one drive and $B^{2}(\cdot\oplus z)$ at another for one of the
+four doubling translations $z\in\{8,10,24,26\}$ is the question every
+route to the height-$22$ level now runs through; nothing here touches it.
+Two exact data from the same route: the level-two block
+$\{c_1,c_2,c_3,c_6\}$ driven by $y_{c_5}$ has outmap $B^{1}$ exactly on
+$[0,\tfrac{47723619}{255897160})$ and $B^{1}(\cdot\oplus e_{\beta_1})$
+exactly on $(\tfrac{1175936917}{2026652880},\tfrac{10168377}{16341335})$,
+the fences that \Cref{rem:b2-anatomy} measured on a grid (the route's
+auditor confirmed them consistent); and $B^{2}$ is realised by a game on
+$137$ vertices, one fewer than \Cref{prop:b2-realised}, with the same
+block and readouts and the pin $(A,A',q_A)=(\tfrac{500}{512},\tfrac{511}{512},\tfrac8{512})$,
+verified here from the game (\texttt{scripts/round17-verify/B2\_pin137\_GAME.json}).
+\end{remark}
 
 \begin{remark}[What a game would have to read]\label{rem:blowup-realise}
 \Cref{thm:blowup} sharpens the realisability question of
