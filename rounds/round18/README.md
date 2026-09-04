@@ -34,4 +34,26 @@ All 22 agents on Opus 5 (the user's rule: only Opus agents).
 
 ## Outcomes
 
+### The paper audit (round-17 diff) --- returned 09:31 UTC, NOT SOUND
+
+Three majors and ten minors, all in text integrated in round 17; every
+finding was re-checked by the root agent and repaired in batch P
+(`results/04_frontier.tex_round-17_diff.json`; the LP findings recomputed
+in `scripts/round18-verify/own_r.py`). Everything recomputable in the
+round-17 material was reproduced exactly by the auditor (BC(e,s) at ten
+sizes, BP(D), OS(R), the blow-up height formulas over all 728 AUSOs, the
+137-vertex $B^2$ game and the exact fences, the handicap minors, HDP,
+L_6's informative rounds, the five-point certificate, ...).
+
+| # | label | defect | repair |
+| --- | --- | --- | --- |
+| M1 | `prop:own-stall`, `rem:own-successor`, `rem:transport`, abstract | "that reading decides no controlled vertex" on $R$ is false: the Z-seeded own-successor clause (i) fires at the Min vertex 6, which the seed pins to 0 (and "(i) can never fire" for the LP was wrong: it fires when the seeded polytope forces equality) | the stall is of the two value-distinguishing vertices outside the seed; clause (i)'s separators printed; the abstract and `rem:transport` aligned |
+| M2 | `rem:own-stall`, abstract, summary | the seven-vertex game does not "stall both readings": vertices 3 (clause ii) and 1 (pair test) are decided in the same round, only 4 is silent, and after retyping 1 and 3 the certificate decides 4 too | restated as a silence at one vertex, not a stall of the rule; "a stall proper is exhibited nowhere in this document" |
+| M3 | `rem:blowup-realise` | "the orientation oracle is weaker than the value oracle already at $m=3$" contradicted by its own numbers (4 out-set queries against $\lvert Cvert+2\ge5$) | "separated by nothing here"; the orientation oracle is the cheaper one on that data |
+| m1--m10 | `rem:cyclic-antipodal` (the profile count: one profile goes straight to the sink, three enter the cycle; the 23/8-vertex conventions), `cor:pinned-no-doubling` (the definition misdescribed its own example and lacked a verb; the height-16 bound scoped to blow-up outmaps), `thm:convex-barrier-both` (its proof cited itself), `rem:choice-lift` (an unproved exactness clause marked as the route's claim), the summary's BC clause (the preorder-seeded combination is measured), `rem:order-unique` (UP $\cap$ coUP attribution), the `st2_nf.py` path, the BC game files (archived in `scripts/round17-verify/`; the harness archived in `scripts/harness/`), `rem:slack-grade` (both composites), `prop:cv-measured` ("between two and three times"), `rem:eval-queries` (a fragment) | all repaired as the audit proposed |
+
+Not checked by the audit (recorded for a later audit): `prop:b3-outer`'s 194-vertex game; ST(1)/ST(2); `rem:bias-families`' BP(D) counts; `prop:bias-witnesses`' PATH games; `rem:discount-fold`'s $9D+3$ variant; `thm:eval-queries`' 136/194/344-vertex reproductions; `rem:choice-lift`'s level-two exactness; the round-17 backlog (untouched).
+
+### The routes
+
 (to be filled as the routes and audits return)
