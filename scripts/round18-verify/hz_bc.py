@@ -27,4 +27,5 @@ for rnd in range(4):
                         rhs = sum(grad[i] * x[i] for i in range(n)) - q
                         assert sum(grad[i] * w[i] for i in range(n)) <= rhs
                         A1.append(list(grad)); b1.append(rhs)
+    print(f'   cuts added this round: {len(A1)-len(A)}')
     A, b = A1, b1
