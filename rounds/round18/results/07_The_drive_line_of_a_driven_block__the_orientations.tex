@@ -1,0 +1,87 @@
+% Full paste-ready file: <code_dir>/dl_results.tex  (490 lines, environments balanced,
+% labels dl:sec, dl:def, dl:tie, dl:fences, dl:flippable, dl:drive-flip, dl:b2-line,
+% dl:b2-distance, dl:escsec, dl:escape, dl:escape-level, dl:tournament,
+% dl:no-beta-translate, dl:updown-general, dl:escape-mixed, dl:escape-updown,
+% dl:m3-decision, dl:two-sided, dl:sign).  The four central statements:
+
+\begin{proposition}[Which single edges of a unique sink orientation can be reversed]\label{dl:flippable}
+Let $s$ be an outmap of the $m$-cube, $e=\{\sigma,\sigma\oplus e_v\}$ an edge, and $s^{e}$ the
+orientation obtained by reversing $e$ alone.
+(a) If $s$ is a unique sink orientation, then $s^{e}$ is one if and only if
+$s(\sigma)\oplus s(\sigma\oplus e_v)=\{v\}$, equivalently
+$\sigma\oplus s(\sigma)=(\sigma\oplus e_v)\oplus s(\sigma\oplus e_v)$: the two endpoints of $e$
+have the same bottom-antipodal successor. Call such an edge \emph{combed}. Reversing a combed
+edge exchanges the outmap values of its two endpoints; since the outmap of a unique sink
+orientation is a bijection of $\{0,1\}^{m}$, a combed flip composes it with a transposition and
+reverses its sign as a permutation.
+(b) Let $s$ be acyclic and $e$ combed, oriented $\sigma\to\sigma'$. Then $s^{e}$ is acyclic if and
+only if $s$ has no directed path from $\sigma$ to $\sigma'$ other than $e$ itself.
+(c) Write $d(s,s')$ for the number of edges the two orient differently and $D(s,s')$ for the least
+number of combed flips carrying $s$ to $s'$ through unique sink orientations. Then $D\ge d$ and
+$D\equiv d\pmod 2$; and if $s'=s(\cdot\oplus z)$ with $z\ne0$ and $m\ge2$ then
+$\operatorname{sgn}s'=\operatorname{sgn}s$, so $D(s,s(\cdot\oplus z))<\infty$ forces
+$d(s,s(\cdot\oplus z))$ to be even.
+\end{proposition}
+
+\begin{proof}
+(a) Faces not containing the direction $v$ are untouched. Let $J\ni v$ and let $F$ be the face
+through $\sigma$ with directions $J$; write $A:=s(\sigma)$, $B:=s(\sigma\oplus e_v)$, and orient
+$e$ as $\sigma\to\sigma'$, so $v\in A$, $v\notin B$. After the flip $\sigma'$ is never a sink of
+$F$, $\sigma$ is a sink of $F$ iff $A\cap J=\{v\}$, and the sinks of $F$ among the other vertices
+are unchanged; before the flip $\sigma$ is not a sink and $\sigma'$ is one iff $B\cap
+J=\emptyset$. So $F$ keeps exactly one sink iff $[A\cap J=\{v\}]\Leftrightarrow[B\cap
+J=\emptyset]$, i.e.\ iff $J'\cap(A\setminus\{v\})=\emptyset\Leftrightarrow J'\cap B=\emptyset$ for
+every $J'\subseteq[m]\setminus\{v\}$. Taking $J'=\{w\}$ gives $A\setminus\{v\}=B$, and that
+condition makes the equivalence hold for all $J'$. The outmap of a unique sink orientation is
+injective because $(s(u)\oplus s(u'))\cap(u\oplus u')\ne\emptyset$ forces $s(u)\ne s(u')$.
+(b) $s$ being acyclic, a cycle of $s^{e}$ must use $e$, i.e.\ must contain a directed
+$\sigma\to\sigma'$ path of $s^{e}$ avoiding $e$; all other edges agree with $s$.
+(c) Each flip changes exactly one edge, so the parity of the number of flips at each edge decides
+whether it differs; and the sign changes at each flip by (a), while translation by $z\ne0$ is a
+product of $2^{m-1}$ transpositions, an even permutation for $m\ge2$.
+\end{proof}
+
+\begin{theorem}[A drive line moves by single combed flips]\label{dl:drive-flip}
+Let $t_0$ be a simple fence of a driven block, with the block nondegenerate on a punctured
+neighbourhood of $t_0$ and $e$ the tied edge. Then $s_{\mathfrak B}(t_0^-)$ and
+$s_{\mathfrak B}(t_0^+)$ agree off $e$; if they differ, $e$ is combed in both and satisfies
+\Cref{dl:flippable}(b) in each. Consequently, for $t<t'$ with $\mathfrak B$ nondegenerate at both,
+if every fence in $(t,t')$ is simple then their number is at least
+$D\bigl(s_{\mathfrak B}(t),s_{\mathfrak B}(t')\bigr)\ge d\bigl(s_{\mathfrak B}(t),s_{\mathfrak
+B}(t')\bigr)$.
+\end{theorem}
+
+\begin{theorem}[The level theorem for the escape shape]\label{dl:escape-level}
+Let $G$ be a nondegenerate stopping escape extension. Put $\Delta:=1-AA'>0$ and
+$\widehat D:=(A'C_\alpha+C_\beta)/\Delta$, $\widehat e:=(A'q_A+q_B)/\Delta$,
+$D_1:=A'R_\alpha+C_\beta$, $e_1:=A'q'_A+q_B$. For an inner strategy $\sigma$ let
+$\Phi_\sigma(c,d)$ denote the unique $t\in[0,1]$ with $t=c\cdot y_\sigma(t)+d$, and put
+$w_{00}:=\Phi_\sigma(\widehat D,\widehat e)$, $w_{10}:=\Phi_\sigma(D_1,e_1)$,
+$w_{01}:=\Phi_\sigma(R_\beta,q'_B)$ and
+$\rho(\sigma,t):=(R_\alpha-C_\alpha)\cdot y_\sigma(t)+(q'_A-q_A)-A\,t$. Then the drive equals
+$w_{00},w_{10},w_{01},w_{01}$ on the layers $(0,0),(1,0),(0,1),(1,1)$; the inner part of the
+improvement outmap at $(\sigma,L)$ is $s_{\mathfrak B}\bigl(w_L(\sigma)\bigr)(\sigma)$; and the
+outer part is given by $P:=[w_{00}<w_{10}]$, $Q:=[w_{00}<w_{01}]$, $R:=[w_{10}<w_{01}]$,
+$S:=[\rho(\sigma,w_{01})>0]$ through
+$O_{(0,0)}=(P,Q)$, $O_{(1,0)}=(1-P,R)$, $O_{(0,1)}=(S,1-Q)$, $O_{(1,1)}=(1-S,1-R)$.
+\Cref{prop:pinned-level} is the case $\widehat D=0$.
+\end{theorem}
+
+\begin{theorem}[No escape extension realises a translate by its $\beta$-coordinate]\label{dl:no-beta-translate}
+Let $\varphi$ take the value $0$ somewhere and let $\zeta=(w,\zeta_\alpha,\zeta_\beta)$ have
+$\zeta_\beta=1$. Then $B_\varphi(s,z')(\cdot\oplus\zeta)$ is the improvement outmap of no
+nondegenerate stopping escape extension with outer pair $(\alpha,\beta)$ --- for any pin, any
+readouts and any block. In particular $z=24$ and $z=26$ of \Cref{cor:pinned-no-doubling} are
+excluded for the escape shape as well.
+\end{theorem}
+
+\begin{proof}
+Write $\tilde\varphi(\sigma):=\varphi(\sigma\oplus w)$ and read the outer part of the target at
+the layer $L$ off the table of \Cref{thm:blowup} at the layer
+$L\oplus(\zeta_\alpha,\zeta_\beta)$. If $(\zeta_\alpha,\zeta_\beta)=(0,1)$ then
+$P=[\tilde\varphi=1]$, $Q=1$, $R=[\tilde\varphi=1]$, and at a $\sigma$ with
+$\tilde\varphi(\sigma)=0$ this is $(0,1,0)$. If $(\zeta_\alpha,\zeta_\beta)=(1,1)$ then
+$P=[\tilde\varphi=0]$, $Q=[\tilde\varphi=1]$, $R=1$, and at the same $\sigma$ this is $(1,0,1)$.
+Both are forbidden by \Cref{dl:tournament}, the three bits being the pairwise comparisons of the
+three reals $w_{00},w_{01},w_{10}$.
+\end{proof}
