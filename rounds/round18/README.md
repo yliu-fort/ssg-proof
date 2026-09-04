@@ -31,6 +31,17 @@ All 22 agents on Opus 5 (the user's rule: only Opus agents).
   and the audits' `r18-audit-*` directories are created in `SCRATCH`.
 - Before launch: one stale monitor loop from session `d1fe2115` (watching
   the round-16 journal) was killed; the repository was clean at `812364d`.
+- 09:39 UTC: the `eval-decision` route died on `max_output_tokens` (one
+  reasoning turn of 64000 tokens, at effort xhigh; nine tool uses, no file
+  written); relaunched at 09:43 UTC as run `wf_49cdc87a-da0`
+  (`round18b.js`: the single route at effort high with a pacing sentence,
+  its two audits, no paper audit).
+- 11:17 UTC: the main run completed: 19 of 20 agents returned (the paper
+  audit at 09:31, the six routes between 09:17 and 10:53, their twelve
+  audits between 09:29 and 11:15), 5.6M subagent tokens, 2 h 32 min. The
+  root agent verified every load-bearing claim in exact arithmetic before
+  integration (`scripts/round18-verify/`), applied each route only after
+  both its audits, and integrated in batches P, A, B, C, D, E, F (below).
 
 ## Outcomes
 
