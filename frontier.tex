@@ -15395,9 +15395,12 @@ convex subsets of $Q(G;L_Z,U_Z)$ such that for every $k<K$
   $\Lambda_{\times}(P_k)$ is at least $\Lambda_{\times}(P_{k+1})$
   entrywise.
 \end{enumerate}
-Then every such run has, after $k\le K$ operator applications, a state with $\Delta\ge\Lambda(P_k)$ and
-$R\ge\Lambda_{\times}(P_k)$. Consequently, within $K$ applications it
-decides $v\in\Vmax$ only if one of the four quantities
+Then every such run has, after $k\le K$ operator applications, a state
+with $\Delta\ge\Lambda(P_k)$ and $R\ge\Lambda_{\times}(P_k)$; the state is
+moreover sound, so each entry is also at least $w^\ast(x)-w^\ast(y)$,
+resp.\ $w^\ast(x)/w^\ast(y)$, and a test is read against the larger of
+the two bounds. Consequently, within $K$ applications it decides
+$v\in\Vmax$ only if one of the four quantities
 $\Lambda(P_K)(v,v^{(0)})$, $\Lambda(P_K)(v,v^{(1)})$,
 $\Lambda(P_K)(v^{(0)},v^{(1)})$, $\Lambda(P_K)(v^{(1)},v^{(0)})$ is
 $\le 0$, or one of $\Lambda(P_K)(v^{(0)},v)$, $\Lambda(P_K)(v^{(1)},v)$
@@ -15453,11 +15456,13 @@ taking the constant chain gives $\Delta_k\ge\Lambda(P)$ for the slack
 calculus at every $k$, while \Cref{thm:slack-vi-upper} and
 \Cref{thm:contraction} give $\Delta_{2k}(x,y)\to w^\ast(x)-w^\ast(y)$, so
 $\Lambda(P)(x,y)\le w^\ast(x)-w^\ast(y)$ and every lower bound of this
-kind is a rate, as \Cref{rem:frontier-moved} says. And the proof step
-that a linear-fractional function with positive denominator attains its
-extrema over a polytope at vertices, used in the multiplicative cases
-below, is elementary (it is quasi-convex and quasi-concave) and is not
-among the four imports; it is used as stated.
+kind is a rate, as \Cref{rem:frontier-moved} says. The multiplicative cases below use that $\max_{z\in P}z(x)/z(y)$ over a
+polytope $P$ on which $z(y)>0$ is attained at a vertex: it is the least
+$t$ with $\max_{z\in P}(z(x)-t\,z(y))\le0$, and $z(x)-t\,z(y)$ is affine,
+so that maximum sits at a vertex for every $t$. The min-times closure of
+\Cref{prop:ratio-closure} is not among the operators above; on the family
+of \Cref{sec:bc} it was measured silent as well (the route's auditor,
+$16$ rounds on $\mathrm{BC}(2,5)$).
 \end{remark}
 
 \begin{remark}\label{rem:hybrid-barrier-lift}
@@ -16040,7 +16045,8 @@ For $e\ge2$, $s\ge5$ put $u:=2^{-e}$, $\gamma:=2^{-s}$. Let
 $\mathrm{CQ},\mathrm{CE},\mathrm{CH},\mathrm{Q}_0$ be the dyadic sink
 chains of \Cref{lem:dyadic-row} realising the constants
 $\tfrac14,\tfrac38,\tfrac34,\tfrac12+2\gamma$, of lengths $2,3,2,s-1$;
-every vertex of them is average and reads only the two sinks.
+every vertex of them is average and reads one sink and the next vertex
+of its chain (\Cref{lem:dyadic-row}).
 $\mathrm{BC}(e,s)$ has $\Vmax=\{v_0,v_1,v_2\}$, $\Vmin=\emptyset$, all
 other non-sinks average, and, with $o:=3-i$,
 $\mathrm{HI}_1:=t_1$, $\mathrm{HI}_2:=\mathrm{CH}$,
@@ -16186,7 +16192,12 @@ $\Pi\cup\{(x^{(0)},y)\}$, the extra atom interpreting as $(Q,P)$. That is
 precisely the frame, equality pattern and true-atom set of $(5,1)$ in
 $G_8$. Since $(Q,P)$ is underivable, a clause deriving $(v_0,P)$ is
 contained in $\Pi$, and the game $K_\sharp$ of \Cref{thm:matching-barrier}
-fools every such clause.
+fools every such clause. (The atom $(x^{(1)},y)$ interprets there as the
+diagonal pair $(P,P)$, whose frame --- types
+$(\mathrm{avg},\mathrm{avg},t_0\,|\,\mathrm{avg},\mathrm{avg},t_0)$,
+equality pattern $\{x=y,\,x^{(0)}=y^{(0)},\,x^{(1)}=y^{(1)}\}$, the same
+true atoms --- is that of $(1,1)$ in $G_8$ and of $(k,k)$ in $K_\sharp$,
+so the transfer is complete; the route's auditor.)
 
 For $\preceq$ at $v_1$ (and symmetrically $v_2$) put
 $\mathcal S_0:=\mathcal V:=\{(x,y):w^\ast(x)\le w^\ast(y)\}$ and
@@ -16439,13 +16450,14 @@ exactly. Consequently no run of the slack calculus, its min-plus closure,
 the transport step, the hybrid or the ratio calculus --- in any
 interleaving, with any seeding of one by another's output, any up-rounding
 onto a grid, and the order transfer of \Cref{thm:convex-barrier-both} ---
-decides any controlled vertex of $\mathrm{BC}(e,s)$ within
+decides any controlled vertex of $\mathrm{BC}(e,s)$ within $K$ operator
+applications, where
 \[
   K+1\;=\;\Bigl\lfloor\frac{\ln\bigl(c/4\gamma\bigr)}{\ln(1/a)}\Bigr\rfloor
   \;\ge\;\Bigl\lfloor\frac{(2^{e+1}-3)(s-4)\ln2}{3}\Bigr\rfloor
 \]
-operator applications; with $s$ fixed and $e=(N-2s-11)/12$ that is
-$2^{\Omega(N)}$. The simulation preorder $\preceq$ of \Cref{def:simorder}
+is the length of the certificate chain; with $s$ fixed and
+$e=(N-2s-11)/12$ that is $2^{\Omega(N)}$. The simulation preorder $\preceq$ of \Cref{def:simorder}
 itself decides nothing (\Cref{prop:bc-lmc}); whether seeding the calculi
 with its verdicts changes the bound is settled here only by measurement:
 at the ten sizes of \Cref{rem:bc-measured} every point of every $P_k$
@@ -16522,6 +16534,10 @@ never within $40$ rounds; on $\mathrm{BC}(3,5)$ and $\mathrm{BC}(4,5)$
 all three are silent for $40$ rounds; and the preorder relates none of
 the twelve pairs at any of the three sizes --- the certificate's
 $K+1=2,5,11$ is a lower bound, and the mechanisms are slower still.
+$v_1$ and $v_2$ have two successors of equal value, so the stall there is
+vacuous in isolation (\Cref{prop:fv-stall}); the content is the stall at
+$v_0$, whose successors differ by $\gamma$, and blocking $v_1,v_2$ is what
+``decides no controlled vertex'' needs.
 Two remarks on the design. The two engine halves carry \emph{different}
 straddle amplitudes on purpose: with $\eta_1=\eta_2$ the (match) clause
 gives $v_1\preceq v_2\preceq v_1$, and those cuts collapse $\Xi_k$ to its
