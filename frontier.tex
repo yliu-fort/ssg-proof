@@ -8582,12 +8582,112 @@ is a property not of the projection but of the matrix $M$ of
 transient; ``which such matrices occur'' is where the two-player half of
 \Cref{rem:auso-size} now sits. The handicap of \Cref{rem:lcp} is no
 constraint either: the game of \Cref{thm:cyclic-uso} has $M+M^{\mathsf T}$
-positive definite at its all-zero base (principal minors
+positive definite, at its all-zero base (principal minors
 $\tfrac94,1,2,\tfrac{351}{256},\tfrac{30047}{16384},\tfrac{287}{256},\tfrac{31}{32}$)
-and a cyclic profile cube, while $G^{\sharp}$ and the one-player
-realisations of \Cref{rem:blowup-measured} have positive handicap at
-every base profile (the route's exact computations, re-verified by its
-auditor).
+and hence at every base (\Cref{rem:handicap-base}), and a cyclic profile
+cube, while $G^{\sharp}$ and the one-player realisations of
+\Cref{rem:blowup-measured} have positive handicap at every base profile
+(the route's exact computations, re-verified by its auditor). Nor does
+handicap zero bound the run:
+
+\begin{proposition}[Handicap zero attains the one-player ceiling at $m\le4$]\label{prop:handicap-zero-ceiling}
+At $m=3$ the $39$-vertex realisation of the first blow-up level
+$(0,1,3,6,7,4,5,2)$ in \Cref{prop:m3-realised} has $M+M^{\mathsf T}$
+positive definite at every base profile --- handicap zero --- while the
+$58$-vertex realisation of the same orientation recorded after
+\Cref{rem:blowup-measured} has positive handicap; both have all-switches
+runs of length $4=h^{\ast}_{1}(3)$ (\Cref{cor:hstar-one}). At $m=4$ there
+is a nondegenerate one-player stopping SSG $\mathrm{CVX}_6$ on $127$
+vertices ($4$ Max, $121$ average, dyadic denominator $2^{7}$) with
+handicap zero and an all-switches run of length $6=h^{\ast}_{1}(4)$; its
+harmonic normal form over $(v_0,v_1,v_2,v_3;t_1)$, in units of
+$\tfrac1{128}$ with the residue going to $t_0$, is
+\[
+  \begin{array}{lll}
+   v_0:&(45,0,57,0;2),&(39,80,1,6;1)\\
+   v_1:&(14,53,2,1;12),&(17,17,31,32;0)\\
+   v_2:&(57,0,47,0;0),&(0,9,21,91;0)\\
+   v_3:&(0,54,0,52;0),&(18,0,65,38;7),
+  \end{array}
+\]
+its orientation is $(5,8,10,11,9,12,14,15,13,4,7,6,2,3,1,0)$ and its run
+from $(0,1,0,0)$ switches
+$\{v_1,v_3\},\{v_0,v_2,v_3\},\{v_2,v_3\},\{v_2\},\{v_0,v_1\},\{v_0\}$. So
+one acyclic unique sink orientation has both a handicap-zero and a
+positive-handicap realisation, handicap is not a property of the
+improvement orientation, and at both values of $m$ where the one-player
+ceiling is known exactly it is attained with $M+M^{\mathsf T}\succ0$.
+\end{proposition}
+
+\begin{proof}
+Everything was recomputed from the games in exact arithmetic: the
+first-passage matrices $P_0,P_1$ over the Max vertices and the symmetric
+matrix $B=\tfrac12(R_0^{\mathsf T}R_1+R_1^{\mathsf T}R_0)$, $R_a=I-P_a$,
+which by \Cref{rem:handicap-base} is positive definite exactly when
+$M+M^{\mathsf T}$ is, at every base. For the $39$-vertex game
+$B=\bigl(\begin{smallmatrix}1&-\frac{277}{4096}&-\frac{81}{128}\\
+-\frac{277}{4096}&1&-\frac{89}{128}\\-\frac{81}{128}&-\frac{89}{128}&1\end{smallmatrix}\bigr)$
+with leading principal minors $1,\tfrac{16700487}{16777216},\tfrac{1744945}{33554432}$;
+for the $58$-vertex game the third minor is
+$-\tfrac{277907957}{68719476736}$ (the route's correctness auditor,
+recomputed here). $\mathrm{CVX}_6$'s normal form is dyadic, so
+\Cref{lem:dyadic-row} realises its rows by pruned binary trees of average
+vertices, $127$ vertices in all; the game is stopping by
+\Cref{lem:trapchar}, its leading principal minors are
+$\tfrac{7625}{16384},\tfrac{47542061}{268435456},\tfrac{939760988311}{17592186044416},\tfrac{2290930799522897}{1152921504606846976}$,
+all positive, none of its $64$ comparisons ties, and the run and outmap
+are as stated (the round-$17$ variational route, its two auditors and
+this round's root agent, \texttt{scripts/round17-verify/vr\_verify.py}
+with the game files; a second $m=3$ example on $48$ vertices,
+$\mathrm{CVX}_4$, is archived beside it, and three of the round-$15$
+readout systems at $m=4$ also have handicap zero with run $6$, one built
+on $181$ vertices by the auditor, so $\mathrm{CVX}_6$ is the smallest
+known).
+\end{proof}
+
+\begin{remark}[The handicap does not depend on the base profile]\label{rem:handicap-base}
+In the harmonic normal form over $C$ let $P_a$ be the matrix of the
+first-passage rows of the actions $a=0,1$, $R_a:=I-P_a$ (invertible, the
+rows being substochastic and the game stopping,
+\Cref{lem:survival-contract}), and $B:=\tfrac12(R_0^{\mathsf T}R_1+R_1^{\mathsf T}R_0)$.
+The sum $q(x):=\sum_{v\in C}(x(v)-x(v^{(0)}))(x(v)-x(v^{(1)}))$ of the
+complementarity forms printed after \Cref{thm:transport-objective} is the
+gap $z^{\mathsf T}w$ of the complementarity problem of \Cref{prop:lcp}, its
+Hessian on the affine space $\Psi(\mathbb R^{C})\supseteq Q(G)$ of
+\Cref{lem:transport-dim} is $2B$ ($x(v)-x(v^{(a)})$ has linear part
+$(R_ad)_v$ there), and $B$ is the congruence
+$R_\beta^{\mathsf T}(EM_\beta E)R_\beta$ symmetrised, for every base
+$\beta$ --- each $I-Q_\beta$ is invertible, its rows being first-passage
+rows (\Cref{lem:survival-contract}) --- because the $v$-th summand
+$(R_0d)_v(R_1d)_v$ is symmetric in $v$'s two actions. Hence $M_\beta+M_\beta^{\mathsf T}\succeq0$ holds for
+every base profile as soon as it holds for one, the handicap is zero at
+every base or at none --- the invariance under principal pivot transforms
+that \Cref{rem:lcp} records as prior art, here read off the normal form
+--- and it is so exactly when
+$\|(P_1-P_0)(I-\tfrac12(P_0+P_1))^{-1}\|_2\le2$, by
+$d^{\mathsf T}Bd=\|(I-\bar P)d\|^{2}-\tfrac14\|(P_1-P_0)d\|^{2}$. On such
+games $q$ is convex, $w^\ast$ is its unique minimiser over $Q(G)$ (it is
+nonnegative there and vanishes only at $w^\ast$, by
+\Cref{thm:transport-objective}), and the problem is a convex quadratic
+programme --- the handicap-zero slice of the route \Cref{rem:lcp} surveys
+and sets aside; the round-$17$ variational route found no member of it
+outside the tractable classes of this document (every member it named has
+$|C|\le2$ or one player), and none is claimed; membership is moreover a
+property of the presentation, like $a$ in \Cref{prop:a-presentation}: the
+subdivision below carries members out of it (the route's correctness
+auditor, $16$ of $181$). Strict reversibility, the
+hypothesis of the Dirichlet principle proper, is unavailable: if some
+positive measure on the non-sinks makes every positional pair's chain
+reversible, then the non-sink edge relation is symmetric, every component
+of the graph it induces is a path (a cycle component would be a trap),
+and a component carries at most one controlled vertex (two would trap
+the segment between them by facing each other), so the game is a disjoint
+union of birth--death chains with one choice each; while reversibility of
+the chance part alone is vacuous, since inserting a Max vertex with two
+equal successors into every edge out of an average vertex makes $\Vavg$
+independent without changing stopping, values or the all-switches run
+(\Cref{lem:splice}(a) run backwards).
+\end{remark}
 
 \subsection{Lemke's algorithm as a bias homotopy}\label{sec:bias}
 

@@ -1,0 +1,108 @@
+{
+ "target": "route \"variational\": Energy functionals and reversibility: a variational characterisation of the value and the class it solves",
+ "sound": false,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "vr:content (d), and the route's headline",
+   "defect": "The clause \"Outside R (exact, from the games): every published realisation of an all-switches run longer than |Vmax|\" -- which appears both in the JSON statement and in the paste-ready LaTeX of vr:content, and as \"excludes every published tall-run realisation\" in the headline -- is FALSE. The paper's own 39-vertex realisation of the level-one blow-up is inside R.",
+   "evidence": "prop:m3-realised (frontier.tex l.8248-8249) records: \"the first blow-up level B(1-cube)=(0,1,3,6,7,4,5,2) of rem:blowup-measured is realised on 39 vertices rather than 58 ... the eighteen games are kept beside the repository's round-16 verification scripts\"; the game is /data/ssg-proof/scripts/round16-verify/m3games/B1_39_game.json. Rebuilt from the game in exact rational arithmetic in /tmp/claude-1000/-data-ssg-proof/5cc7fb9d-035b-424b-bca6-ec769216aeb1/scratchpad/r17-audit-variational-correctness (aud.py, runs.py, m3chk.py): N=39 (3 Max, 34 average), stopping by lem:trapchar, 0 ties among the 24 incidences, outmap (0,1,3,6,7,4,5,2), longest all-switches run 4 > |Vmax|=3 (run lengths by start 0,1,2,3,4,2,4,3), all 39 vertices reachable from vertex 0, T w* = w*, q(w*)=0, and B = [[1,-277/4096,-81/128],[-277/4096,1,-89/128],[-81/128,-89/128,1]] with leading principal minors 1, 16700487/16777216, 1744945/33554432 -- positive definite, so B1_39 is in R with a run longer than |Vmax|. (Every game the route does list -- B1_58, AP_m4_k0_den256_s200_game, B2_small, B2_155, B6, ST1, ST2, W_10, W_14 -- I confirmed outside R, and I additionally confirmed G# and the prop:hstar-one-five freeze of B6 (run 10) outside R.)"
+  },
+  {
+   "severity": "major",
+   "result_name": "vr:convex-long and vr:ceiling -- convexity costs nothing in run length (its why_not_implied and its necessity)",
+   "defect": "The justification \"the paper's own realisations at those heights all violate B >= 0, so the ceiling being attained inside the convex class does not follow from it -- it required building two new games\" is false at m=3, and CVX4 is needed for neither half of vr:convex-long: an already-published, already-built game settles both (i) and (ii). The proposition as stated about CVX4 is true; the claim that it was necessary is not.",
+   "evidence": "(i) B1_39_game (see the previous finding) is in R with m=3 and all-switches run 4, so it already refutes \"B >= 0 implies L <= |Vmax|\". (ii) B1_39_game and the 58-vertex B1_game have the IDENTICAL outmap (0,1,3,6,7,4,5,2) -- I recomputed both from the games -- while B1_58's B has leading minors 1585/2048, 6498559/16777216, -277907957/68719476736 (indefinite); so the paper already contains one AUSO with a convex and a non-convex realisation. For m=4 the content is one application of lem:dyadic-row from existing round-15 data: of the 203 m=4 readout systems in scratchpad/solo, three (AP_m4_k0_den1024_s146, _s213, AP_m4_k0_den512_s231) are tie-free, dyadic, every row leaking to t0, with B positive definite and all-switches run 6. I built the s146 game with lem:dyadic-row (build_dyadic.py; 181 vertices, 4 Max, 175 average) and verified from the game: stopping, harmonic normal form reproduced exactly, B positive definite, 0 ties of 64, outmap equal to its recorded target (8,11,6,9,12,13,10,15,4,7,14,5,2,3,1,0), longest run 6, T w* = w*, q(w*)=0."
+  },
+  {
+   "severity": "minor",
+   "result_name": "vr:convexity -- when the complementarity form is convex (clause (a)); and vr:variational",
+   "defect": "A := Psi(R^C) is called \"the affine hull of Q(G)\" but is only an affine space containing Q(G); dim Q(G) < |C| happens, and then clause (a) read literally is NOT equivalent to (b). The route's own properness witness is the counterexample. Consequently vr:variational's \"z* the unique minimiser of q over the affine hull, one exact linear solve 2Bu = -b\" computes the minimiser over A, not over aff Q(G), and the headline's \"the SSG problem is a convex quadratic programme exactly when ||Delta(I-Pbar)^{-1}||_2 <= 2\" is only an \"if\". Repairable by writing \"the affine space A = Psi(R^C) contains Q(G)\" throughout.",
+   "evidence": "NCX_game (kinds (avg,max,max,avg), succ 0->(1,3), 1->(t1,2), 2->(0,3), 3->(t0,2)): I reproduced w* = (2/3,1,2/3,1/3), both Max vertices value-distinguishing, B = [[1,-5/8],[-5/8,3/8]], det B = -1/64, so (b) fails. But an exact feasibility scan of Q(G) in the u-coordinates finds every feasible point has u_1 = 1 (u_2 in [2/3,1]), so aff Q(G) is the line {u_1 = 1}, on which q(u) = 3u_2^2/8 - u_2/4 -- verified exactly at u_2 = 2/3, 3/4, 5/6, 1 giving q = 0, 3/128, 5/96, 1/8 -- is strictly convex. So (a) holds literally while (b) fails. (For contrast I checked dim Q(B1_game) = 3 = |C| by exhibiting four affinely independent feasible points, so the class R is not a vacuous restriction.)"
+  },
+  {
+   "severity": "minor",
+   "result_name": "vr:rev-trivial (verification field)",
+   "defect": "The exhaustive count does not reproduce. \"1643316 stopping such games\" for n <= 5 is wrong by an order of magnitude under the stated description (every game on n <= 5 non-sink vertices whose non-sink edge relation is symmetric, all 3^n kind assignments). The CONCLUSION (0 violations) does reproduce.",
+   "evidence": "rev5.py, exact, two independent enumerations: for n = 1..5 the numbers of stopping games with symmetric non-sink edge relation are 16, 376, 10768, 360256, 13659136, total 14030552, with 0 violations of \"every component is a path carrying at most one controlled vertex\". The n <= 4 figure (371416) was cross-checked by a second, completely separate brute force over all 36^n ordered successor tuples with symmetry filtering, giving the same 371416 and 0 violations."
+  },
+  {
+   "severity": "minor",
+   "result_name": "vr:class / vr:rev-vacuous (interaction not recorded)",
+   "defect": "R is NOT preserved by the route's own subdivision of vr:rev-vacuous -- a linear-time transformation that the route proves preserves values, stopping, and the entire all-switches run. So membership in R is a property of the presentation, exactly the phenomenon of prop:a-presentation, and the route nowhere records it. This bears directly on the framing of R as \"the class it solves\".",
+   "evidence": "subR.py, exact: on 181 random stopping games, all of which were in R, 16 fell OUT of R after subdividing every edge out of an average vertex by a Max vertex with coincident successors. (subR2.py found no move in the other direction: 29 sampled non-R games all stayed outside R, and so did NCX (N 6 -> 10), W_10 (10 -> 20), W_14 (14 -> 32) and B1_58 (58 -> 164).) I separately verified the vr:rev-vacuous claims themselves on 120 random games -- Vavg independent, stopping preserved, val_{G'} = val_G on V and equal to the target value at every new Max vertex, and the all-switches run reproduced round for round on the 64 games where it was checkable -- 0 violations."
+  },
+  {
+   "severity": "minor",
+   "result_name": "vr:optdir -- convexity is exactly a bound on the direction of improvement (citation)",
+   "defect": "The LaTeX asserts \"\\Cref{thm:hamming-refuted} and \\Cref{prop:needle} say that no such statement holds vertexwise\". Neither says that. thm:hamming-refuted is about the Hamming distance to Opt, and in its own two-vertex instance every coordinate at which sigma differs from an optimal sigma* IS improving; prop:needle is about the density of wrong vertices inside S_sigma. The vertexwise failure is nonetheless true and is witnessed by the route's own AP_m4 computation, which should be cited instead.",
+   "evidence": "I verified the vr:optdir identity itself exactly on all profile pairs of 368 random stopping games (0 failures) and reproduced the sharpness number: on AP_m4_k0_den256_s200_game at sigma = (0,0,0,1) with the unique optimal (1,1,1,1) the sum is exactly -274816564885649/769490309485821952, and the negative summand is at the second Max vertex, gap 17022443/1202277632 > 0 times gain -53229249/1280054272 < 0 -- that is the vertexwise counterexample. I also confirmed the corollary is non-vacuous inside R: a random R-member (kinds (avg,avg,max,avg,max,max), succ [(3,0),(2,5),(7,7),(7,6),(6,2),(3,4)]) has terms [1, -1/4] with sum 3/4 >= 0."
+  },
+  {
+   "severity": "minor",
+   "result_name": "vr:content (c)",
+   "defect": "Four of the nine families listed as \"inside R\" -- G_8, S, S_r, H_m -- have |C| = 1 and are therefore covered by the route's own part (a); listing them as content of (c) overstates what was found. Only L_n, RC(k), CC(L,m), WD(e,j,m) and the cyclic game carry information.",
+   "evidence": "Rebuilt from the paper's definitions (myinst.py, cc.py, wd.py, and my own L_n, RC(k)): G_8 |C|=1, S |C|=1, S_r (r<=4) |C|=1, H_m (m<=6) |C|=1, all in R; L_n (n<=7) |C|=n in R; RC(k) (k<=7) |C|=k in R; CC(L,m) at (1,2),(2,2),(2,3),(3,3),(4,4) |C|=2 in R; WD at (1,2,3),(2,2,4),(2,3,5),(3,4,6),(2,5,7) |C|=2 in R. The cyclic game of thm:cyclic-uso: I reproduced B = [[1/2,0,-15/32],[0,1/2,-15/32],[-15/32,-15/32,1]] (PD, minors 1/2, 1/4, 31/1024) and the seven principal minors of M+M^T at the all-zero base -- 9/4, 1, 2, 351/256, 30047/16384, 287/256, 31/32 -- exactly the list printed after prop:seven-k1, and confirmed all eight bases give the same verdict."
+  },
+  {
+   "severity": "minor",
+   "result_name": "vr:content (verification field: damping)",
+   "defect": "\"Damping (rows scaled by 1/2) kept all 766 tested members of R inside R\" mis-describes def:damping. rem:signdef explicitly warns that the damping gadget reweights the first-passage laws entry by entry according to the depths of their targets, not by one common scalar. Under uniform scaling by c the test is close to vacuous, since B(c) = I - c sym(P_0+P_1) + c^2 sym(P_0^T P_1) tends to I.",
+   "evidence": "Halving the rows of NCX -- a game OUTSIDE R -- gives R_0 = [[1,0],[-1/4,7/8]], R_1 = [[1,-1/2],[0,3/4]] and B = [[1,-11/32],[-11/32,21/32]] with det 551/1024 > 0, i.e. uniform scaling carries a non-member INTO R. So the measurement does not test closure under def:damping in either direction."
+  },
+  {
+   "severity": "note",
+   "result_name": "vr:hessian / vr:convexity (b)<=>(d)",
+   "defect": "The proof of (b)<=>(d) uses \"R_beta being invertible\" for an arbitrary base profile beta, but vr:hessian's invertibility paragraph only treats I-P_0, I-P_1 and I-Pbar. GAP, one sentence: for every base profile beta the matrix I-Q_beta is invertible, because each row of Q_beta is one of the two first-passage rows at its vertex, so Q_beta xi <= S xi for xi >= 0 and Q_beta^n 1 <= S^n 1 -> 0 by lem:survival-contract.",
+   "evidence": "Reading of the route's LaTeX proof of vr:convexity, (b)<=>(d) paragraph, against its own vr:hessian invertibility paragraph. The statement is true and one line; I verified base-independence computationally on all 2^|C| bases of 368 random stopping games with 0 disagreements with the sign of B."
+  },
+  {
+   "severity": "note",
+   "result_name": "vr:content (a)",
+   "defect": "\"B is the scalar (1-p^{v,0}_v)(1-p^{v,1}_v) > 0\" needs p^{v,a}_v < 1, which is asserted. GAP, one sentence: in a stopping game p^{v,a}_v < 1, since p^{v,a}_v = 1 would make {v} together with the average part below v^{(a)} a nonempty trap, contradicting lem:trapchar.",
+   "evidence": "Reading of the route's LaTeX proof of vr:content(a)."
+  },
+  {
+   "severity": "note",
+   "result_name": "vr:convexity (cost clause)",
+   "defect": "\"Each of (b),(c),(d) is decidable in polynomial time in exact rational arithmetic\" is asserted with only the cost of forming B given. Exact positive-semidefinite testing of a rational symmetric matrix is not the leading-principal-minors test (that test is valid only for definiteness); it needs symmetric elimination on a positive diagonal pivot, or the characteristic polynomial. Elementary, but not stated, and the paper's four-imports rule makes such statements worth spelling out.",
+   "evidence": "The route's LaTeX gives only \"B costs O(|C|^3) rational operations and the test is a symmetric elimination\". I used the symmetric-elimination test throughout (aud.py is_psd) and it is correct, so the claim is true."
+  },
+  {
+   "severity": "note",
+   "result_name": "vr:min (remark)",
+   "defect": "The three frequency rows \"7434/7640 (Max only), 5082/5274 (Min only), 2834/3037 (both)\" are presented as if the split by owner were informative. Both B and the stopping test (lem:trapchar) are owner-blind, so the three rows measure the same quantity and differ only through the induced |C| distribution.",
+   "evidence": "B = sym(R_0^T R_1) does not mention the owners, and lem:trapchar's condition at a controlled vertex is the same for Max and Min. My own scan of 368 random stopping games gave 347 in R, but broken down by |C| the numbers are 106/106 (|C|=1, in R automatically by vr:content(a)), 111/115, 70/77, 42/47, 17/20, 1/2, 0/1 -- the frequency is a function of |C| alone."
+  },
+  {
+   "severity": "note",
+   "result_name": "vr:gap (the conditional)",
+   "defect": "\"With it, vr:variational plus lem:round-recover would make R a polynomial class\" is asserted. Under the GAP exactly as stated (an algorithm that COMPUTES a minimiser in polynomial time) lem:round-recover is unnecessary; under an approximate-minimiser reading, the passage from q(x) <= eps to |x - w*| small needs a growth bound on the convex quadratic over Q(G), which is not supplied. The route does not claim R is a polynomial class, so the impact is confined to this sentence.",
+   "evidence": "Reading of vr:gap and lem:round-recover (frontier.tex, \"Rounding onto a grid, and exact recovery\")."
+  }
+ ],
+ "novelty_table": [
+  {
+   "result_name": "vr:convex-long (i): CVX4 refutes \"B >= 0 implies L <= |Vmax|\"",
+   "closest_label": "prop:m3-realised",
+   "class": "restatement"
+  },
+  {
+   "result_name": "vr:convex-long (ii): membership in R is not a property of the improvement orientation",
+   "closest_label": "prop:m3-realised (39-vertex B(1-cube) game) together with rem:blowup-measured (58-vertex one)",
+   "class": "restatement"
+  },
+  {
+   "result_name": "vr:ceiling: h*_1(4) = 6 is attained inside R (CVX6, 127 vertices)",
+   "closest_label": "rem:hk-survey + lem:dyadic-row",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "vr:hessian, vr:convexity, vr:variational, vr:optdir, vr:content(a),(b),(c),(e), vr:rev-trivial, vr:rev-vacuous",
+   "closest_label": "thm:transport-objective / prop:lcp / lem:normalform",
+   "class": "new-relation"
+  }
+ ],
+ "verdict": "NOT SOUND: two major defects survive, both checkable in exact arithmetic, neither of which damages the route's central identities.\n\nWHAT REPRODUCES (rebuilt from the statements in /tmp/claude-1000/-data-ssg-proof/5cc7fb9d-035b-424b-bca6-ec769216aeb1/scratchpad/r17-audit-variational-correctness, exact rational arithmetic, independent of the route's code):\n- vr:hessian. The algebra is correct and elementary. On 368 random stopping games the exact second difference of q∘Psi equals 2 d^T B d, and d^T B d = |(I-Pbar)d|^2 - (1/4)|Delta d|^2, in every case; the invertibility argument via lem:survival-contract is sound.\n- vr:convexity. (b)<=>(d) is correct, including base-independence: on 368 games all 2^|C| base profiles agree with the sign of B, 0 disagreements. On thm:cyclic-uso's game I reproduced B (PD) and the seven principal minors of M+M^T -- 9/4, 1, 2, 351/256, 30047/16384, 287/256, 31/32 -- exactly the list printed after prop:seven-k1.\n- vr:variational. Verified on CVX4 and on 361 random games with B positive definite: q(x) = q(z*) + (x-z*)^T B (x-z*), ||w*-z*||_B^2 = -q(z*), q(w*) = 0, T w* = w*.\n- vr:optdir. The identity holds on all profile pairs of 368 games; the sharpness number on AP_m4 at sigma=(0,0,0,1) reproduces to the digit: -274816564885649/769490309485821952.\n- CVX4 and CVX6. Both reproduce completely, twice: from the printed harmonic normal forms and again from the JSON games. CVX4: 48 vertices (3 Max, 43 average), stopping, B and its minors 351/512, 511911/1048576, 47018781/536870912 as printed, w* = (229/288, 7/8, 117/128), outmap (0,1,3,6,7,4,5,2), 0 ties of 24, longest run 4 from (0,0,1) with the printed switch sets, all 48 vertices reachable. CVX6: 127 vertices (4 Max, 121 average), stopping, B and all four printed minors, w* as printed, outmap (5,8,10,11,9,12,14,15,13,4,7,6,2,3,1,0), 0 ties of 64, run 6 from (0,1,0,0) with the printed switch sets, all 127 reachable. Both orientations independently confirmed USO, acyclic, of BA height 4 and 6.\n- vr:content memberships and non-memberships as I listed them, including the independent rebuild of W_10 and W_14 from thm:lasserre-vacuous (value vectors (1/2,1/2,1/4) and (1/2,1/2,15/32), both outside R) and an independent witness for sign-definite-but-outside-R.\n- vr:rev-trivial's proof (a),(b),(c) checks step by step; note the proof uses only symmetry of the non-sink edge relation plus stopping, not the measure, which is why the verification over symmetric-edge games is the right test.\n- vr:rev-vacuous: proof checks; verified on 120 random games (independence, stopping, values, and the run round for round on 64 of them).\n\nWHAT DOES NOT: (1) \"R excludes every published tall-run realisation\" -- the paper's own 39-vertex realisation of B(1-cube) (prop:m3-realised) has 3 Max vertices, an all-switches run of 4, and B positive definite, so it is in R; this falsifies a clause of the paste-ready LaTeX of vr:content(d) and the headline. (2) The same game, paired with the 58-vertex one of identical outmap, already establishes both halves of vr:convex-long, so its \"the paper's own realisations at those heights all violate B >= 0 ... it required building two new games\" is false and CVX4 was not needed. Three of the round-15 m=4 readout systems likewise give run 6 inside R -- I built one (181 vertices) and verified it from the game -- so vr:ceiling's content, though its 127-vertex game is genuinely new and smaller, was one application of lem:dyadic-row away from existing data.\n\nNOT CHECKED: the route's own scan totals (1122, 816, 444, 411, 916, 5084 samples) -- I re-derived the identities on my own 368/361 games instead; the AN5 (m=5) skeleton; whether R contains a two-player family outside the paper's polynomial classes, which the route itself marks open. No target-equivalent oracle is assumed anywhere: membership in R is decided from the instance without the value, and the algorithmic half is explicitly parked behind an honestly stated fifth-import GAP (convex quadratic programming in P)."
+}
