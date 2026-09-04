@@ -76,3 +76,80 @@ Not checked by the audit (recorded for a later audit): `prop:b3-outer`'s 194-ver
 | `rlt-two` | 10:20 UTC | new-theorem | `rl_verify.py`: the level-one choice lift built as one exact LP (Balas' homogenisation) on 120 random one-player stopping games, the merged matrix $M$ and its transience (an M-matrix test) recomputed from first-passage laws, $\max_{R_1}x=w^*$ at every Max vertex whenever $M$ is transient (119 cases); the router trees $T_2(3,\tfrac14)$, $T_3(3,\tfrac14)$, $T_1(3,\tfrac12)$ rebuilt from the definition: stopping, $w^*=\kappa$, $\max_Q x(\mathrm{root})=1$, the explicit level-one point verified in $Q$ and in $R_1$ by per-vertex Balas LPs, root values $\tfrac47,\tfrac8{11},\tfrac23$, the merged bound $D\le MD$ on it; the proofs of the merged bound and of the splitter corollary checked by hand | correctness: new-theorem with `rl:modulator` STRUCK (false as stated: the freezing of `thm:modulator` retypes with an arbitrary payoff, the route's freezes to an action; on $T_2$ the two numbers are 1 and 3), the attribution to `rem:choice-lift` fabricated, `rl:cone`'s witnesses never built as games; the router tree confirmed at seven sizes up to $N=263$; novelty: new-theorem, `rl:levels`/`rl:cone` theorems about a level-$j$ lift the paper never defines, `rl:where` citing the unproved round-17 clause, the 'smallest instance' false ($T_1(2,\tfrac38)$ on 10 vertices straddles), the straddle corollary dropping a hypothesis, the ladder witness wrong ($\rho_{\max}(L_n)=0$; $W_{14}$ is the witness) | batch D, commit `11267d9`: `prop:router-tree` (the family, its values, the explicit level-one point, the straddle on 10 and 14 vertices, under the theorem's full hypothesis) and `rem:merged-matrix` (the level-one bound and the no-splitter criterion; the higher levels only as the route's own formalisation; the modulator identification recorded as refuted) after `rem:choice-lift`; `rl:cone`, the tables and the enumeration not integrated |
 | `convex-class` | 10:27 UTC | new-theorem | `hz_wedge.py`: M7 (tangent cuts of the complementarity sum at the $8\lvert C\rvert$ lexicographic optima of the Z-seeded transport polytope, all three readings) rebuilt from the statement: on $\mathrm{WD}(2j,j,j+4)$, $j=2,3,4$, $B=2^{-(e+1)}\bigl[\begin{smallmatrix}1&-\lambda\\-\lambda&1\end{smallmatrix}\bigr]$ from the game (in $\mathcal R$), round 0 silent, 12 cuts all valid at $w^*$, round 1 decides both Max vertices; `hz_ring.py`: HZ(4), HZ(6) from the game files ($N=6n^2+2$, stopping, reachable, $\lvert\Vmax\rvert=\lvert\Vmin\rvert=n^2/2$, $a=5n^2$, $P_a=\tfrac12\cdot$permutation, $B\succ0$ with $B-\tfrac14I$ PSD and singular, least value $2^{-n^2}$, one SCC holds all controlled vertices), the singular member, membership in $\mathcal R$ of $G_8$, $S$, $S_3$, $H_{3,4,5}$, CC, $R$, the 7-vertex stall, BC(2,5) (BC(3,5) outside); `hz_w7.py`: M7 decides vertex 4 of the seven-vertex stall at round one, HZ's reduced $\tfrac12$-contraction; `hz_bc.py`: BC(2,5) decided at round one here (16 cuts; the auditor's implementation, with 4 cuts, at round two --- a tie-break matter) | novelty: new-theorem (weak), NOT sound as framed: the headline 'the hardest stalls all lie in R' false (BC($e\ge3$), CV outside), HZ($n$) polynomial by a reduced $\tfrac12$-contraction so not the member `rem:handicap-base` asks for, `hz:escape`'s general claim unproved, the phenomenon already in the paper on WD (M1, M(1,0) at round zero; Lasserre exact at $\lvert C\rvert=2$); what is new: an affine cut that is not a pairwise difference bound, outside `thm:convex-barrier-both`'s language, and one genuine decision; correctness: NOT sound (the BC round, the headline; minors: the tie-break unspecified, no bit-size bound, the exactness threshold off by 64, the escape step $2s<2^s$, the bisector sentence reversed, the singular instance's polytope a point), the core reproduced exactly | batch E, commit `05f4aab`: `rem:handicap-base` extended, `prop:handicap-singular`, `prop:hz` (reframed as a presentation artefact, polynomial by the reduced contraction) after `rem:handicap-base`; `rem:tangent-cut` after `rem:convex-barrier-both`, whose exclusion list gains the non-pairwise affine cut; the summary's mechanism paragraph |
 | `beyond-holt-klee` | 10:53 UTC | new-theorem | `oc_verify.py` (+ `H11_m5_GAME.json` archived): the 260-vertex game rebuilt from its file: stopping, the printed normal form equals the game's first-passage laws (denominator $2^{13}$, $p^{v,a}_v=0$, every row leaks, $\rho=2047/2048$ over states), the outmap from the 32 exact value vectors equals the printed $s$, least margin $580908876268806955/409811754332034205696$, USO, acyclic, Holt--Klee by the harness's max-flow test, height 11, the run $10,17,6,21,22,24,4,8,12,28,30,31$, values nondecreasing along it | novelty: DEAD-END under the rubric (the object is the paper's own `thm:readout-realise`(b) at $r=1$; the record a strengthening of `prop:hstar-one-five`; the slope a restatement of `cor:stack-family`; `oc:diagonal` a restatement whose conclusion would mislead; the local-maxima counts follow from the combed criterion now in `rem:pinned-escape`; the m = 5 column does NOT close for $h^*_1$ with ties allowed) --- integrate the record; correctness: NOT sound (`oc:diagonal` REFUTED: it drops the peak law's second conclusion, which fails on every 2-face; its multi-switch clause false for general acyclic orientations), results 1, 2, 4 reproduced digit for digit, the m = 4 survey (5951 distinct classes) reproduced in full | batch F, commit below: `prop:hstar-one-eleven` after `prop:hstar-one-five` ($h^{*,\mathrm{nd}}_1(5)=h^*_{LP}(5)=h^*_{HK}(5)=11$, the normal form and outmap printed, the stacking slope $11/6$); `rem:four-ceilings` (LP row 11, $h^*_1$ row $\ge11$), `cor:stack-family`, `rem:hk-survey` (the 6113-class survey, the smallest unresolved class, the open m = 6 walk), abstract and summary aligned; `oc:diagonal` and `oc:local-max` not integrated |
+
+## What the round changed, in one paragraph
+
+Seven object-changing routes; every one returned (one after a relaunch), and
+every one was cut hard by its audits --- the novelty audits ruled three of
+the seven routes dead-end or blocked under the rubric and struck a headline
+claim in four (the paper's "hardest stalls all lie in $\mathcal R$", the
+modulator identification, the "$m=5$ column closes", the diagonal-labelling
+theorem, the last refuted outright by its correctness audit). The paper
+audit of the round-17 text found three majors, all repaired (batch P). What
+survived and entered the paper: the one-player fold $\mathrm{OF}(D)$, on
+which the stopping-probability path has $2^{m}-1$ breakpoints and is a
+Hamiltonian walk of the Max cube, correcting `rem:fold`'s claim that the
+device needs a Min vertex, with the undamped one-player response map proved
+convex with exactly $2^{D}+1$ pieces (A); the escape shape of the third
+level, its level theorem, and the proof that no outer pair whose drive's
+switch row reads only the block and whose rest row reads its partner
+positively can realise a translate carrying the drive's coordinate --- two
+of the four doublings to $B^{3}$ dead for every block, all four when the
+drive is $\alpha_2$, and over the level-two block only $z=8$ with a
+mixed-sign rest readout left (C); the $m=5$ record $h^{*,\mathrm{nd}}_1(5)=h^*_{LP}(5)=h^*_{HK}(5)=11$
+on $260$ vertices, found by a guided walk through realised orientations,
+with the stacking slope $11/6$ (F); the router tree, on which level one of
+the choice lift closes only a $\Theta(1/N)$ fraction of the transport
+interval with one player and five average vertices, and the merged-matrix
+bound on that level (D); the tangent cut of the convex complementarity sum,
+sound on the handicap-zero class, an affine cut outside the certificate
+method's language, deciding the wedge at round one and one vertex nothing
+else decides, together with the closed forms placing WD and CC inside
+$\mathcal R$ and BC, CV outside, the boundary of $\mathcal R$ attained,
+and HZ$(n)$ --- outside every named bound as presented, yet polynomial by a
+reduced $\tfrac12$-contraction, a companion to `prop:a-presentation` (E);
+and, on the negative side, that black-box composition amplifies a value
+gap by at most a linear factor without any admissibility hypothesis, with
+the ruin chain tight, the free sink-adjacent comparison, and the
+$\varepsilon$-order ladder whose middle is the promise-gap question (B).
+The pivot is unmoved: no superpolynomial all-switches family, no
+$B^{3}$; the escape route to $B^{3}$ is narrowed to one corner.
+
+## Where the next round should start
+
+1. $B^{3}$: the one surviving corner, $z=8$ with $R_\alpha-C_\alpha$ mixed in
+   sign over a driven three-Max block (the published one, or one reading
+   the level-three drive), as an exact infeasibility question in the
+   seventeen parameters of `thm:escape-level` --- a certificate, not a
+   search; and the second escape shape, an outer pair whose drive's switch
+   row reads the partner as well.
+2. The one-player half of the pivot: $h^{*,\mathrm{nd}}_1=h^*_{HK}$ at every
+   $m\le5$; the guided walk at $m=6$ towards a height-$13$ Holt--Klee class
+   and towards the height-$14$ blow-up $B_\varphi(s,13)$ was cut short
+   (`rem:hk-survey`) --- a hit at $14$ would make the blow-up doubling
+   one-player; and whether a degenerate five-state game beats $11$.
+3. The law beyond Holt--Klee: an exact infeasibility certificate for the
+   smallest unresolved $4$-cube class, uniform in the value configuration
+   (a McCormick/RLT relaxation with a Farkas certificate).
+4. A family in the handicap-zero class designed against the tangent cut
+   (its cut points are lexicographic optima of the own-successor rows); and
+   the damping closure of $\mathcal R$, open.
+5. The fold fed back into its own drive: `prop:one-player-fold` shows a
+   driven fold without feedback is a cascade and the path is never a run;
+   a family must make the affine cascade carry the counter.
+6. The evaluation-query decision problem (the relaunched route, pending at
+   the time of writing).
+
+## Integration commits
+
+`fccc750` batch P (the paper audit's 3 majors and 10 minors; the harness
+archived in `scripts/harness/`, the BC game files in
+`scripts/round17-verify/`); `a7969fd` batch A (the one-player fold, the
+convex one-player response map); `e10d4d8` batch B (the admissibility-free
+amplification bound, the free pair, the $\varepsilon$-ladder); `35cea73`
+batch C (the escape shape, `thm:escape-no-beta`, `cor:escape-m3`, the exact
+drive line); `11267d9` batch D (the router tree, the merged matrix);
+`05f4aab` batch E (WD and CC in $\mathcal R$, the singular member, HZ$(n)$,
+the tangent cut); `295e1a6` batch F (the $m=5$ record, the slope $11/6$,
+the survey). The paper stands at $241$ pages with no undefined references;
+the PDF is synced to gdrive:ssg-proof/.
