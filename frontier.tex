@@ -216,17 +216,18 @@ vertices, and the second level by a two-player game on $138$ vertices with
 one Min vertex (\Cref{rem:blowup-measured,prop:b2-realised}), whose
 walk no one-player game has (\Cref{thm:b2-walk}), so the smallest open
 instance of the pivot is the third level, of which the outer half is
-realised on $194$ vertices and the translated layer is not
+realised on $194$ vertices while the translated layer remains unrealised
 (\Cref{prop:b3-outer}); the height of every blow-up is exactly $2h+2$
 (\Cref{prop:blowup-height}). The one-player ceiling is
 $1,2,4,6$ for $m\le4$ and at least $10,12,13$ at $m=5,6,7$, the Holt--Klee
 ceiling $1,2,4,6,11$ and at least $14,20$ at $m=6,7$, both rows growing by
 at least one per dimension
 (\Cref{cor:hstar-one,prop:hstar-one-five,prop:hk-records,prop:sink-lift,rem:four-ceilings}),
-and the one-player row is unbounded in ratio to the trivial one: stacking
-copies of a block behind a freezing bias gives one-player games with $7k$
-Max vertices and runs of length $12k$, a construction that Fekete's lemma
-caps at its best block (\Cref{thm:stack,cor:stack-family}); the blow-up
+and the one-player row exceeds the trivial one by a constant factor:
+stacking copies of a block behind a freezing bias gives one-player games
+with $7k$ Max vertices and runs of length $12k$, a construction whose
+run per state never exceeds its best block's
+(\Cref{thm:stack,cor:stack-family}); the blow-up
 itself doubles while staying Holt--Klee once its outer pair reads a
 signal other than the parity, at $m=4$ and $m=5$, and a readout-free
 condition stops the iteration on every tall seed examined
@@ -2827,9 +2828,10 @@ The families $\mathrm{FV}(n)$ and $\mathrm{FV}_2(n)$ have $D(G)=3$ and
 are solved by \Cref{thm:few-denominator} in $O(N^{2})$ operations; yet
 for $n=3,4,5$, seeded with $Z_0,Z_1$ and read in both directions of
 \Cref{rem:own-successor} at every controlled vertex, the slack calculus of
-\Cref{def:slack}, its min-plus closure of \Cref{def:trans-slack} and the
-one-shot transport test of \Cref{def:transport} never fire on them, at any
-round. (The argument below is a schema, for the two calculi, whose three
+\Cref{def:slack} and its min-plus closure of \Cref{def:trans-slack} never
+fire on them, at any round, and the one-shot transport test of
+\Cref{def:transport} does not fire over the rounds tested. (The argument
+below is a schema, for the two calculi, whose three
 finite checks were carried out for $n=3,4,5$; for the transport test the
 silence is an exact computation over the rounds tested and is not covered
 by the schema; the statement for every $n$ is not proved.)
@@ -2858,7 +2860,7 @@ by the round-$15$ verification route, confirmed by its auditor.)
 \end{proof}
 
 So the few-denominator class contains instances on which the mechanisms
-M2, M2T and M4 are silent for ever; but these are \emph{not} stalls in
+M2 and M2T are silent for ever and M4 over every round tested; but these are \emph{not} stalls in
 the sense of \Cref{def:decision-rule} or of the open question of
 \Cref{rem:alphabet-compare}: every controlled vertex of $\mathrm{FV}(n)$
 has two successors of equal value, exactly the case in which a sound
@@ -3923,10 +3925,14 @@ at most $\tfrac43(s+3)$ on $[\tfrac14,\tfrac34]$; so a context that
 outputs at least $\tfrac34$ when the plugged-in value is at least
 $\tfrac12$ and at most $\tfrac14$ when it is at most $\tfrac12-\delta$
 has $s\ge3/(16\delta)-3$ vertices --- with $\delta=2^{-(a+1)}$
-(\Cref{lem:denominator-sharp}), exponentially many. Admissibility is a
-real restriction here: it forbids directed cycles through calls, so a
-cyclic finite-state device reading a stream of plays is not a context in
-this sense, and the bound says nothing about it. And since a gate's two
+(\Cref{lem:denominator-sharp}), exponentially many. Admissibility ---
+$H$ stopping with its calls read as controlled vertices --- restricts
+less than it may seem: by \Cref{lem:trapchar} it forbids only directed
+cycles inside the controlled-plus-call subgraph, so a device that replays
+the plugged-in game through an average vertex (a call $c\to(x,t_0)$ with
+$x\in\Vavg$, $x\to(c,t_0)$, which repeats $G$ a geometric number of times)
+is a context, and the bound covers it; what is excluded is a replay loop
+through calls and controlled vertices alone, which is not stopping. And since a gate's two
 actions have the same support whatever $p,q\in(0,1)$, the sets
 $\{\val=1\}$ and $\{\val>0\}$ of $H^{p,q}$ do not depend on $(p,q)$
 (\Cref{prop:qualitative}), so no context turns the threshold
@@ -5542,12 +5548,16 @@ The bottom-antipodal height $H$ of $B(s)$ is
                         h(v)+2+h_u,& h(v)\ \text{odd}.\end{cases}
 \end{array}
 \]
-In particular the height of $B(s)$ is exactly $2h_u+2$, attained at the
-$2^{k+1}$ vertices $(1,1,v)$, $(1,0,v)$ with $h(v)$ even and $(0,1,v)$
-with $h(v)$ odd over the $2^{k}$ vertices $v$ of maximal height, and
-$h^{\ast}(m+2)\ge2h^{\ast}(m)+2$ is what the construction gives, no more.
-The same holds for $B(s,z)$ with an arbitrary $z$, with $h(o\oplus z)$ in
-place of $h_u$.
+In particular the height of $B(s)$ is exactly $2h_u+2$, attained exactly
+at the vertices $(1,1,v)$ and, according to the parity of $h_u$, $(1,0,v)$
+or $(0,1,v)$, over the vertices $v$ of maximal height --- twice their
+number, which need not be a power of two ($32$ of the $728$ acyclic
+unique sink orientations of the $3$-cube have six or seven maximal
+vertices) --- and $h^{\ast}(m+2)\ge2h^{\ast}(m)+2$ is what the construction
+gives, no more. The four formulas hold for $B(s,z)$ with an arbitrary $z$,
+with $h(o\oplus z)$ in place of $h_u$; the height of $B(s,z)$ is then
+$h_s+2+h(o\oplus z)$, equal to $2h_u+2$ exactly when $o\oplus z$ has
+maximal height, and $h_s+2$ at $z=0$.
 \end{proposition}
 
 \begin{proof}
@@ -6011,7 +6021,7 @@ $x,\alpha_1,\beta_1,\alpha_2,\beta_2,c_{\min}$, together with
 The inner six vertices do not read $\alpha_3$ or $\beta_3$, so their values are
 the level-two values in all four layers and the inner outmap is $B^{2}$ on each;
 on the layer $(0,0)$ the outer pair is the closed two-cycle of
-\Cref{rem:b2-anatomy}(i) with $A=\tfrac{1021}{1024}$, $A'=\tfrac{1023}{1024}$,
+\Cref{rem:b2-anatomy} with $A=\tfrac{1021}{1024}$, $A'=\tfrac{1023}{1024}$,
 $q=\tfrac1{512}$, $\Theta=\tfrac{2048}{4093}$. Verified from the game: the
 greatest trap is empty, the $256$ profile values were computed by exact
 elimination and $\val_\sigma$ taken as the minimum over the two Min strategies,
@@ -6761,11 +6771,13 @@ edge --- and the operation $D$ of \Cref{prop:D-quadratic} for the same
 reasons. Over every acyclic unique sink orientation of the $m$-cube for
 $m\le4$ and every $z$, the Holt--Klee blow-ups $B(s,z)$ reach heights at
 most $4,6,8,12$ at dimensions $3,4,5,6$, against
-$h^{\ast}_{\mathrm{HK}}=4,6,11,\ge12$ (exhaustive, the route's
+$h^{\ast}_{\mathrm{HK}}=4,6,11,\ge14$ (exhaustive, the route's
 computation, the last value from a scan that finished after its report
-and corrected it): at dimension $6$ the best Holt--Klee blow-up, from a
-seed of height $5$ translated by the all-ones vector, ties the best
-Holt--Klee height known there. Nothing here shows that no
+and corrected it; the $14$ from \Cref{prop:hk-records}): at dimension $6$
+the best Holt--Klee blow-up of this rule family, from a seed of height $5$
+translated by the all-ones vector, reaches $12$, two below the height
+$14$ of \Cref{prop:hk-records}, which is itself a blow-up with a readout
+other than the parity (\Cref{prop:hk-doubling-measured}). Nothing here shows that no
 dimension-raising doubling preserves Holt--Klee, and $11\ge2\cdot4+2$
 leaves room for one;
 that statement, $h^{\ast}_{\mathrm{HK}}(m+2)\ge2h^{\ast}_{\mathrm{HK}}(m)+2$
@@ -6841,8 +6853,16 @@ fail Holt--Klee on a $3$-face (the route's auditor, reproduced by this
 round's), so \Cref{lem:hstar-super} preserves Holt--Klee for some pairs
 of factors and not others and no doubling follows); the last two rows are
 \Cref{cor:hstar-one,prop:oneplayer-runs,prop:hstar-one-five} together with
-$h^{\ast}_{1}\le h^{\ast}_{\mathrm{LP}}\le h^{\ast}_{\mathrm{HK}}$
-(\Cref{prop:oneplayer-lp}) and the monotonicity of both in $m$ (the game
+$h^{\ast,\mathrm{nd}}_{1}\le h^{\ast}_{\mathrm{LP}}\le h^{\ast}_{\mathrm{HK}}$
+for the ceiling $h^{\ast,\mathrm{nd}}_{1}$ over \emph{nondegenerate}
+one-player games (\Cref{prop:oneplayer-lp} needs nondegeneracy;
+$h^{\ast}_{1}$ itself allows ties, and whether it obeys
+$h^{\ast}_{1}\le h^{\ast}_{\mathrm{HK}}$ is the question left open after
+\Cref{thm:no-seven}, settled there for $m\le4$ only), every lower bound
+of the last row being attained by a nondegenerate game
+(\Cref{prop:oneplayer-runs,prop:hstar-one-five,prop:oneplayer-plus-one}
+state this of their witnesses), so that the third row inherits it, and
+the monotonicity of both in $m$ (the game
 of \Cref{prop:oneplayer-runs} adjoining a Max vertex over $t_0$ and a
 fresh coin stays nondegenerate), the lower bounds being what a search
 found and not claimed tight, the $m=7$ entries of the last two rows
@@ -7086,10 +7106,13 @@ layer difference in all eight cases. For different layers and different
 inner vertices, the same check leaves only the pairs of layers
 $\{(1,0),(0,1)\}$, $\{(1,0),(1,1)\}$ and $\{(0,1),(1,1)\}$ at one readout
 combination each, and there both layers carry $s$, which separates them.
-Acyclicity: the inner coordinate moves only along edges of the acyclic
-$s$ or of the acyclic $s(\cdot\oplus z)$, so any directed cycle has
-constant inner vertex and lies in the $2$-face of layers, whose
-orientation has the sink $(0,0)$ and is not a directed cycle.
+Acyclicity, as in the proof of \Cref{thm:blowup}: no outer edge leaves the
+layer $(0,0)$, whose inner orientation is the translate of $s$, so a
+directed cycle meeting $(0,0)$ would lie in it; a cycle avoiding $(0,0)$
+moves its inner coordinate only along edges of the one acyclic
+orientation $s$ carried by the other three layers, so its inner vertex is
+constant, and it would then lie in three vertices of the square of
+layers, which contain no cycle.
 (b) The layer dynamics of the table sends $(1,0)\mapsto(0,1)$ at
 $\varphi=0$ and $(0,1)\mapsto(1,0)$ at $\varphi=1$, and drops to $(0,0)$
 in the two remaining cases; so an alternating readout keeps the walk in
@@ -7306,8 +7329,9 @@ Let $G$ be a sign-definite stopping SSG, and let $\sigma_0,\sigma_1,\dots$ be an
 of improving switches (all-switches included). Then every $v\in\Vmax$ switches at most
 twice, so the run has length at most $2|\Vmax|$; membership is decidable in
 polynomial time. (Every improving rule is therefore polynomial on the class;
-whether the class contains a member outside the eight polynomial classes of
-this document is not determined --- the random samples below all have
+whether the class contains a member outside the seven polynomial classes
+of this document and the quasipolynomial class of \Cref{thm:qp} is not
+determined --- the random samples below all have
 $\min(|\Vmax|,|\Vmin|)\le2$ --- so it is recorded as a bound on the rule and
 not as a new polynomial class.)
 \end{theorem}
@@ -7333,10 +7357,23 @@ average vertices, so both the algorithm and the membership test are polynomial.
 \end{proof}
 
 \begin{remark}\label{rem:signdef}
-The class admits two players, cycles and $a=\Theta(N)$, and is closed under
-\Cref{def:damping}, which multiplies every $d^{v}$ by a positive scalar, so
-the reduction of \Cref{thm:stopping-transform} keeps the hypothesis. The
-content of \Cref{thm:signdef} is the contrapositive,
+The class admits two players, cycles and $a=\Theta(N)$. It is \emph{not}
+closed under \Cref{def:damping}: the chain of \Cref{lem:gadget} multiplies
+the weight of a path by $1-2^{-m}$ per edge, so the two first-passage laws
+at a Max vertex are reweighted entry by entry according to the depths of
+their targets, not by one common scalar. On the stopping game with
+$\Vmax=\{v,w_1,w_2\}$, $v\to(B,A)$, $w_1\to(t_1,t_0)$, $w_2\to(t_0,t_1)$,
+$A\to(a_1,w_2)$, $a_1\to(w_1,w_1)$, $B\to(w_1,b_1)$, $b_1\to(w_2,t_0)$
+($9$ vertices) one has $d^{v}=(0,0,\tfrac14)$ on $(v,w_1,w_2)$, while in
+$G_m$ the same vector is
+$\bigl(0,\,-\lambda^{2}(1-\lambda)/2,\,\lambda^{2}(2-\lambda)/4\bigr)$ with
+$\lambda=1-2^{-m}$, i.e.\ $(0,-\tfrac1{16},\tfrac3{32})$,
+$(0,-\tfrac9{128},\tfrac{45}{256})$, $(0,-\tfrac{49}{1024},\tfrac{441}{2048})$
+at $m=1,2,3$: both signs present (the round-$17$ paper audit, recomputed
+here from the definitions, \texttt{scripts/round17-verify/signdef\_damping.py}).
+Sign-definiteness is therefore a property of the stopping game as
+presented, and the reduction of \Cref{thm:stopping-transform} need not
+preserve it. The content of \Cref{thm:signdef} is the contrapositive,
 which is a design constraint on every attempt at a long run --- \emph{a run longer than
 $2|\Vmax|$ needs a Max vertex whose two successors have first-passage laws whose
 difference changes sign on $C$}, i.e.\ a vertex that genuinely trades one controlled
@@ -7486,13 +7523,22 @@ designated run, so nondegeneracy for every $k$ is not proved. Hence
   h^{\ast}_{1}(m)\;\ge\;\tfrac{12}{7}\,m\qquad\text{for } m\equiv0 \pmod 7 ,
 \]
 and more generally $h^{\ast}_{1}(m_1+k(m_0+1))\ge h_1+k\,h_0$ whenever a one-player
-normal form on $m_1$ (resp.\ $m_0$) states has a run of length $h_1$ (resp.\ $h_0$);
-in particular $h^{\ast}_{1}$ is superadditive up to one state,
-$h^{\ast}_{1}(m_1+m_2+1)\ge h^{\ast}_{1}(m_1)+h^{\ast}_{1}(m_2)$. Two
-consequences, both from the route's auditor. By Fekete's lemma the limit
-$\lim_m h^{\ast}_{1}(m)/m$ exists and equals
-$\sup_{m_0}h^{\ast}_{1}(m_0)/(m_0+1)$: stacking is capped by its best
-block and can never by itself make $h^{\ast}_{1}$ superlinear. And since
+normal form on $m_1$ states has a run of length $h_1$ and a
+\emph{nondegenerate} one on $m_0$ states has a run of length $h_0$ ---
+\Cref{lem:balance,thm:stack} need the gap $g_{\min}>0$ of the block that
+is balanced and stacked, while copy $1$, which nothing perturbs, may be
+degenerate. Writing $h^{\ast,\mathrm{nd}}_{1}$ for the ceiling over
+nondegenerate one-player games, this gives
+$h^{\ast}_{1}(m_1+m_2+1)\ge h^{\ast}_{1}(m_1)+h^{\ast,\mathrm{nd}}_{1}(m_2)$
+and $\liminf_m h^{\ast}_{1}(m)/m\ge\sup_{m_0}h^{\ast,\mathrm{nd}}_{1}(m_0)/(m_0+1)$.
+Superadditivity of $h^{\ast}_{1}$ itself --- which by Fekete's lemma would
+make $\lim_m h^{\ast}_{1}(m)/m$ exist --- is \emph{not} established: the
+stacked game need not be nondegenerate, \Cref{thm:stack} excluding ties
+only along the designated run (the round-$17$ paper audit, correcting an
+earlier claim here). What the construction does show is its own cap: the
+run of a stack is the sum of its blocks' runs, so its length per state
+never exceeds that of its best block, and stacking can never by itself
+make $h^{\ast}_{1}$ superlinear. And since
 $\mathrm{ST}(2)$ is nondegenerate, \Cref{prop:oneplayer-lp} makes its
 orientation Holt--Klee, so $h^{\ast}_{\mathrm{HK}}(14)\ge h^{\ast}_{\mathrm{LP}}(14)\ge24$
 --- weaker than the $27$ that the sink lift of \Cref{prop:sink-lift} gives
@@ -7528,10 +7574,12 @@ the value vector increases pointwise at every round of every run. The raw SSGs w
 also built through \Cref{lem:dyadic-row} and the runs recomputed \emph{from the games}
 by a second, independent evaluator: $\mathrm{ST}(1)$ is a stopping one-player SSG on
 $N=734$ vertices ($7$ Max) with a run of length $12$, and $\mathrm{ST}(2)$ one on
-$N=2199$ vertices ($14$ Max) with a run of length $24$ (both re-verified
-here from the game files: no tied incidence, unique sink orientations,
-acyclic, heights $12$ and $24$, the run of $\mathrm{ST}(2)$ recomputed
-through its exact first-passage normal form over all $2^{14}$ starts). The construction is the first
+$N=2199$ vertices ($14$ Max) with a run of length $24$ ($\mathrm{ST}(1)$
+re-verified here from its game file,
+\texttt{scripts/round16-verify/ST1\_GAME.json}: no tied incidence, a
+unique sink orientation, acyclic, height $12$; $\mathrm{ST}(2)$'s game file
+is not recorded here, and its run of $24$ was recomputed through its exact
+first-passage normal form over all $2^{14}$ starts, \texttt{st2\_nf.py}). The construction is the first
 family of one-player stopping SSGs whose all-switches run exceeds $|\Vmax|$ by a
 constant factor: the previous record families, $\mathrm{RC}(k)$ and the ladder, both
 have $L=|\Vmax|$, and \Cref{cor:gate}'s attained example has $L=|\Vmax|+2$.
@@ -8151,7 +8199,7 @@ The linear complementarity formulation of \Cref{prop:lcp} comes with an
 algorithm, Lemke's, which \Cref{rem:lcp} left aside. The round-$16$
 algorithmic free search read it in the game: it is a homotopy in a
 loyalty bonus paid to a base profile: on one player an improving
-single-switch rule that none of the barriers of this document constrains,
+multi-switch rule that none of the barriers of this document constrains,
 on two players a directed path of the profile cube along which the value
 vector need not be monotone.
 
@@ -8230,17 +8278,29 @@ $M_{SS}z_S+q_S+\lambda d_S=0$, determining $z_S$ affinely --- $M_{SS}$ is a
 $P$-matrix, hence invertible --- and $I_S$ is cut out by the affine
 inequalities $z_S(\lambda)\ge0$ and
 $(Mz(\lambda)+q+\lambda d)_{C\setminus S}\ge0$, so it is an interval.
-Uniqueness in (a) makes the interiors of the $I_S$ disjoint with union
-$[0,\infty)$, so each $S$ occurs on one interval only.
+The $I_S$ cover $[0,\infty)$ by (a). Uniqueness of the solution does not
+by itself make their interiors disjoint --- a complementary pair may
+vanish together at a point and two supports then share an interval, as
+on the $25$-vertex game named in the statement --- but the nondegeneracy
+hypothesis says exactly that no two distinct $S$ are feasible on a common
+interval of positive length, i.e.\ that the interiors are disjoint, and
+then $\lambda\mapsto S(\lambda)$ is a step function with each $S$ on its
+one interval $I_S$.
 
 (d) Along an edge of Lemke's almost-complementary path the basis is
 $\{z_v:v\in S\}\cup\{w_v:v\notin S\}\cup\{z_0\}$ and one complementary pair
 is nonbasic, so every point of the edge is a \emph{complementary} solution of
 $\mathrm{LCP}(M,q+\lambda d)$ for $\lambda=z_0$; by (a) the edge lies in the
 graph of the function $\lambda\mapsto z(\lambda)$, so the path projects
-injectively to $\lambda$. It starts at $\lambda_0$ and, secondary ray
-termination being impossible for a $P$-matrix, ends at $\lambda=0$; being
-connected it is the whole segment.
+injectively to $\lambda$. It starts on the initial ray, and its points
+with $\lambda>\lambda_0$ are exactly that ray, by (b) and the injectivity;
+so its other end is not a ray of unbounded $\lambda$, and not a ray of
+bounded $\lambda$ either, since along such a ray $z$ would be unbounded
+at one $\lambda$ against (a) and the affine form of (c). Hence the path
+ends at a vertex, which for Lemke's pivoting means that $z_0=\lambda$
+leaves the basis, at $\lambda=0$ (this replaces the classical ``no
+secondary ray for a $P$-matrix'', which is not imported); being connected
+it is the whole segment.
 \end{proof}
 
 \begin{corollary}[The homotopy is an exact algorithm]\label{cor:bias-algorithm}
@@ -8276,13 +8336,14 @@ here is its statement on the harmonic normal form of an SSG,
 \Cref{prop:bias-one-improving,lem:bias-path-lp} and the measurements.
 \end{remark}
 
-\begin{proposition}[One player: an improving single-switch rule]\label{prop:bias-one-improving}
+\begin{proposition}[One player: an improving multi-switch rule]\label{prop:bias-one-improving}
 Let $G$ be a stopping SSG with $\Vmin=\emptyset$, let
 $\mu_1>\mu_2>\dots>\mu_K>\mu_{K+1}:=0$ be the breakpoints of the bias homotopy
 and $\pi_0=\beta,\pi_1,\dots,\pi_K$ its profiles, so that $\pi_0$ is
 $\lambda$-optimal on $[\mu_1,\infty)$ and $\pi_t$ on $[\mu_{t+1},\mu_t]$ for
-$1\le t\le K$ (all these intervals nondegenerate --- if two breakpoints
-coincide, delete the intermediate profile and the statement is unchanged).
+$1\le t\le K$ (all these intervals nondegenerate: the coordinates that
+flip at one value of $\lambda$ are counted as one breakpoint, so
+consecutive profiles may differ in several coordinates).
 Write $\kappa_\pi(v):=\sum_{w}d_w\,\mathbb E_\pi[N_w\mid v]\,[\pi(w)\ne\beta(w)]$
 for the $d$-weighted expected number of visits to the deviating vertices.
 Then for every $0\le t<K$,
@@ -8290,11 +8351,14 @@ Then for every $0\le t<K$,
   \val_{\pi_{t+1}}-\val_{\pi_t}\;=\;\mu_{t+1}\bigl(\kappa_{\pi_{t+1}}-\kappa_{\pi_t}\bigr)\;\ge\;0
   \qquad\text{pointwise,}
 \]
-so the path is a nondecreasing chain of value vectors and, consecutive
-profiles differing in one coordinate, every step is an improving single
-switch: on one-player games the bias homotopy is a switching rule in the
-sense of \Cref{def:rule}, and one not among the seven of
-\Cref{prop:rules-fail}.
+so the path is a nondecreasing chain of value vectors and every coordinate
+in which $\pi_{t+1}$ differs from $\pi_t$ is strictly switchable at
+$\pi_t$: each step is an improving switch of one or several vertices at
+once, a single switch when the breakpoint is simple and a multi-switch
+otherwise, so on one-player games the bias homotopy is a switching rule in
+the sense of \Cref{def:rule} --- a multi-switch one, bounded by the
+$N4^{a}$ of \Cref{thm:switch-count} rather than by its $N2^{a}$ --- and one
+not among the seven of \Cref{prop:rules-fail}.
 \end{proposition}
 
 \begin{proof}
@@ -8479,7 +8543,7 @@ homotopy makes at least $2^{cn}$ switches.} By \Cref{prop:bias-shadow} its
 one-player half asks for a two-action Markov decision process whose occupancy
 polytope has an exponentially long shadow in a direction selecting one
 action-coordinate per state; by \Cref{prop:bias-one-improving} such a family would
-also be an exponential lower bound for an improving single-switch rule that is
+also be an exponential lower bound for an improving multi-switch rule that is
 none of the seven of \Cref{prop:rules-fail} and is not all-switches.
 Conversely a polynomial bound on the path would, by
 \Cref{thm:lemke-homotopy}, put \textsc{SSG-Value} in $\mathsf P$, so no
@@ -8632,8 +8696,10 @@ start vertex distinguishes the two.
 
 The ladder is in fact extremal, and the reason is the sharp denominator
 bound: each $\val_\sigma$ lies on a grid of mesh $1/D_\sigma$ with
-$D_\sigma\le2^{a}$, so an improving switch cannot gain less than
-$2^{-a}$, and no improving rule whatever can run longer than that allows.
+$D_\sigma\le2^{a}$, so a single improving switch, which compares two
+coordinates of one value vector, cannot gain less than $2^{-a}$, a
+multi-switch step, which compares coordinates of two vectors, less than
+$4^{-a}$, and no improving rule whatever can run longer than that allows.
 
 \begin{theorem}[Every single-switch improving rule stops within $N2^{a}$ switches, every multi-switch one within $N4^{a}$]\label{thm:switch-count}
 Let $G$ be a stopping SSG with $a=|\Vavg|$, and let
@@ -15985,7 +16051,7 @@ translated by a single coordinate are realised by one-player games and the
 second level by a two-player game on $138$ vertices
 (\Cref{rem:blowup-measured,prop:b2-realised}), so the third level is the
 smallest open instance --- its outer half is realised on $194$ vertices,
-its translated layer is not (\Cref{prop:b3-outer}) --- and
+its translated layer remains unrealised (\Cref{prop:b3-outer}) --- and
 \Cref{rem:blowup-realise} states the question
 that remains: whether each further level costs only a constant number of
 controlled vertices and of bits; the height of a blow-up is exactly
@@ -15996,8 +16062,8 @@ and the Holt--Klee ceiling $1,2,4,6,11,\ge14,\ge20$
 (\Cref{prop:sink-lift,prop:oneplayer-plus-one}); stacking copies of a
 block behind a freezing bias gives one-player games with $7k$ Max
 vertices and runs of length $12k$, so the one-player ceiling exceeds
-$|\Vmax|$ by a constant factor, though Fekete's lemma caps every such
-stack at its best block (\Cref{thm:stack,cor:stack-family}); the blow-up
+$|\Vmax|$ by a constant factor, though the run of a stack never exceeds,
+per state, that of its best block (\Cref{thm:stack,cor:stack-family}); the blow-up
 doubles and stays Holt--Klee at $m=4,5$ when its outer pair reads a
 non-parity signal, and a readout-free condition stops the iteration on
 every tall seed examined (\Cref{prop:blowup-readout,prop:hk-doubling-measured,prop:tstar});
@@ -16009,10 +16075,12 @@ unique sink orientation with the Max cube as its sink projection
 (\Cref{thm:profile-uso,prop:projection}), Holt--Klee constraining that
 projection not at all wherever checked ($m\le3$, the height-$7$ orbit,
 $B^{2}$); Lemke's algorithm on the profile complementarity problem is a
-bias homotopy, on one player an improving single-switch rule that no
+bias homotopy, on one player an improving multi-switch rule that no
 barrier here covers and on two players a directed path of the profile
-cube, and no named family of this document costs it more than $2|C|$
-switches (\Cref{sec:bias}). Bidirectional improvement and its
+cube; no hard family of this document costs it more than about $2|C|$
+switches, while four explicit one-player witnesses exceed $|C|$, with
+$7$ breakpoints at $|C|=3$ and $22$ at $|C|=6$
+(\Cref{sec:bias,prop:bias-witnesses}). Bidirectional improvement and its
 one-sided form, best-response restart, are covered by no barrier here and
 have no known superpolynomial family
 (\Cref{def:bsi,thm:bsi-nostall,prop:bsi-br}); the restart rule beats the
