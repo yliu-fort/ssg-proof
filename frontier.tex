@@ -8187,11 +8187,15 @@ Let $G$ be stopping, $\beta$, $d$ as above, and let $M,q$ be the data of
 \item for $S\subseteq C$ the set $I_S$ of $\lambda\ge0$ whose solution has
   $z_v=0$ off $S$ and $(w+\lambda d)_v=0$ on $S$ is a closed interval, on
   which $z_S(\lambda)=-(M_{SS})^{-1}(q_S+\lambda d_S)$ is affine; the $I_S$
-  cover $[0,\infty)$ and meet only in endpoints, so
-  $\lambda\mapsto S(\lambda)$ is a step function with at most $2^{|C|}-1$
-  breakpoints and pairwise distinct values, so the corresponding profiles
-  $\beta\oplus S$ are pairwise distinct, consecutive ones differing in one
-  coordinate when consecutive breakpoints are distinct;
+  cover $[0,\infty)$; when the homotopy is \emph{nondegenerate} --- no two
+  distinct $S$ feasible on a common interval of positive length, which
+  fails on an explicit $25$-vertex one-player game of the route's auditor
+  --- they meet only in endpoints, $\lambda\mapsto S(\lambda)$ is a step
+  function with at most $2^{|C|}-1$ breakpoints and pairwise distinct
+  values, and the corresponding profiles $\beta\oplus S$ are pairwise
+  distinct, consecutive ones differing in one coordinate when consecutive
+  breakpoints are distinct; in general the path is the one Lemke's
+  lexicographic tie-breaking selects;
 \item Lemke's algorithm with covering vector $d$, started from the initial
   ray $z=0$, traverses exactly
   $\{(z(\lambda),w(\lambda)+\lambda d,\lambda):0\le\lambda\le\lambda_0\}$
@@ -8240,10 +8244,13 @@ connected it is the whole segment.
 On a stopping SSG the \emph{bias homotopy} --- start at $\pi_0=\beta$,
 $\lambda=\lambda_0$; on the current piece solve
 $y(\lambda)=\alpha+\lambda\gamma$ by two exact $|C|\times|C|$ linear systems;
-take the largest $\lambda'<\lambda$ at which some regret
+take the largest $\lambda'\le\lambda$ at which some regret
 $\rho_v(\lambda):=\varepsilon_v\bigl(y_v(\lambda)-
-f^{\lambda}_{v,\bar\pi(v)}(y(\lambda))\bigr)$ vanishes; switch that $v$ and
-repeat --- terminates with $\val|_C$ after at most $2^{|C|}-1$ switches --- the
+f^{\lambda}_{v,\bar\pi(v)}(y(\lambda))\bigr)$ vanishes and switch with
+Lemke's lexicographic tie-breaking when several vanish at once (switching
+a single one of them can stall at a degenerate breakpoint, on an
+$8$-vertex instance of the route's auditor) --- terminates with $\val|_C$
+after at most $2^{|C|}-1$ switches --- the
 trivial enumeration ceiling, no better than trying every profile --- each
 costing $O(|C|^{3})$ exact rational operations on numbers of polynomial
 bit-size, and decides \Cref{prob:main}.
@@ -8299,8 +8306,13 @@ $\Delta\kappa:=\kappa_{\pi_{t+1}}-\kappa_{\pi_t}$. For
 $\lambda\in[\mu_{t+2},\mu_{t+1})$, a nondegenerate interval, the profile
 $\pi_{t+1}$ is optimal, so $\Delta v-\lambda\Delta\kappa\ge0$; substituting
 the identity gives $(\mu_{t+1}-\lambda)\Delta\kappa\ge0$, hence
-$\Delta\kappa\ge0$ and $\Delta v\ge0$. A single switch that does not lower the value is an improving
-switch.
+$\Delta\kappa\ge0$ and $\Delta v\ge0$. Moreover $\pi_t$ is not $\lambda$-optimal for $\lambda<\mu_{t+1}$, so
+$\Delta v-\lambda\Delta\kappa$ is strictly positive somewhere there, whence
+$\Delta\kappa\ne0$, $\Delta v\ne0$, and by \Cref{lem:profile-trichotomy}
+every coordinate flipped at the breakpoint is strictly switchable: several
+may flip at one breakpoint, so the path is a multi-switch improving rule
+(the route's auditor: $77$ of $446$ steps on random one-player games flip
+two or more coordinates, every flipped vertex strictly switchable).
 \end{proof}
 
 \begin{proposition}[One player: the path is a shadow-vertex path]\label{prop:bias-shadow}
@@ -8352,7 +8364,8 @@ harmonic normal form.
 
 \begin{lemma}[Realising a prescribed path is one linear programme]\label{lem:bias-path-lp}
 Fix the transition part $(Q_\beta,Q_{\bar\beta})$ of a harmonic normal form on
-$C$, the signs $\varepsilon$ and the covering vector $d$; then
+$C$ of a \emph{stopping} game (so that every mixed profile is transient),
+the signs $\varepsilon$ and the covering vector $d$; then
 $M=E(I-Q_{\bar\beta})(I-Q_\beta)^{-1}E$ is fixed and
 $q=MEr_\beta-Er_{\bar\beta}$ is affine in the reward vectors. Let
 $S_0=\emptyset,S_1,\dots,S_K$ be subsets of $C$ with
@@ -8389,16 +8402,19 @@ normal form.
 With $d=\bbone$ and the maximum over all $2^{|C|}$ base profiles, the
 number of breakpoints is: $L_n$ ($n\le10$) exactly $n$; $\mathrm{RC}(k)$
 ($k\le10$) exactly $k$; $M_n$ ($n=3,4,5$) exactly $2n+1=|C|$; the
-$19$-vertex instance $G^{\ast}$ of the harness ($|C|=7$) $9$;
+$19$-vertex instance $G^{\ast}$ of the harness ($|C|=7$) $6$ distinct
+breakpoints, $9$ coordinate flips;
 $\mathrm{WD}$, $\mathrm{CC}$, $H_m$, $G_m$ ($|C|\le2$) at most $3$;
 $G^{\sharp}$ and the game of \Cref{prop:b2-realised} ($|C|=6$) $12$ each,
 attained at one base profile (the route's auditor); and $P_D$ of
-\Cref{thm:fold} at most $2D=|C|$ --- the route counted $0,2,4,6,10,12$ at
-$D\le6$ and its auditor $0,1,2,3$ at $D\le4$, the difference being a
-convention at the profile degeneracy of $P_D$, whose $F_d$ and $G_d$
-share a successor pair. So none of the hard families of this document
-costs the homotopy more than $2|C|$ switches; in particular the ladder,
-on which least-index and smallest-gap need $2^{n}-1$, costs it $n$.
+\Cref{thm:fold} $0,2,4,8,10,13$ coordinate flips at $D=1,\dots,6$ (the
+route's auditor; the route reported $0,2,4,6,10,12$, and counting
+distinct breakpoints gives $0,1,2,3$ at $D\le4$), so at $D=6$ the count
+$13$ exceeds $|C|=12$ by one --- the convention matters because $P_D$ is
+profile-degenerate, its $F_d$ and $G_d$ sharing a successor pair. So no
+hard family of this document costs the homotopy more than about $2|C|$
+switches; in particular the ladder, on which least-index and
+smallest-gap need $2^{n}-1$, costs it $n$.
 \end{remark}
 
 \begin{proposition}[The path exceeds $|C|$; four exact witnesses]\label{prop:bias-witnesses}
@@ -8443,6 +8459,8 @@ game,
 $\mathrm{PATH}_6$ is $\mathrm{PATH}_5$ with a sixth Max vertex adjoined,
 so the four are three independent data points and not a family with a
 growth law. All four were built from their dyadic normal forms by \Cref{lem:dyadic-row}
+(a row absorbed entirely in $t_1$, like $\mathrm{HAM}_3$'s $(v_3,1)$,
+does not leak, and stopping is then the trap test directly)
 and verified \emph{from the game}: stopping by \Cref{lem:trapchar}, the normal
 form recomputed from the successor lists, the value against brute force over
 all profiles, and the path by two independent implementations --- the
