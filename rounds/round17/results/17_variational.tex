@@ -1,0 +1,443 @@
+% Round-17 route "variational": energy functionals, reversibility, and the
+% convexity of the complementarity form.  Labels prefixed vr:.
+% Paste-ready in the amsthm style of frontier.tex.  Full file: <code_dir>/vr.tex
+
+\subsection{The complementarity form as a difference of energies}\label{vr:sec}
+
+\Cref{thm:transport-objective} leaves the transport polytope with a
+quadratic obstruction: $w^{\ast}$ is the point of $Q(G)$ at which the
+$|C|$ forms $q_v(x)=(x(v)-x(v^{(0)}))(x(v)-x(v^{(1)}))$ all vanish. This
+subsection reads their \emph{sum} as an energy, computes its Hessian on
+the affine hull of $Q(G)$, and identifies exactly when that Hessian is
+positive semidefinite --- equivalently, when the complementarity problem
+of \Cref{prop:lcp} is monotone. Throughout $G$ is a stopping SSG,
+$C=\Vmax\cup\Vmin$, $\Psi\colon\mathbb R^{C}\to\mathbb R^{V}$ is the
+harmonic extension of \Cref{lem:transport-dim}, $\mathcal A:=\Psi(\mathbb
+R^{C})\supseteq Q(G)$ is its image and $\mathcal A_0$ the direction space
+of $\mathcal A$; $\Psi_0$ denotes the linear part of $\Psi$. We write
+$p^{v,a}\in\mathbb R^{C}$ and $r^{v,a}\in[0,1]$ for the harmonic normal
+form of \Cref{def:readout}: the first-passage law of $v^{(a)}$ over
+$C\cup\{t_1\}$, so that $x(v^{(a)})=\sum_{w}p^{v,a}_wx(w)+r^{v,a}$ for
+every $x\in\mathcal A$. Let $P_a$ be the $C\times C$ matrix with rows
+$p^{v,a}$, and put
+\[
+  R_a:=I-P_a,\qquad \bar P:=\tfrac12(P_0+P_1),\qquad \Delta:=P_1-P_0 .
+\]
+
+\begin{definition}[The complementarity form]\label{vr:def-form}
+$q(x):=\sum_{v\in C}\bigl(x(v)-x(v^{(0)})\bigr)\bigl(x(v)-x(v^{(1)})\bigr)$,
+a quadratic on $\mathbb R^{V}$, and $\widehat q:=q\circ\Psi$, a quadratic
+on $\mathbb R^{C}$. Write $B$ for the symmetric matrix with
+$\widehat q(u+d)=\widehat q(u)+\langle 2Bu+b,d\rangle+d^{\mathsf T}Bd$,
+i.e.\ $B$ is one half the Hessian of $\widehat q$.
+\end{definition}
+
+\begin{lemma}[The Hessian is a difference of two energies]\label{vr:hessian}
+Let $G$ be stopping. Then $I-\bar P$ and $I-P_a$ $(a=0,1)$ are invertible,
+and for every $d\in\mathbb R^{C}$
+\[
+  d^{\mathsf T}Bd
+  \;=\;\sum_{v\in C}(R_0d)_v\,(R_1d)_v
+  \;=\;\bigl\|(I-\bar P)d\bigr\|^{2}-\tfrac14\bigl\|\Delta d\bigr\|^{2},
+  \qquad
+  B=\tfrac12\bigl(R_0^{\mathsf T}R_1+R_1^{\mathsf T}R_0\bigr).
+\]
+Equivalently, for every $x\in\mathbb R^{V}$,
+\[
+  q(x)=\sum_{v\in C}\Bigl(x(v)-\tfrac{x(v^{(0)})+x(v^{(1)})}2\Bigr)^{2}
+       -\tfrac14\sum_{v\in C}\bigl(x(v^{(1)})-x(v^{(0)})\bigr)^{2},
+\]
+the residual energy of the controlled rows minus a quarter of the gap
+energy. $B$ is unchanged when the two actions of a single controlled
+vertex are relabelled.
+\end{lemma}
+
+\begin{proof}
+$\Psi$ is affine and $\Psi_0(d)$ vanishes at both sinks, so for $x=\Psi(u)$
+and $d\in\mathbb R^{C}$ one has
+$\Psi_0(d)(v^{(a)})=\sum_wp^{v,a}_wd_w=(P_ad)_v$; hence the affine form
+$x\mapsto x(v)-x(v^{(a)})$ has linear part $d\mapsto(R_ad)_v$ along
+$\mathcal A$, and the quadratic part of $\widehat q$ is
+$\sum_v(R_0d)_v(R_1d)_v$. The identity
+$\alpha\beta=\bigl(\tfrac{\alpha+\beta}2\bigr)^{2}
+-\bigl(\tfrac{\alpha-\beta}2\bigr)^{2}$ applied termwise with
+$\alpha=(R_0d)_v$, $\beta=(R_1d)_v$, $\alpha+\beta=2((I-\bar P)d)_v$ and
+$\alpha-\beta=(\Delta d)_v$ gives the second form, and writing the sum as a
+matrix product and symmetrising gives the third. The displayed form of $q$
+is the same identity applied to $x$ itself. The $v$-th summand is symmetric
+in the two actions of $v$, whence the invariance.
+
+Invertibility. Let $S$ be the reduced survival operator of
+\Cref{lem:survival-contract}, $(S\xi)_v=\max_a\sum_wp^{v,a}_w\xi_w$; that
+lemma gives $S^{n}\bbone\to0$. For $\xi\ge0$ one has
+$P_a\xi\le S\xi$ and $\bar P\xi=\tfrac12(P_0\xi+P_1\xi)\le S\xi$
+componentwise, so $P_a^{n}\bbone\le S^{n}\bbone\to0$ and
+$\bar P^{n}\bbone\le S^{n}\bbone\to0$; hence $I-P_a$ and $I-\bar P$ are
+invertible with nonnegative inverses.
+\end{proof}
+
+\begin{theorem}[When the complementarity form is convex]\label{vr:convexity}
+For a stopping SSG $G$ the following are equivalent.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $q$ is convex on the affine hull $\mathcal A$ of $Q(G)$;
+\item $B\succeq0$;
+\item $\bigl\|\Delta(I-\bar P)^{-1}\bigr\|_{2}\le2$, where
+      $\|\cdot\|_2$ is the spectral norm: the two actions' first-passage
+      laws differ by at most twice what the averaged chain dissipates;
+\item $M_\beta+M_\beta^{\mathsf T}\succeq0$ for some, equivalently for
+      every, base profile $\beta$, where
+      $M_\beta=E(I-Q_{\bar\beta})(I-Q_\beta)^{-1}E$ is the matrix of
+      \Cref{prop:lcp}: the $P$-matrix linear complementarity problem of
+      that proposition is \emph{monotone}.
+\end{enumerate}
+Each of (b),(c),(d) is decidable in polynomial time in exact rational
+arithmetic, and none depends on which action of a controlled vertex is
+called $0$; in particular the monotonicity of the complementarity problem
+of \Cref{prop:lcp} does not depend on the base profile, which the phrase
+``positive definite at its all-zero base'' in the paragraph after
+\Cref{prop:seven-k1} leaves open.
+\end{theorem}
+
+\begin{proof}
+(a)$\Leftrightarrow$(b) is the definition of convexity for a quadratic.
+(b)$\Leftrightarrow$(c): by \Cref{vr:hessian}, $B\succeq0$ says
+$\|\Delta d\|\le2\|(I-\bar P)d\|$ for all $d$; substituting the bijection
+$y=(I-\bar P)d$ turns this into $\|\Delta(I-\bar P)^{-1}y\|\le2\|y\|$ for
+all $y$.
+(b)$\Leftrightarrow$(d): fix a base profile $\beta$ and let $R_\beta$,
+$R_{\bar\beta}$ be $I$ minus the matrices of the rows named by $\beta$ and
+by its complement. Since the $v$-th summand $(R_0d)_v(R_1d)_v$ of
+\Cref{vr:hessian} is symmetric in the two actions of $v$, it equals
+$(R_\beta d)_v(R_{\bar\beta}d)_v$, so
+$d^{\mathsf T}Bd=(R_\beta d)^{\mathsf T}\bigl(R_{\bar\beta}R_\beta^{-1}\bigr)(R_\beta d)$
+and, $R_\beta$ being invertible, $B\succeq0$ iff
+$R_{\bar\beta}R_\beta^{-1}+(R_{\bar\beta}R_\beta^{-1})^{\mathsf T}\succeq0$;
+finally $M_\beta=ER_{\bar\beta}R_\beta^{-1}E$ with $E$ diagonal with entries
+$\pm1$, and conjugation by a diagonal sign matrix preserves positive
+semidefiniteness. This holds for every $\beta$ at once, which is the last
+clause. Cost: the $p^{v,a}$ are read off one
+exact linear solve on the average part (\Cref{lem:transport-dim}), $B$ costs
+$O(|C|^{3})$ rational operations and the test is a symmetric elimination.
+\end{proof}
+
+\begin{definition}[The convex class]\label{vr:class}
+$\mathcal R$ is the class of stopping SSGs, presented as instances, whose
+subgame reachable from $v_0$ satisfies the equivalent conditions of
+\Cref{vr:convexity}. (In every witness below every vertex is reachable from
+the named start, so the distinction does not arise.)
+\end{definition}
+
+\begin{theorem}[A Dirichlet principle on $\mathcal R$]\label{vr:variational}
+Let $G\in\mathcal R$. Then $q\ge0$ on $Q(G)$, $w^{\ast}$ is the unique
+minimiser of the convex quadratic $q$ over $Q(G)$, and the minimum value is
+$0$. If moreover $B\succ0$, let $z^{\ast}\in\mathcal A$ be the unique
+minimiser of $q$ over $\mathcal A$ --- computed by one exact linear solve
+$2Bu=-b$ --- and let $\|\cdot\|_B$ be the norm $\|d\|_B^2=d^{\mathsf T}Bd$
+on $\mathcal A_0$. Then
+\[
+  q(x)=q(z^{\ast})+\|x-z^{\ast}\|_B^{2}\quad(x\in\mathcal A),
+  \qquad
+  w^{\ast}=\operatorname*{arg\,min}_{x\in Q(G)}\|x-z^{\ast}\|_B ,
+\]
+so $w^{\ast}$ is the $\|\cdot\|_B$-projection of the free energy minimiser
+onto the transport polytope, and $\|w^\ast-z^\ast\|_B^2=-q(z^\ast)$.
+\end{theorem}
+
+\begin{proof}
+$q\ge0$ on $Q(G)$ with equality only at $w^{\ast}$ is three lines from
+\Cref{thm:transport-objective}: at $v\in\Vmax$ both factors of $q_v$ are
+$\ge0$ on $Q(G)$ and at $v\in\Vmin$ both are $\le0$, so $q\ge0$; and
+$q(x)=0$ forces $x(v)=x(v^{(i)})$ for some $i$ at every $v\in C$, which with
+the rows of $Q(G)$ gives $Tx=x$, so $x=w^{\ast}$ by
+\Cref{thm:contraction}. The Taylor identity is exact for a quadratic, and
+minimising $q$ over $Q(G)$ is minimising $\|x-z^\ast\|_B$ there.
+\end{proof}
+
+\begin{remark}[What is still missing on $\mathcal R$]\label{vr:gap}
+\Cref{vr:variational} turns \Cref{prob:main} on $\mathcal R$ into the
+minimisation of a convex quadratic form with rational coefficients over a
+polytope with $N$ variables and $O(N)$ rows, whose minimum value is known to
+be $0$; \Cref{lem:round-recover} then recovers $w^{\ast}$ exactly from a
+sufficiently accurate minimiser. What is missing is exactly one statement,
+and this document does not have it:
+\emph{there is an algorithm which, given a positive semidefinite rational
+matrix $B$, a rational vector $b$ and a rational polytope $P$, computes a
+minimiser of $u^{\mathsf T}Bu+b^{\mathsf T}u$ over $P$ in time polynomial in
+the bit size of the data.} That is the polynomial solvability of convex
+quadratic programming (Kozlov, Tarasov and Khachiyan, from memory, unchecked
+against the source), a fifth import; equivalently the polynomial
+solvability of monotone linear complementarity problems. $\mathcal R$ is
+therefore recorded here as a class on which the problem is \emph{convex},
+not as a proved polynomial class --- the same status
+\Cref{rem:signdef} gives the sign-definite games.
+\end{remark}
+
+\begin{theorem}[Convexity is a bound on the direction of improvement]\label{vr:optdir}
+Let $G$ be stopping and let $\pi,\pi'$ be positional profiles with
+absorbing profile values $x:=\val_\pi$, $y:=\val_{\pi'}$. For $v\in C$ and
+$a\in\{0,1\}$ write $A_a(v,z):=\sum_wp^{v,a}_wz_w+r^{v,a}$. Then, with
+$d:=(y-x)|_{C}$,
+\[
+  d^{\mathsf T}Bd\;=\;\sum_{v:\ \pi(v)\ne\pi'(v)}
+   \Bigl[A_{\pi'(v)}(v,x)-A_{\pi(v)}(v,x)\Bigr]
+   \Bigl[A_{\pi'(v)}(v,y)-A_{\pi(v)}(v,y)\Bigr].
+\]
+Consequently, if $G\in\mathcal R$ and $\Vmin=\emptyset$, then for every Max
+strategy $\sigma$ and every optimal $\sigma^{\ast}$,
+\[
+  \sum_{v:\ \sigma(v)\ne\sigma^{\ast}(v)}
+  \underbrace{\bigl[w^{\ast}(v)-A_{\sigma(v)}(v,w^{\ast})\bigr]}_{\text{optimality gap of }\sigma(v)\ \ge0}
+  \cdot
+  \underbrace{\bigl[A_{\sigma^{\ast}(v)}(v,\val_\sigma)-\val_\sigma(v)\bigr]}_{\text{gain of switching }v\text{ to }\sigma^{\ast}(v)}
+  \;\ge\;0 :
+\]
+weighted by the optimality gaps, the switches towards an optimal strategy
+are improving on average. \Cref{thm:hamming-refuted} and
+\Cref{prop:needle} say that no such statement holds vertexwise, and it fails
+in the weighted form too outside $\mathcal R$.
+\end{theorem}
+
+\begin{proof}
+$(R_ad)_v=(y_v-x_v)-(P_a(y-x))_v=\bigl[y_v-A_a(v,y)\bigr]-\bigl[x_v-A_a(v,x)\bigr]$,
+the terms $r^{v,a}$ cancelling. If $a=\pi(v)$ the second bracket vanishes
+and if $a=\pi'(v)$ the first does. So if $\pi(v)=\pi'(v)=a$ then
+$(R_ad)_v=0$ and the $v$-th summand of $\sum_v(R_0d)_v(R_1d)_v$ vanishes;
+and if $i:=\pi(v)\ne j:=\pi'(v)$ that summand is
+$(R_id)_v(R_jd)_v=\bigl[y_v-A_i(v,y)\bigr]\cdot\bigl[-(x_v-A_j(v,x))\bigr]
+=\bigl[A_j(v,y)-A_i(v,y)\bigr]\bigl[A_j(v,x)-A_i(v,x)\bigr]$, using
+$y_v=A_j(v,y)$ and $x_v=A_i(v,x)$. \Cref{vr:hessian} gives the display. For
+the corollary take $\pi'=\sigma^{\ast}$, so $y=w^{\ast}$ and
+$A_{\sigma^\ast(v)}(v,w^\ast)=w^\ast(v)$, and apply $B\succeq0$.
+\end{proof}
+
+\begin{proposition}[Convexity does not shorten the run, and is not a property of the orientation]\label{vr:convex-long}
+There is a nondegenerate one-player stopping SSG $\mathrm{CVX}_4$ on $48$
+vertices ($3$ Max, $43$ average) which lies in $\mathcal R$, with
+$B\succ0$, and on which all-switches makes $4>|\Vmax|$ productive rounds.
+Its improvement orientation is $(0,1,3,6,7,4,5,2)$, the level-one blow-up
+$B$ of the one-cube --- the same orientation that the $58$-vertex
+one-player realisation recorded after \Cref{rem:blowup-measured} carries,
+and that realisation is \emph{outside} $\mathcal R$
+(\Cref{vr:content}(d)). So membership in $\mathcal R$ is not a property of
+the improvement orientation: one AUSO has both a convex and a non-convex
+realisation. Its harmonic normal
+form, over $(v_0,v_1,v_2;t_1)$ in units of $\tfrac1{32}$ (the residue going
+to $t_0$), is
+\[
+  \begin{array}{lll}
+   v_0:&(5,12,12;0),&(6,0,0;20)\\
+   v_1:&(9,9,12;2),&(0,0,0;7)\\
+   v_2:&(0,22,0;10),&(21,0,1;0),
+  \end{array}
+\]
+with
+$B=\begin{pmatrix}351/512&-69/1024&-123/256\\-69/1024&23/32&-533/1024\\
+-123/256&-533/1024&31/32\end{pmatrix}$,
+leading principal minors $\tfrac{351}{512},\ \tfrac{511911}{1048576},\
+\tfrac{47018781}{536870912}$, all positive, and
+$w^{\ast}=(\tfrac{229}{288},\tfrac78,\tfrac{117}{128})$ on
+$(v_0,v_1,v_2)$. From $\sigma=(0,0,1)$ the all-switches run switches
+$\{v_0,v_1,v_2\}$, $\{v_1,v_2\}$, $\{v_2\}$, $\{v_0\}$; $v_0$ switches
+twice and $v_2$ three times.
+\end{proposition}
+
+\begin{proof}
+The normal form is dyadic of denominator $2^{5}$, so \Cref{lem:dyadic-row}
+realises each of the six rows by a pruned binary tree of average vertices of
+depth $5$; the game so built has $48$ vertices, is stopping by
+\Cref{lem:trapchar}, and everything above --- the first-passage matrices,
+$B$, its minors, the eight profile values, the run and the outmap --- was
+computed from the game in exact rational arithmetic. All $24$ action
+comparisons are strict, so the game is nondegenerate and
+\Cref{prop:allsw-auso} applies.
+\end{proof}
+
+\begin{theorem}[The one-player ceiling is attained inside $\mathcal R$ at $m\le4$]\label{vr:ceiling}
+There is a nondegenerate one-player stopping SSG $\mathrm{CVX}_6$ on $127$
+vertices ($4$ Max, $121$ average, dyadic denominator $2^{7}$) which lies in
+$\mathcal R$, with $B\succ0$, and whose all-switches run from
+$\sigma=(0,1,0,0)$ has length $6=h^{\ast}_{1}(4)$
+(\Cref{cor:hstar-one}). Its harmonic normal form, over
+$(v_0,v_1,v_2,v_3;t_1)$ in units of $\tfrac1{128}$, the residue going to
+$t_0$, is
+\[
+ \begin{array}{lll}
+  v_0:&(45,0,57,0;2),&(39,80,1,6;1)\\
+  v_1:&(14,53,2,1;12),&(17,17,31,32;0)\\
+  v_2:&(57,0,47,0;0),&(0,9,21,91;0)\\
+  v_3:&(0,54,0,52;0),&(18,0,65,38;7),
+ \end{array}
+\]
+its improvement orientation is
+$(5,8,10,11,9,12,14,15,13,4,7,6,2,3,1,0)$, its switch sets along the run
+are $\{v_1,v_3\},\{v_0,v_2,v_3\},\{v_2,v_3\},\{v_2\},\{v_0,v_1\},\{v_0\}$,
+and the leading principal minors of $B$ are
+$\tfrac{7625}{16384}$, $\tfrac{47542061}{268435456}$,
+$\tfrac{939760988311}{17592186044416}$,
+$\tfrac{2290930799522897}{1152921504606846976}$, all positive.
+Together with \Cref{vr:convex-long}, at both values of $m$ at which the
+one-player ceiling is known exactly --- $h^{\ast}_{1}(3)=4$ and
+$h^{\ast}_{1}(4)=6$ (\Cref{cor:hstar-one}) --- it is attained by a game
+whose complementarity form is convex. Convexity of the form, equivalently
+monotonicity of the complementarity problem of \Cref{prop:lcp}, therefore
+imposes no bound at all on the bottom-antipodal height below the general
+one-player ceiling at $m\le4$.
+\end{theorem}
+
+\begin{proof}
+As for \Cref{vr:convex-long}: the normal form is dyadic of denominator
+$2^{7}$, \Cref{lem:dyadic-row} realises its eight rows by pruned binary
+trees of average vertices, and everything stated was recomputed from the
+resulting $127$-vertex game --- its first-passage matrices by
+back-substitution along the (acyclic) average part, $B$ and its minors from
+those, the sixteen profile values by $4\times4$ exact solves, the value
+vector's fixed-point property on all $127$ vertices, and the absence of ties
+in all $64$ comparisons. Every vertex is reachable from $v_0$.
+\end{proof}
+
+\begin{proposition}[The convex class is proper, and what falls on each side]\label{vr:content}
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item If $|C|\le1$ then $G\in\mathcal R$: with $C=\{v\}$, $B$ is the scalar
+      $(1-p^{v,0}_v)(1-p^{v,1}_v)>0$.
+\item $\mathcal R$ is proper. The one-player stopping SSG on six vertices
+      with kinds $(\mathrm{avg},\max,\max,\mathrm{avg})$ and successors
+      $0\to(1,3)$, $1\to(t_1,2)$, $2\to(0,3)$, $3\to(t_0,2)$ has
+      $w^{\ast}=(\tfrac23,1,\tfrac23,\tfrac13)$, both Max vertices
+      value-distinguishing, and
+      $B=\bigl(\begin{smallmatrix}1&-5/8\\-5/8&3/8\end{smallmatrix}\bigr)$
+      with $\det B=-\tfrac1{64}<0$.
+\item Inside $\mathcal R$ (exact, from the games): the ladder $L_n$ of
+      \Cref{def:ladder} for $n\le6$; the chain $\mathrm{RC}(k)$ of
+      \Cref{rem:grid-per-vertex} for $k\le5$; $G_8$ of
+      \Cref{prop:simorder-stalls}; $S$ and $S_r$ $(r\le4)$ of
+      \Cref{prop:transport-stalls,thm:transport-barrier}; $H_m$ $(m\le6)$ of
+      \Cref{cor:slack-stalls}; $CC(L,m)$ of \Cref{thm:hybrid-lower} at
+      $(1,2),(2,2),(2,3),(3,3),(4,4)$; the wedge $\mathrm{WD}(e,j,m)$ of
+      \Cref{def:wedge} at $(1,2,3),(2,2,4),(2,3,5),(3,4,6),(2,5,7)$; and the
+      cyclic game of \Cref{thm:cyclic-uso}, whose $M+M^{\mathsf T}$ has
+      exactly the principal minors recorded after \Cref{prop:seven-k1}.
+      So $\mathcal R$ contains a game with a cyclic profile cube.
+\item Outside $\mathcal R$ (exact, from the games): every published
+      realisation of an all-switches run longer than $|\Vmax|$ --- the
+      $58$-vertex level-one blow-up game recorded after
+      \Cref{rem:blowup-measured} ($m=3$, run $4$), the
+      one-player realisation of a height-six orientation at $m=4$ of
+      \Cref{rem:hk-survey} ($N=100$, run $6$), and both realisations of
+      $B^{2}$ of \Cref{prop:b2-realised} ($m=5$, run $10$); and $W_{10}$,
+      $W_{14}$ of \Cref{thm:lasserre-vacuous}, on which the degree-two
+      Lasserre lift is vacuous.
+\item $\mathcal R$ and the sign-definite class of \Cref{def:signdef} are
+      incomparable: $L_n\in\mathcal R$ is not sign-definite
+      (\Cref{rem:signdef}), and among $816$ random stopping games $670$
+      were sign-definite, of which $32$ were outside $\mathcal R$.
+\item The inequality of \Cref{vr:optdir} genuinely fails outside
+      $\mathcal R$: on the $m=4$ game of (d) it equals
+      $-\tfrac{274816564885649}{769490309485821952}<0$ at
+      $\sigma=(0,0,0,1)$.
+\end{enumerate}
+\end{proposition}
+
+\subsection{Reversibility is either unavailable or vacuous}\label{vr:sec-rev}
+
+The Dirichlet principle proper --- the harmonic function with given boundary
+values minimises $\sum_{u,v}\pi(u)P(u,v)(f(u)-f(v))^{2}$ --- needs the chain
+to be reversible. Two theorems bracket what that hypothesis can do here.
+
+\begin{theorem}[Strict reversibility trivialises the model]\label{vr:rev-trivial}
+Call a stopping SSG \emph{profile-reversible} if there is $\pi>0$ on the
+non-sinks with $\pi(u)P_{\sigma,\tau}(u,v)=\pi(v)P_{\sigma,\tau}(v,u)$ for
+all non-sinks $u,v$ and every positional pair $(\sigma,\tau)$. Then
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item the edge relation restricted to the non-sinks is symmetric, so in the
+      simple graph it induces on the non-sinks every vertex has at most two
+      neighbours;
+\item no connected component of that graph is a cycle: every component is a
+      path (self-loops at average vertices are allowed);
+\item every component contains at most one controlled vertex.
+\end{enumerate}
+Consequently the game splits into independent one-dimensional components,
+each solved by two tridiagonal linear solves and one comparison, and
+$\val$ is computed in $O(N)$ arithmetic operations.
+\end{theorem}
+
+\begin{proof}
+(a) Let $u\to v$ with $u,v$ distinct non-sinks. If $u\in\Vavg$ then
+$P_{\sigma,\tau}(u,v)\ge\tfrac12$ for every pair; if $u\in C$ choose the
+pair that selects $v$ at $u$, so $P_{\sigma,\tau}(u,v)=1$. Either way
+reversibility forces $\pi(v)P_{\sigma,\tau}(v,u)=\pi(u)P_{\sigma,\tau}(u,v)>0$,
+so $v\to u$ is an edge. Each non-sink has exactly two out-edges, hence at
+most two distinct non-sink out-neighbours, so in the induced simple graph
+every vertex has at most two neighbours and every component is a path or a
+cycle.
+(b) In a cycle component every vertex's two out-edges go to its two
+neighbours in the cycle, so every average vertex of the component has both
+successors inside it and every controlled vertex has one; the component is a
+trap and $G$ is not stopping (\Cref{lem:trapchar}).
+(c) Suppose $v_i$ and $v_j$, $i<j$, are controlled vertices of one path
+component $v_1-\dots-v_k$. Take the pair with $v_i$ choosing $v_{i+1}$ and
+$v_j$ choosing $v_{j-1}$. Then $U:=\{v_i,\dots,v_j\}$ is a trap: an average
+vertex strictly inside has both its successors, its two path neighbours,
+in $U$; $v_i$ and $v_j$ each have their chosen successor in $U$. Again $G$
+is not stopping.
+Finally, a component's vertices have all their successors inside it or in
+$\{t_0,t_1\}$, so the components are independent games; in a component with
+one controlled vertex both of its actions may be tried, and each of the two
+resulting chains is a birth--death chain on a path, i.e.\ a tridiagonal
+system.
+\end{proof}
+
+\begin{theorem}[Reversibility of the chance part is vacuous]\label{vr:rev-vacuous}
+For a stopping SSG $G$ let $G'$ be obtained by subdividing every edge out of
+an average vertex with a new Max vertex whose two successors are both the
+old target: $|V'|=|V|+2a$. Then
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $\Vavg'=\Vavg$ is an independent set of $G'$, so the chain on
+      $\Vavg'$ with $C'\cup\{t_0,t_1\}$ absorbing has no interior
+      transition and is reversible with respect to \emph{every} positive
+      measure;
+\item $G'$ is stopping if and only if $G$ is, and then
+      $\val_{G'}=\val_G$ on $V$;
+\item the new Max vertices are never strictly switchable, so all-switches on
+      $G'$ from a strategy agreeing with $\sigma$ on $\Vmax$ performs
+      exactly the run of $G$ from $\sigma$, round for round.
+\end{enumerate}
+Hence on every SSG, after a linear-time normalisation, the average values
+are the unique minimiser of the strictly convex Dirichlet energy
+$E(x)=\sum_{v\in\Vavg}\sum_{i}\bigl(x(v)-x(v^{(i)})\bigr)^{2}$ given the
+values on $C$ --- and this says nothing, because the boundary of the network
+is exactly $C$ and the boundary data are the unknown. The variational
+content of an SSG sits entirely at the controlled vertices; the class of
+games with a reversible chance part is the whole problem.
+\end{theorem}
+
+\begin{proof}
+(a) is by construction. (b): traps correspond. If $U'$ is a nonempty trap of
+$G'$ then every average vertex of $U'$ has both its new Max successors in
+$U'$, and each of those, being controlled, has some successor in $U'$ ---
+its unique target. So $U:=U'\cap V$ is nonempty, every average vertex of $U$
+has both old successors in $U$, and every controlled vertex of $G$ in $U$
+has some successor in $U$ (its successors are unchanged): a trap of $G$.
+Conversely a trap $U$ of $G$ lifts to $U$ together with the new Max vertices
+between an average vertex of $U$ and its successors. Values: extend
+$w^{\ast}_G$ to $G'$ by giving each new Max vertex the value of its target;
+the extension is a fixed point of the Shapley operator of $G'$, which is
+stopping, so it is $\val_{G'}$ by \Cref{thm:contraction}. (c) A vertex whose
+two successors coincide has $\val_\sigma(\bar\sigma(v))=\val_\sigma(\sigma(v))$
+at every $\sigma$, so it never belongs to $S_\sigma$; and by (b) the values
+of the old vertices, hence the switchable sets among them, are those of $G$.
+\end{proof}
+
+\begin{remark}[Which player breaks convexity]\label{vr:min}
+Min does not. Condition (d) of \Cref{vr:convexity} is stated for
+$M=E(\cdot)E$ and conjugation by the diagonal sign matrix $E$ that carries
+the owners is invisible to positive semidefiniteness, so the criterion is
+player-blind; $\mathcal R$ contains two-player games, including the cyclic
+game of \Cref{thm:cyclic-uso} (\Cref{vr:content}(c)), and convexity already
+fails for one player (\Cref{vr:content}(b)). What breaks convexity is
+amplification, $\|\Delta(I-\bar P)^{-1}\|_2>2$: a property of the two
+actions' first-passage laws, not of who owns the vertex. In random stopping
+games the condition is common but not generic --- $1094$ of $1122$ games,
+and by composition $7434/7640$ (Max only), $5082/5274$ (Min only),
+$2834/3037$ (both) --- and the games engineered in this document to be hard
+sit on both sides of it (\Cref{vr:content}(c),(d)).
+\end{remark}
