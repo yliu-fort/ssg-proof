@@ -1,0 +1,107 @@
+{
+ "target": "Route \"query-model\": the strategy-evaluation oracle model — evaluation-query complexity of stopping SSGs (thm:qm-eval, thm:qm-hdp, cor:qm-nobarrier, cor:qm-runs, prop:qm-separation)",
+ "sound": true,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "No evaluation-model barrier (cor:qm-nobarrier)",
+   "defect": "The interpretive payload of this result — 'the paper's exponential lower bounds are properties of the rule, not of the instance or of the information available' — is already the paper's own stated position, in cor:selection and rem:ladder, and the route cites neither. Its declared closest_label (rem:blowup-realise) is not the closest statement in the paper. As a result it is also immediate from the route's own thm:qm-eval ('Immediate from thm:qm-eval', its own argument field), so it carries no independent content.",
+   "evidence": "cor:selection (frontier.tex l.3614): 'no superpolynomial lower bound on any strategy-improvement algorithm can arise from the length of improving paths: such a path of length at most n always exists, so any superpolynomial behaviour is a property of the algorithm's selection rule alone.' rem:ladder (l.8771): 'L_n is as easy as an SSG can be --- acyclic, one-player, solvable by back-substitution in linear time --- so this is a lower bound against a RULE, not evidence about the problem', and 'from the same strategy the shortest improving route has length 1 and the least-index route has length 2^n-1'. rem:hybrid-lower-not-a-refutation (l.15386) makes the same disclaimer for thm:hybrid-lower. grep of the route's qm.tex for cor:selection, rem:ladder, thm:short-path, lem:transport-dim: no hits."
+  },
+  {
+   "severity": "major",
+   "result_name": "Evaluation is cheap (thm:qm-eval) / cor:qm-nobarrier",
+   "defect": "The cost model charges only for the operation that is already polynomial and gives away for free the operation that is the whole problem, and the route's list of deflated lower bounds mixes cost measures. M2 (cor:slack-stalls), M5 (thm:hybrid-lower, thm:cv-lower) and the own-successor hybrid (thm:wedge-proved) are graph-reading propagation calculi, not evaluation algorithms: their round counts were never claims about how many val_sigma computations are needed, so 'each is solved by |C|+2 evaluations' compares incommensurable quantities rather than deflating anything. The genuine content is therefore confined to the rules that really are evaluation algorithms (all-switches, least index, def:bsi, R_BR), where cor:selection already stands.",
+   "evidence": "rem:qm-eval(iii), the route's own text: 'The step it cannot perform in polynomial time is solving the hypothesis --- which is an SSG-valued problem on the same controlled set --- so thm:qm-eval is not a step towards (Poly-Rule).' next_steps(4) concedes the associated reformulation is target-equivalent. def:slack / def:hybrid / def:trans-slack take the game, not an evaluation sequence, as input."
+  },
+  {
+   "severity": "major",
+   "result_name": "Evaluation is not free (thm:qm-hdp) and the headline Theta(|C|)",
+   "defect": "The lower-bound half of the headline is doubly narrower than stated, and only one of the two narrowings is disclosed. (i) Disclosed: the 2^m members are pairwise isomorphic, so prob:main itself is constant on the family and the m-query bound is for the search problem only. (ii) NOT disclosed: the hiding mechanism is tied incidences alone — at every v_j with j>i the two successors have equal value — so HDP_m is a degenerate game for m>=2, and nothing whatever is proved about the nondegenerate class in which def:improvement-uso, prop:allsw-auso, the readout theory and the entire blow-up programme live. The route states the tie in thm:qm-hdp(b) and in hdp.py's docstring but never draws the consequence, and never asks whether Q >= m survives nondegeneracy.",
+   "evidence": "Recomputed here from the route's own code: HDP_3(z=(0,1,1)) has 10 tied incidences out of 24 (sigma,v) pairs. thm:qm-hdp's NOTE concedes the isomorphism point for the decision problem but says nothing about degeneracy; the words 'nondegenerate', 'tie-free' and 'def:improvement-uso' do not occur in the route's statements of thm:qm-hdp or cor:qm-theta."
+  },
+  {
+   "severity": "minor",
+   "result_name": "Evaluation dimension (def:qm-dim)",
+   "defect": "The advertised new invariant does no work. Every bound the route reports, and every headline, is |C|+2; d(G) <= |C| is immediate from the ambient dimension of the paper's own lem:transport-dim, and no statement uses d(G) other than as an intermediate that is then discarded. It is presented in the route's 'object' field as one of the two contributions.",
+   "evidence": "lem:transport-dim (l.14176): 'Q(G) is affinely isomorphic to a polytope in R^C and dim Q(G) <= |C|'; the value set of def:qm-dim is a finite subset of that polytope. The route's dimrun.log reports d(G) as a measured column only (d = |C| for ladders, HDP, RC, B2_small, H5, TB_D10; d = 4 < 7 for G*; d = 1 for CV), supporting no statement."
+  },
+  {
+   "severity": "minor",
+   "result_name": "Values beat orientations (rem:qm-separation)",
+   "defect": "The sentence 'any class on which the outmap oracle provably needs more than |C|+2 queries separates the two by that margin, and none is known' is imprecise in a way that matters for the route's own gap: a superlinear deterministic outmap lower bound for GENERAL unique sink orientations is known (Schurr-Szabo, order m^2/log m, which the route itself lists in prior_art), and what is open is only whether it survives restriction to SSG-realisable orientations. As written it reads as if no superlinear outmap bound existed at all.",
+   "evidence": "Route prior_art (ii): 'Schurr-Szabo (a deterministic lower bound of order m^2/log m)'; rem:qm-separation as drafted omits the qualifier 'among realisable orientations'."
+  },
+  {
+   "severity": "note",
+   "result_name": "Values beat orientations (prop:qm-separation)",
+   "defect": "Engineered and asymptotically empty, as the route concedes: the family is built so that one coordinate's value literally encodes the sink index, and the separation is the constant pair 1 against 4, with 4 comfortably below the ceiling |C|+2 = 6 that the route's own theorem imposes. The only non-assembly ingredient is the exhaustive minimax number D_out(AUSO_3)=4; the realisability half is prop:m3-realised and prop:m3-one-min plus the paper's own automorphism group v -> pi(v) XOR t of order 2^m m! = 48.",
+   "evidence": "rem:qm-separation: 'it is a cheap one: the family broadcasts its own solution in a value.' prop:auso-census (l.5257) supplies 744/728/18 and the group of order 2^m m!; prop:m3-realised (l.7884) supplies one game per class."
+  },
+  {
+   "severity": "note",
+   "result_name": "def:qm-oracle",
+   "defect": "The oracle returns val_sigma at C and at the successors of C, never at v0, so as posed the model does not address prob:main at all — all five results are about naming an optimal Max strategy. Trivially repairable (add v0 to the answer), but it means cor:qm-theta's Theta(|C|) is a bound on a different problem from the paper's target, and the route's own next_steps(3) concedes the decision version's query complexity may be O(1).",
+   "evidence": "def:qm-oracle's displayed answer set is C union {v^(a)}; prob:main (l.306) asks val(v0) >= 1/2; next_steps(3): 'whether the EVALUATION-query complexity of deciding val(v0) >= 1/2 ... is more than O(1) is open'."
+  }
+ ],
+ "novelty_table": [
+  {
+   "result_name": "Evaluation is cheap: at most d(G)+2 <= |C|+2 strategy evaluations (thm:qm-eval)",
+   "closest_label": "thm:compare-equivalence",
+   "class": "new-object"
+  },
+  {
+   "result_name": "The evaluation-query model itself (def:qm-oracle, def:qm-harmonic, def:qm-dim)",
+   "closest_label": "lem:transport-dim",
+   "class": "new-object"
+  },
+  {
+   "result_name": "Evaluation is not free: HDP_m needs |Vmax| queries (thm:qm-hdp, cor:qm-theta)",
+   "closest_label": "thm:ladder",
+   "class": "new-object"
+  },
+  {
+   "result_name": "No evaluation-model barrier (cor:qm-nobarrier)",
+   "closest_label": "cor:selection",
+   "class": "restatement"
+  },
+  {
+   "result_name": "A run stops informing after |C|+1 rounds (cor:qm-runs)",
+   "closest_label": "cor:law-u",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "Values beat orientations (prop:qm-separation)",
+   "closest_label": "prop:m3-realised",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "The justified-strategy reformulation (rem:qm-eval, last clause)",
+   "closest_label": "thm:gap-equivalence",
+   "class": "restatement"
+  },
+  {
+   "result_name": "lem:qm-form(b) (pinning C and reading y(v^(a)) = q + p.y|_C)",
+   "closest_label": "lem:readout",
+   "class": "restatement"
+  },
+  {
+   "result_name": "lem:qm-form(c) (unique fixed point of a substochastic first-passage system)",
+   "closest_label": "lem:survival-contract",
+   "class": "restatement"
+  },
+  {
+   "result_name": "Independent enumeration 12/12, 744/728, eighteen classes",
+   "closest_label": "prop:auso-census",
+   "class": "restatement"
+  },
+  {
+   "result_name": "S_sigma empty is a free optimality certificate",
+   "closest_label": "lem:local-global",
+   "class": "restatement"
+  }
+ ],
+ "verdict": "VERDICT: new-theorem stands, by the letter of the rubric and only just; significance is low.\n\n1. DID THE OBJECT CHANGE? Yes, formally. The object is the deterministic query complexity of naming an optimal strategy when the unit of cost is one policy evaluation and the algorithm's input is the controlled skeleton alone. The paper owns oracle models (thm:compare-equivalence, thm:decide-one-bit, thm:top, rem:bsi) but every one of them is an oracle FOR the problem, so their query counts carry no information; this oracle is a polynomial-time primitive (thm:eval-stopfree), which is a genuinely different model and is not circular in the sense of audit item 3. It does not collapse into an owned object: the paper has no rank or affine-independence argument anywhere (grep: no occurrence of \"affinely independent\", \"affine hull\", \"linearly independent\"), and the adaptive equivalence-query loop that forces the rank to grow is not a three-line consequence of lem:readout plus lem:transport-dim. So thm:qm-eval is proved, new-object, and earns the verdict.\n\n2. WHAT IS ACTUALLY NEW, stripped of framing. Exactly one thing: a short improving route is not merely SHORT (cor:selection, thm:short-path, already in the paper, with the better constant n = |Vmax| and with rem:ladder's sharper distance-1 example) but FINDABLE from the evaluation answers alone, in |C|+2 queries, by an algorithm that sees nothing else of the game. Everything else in the submission is either the paper's own machinery re-proved (lem:qm-form = lem:readout + lem:survival-contract, honestly conceded), an immediate corollary of that one theorem (cor:qm-nobarrier, cor:qm-theta), an engineered constant-factor separation the route itself calls cheap (prop:qm-separation), or a standard prefix-guessing adversary transplanted into a degenerate SSG (thm:qm-hdp).\n\n3. IS IT CIRCULAR OR VACUOUS? Not circular: the oracle is a poly-time operation, so the model is not an SSG-Compare in disguise. But it is close to vacuous as leverage on the target, for a reason the route states and then writes a headline against: the model charges for the cheap step and gives the hard step away, the hard step being an SSG-valued problem on the same controlled set. Consequently \"no adversary argument in this model can prove more than |C|+2\" deflates lower bounds that were never information-theoretic claims — and for M2, M5, M6 and the own-successor hybrid it deflates bounds whose mechanisms are not evaluation algorithms at all. rem:qm-eval's proposed follow-on route is conceded target-equivalent; the paper already carries seven such reformulations.\n\n4. THE REAL REMAINING GAP, more precisely than the route states it. The route states it as: is D_out superlinear on SSG-realisable orientations. That is the right long-range question but it is not this route's gap. This route's gap is: whether ANY lower bound in its own model survives the two properties that make an instance relevant to this paper — nondegeneracy and the decision problem — i.e. whether there exists a family of NONDEGENERATE stopping SSGs sharing one controlled skeleton, differing in the answer to val(v0) >= 1/2, on which every deterministic evaluation algorithm needs more than a constant number of queries. Until that is answered, cor:qm-theta's Theta(|C|) is a statement about 2^m relabellings of a single degenerate game (HDP_3: 10 tied incidences out of 24, recomputed here), and the model has no proved lower bound whatever for prob:main.\n\n5. INTEGRATION: better if trimmed hard, worse as submitted.\nWORTH INTEGRATING. (a) thm:qm-eval with def:qm-oracle and def:qm-dim, placed immediately after cor:selection, and stated as what it is: the adaptive, data-only refinement of cor:selection, with the constant |C|+2 against cor:selection's n and with the multi-switch qualification of cor:selection removed. lem:qm-form must be a citation of lem:readout(a),(b) and lem:survival-contract, not a fourth re-proof of the harmonic form — the paper already carries it at lem:rise-bound, thm:lasserre-vacuous, def:profile-orientation and rem:no-halving-controlled. (b) cor:qm-runs, as a remark hung on rem:ladder: \"of the 64 strategies the least-index run of L_6 evaluates, 7 carry information and the other 57 are predicted exactly, values and appeals, by any harmonic system consistent with the first 7\" is a genuinely sharp sentence and is the one thing here that a reader of rem:ladder does not already know.\nNOT WORTH INTEGRATING AS RESULTS. (c) cor:qm-nobarrier: fold one clause into cor:selection or rem:ladder (\"and the same holds against algorithms free to evaluate non-improving strategies, by thm:qm-eval\"); stating it as a corollary with its own significance claim would make the paper worse, since it re-announces cor:selection's moral as a discovery. (d) prop:qm-separation: at most one sentence in rem:blowup-realise recording that the value oracle is strictly stronger than the outmap oracle and that the interesting question is D_out on realisable orientations — with the Schurr-Szabo qualifier restored. (e) thm:qm-hdp: integrate only if its statement carries both caveats in the theorem, not in a trailing note — the members are pairwise isomorphic, so prob:main is constant on the family, and the family is degenerate, so cor:qm-theta says nothing about the nondegenerate class the rest of the paper works in. Without those the row \"Theta(|C|)\" in a summary table would be actively misleading."
+}
