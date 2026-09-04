@@ -31,7 +31,7 @@ lines). All 22 agents on Opus 5. Scheduled launch 2026-09-04 03:51 UTC.
 
 ## Outcomes
 
-### The paper audit (round-16 diff) — returned 04:39 UTC, NOT SOUND
+### The paper audit (round-16 diff) — returned 04:43 UTC, NOT SOUND
 
 Seven majors and eleven minors, all in text integrated in round 16; every
 finding was re-checked by the root agent and repaired in batch A
@@ -58,4 +58,9 @@ total; the measured rows of `prop:cv-measured`; `prop:q16`'s revised counts;
 
 ### The routes
 
-Filled in as they return.
+| key | returned | route's verdict | root agent's own verification (`scripts/round17-verify/`) | audits | integration |
+| --- | --- | --- | --- | --- | --- |
+| `order-lattice` | 04:54 UTC | new-theorem | `ol_verify.py`: `ol:unique` exhaustive over all preorders on 76 games; OL3's 3-cycle, values, nondegeneracy and $w^*$ from the game; no cycle at $\lvert C\rvert\le2$ (2000 games); the 1-Max-1-Min cross-multiplication proof checked by hand | novelty: sound, verdict DEAD-END (the object collapses, provably, to the profile cube's antipodal walk; `ol:small-C` is four lines from `thm:profile-uso`; `ol:lift-cycles` is the paper's own instance; `ol:read`'s parameter $b$ is inside `thm:modulator`); correctness: pending | batch B (drafted): a remark after `thm:order-determines` (uniqueness of the consistent order, the read letters, stopping necessary) and a remark after `thm:cyclic-uso` (the antipodal 3-cycle on the paper's instance; no cycle at $\lvert C\rvert\le2$) |
+| `parametric-path` | 04:59 UTC | new-barrier | `bp_verify.py`: BP(D) rebuilt from the statement for $D=1..8$, the tent identity, the breakpoint set $\{k/2^D\}$ with exactly $F_d,G_d$ tied, $2^D$ distinct pairs = the tent itinerary; the route's one-Max instances (roots $\{1/4,1/2\}$, $\{1/8,\dots,5/8\}$) against their own polynomials; `pp:step`'s derivative argument checked by hand | pending | pending both audits: a subsection after `sec:bias` (the stopping-probability path: `pp:basic`, `pp:step`, `pp:tent`/`pp:barrier`, `pp:one`, `pp:differ`) and a BP(D) row in `rem:bias-families` |
+| `convex-lift` | 05:06 UTC | new-theorem | `cl_verify.py`: the level-one gap certificate on $W_{14}$ from the paper's normal form (five points in $\tilde Q$, tightness, both convex combinations, so $\max_{R_1}x(v_1)\ge3/5$); $w^*$ and stopping of $W_{14}$, its dual and DW recomputed from the game files; `cl:exact-lift`, `cl:rigid`, `cl:collapse` arguments checked by hand | pending | pending both audits |
+| `realisation-space` | 05:13 UTC | new-barrier | `b2pins.py` (the round-16 sparse verifier): the three new realisations of $B^2$ (137, 138, 139 vertices, 5 Max, 1 Min) verified from the game files, outmap $=B^2$, no tied incidence, USO, acyclic, height 10, run $12,19,13,17,8,16,0,7,1,5,4$ with values increasing (`B2_pin137_GAME.json` archived); `rs:upclosed` and `rs:no-outer-translate` checked by hand (the up-closedness of the outer vertices' switchable sets on the pinned layer against the parity classes the translate demands) | pending | pending both audits |

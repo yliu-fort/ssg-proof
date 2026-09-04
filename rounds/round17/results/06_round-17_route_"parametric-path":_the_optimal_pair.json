@@ -1,0 +1,114 @@
+{
+ "target": "round-17 route \"parametric-path\": the optimal pair as a function of a uniform stopping probability (labels pp:*)",
+ "sound": true,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "pp:basic",
+   "defect": "Reported as a result of class new-relation; it is a RESTATEMENT of thm:opt-subcube (with thm:contraction, lem:lfp and Cramer's rule), plus one routine and never-used degree count. Under rule 2 a restatement reported as a result is a defect; it must be demoted to a remark before integration.",
+   "evidence": "The three lines: (1) for dyadic beta the operator T_beta is the Shapley operator of the stopping SSG G_m of def:damping (the route's own restatement note, beta = 1-2^{-m}), so thm:contraction gives (a) and thm:opt-subcube gives (c) verbatim -- its proof is symmetric in the two players and lem:profile-faces already states the profile version; (2) (b) is thm:opt-subcube's characterisation with y^pi written by Cramer on the linear system of lem:lfp, the determinant positive by (a); (3) (d) is 'a nonzero polynomial of degree <= n+1 has at most n+1 roots, and there are |C|2^{|C|} of them'. The route itself notes (d) is nowhere near tight (BP(D) attains 2^D-1 against (n+1)2D*4^D; OS(k) attains k against 2(n+1))."
+  },
+  {
+   "severity": "major",
+   "result_name": "pp:differ + pp:separation (the exponential-gap half)",
+   "defect": "The claimed EXPONENTIAL separation between the two homotopies is measured, not proved. The only proved ceiling for the bias homotopy is thm:lemke-homotopy(c)'s 2^{|C|}-1 = 4^D-1 on BP(D), which EXCEEDS the discount path's proved 2^D-1, so no separation follows from any theorem; 'at most |C| = 2D' is a measurement at D = 1..5 with no growth law, and prop:bias-witnesses already shows the bias path reaching 2^{|C|}-1 on other families. The concluding sentence -- 'BP(D) is one more family that does not defeat the bias homotopy, to be added to rem:bias-families' -- is by rule 3 a new row of measurements, not a result.",
+   "evidence": "thm:lemke-homotopy(c): '...a step function with at most 2^{|C|}-1 breakpoints'. prop:bias-witnesses: LP*(1)=1, LP*(2)=3=2^2-1, LP*(3)>=7=2^3-1. The route's own verification field: 'On BP(D), D=1..5: 1,2,3,4,5 breakpoints under single-switch tie-breaking and 1,2,3,6,7 under switch-all-vanishing' -- five sizes, two conventions, no proof."
+  },
+  {
+   "severity": "major",
+   "result_name": "pp:barrier (the significance of the barrier)",
+   "defect": "The barrier's model contains no mechanism this project studies -- not M1-M6, not all-switches, not def:bsi or R_BR, and not the bias homotopy -- and by the route's OWN argument it can never reach the paper's live open question. pp:differ(ii) says a parameter in the objective forces interval optimality regions; that is exactly why the fold of pp:tent cannot be transplanted to the bias path, so pp:tent gives literally zero information about rem:bias-gap. What the barrier prunes is an algorithm schema the paper never proposed, and rem:fold already asserts the same conclusion for the neighbouring parameter ('sweeping theta and tracking the optimal pair meets 2^{Omega(N)} distinct pairs, so no continuation method of that shape is polynomial').",
+   "evidence": "rem:bias-gap: 'Conversely a polynomial bound on the path would, by thm:lemke-homotopy, put SSG-Value in P, so no polynomial bound may be conjectured here.' The bias path is an exact algorithm (cor:bias-algorithm); the discount path is not (its start is degenerate by pp:start and each step costs 2^{|J|} by pp:step), so an exponential lower bound on the latter is cheaper to obtain and carries less."
+  },
+  {
+   "severity": "minor",
+   "result_name": "pp:step",
+   "defect": "A rediscovery -- honestly attributed by the route -- of the standard first-order sensitive-discount step of Blackwell/Veinott/Miller-Veinott theory, carried to two players. Its one sharp claim, that the per-step cost is 2^{|J|} rather than O(1), is contradicted by every instance the route built: |J| = 2 at all 57 BP breakpoints and |J| = 1 at all 10 OS breakpoints, so the route's own families give no evidence that a step is ever more than O(n^3). Its closest owned neighbour is lem:profile-faces (freeze outside the free set J and the tied profiles are exactly the optimal profiles of the frozen subgame G_J), which the route did not cite; it cited cor:bias-algorithm.",
+   "evidence": "Route's verification: 'All 67 right-hand predictions and all 67 left-hand predictions correct... |J| = 2 at every BP breakpoint and |J| = 1 at every OS breakpoint'; route's next_steps (3) asks for an instance where |J| grows, i.e. admits the sharp half is unwitnessed. lem:profile-faces, l.8016: '...is the set of optimal profiles of G_J, all carrying y_pi = val(G_J)|_C'."
+  },
+  {
+   "severity": "minor",
+   "result_name": "pp:one",
+   "defect": "Wrong closest label, and one unattributed piece of folklore. The closest statement in the paper is prop:leapfrog -- a ONE-PLAYER stopping SSG on O(K^2) vertices, built from lem:dyadic-row mixtures, in which ONE Max vertex reverses K times -- not prop:bias-witnesses, which the route cited; the route did not find it. Neither implies the other (different parameter), but the paper already owns the 'one controlled vertex, k reversals, O(k^2) vertices by dyadic rows' shape, so the marginal novelty is the polynomial realisation, not the phenomenon. Separately, the qualitative half (the optimal action is not monotone in the discount factor, so the optimality region is not an interval) is textbook MDP folklore; the route's prior_art flags Blackwell's threshold and the matrix-versus-objective distinction but not this.",
+   "evidence": "prop:leapfrog: 'a one-player stopping SSG on O(K^2) vertices... with |Vmax| = K+1 on which all-switches takes exactly K rounds... the vertex v is switched K times, at a cost of Theta(K) vertices per reversal'. pp:one: 'a single controlled vertex changes its action Omega(sqrt(N/log N)) times along the path... |V| = O(k^2 log k)'."
+  },
+  {
+   "severity": "minor",
+   "result_name": "pp:one (the dumped witness)",
+   "defect": "The dumped instance is not the witness named in the write-up. OS2.json is R = {1/4,1/2}, K = 4, 17 vertices; the LaTeX's 'smallest witness OS_2' is R = {1/2,3/4}, K = 5, 19 vertices, and pp:differ(i) quotes that game's readouts (11/32, 10/32). The claim survives -- I verified the dumped game from its successor lists -- but the named witness was not the file archived.",
+   "evidence": "OS2.json: {\"roots\": [\"1/4\",\"1/2\"], \"n\": 15, \"v\": 14}. My exact recomputation from that game: val(u_0)-val(u_1) = (1/2)beta^4(beta-1/4)(beta-1/2), optimal action 0,1,0 with ties exactly at 1/4 and 1/2. The 19-vertex OS_2 of the LaTeX is consistent arithmetically (1/4*(1-1/2)*(1-3/4) = 1/32 = 11/32-10/32) but was not dumped."
+  },
+  {
+   "severity": "note",
+   "result_name": "pp:def (integration hazard)",
+   "defect": "Notation collision, three ways, if integrated verbatim: the route's beta is ONE MINUS lem:gadget's beta (there beta := 2^{-m} is the leak, so the route's beta = 1-2^{-m}), and beta already denotes the BASE PROFILE throughout def:bias, thm:lemke-homotopy and lem:bias-path-lp -- the very section pp:differ and pp:separation compare against.",
+   "evidence": "lem:gadget: 'arrives at w with probability 1-beta and at t_0 with probability beta, where beta := 2^{-m}'. def:bias: 'Fix a base profile beta in {0,1}^C'. pp:def: 'every step out of a non-sink is diverted to t_0 with probability p = 1-beta'."
+  },
+  {
+   "severity": "note",
+   "result_name": "pp:barrier (second sentence)",
+   "defect": "The clause 'the damping of thm:stopping-transform cannot be weakened below 2^{-Omega(N)} if the optimal pair is wanted' constrains nothing the paper does and is folklore by the route's own admission: thm:stopping-transform already takes m = Theta(a + log N), extracts one bit at v_0 and never claims the pair transfers; and BP(D) is acyclic and stopping, so the transformation would never be applied to it.",
+   "evidence": "Route's prior_art: 'That the Blackwell threshold can be exponentially close to 1 is folklore for MDPs; pp:barrier's 1-2^{-Omega(N)} is the two-player instance of it.' thm:stopping-transform: 'm := ceil(5a/2 + log_2 N) + 3'."
+  },
+  {
+   "severity": "note",
+   "result_name": "pp:tent (independent re-verification, in the route's favour)",
+   "defect": "No defect: I rebuilt thm:fold's P_D as a discount game and the naive transplant does die exactly as the route claims, so pp:tent is emphatically NOT a relabelling of thm:fold, and I confirmed the family from the dumped games with an independent exact solver. This is what keeps the route's verdict alive and it should be recorded.",
+   "evidence": "P_D of thm:fold read as G_beta (u -> (t_0,t_1), no freezing), 2000 exact rational samples of beta per D: 0 changes of the optimal pair and 1 distinct pair for every D = 1..7. BP3.json, by enumerating all 2^6 profiles with an exact linear solve per profile: 8 pairwise distinct optimal pairs across the 8 interval midpoints, 4 optimal pairs (i.e. |J| = 2) at each of the 7 breakpoints k/8. BP8.json (N = 82, |C| = 16): 255 changes and 256 distinct pairs across the 256 midpoints, 2 tied controlled vertices at each sampled breakpoint."
+  }
+ ],
+ "novelty_table": [
+  {
+   "result_name": "pp:tent + pp:robust + pp:barrier (BP(D), 2^{Omega(N)} breakpoints of the discount path)",
+   "closest_label": "thm:fold / rem:fold",
+   "class": "new-object"
+  },
+  {
+   "result_name": "pp:one (one player, one Max vertex, arbitrary dyadic breakpoint set)",
+   "closest_label": "prop:leapfrog (the route cited prop:bias-witnesses; prop:leapfrog is closer in shape and was not found)",
+   "class": "new-object"
+  },
+  {
+   "result_name": "pp:differ (i)+(ii): the discount path is not a parametric-objective path",
+   "closest_label": "thm:lemke-homotopy(c) (with prop:bias-shadow)",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "pp:separation: the gap between the two homotopies on BP(D) is exponential",
+   "closest_label": "rem:bias-families",
+   "class": "measurement-only"
+  },
+  {
+   "result_name": "pp:step (the path-following step is a derived discounted game on the tied set)",
+   "closest_label": "lem:profile-faces (the route cited cor:bias-algorithm)",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "pp:basic (well-definedness, optimality regions, breakpoint bound)",
+   "closest_label": "thm:opt-subcube (with thm:contraction, lem:lfp)",
+   "class": "restatement"
+  },
+  {
+   "result_name": "pp:start (the degenerate start and the leading-order recursion)",
+   "closest_label": "thm:lemke-homotopy(b)",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "restatement 1: G_beta at beta = 1-2^{-m} is Condon's damped game",
+   "closest_label": "def:damping / lem:gadget",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement 2: pp:monotone (w_beta increasing in beta, w_beta -> val)",
+   "closest_label": "thm:stopping-transform, Steps 1-2",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "restatement 3: pp:pair (the path names an optimal pair of an arbitrary SSG)",
+   "closest_label": "thm:stopping-transform with thm:lfp-general",
+   "class": "restatement"
+  }
+ ],
+ "verdict": "VERDICT SUSTAINED, NARROWLY: new-barrier. The route has proved results of class new-object (pp:tent, pp:one), so the rubric's bar is cleared, and I re-verified both from the games with an independent exact solver.\n\nDID IT CHANGE THE OBJECT? Partly. The object is the path beta -> Opt(beta) of the damped family G_beta -- the paper's own def:damping with the damping constant made a variable. The paper does not own that path, but it owns the genus twice already: sec:fold is a one-parameter family of SSGs and its optimal-pair breakpoints (frozen sink payoff), and sec:bias is a genuine homotopy with a full structure theory (loyalty bias). So the route supplies a third parameter, not a new kind of object, and it does so with sec:fold's own gadget: the fold (one Max and one Min on the same successor pair), the tent map T(x)=|2x-1| and the breakpoint set {j2^{-D}} are all thm:fold's, and even the size is the same shape (6D+2 there, 10D+2 here). What redeems this is that the transplant is not free: I rebuilt P_D as a discount game and its discount path has ZERO breakpoints for D=1..7, so BP(D) is a real re-engineering (routing the fold through a two-step reader of multiplier beta^3/2 against a three-vertex constant block of ratio beta^3/4 to make the tent slope beta-independent), and pp:tent is in no sense a restatement. The non-collapse into the paper's bias homotopy is PROVED, not merely noticed (pp:one exhibits a |C|=1 game whose optimality region is not an interval; thm:lemke-homotopy(c) says the bias regions are). The relation to the theta-sweep of sec:fold -- the parameter that drives the same gadget -- is never examined, which is the one collapse question that mattered.\n\nCIRCULAR OR VACUOUS? Not circular. pp:pair is target-equivalent (computing the pair optimal near beta=1 solves the game) and the route correctly demoted it to restatements. Not vacuous, but thin: the barrier's model contains none of M1-M6, all-switches, def:bsi, R_BR or the bias homotopy, and by pp:differ(ii)'s own argument -- parameter in the constraint matrix folds, parameter in the objective cannot -- the mechanism can never transfer to rem:bias-gap, the paper's live open question about a parametric path. BP(D) itself is acyclic, hence inside the paper's own polynomial classes, which is the normal pattern for a mechanism barrier but means nothing is learned about hardness.\n\nTHE REAL REMAINING GAP, more precisely than the route states it: not merely \"is there a one-player exponential family\", but -- can the upper envelope max_sigma y^sigma_beta of the 2^m occupancy rational functions of a two-action MDP change its argmax superpolynomially often in beta? The route's fold needs max and min at the same successor pair to form |o_0 - o_1|, and pp:monotone shows every one-player value is nondecreasing in beta, so no one-player value folds; pp:one reaches only Omega(sqrt(N/log N)) because a single vertex's regret is a polynomial of degree <= n+1 and interleaving many vertices is what the fold was doing. And a second gap the route does not name at all: nothing here moves rem:bias-gap by a single step.\n\nINTEGRATE OR NOT? Slightly better, if cut to about a page, and worse if taken as offered. WORTH INTEGRATING: (1) pp:def as a short definition attached to def:damping, with the pp:damping identification as its one-line remark; (2) pp:tent as a proposition placed immediately after rem:fold in sec:fold -- that is where it belongs, because it extends rem:fold's own sentence to the one parameter that is an algorithm schema, and it must carry the P_D-has-no-discount-breakpoints fact, which is the whole justification for a second family; pp:barrier as a one-sentence corollary there, WITHOUT the stopping-transform clause; pp:robust compressed into the same remark; (3) pp:one as a proposition in sec:bias next to prop:bias-witnesses, with pp:differ(i)+(ii) as a two-line corollary (it is two lines from pp:one and thm:lemke-homotopy(c) and should not be a separate theorem), and with prop:leapfrog cited as the neighbouring construction. NOT WORTH INTEGRATING as numbered results: pp:basic (restatement of thm:opt-subcube; at most one sentence citing it plus the degree count), pp:separation (measurement-only; at most a row in rem:bias-families reading \"BP(D): bias homotopy 1,2,3,4,5 measured at D<=5 against the discount path's proved 2^D-1\"), pp:step (standard sensitive-discount sensitivity, with its sharp half unwitnessed; a remark), pp:start (routine Taylor expansion; keep only the sentence that the start is degenerate, since pp:robust(b) already answers the objection it exists to answer), pp:pair (keep as a remark explicitly flagged target-equivalent so no reader reads it as an algorithm). Fix the beta collision before any of it lands."
+}

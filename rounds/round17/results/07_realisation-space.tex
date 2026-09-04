@@ -1,0 +1,642 @@
+% ===================================================================
+% Route rs: (round 17) --- the realisation space of an orientation.
+% Paste-ready; labels prefixed rs:.  Cross-references are to frontier.tex.
+% Full file: <code_dir>/rs_results.tex
+% ===================================================================
+
+\subsection{The realisation space of an orientation}\label{rs:sec}
+
+\Cref{thm:readout-realise} turns realisability into an interpolation
+problem; the object below turns it into a \emph{set}. Fixing the shape of a
+game --- which row may read which vertex --- makes the family of games of that
+shape a semialgebraic set, cut out of the substochastic polytope by the
+$m2^{m}$ sign conditions that say what the improvement orientation is. The
+questions of \Cref{rem:blowup-realise} then become metric questions about
+those sets, and the cost of one blow-up level becomes a width.
+
+\begin{definition}[Shapes, the realisation space, the bit cost]\label{rs:def-space}
+Fix $m\ge1$, $k\ge0$; write $C=\{x_1,\dots,x_m\}\cup\{y_1,\dots,y_k\}$ for the
+controlled vertices, the $x$'s Max and the $y$'s Min, and $n=m+k$. A
+\emph{shape} $S$ assigns to each $v\in C$ and each action $a\in\{0,1\}$ a set
+$S(v,a)\subseteq C\cup\{t_1\}$ of admissible targets. A \emph{point} of $S$ is
+a family $\theta=(p^{v,a},q^{v,a})_{v,a}$ of nonnegative rationals with
+$p^{v,a}$ supported on $S(v,a)\cap C$, $q^{v,a}=0$ unless $t_1\in S(v,a)$, and
+$|p^{v,a}|_{1}+q^{v,a}\le1$, the missing mass going to $t_0$; $P_S\subseteq
+\mathbb R^{E(S)}$, $E(S)=\sum_{v,a}|S(v,a)|$, is the (full-dimensional)
+polytope of points, and $P_S^{\delta}$ the points every row of which leaks at
+least $\delta$. A point of $P_S^{\delta}$ with $\delta>0$ and dyadic entries is
+the harmonic normal form (\Cref{def:reduced-rows}) of a stopping SSG, each row
+spent on a chain of \Cref{lem:dyadic-row}. For $\sigma\in\{0,1\}^{m}$ and
+$\tau\in\{0,1\}^{k}$ let $P_{\sigma,\tau}(\theta)$ be the $C\times C$ matrix of
+the chosen rows, $x_{\sigma,\tau}=(I-P_{\sigma,\tau})^{-1}q_{\sigma,\tau}$,
+$\val_\sigma=\min_{\tau}x_{\sigma,\tau}$ componentwise
+(\Cref{thm:stopping-determinacy}), and
+\[
+ \Delta_{v,\sigma}(\theta)\ :=\ p^{v,1-\sigma_v}\!\cdot\!\val_\sigma
+   +q^{v,1-\sigma_v}-\val_\sigma(x_v)
+\]
+the margin of the incidence $(\sigma,x_v)$. For an outmap $s$ of the
+$m$-cube the \emph{realisation space} is
+\[
+ \mathcal R(s;S)\ :=\ \bigl\{\theta\in P_S^{>0}:\
+   \Delta_{v,\sigma}(\theta)\ne0\ \text{and}\
+   \Delta_{v,\sigma}(\theta)>0\iff v\in s(\sigma),\ \ \forall v\le m,\ \forall\sigma\bigr\},
+\]
+and the \emph{bit cost} is
+$c(s;S):=\min\{D:\mathcal R(s;S)\cap2^{-D}\mathbb Z^{E(S)}\ne\emptyset\}$
+($+\infty$ if the space is empty). By \Cref{thm:readout-realise}(b) a point of
+$\mathcal R(s;S)\cap2^{-D}\mathbb Z^{E(S)}$ is a nondegenerate stopping SSG
+with $m$ Max, $k$ Min and $O(n^{2}D)$ average vertices realising $s$.
+\end{definition}
+
+\begin{theorem}[The realisation space is semialgebraic of degree $n+1$]\label{rs:semialg}
+Let $S$ be a shape with $m$ Max and $k$ Min vertices, $n=m+k$.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item For every $\sigma,\tau$ the determinant $D_{\sigma,\tau}(\theta):=
+      \det(I-P_{\sigma,\tau}(\theta))$ is a polynomial of degree at most $n$
+      in $\theta$, strictly positive on $P_S^{>0}$, and
+      \[
+        N^{\tau}_{v,\sigma}\ :=\ D_{\sigma,\tau}\cdot
+        \bigl(p^{v,1-\sigma_v}\!\cdot\!x_{\sigma,\tau}+q^{v,1-\sigma_v}-x_{\sigma,\tau}(x_v)\bigr)
+        \ =\ p^{v,1-\sigma_v}\!\cdot\!\adj(I-P_{\sigma,\tau})q_{\sigma,\tau}
+             +q^{v,1-\sigma_v}D_{\sigma,\tau}
+             -\bigl(\adj(I-P_{\sigma,\tau})q_{\sigma,\tau}\bigr)_{x_v}
+      \]
+      is a polynomial of degree at most $n+1$.
+\item With one player ($k=0$),
+      $\mathcal R(s;S)=P^{>0}_S\cap\bigcap_{v,\sigma}\{\varepsilon_{v,\sigma}
+      N_{v,\sigma}>0\}$, $\varepsilon_{v,\sigma}=\pm1$ according to $s$: an
+      intersection of $m2^{m}$ strict polynomial inequalities of degree at
+      most $m+1$ in at most $2m(m+1)$ variables with an open polyhedron.
+      With $k\ge1$, $\mathcal R(s;S)=\bigcup_{T}\mathcal R_T(s;S)$ over the
+      maps $T:\sigma\mapsto\tau_\sigma$, where $\mathcal R_T$ adds the
+      non-strict best-response inequalities
+      $D_{\sigma,\tau}D_{\sigma,\tau_\sigma}
+       \bigl(x_{\sigma,\tau_\sigma}(u)-x_{\sigma,\tau}(u)\bigr)\le0$,
+      again polynomials of degree at most $2n$, and uses
+      $N^{\tau_\sigma}_{v,\sigma}$ in the sign conditions.
+\item $\mathcal R(s;S)$ is relatively open in $P_S$. Hence if it is nonempty
+      it has full dimension $E(S)$, and it contains dyadic points, so
+      $c(s;S)<\infty$.
+\item {\rm(The fibre is the interpolation programme.)} For a value
+      configuration $X=(X_\sigma)_{\sigma}\in([0,1]^{C})^{2^{m}}$ let
+      $L_S(X)$ be the set of $\theta\in P_S^{>0}$ with $\val_\sigma(\theta)
+      =X_\sigma$ for all $\sigma$ and with the prescribed margin signs. Each
+      $L_S(X)$ is a relatively open polyhedron --- the linear programme of the
+      paragraph after \Cref{thm:readout-realise} --- and $\mathcal R(s;S)$ is
+      the disjoint union of the nonempty $L_S(X)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) The entries of $I-P_{\sigma,\tau}$ are affine in $\theta$, so the
+determinant has degree $\le n$ and the adjugate entries degree $\le n-1$;
+$I-P$ is a nonsingular $M$-matrix on $P^{>0}_S$ (row sums $<1$), so
+$D_{\sigma,\tau}>0$ and Cramer's rule gives the displayed identity; its three
+summands have degrees $1+(n-1)+1$, $1+n$ and $(n-1)+1$.
+(b) is (a) together with the definition; the best-response comparison
+$x_{\sigma,\tau_\sigma}(u)\le x_{\sigma,\tau}(u)$ becomes polynomial after
+multiplying by the two positive determinants.
+(c) On $P^{>0}_S$ the maps $\theta\mapsto x_{\sigma,\tau}(\theta)$ are
+continuous, hence so are $\val_\sigma=\min_\tau x_{\sigma,\tau}$ and the
+margins; the defining conditions are strict, so the set is relatively open. A
+nonempty relatively open subset of the full-dimensional polytope $P_S$ has
+full dimension, hence contains a point all of whose coordinates are dyadic.
+(d) For fixed $X$ the equations $X_\sigma(v)=p^{v,\sigma_v}\!\cdot\!X_\sigma
++q^{v,\sigma_v}$ (at Max $v$), $X_\sigma(u)=\min_a(p^{u,a}\!\cdot\!X_\sigma+q^{u,a})$
+(at Min $u$) and the margin inequalities are linear in $\theta$ once $X$ is a
+constant; the fibres are disjoint because $\val$ is a function of $\theta$.
+\end{proof}
+
+\begin{remark}\label{rs:rem-fibre}
+Part (d) is the paragraph following \Cref{thm:readout-realise} read as a
+fibration; the successive-linear-programming realisers of rounds~15 and~16 are
+exactly alternating minimisation between the two coordinates of that
+fibration, and \Cref{rs:semialg}(a) says what they are linearising: a system
+of polynomial inequalities of degree $n+1$, not of unbounded degree.
+\end{remark}
+
+\begin{lemma}[Row swap; the cost is a class invariant]\label{rs:swap}
+Let $\theta\in\mathcal R(s;S)$ and let $\theta^{(j)}$ be $\theta$ with the two
+rows of $x_j$ exchanged, a point of the shape $S^{(j)}$ obtained from $S$ by
+exchanging $S(x_j,0)$ and $S(x_j,1)$. Then
+$\theta^{(j)}\in\mathcal R(s^{e_j};S^{(j)})$, where $s^{z}(\sigma):=s(\sigma\oplus z)$;
+relabelling the Max vertices by a permutation $\pi$ carries
+$\mathcal R(s;S)$ to $\mathcal R(s\circ\pi;S\circ\pi)$. Consequently
+$c(s;S)$ depends only on the class of $s$ under translations and coordinate
+permutations of the cube --- the classes of \Cref{prop:auso-census} --- and
+in particular a translate $s^{z}$ is never more expensive to realise than $s$.
+\end{lemma}
+
+\begin{proof}
+Playing action $a$ at $x_j$ in $\theta^{(j)}$ is playing $1-a$ in $\theta$, so
+$\val^{\theta^{(j)}}_\sigma=\val^{\theta}_{\sigma\oplus e_j}$ for every
+$\sigma$; the margin of $(\sigma,x_j)$ in $\theta^{(j)}$ is minus that of
+$(\sigma\oplus e_j,x_j)$ in $\theta$ and the margin of $(\sigma,x_i)$,
+$i\ne j$, equals that of $(\sigma\oplus e_j,x_i)$. Reading the two cases
+against $v\in s(\sigma)\iff \Delta_{v,\sigma}>0$ gives the $j$-edge reversed
+and every other edge transported, which is the outmap $s^{e_j}$.
+\end{proof}
+
+\begin{remark}\label{rs:rem-swap}
+The paper realises one representative per class throughout, so the invariance
+is implicit in its practice; what the explicit involution adds is the reading
+of \Cref{rem:blowup-realise}: the obstacle at a blow-up level is \emph{not}
+that the translated orientation is hard --- by \Cref{rs:swap} it costs
+exactly what the untranslated one costs --- but that one game must present
+\emph{both} of them, at two values of one drive. \Cref{rs:level} below makes
+that precise.
+\end{remark}
+
+\begin{theorem}[The bit cost is the log of an inradius]\label{rs:inradius}
+For $\theta\in\mathcal R(s;S)$ let
+$\rho(\theta):=\sup\{\varepsilon>0:\ B_\infty(\theta,\varepsilon)\cap P_S
+\subseteq\mathcal R(s;S)\}$ and $\rho(s;S):=\sup_\theta\rho(\theta)$, the
+\emph{robustness} of the realisation space. Then
+\[
+  c(s;S)\ \le\ \bigl\lceil\log_2(1/\rho(s;S))\bigr\rceil+1
+  \qquad\text{and}\qquad
+  \log_2(1/\rho(s;S))\ \le\ (n+2)\,c(s;S)+\log_2\bigl(6(n+1)\bigr).
+\]
+So $c(s;S)$ and $\log_2(1/\rho(s;S))$ agree up to the factor $n+2$; in
+particular, for a family of shapes with $n=O(k)$ controlled vertices, the bit
+cost is polynomially bounded in $k$ if and only if the robustness is
+$2^{-\poly(k)}$.
+\end{theorem}
+
+\begin{proof}
+Upper bound: pick $\theta$ with $\rho(\theta)>2^{-D}$, $D=\lceil\log_2(1/\rho)\rceil+1$,
+and round every coordinate \emph{down} to $2^{-D}\mathbb Z$. Rounding down
+keeps every row substochastic and only increases its leak, so the rounded
+point lies in $P_S$; it is within $2^{-D}<\rho(\theta)$ of $\theta$ in the sup
+norm, hence in $\mathcal R(s;S)$.
+
+Lower bound: let $\theta\in\mathcal R(s;S)$ be dyadic of denominator $2^{D}$,
+so every row leaks $\delta\ge2^{-D}$. Writing $I-P_{\sigma,\tau}=M/2^{D}$ with
+$M$ an integer matrix, $|\det M|\le2^{nD}$ and
+$x_{\sigma,\tau}=\adj(M)\tilde q/\det M$ with $\tilde q$ integral, so every
+value has denominator dividing $\det M\le2^{nD}$ and every margin, a
+$2^{-D}$-combination of values, has denominator dividing $2^{(n+1)D}$; being
+nonzero it is at least $\mu:=2^{-(n+1)D}$ in absolute value. Now let
+$\|\theta'-\theta\|_\infty\le\varepsilon\le\delta/(2(n+1))$ with
+$\theta'\in P_S$. Each row of $\theta'$ leaks at least $\delta/2$, so
+$\|(I-P'_{\sigma,\tau})^{-1}\|_\infty\le2/\delta$, and from
+$x-x'=(I-P')^{-1}[(P-P')x+(q-q')]$ and $\|x\|_\infty\le1$ we get
+$\|x_{\sigma,\tau}-x'_{\sigma,\tau}\|_\infty\le2(n+1)\varepsilon/\delta$; the
+same bound passes to $\val_\sigma$, a componentwise minimum. Hence
+$|\Delta_{v,\sigma}-\Delta'_{v,\sigma}|\le
+2\cdot2(n+1)\varepsilon/\delta+(n+1)\varepsilon\le5(n+1)\varepsilon/\delta$,
+so $\varepsilon<\mu\delta/(6(n+1))$ preserves every sign and
+$\rho(\theta)\ge\mu\delta/(6(n+1))\ge2^{-(n+2)D}/(6(n+1))$.
+\end{proof}
+
+\begin{corollary}[The open question of \Cref{rem:blowup-realise} is a metric one]\label{rs:metric}
+Let $S_1,S_2,\dots$ be shapes with $|C_k|=O(k)$ controlled vertices. Then the
+tower $B^{k}$ is realisable in the additive regime of
+\Cref{rem:blowup-realise} --- $O(k)$ controlled vertices and denominators
+$2^{O(k)}$ --- along the $S_k$ if and only if
+$\log_2\bigl(1/\rho(B^{k};S_k)\bigr)=O(k^{2})$, and it is realisable with
+$\poly(k)$ many vertices if and only if that quantity is $\poly(k)$. Thus the
+question is whether the realisation spaces of the tower shrink at an
+exponential or at a doubly exponential rate.
+\end{corollary}
+
+\subsection{Driven blocks and the drive line}\label{rs:sec-drive}
+
+\begin{definition}[Driven block]\label{rs:def-drive}
+A \emph{driven block} is a point $\theta$ of a shape whose rows may in
+addition read one vertex $\beta\notin C$ with weight $r^{v,a}\ge0$
+(substochasticity now reading $|p^{v,a}|_1+r^{v,a}+q^{v,a}\le1$). For
+$t\in[0,1]$ --- the \emph{drive} --- write $x_{\sigma,\tau}(t)$,
+$\val_\sigma(t)$, $\Delta_{v,\sigma}(t)$ for the profile values, values and
+margins of the block with $y_\beta$ frozen at $t$, and $\Phi(t)$ for its
+improvement outmap where no margin vanishes.
+\end{definition}
+
+\begin{theorem}[The drive line]\label{rs:drive}
+Let $\theta$ be a driven block with $k$ Min vertices.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $x_{\sigma,\tau}(t)$ is affine and nondecreasing in $t$.
+\item For each $\sigma$ and each $\tau$ the set
+      $R_\tau(\sigma)=\{t: x_{\sigma,\tau}(t)\le x_{\sigma,\tau'}(t)
+      \text{ componentwise for all }\tau'\}$ is an interval, and the
+      $R_\tau(\sigma)$ cover $[0,1]$. Hence $\val_\sigma(\cdot)$ is piecewise
+      affine with at most $2^{k}$ pieces and at most $2^{k}-1$ breakpoints,
+      and so is every readout $t\mapsto p^{v,a}\!\cdot\!\val_\sigma(t)
+      +r^{v,a}t+q^{v,a}$, with the same breakpoints.
+\item Every margin $\Delta_{v,\sigma}(\cdot)$ is piecewise affine with at
+      most $2^{k}$ pieces, hence changes sign at most $2^{k}$ times. For
+      $k=0$ it is affine and changes sign at most once.
+\item For $k=0$, $\{t:\Phi(t)=\vartheta\}$ is an interval for every outmap
+      $\vartheta$; no outmap recurs along the drive line, and the sign vector
+      of the $m2^{m}$ margins moves monotonically in the Hamming order.
+\item The partition of $[0,1]$ into maximal open intervals of constant outmap
+      is computable exactly: its breakpoints are among the at most
+      $2^{m}\binom{2^{k}}{2}n$ zeros of the differences
+      $x_{\sigma,\tau}(v)-x_{\sigma,\tau'}(v)$ and, on each resulting cell,
+      the at most $m2^{m}$ zeros of the then-affine margins.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) $(I-P_{\sigma,\tau})x=q_{\sigma,\tau}+r_{\sigma,\tau}t$ with
+$(I-P)^{-1}\ge0$ and $r\ge0$.
+(b) Each condition $x_{\sigma,\tau}(v)\le x_{\sigma,\tau'}(v)$ is an affine
+inequality in $t$, so a half-line, and $R_\tau(\sigma)$ is an intersection of
+half-lines; the cover is \Cref{thm:stopping-determinacy}, an optimal
+positional $\tau$ existing at every $t$. On $R_\tau(\sigma)$ one has
+$\val_\sigma=x_{\sigma,\tau}$, affine. A readout is a nonnegative combination
+of the entries of $\val_\sigma$ plus an affine term, so it is affine on each
+$R_\tau(\sigma)$.
+(c) A difference of two functions affine on the same $\le2^{k}$ intervals is
+affine there, and a piecewise-affine function with $p$ pieces has at most $p$
+zeros. (d) With $k=0$ each $\{t:\varepsilon\Delta_{v,\sigma}(t)>0\}$ is a
+half-line, and an intersection of half-lines is an interval; a coordinate of
+the sign vector, once flipped, cannot flip back. (e) is (b) and (c).
+\end{proof}
+
+\subsection{The pinned shape and what one blow-up level costs}\label{rs:sec-level}
+
+\begin{definition}[The pinned shape]\label{rs:def-pinned}
+Let $\mathfrak B$ be a driven block with Max vertices $x_1,\dots,x_m$, $k$ Min
+vertices and drive coordinate $\beta$. Its \emph{pinned extension} by
+$(A,A',q_A,q_B,R_\alpha,R_\beta)$ --- $A,A'\in(0,1)$ with $AA'<1$, $q_A,q_B\ge0$,
+$R_\alpha,R_\beta$ substochastic affine readouts of $\mathfrak B$ --- is the
+game $G$ on $C\cup\{\alpha,\beta\}$ with $\alpha,\beta$ Max and
+\[
+ \alpha:\ (0)\ Ay_\beta+q_A,\quad(1)\ R_\alpha;\qquad
+ \beta:\ (0)\ A'y_\alpha+q_B,\quad(1)\ R_\beta,
+\]
+no row of $\mathfrak B$ reading $\alpha$. Put
+$\Theta_u:=(Aq_B+q_A)/(1-AA')$ and $\Theta_w:=A'\Theta_u+q_B$.
+\end{definition}
+
+\begin{theorem}[The level theorem]\label{rs:level}
+Let $G$ be a pinned extension, stopping and nondegenerate. On the layer
+$L=(\sigma_\alpha,\sigma_\beta)=(0,0)$ one has $y_\alpha=\Theta_u$ and
+$y_\beta=\Theta_w$ at every inner strategy $\sigma$, so the block is
+\emph{frozen} at the drive $\Theta_w$ there; on the other layers
+$y_\beta=A'R_\alpha+q_B$ at $L=(1,0)$ and $y_\beta=R_\beta$ at
+$L=(0,1),(1,1)$, evaluated at that layer's block values $x^{L}_\sigma$.
+Writing $a=R_\alpha(x^{L}_\sigma)$, $b=R_\beta(x^{L}_\sigma)$, the improvement
+outmap of $G$ in the coordinates $(x_1,\dots,x_m,\alpha,\beta)$ equals
+$B_\varphi(s,z)$ of \Cref{prop:blowup-readout} \emph{if and only if} for every
+$\sigma$
+\begin{align*}
+ &\text{(C1)}\quad a<\Theta_u \quad\text{at } L\in\{(0,0),(1,0)\}; &
+ &\text{(C2)}\quad b<\Theta_w \quad\text{at } L\in\{(0,0),(0,1)\};\\
+ &\text{(C3)}\quad a-Ab-q_A>0\iff\varphi(\sigma)=1 \ \text{ at } L\in\{(0,1),(1,1)\}; &
+ &\text{(C4)}\quad b-A'a-q_B>0\iff\varphi(\sigma)=0 \ \text{ at } L\in\{(1,0),(1,1)\};
+\end{align*}
+and (C5) the block's improvement outmap at the drive $y^{L}_\beta(\sigma)$
+has, at $\sigma$, the coordinate set $s(\sigma\oplus z)$ when $L=(0,0)$ and
+$s(\sigma)$ otherwise. Moreover (C1) and (C2) force
+$y^{L}_\beta(\sigma)<\Theta_w$ for every $L\ne(0,0)$ and every $\sigma$ --- the
+pinned layer carries the strictly largest drive, the quantitative form of
+\Cref{lem:layer-order} --- so (C5) on the layer $(0,0)$ is the single frozen
+condition ``the block at the drive $\Theta_w$ realises $s(\cdot\oplus z)$''.
+Finally (C1) is equivalent to $\Phi+A\Psi<0$ and (C2) to $\Psi+A'\Phi<0$,
+where $\Phi=a-Ab-q_A$ and $\Psi=b-A'a-q_B$, so the whole outer part is
+the demand that one difference of two substochastic readouts read
+$\varphi$ with a margin.
+\end{theorem}
+
+\begin{proof}
+Freezing the outer pair at $(0,0)$ leaves $y_\alpha=Ay_\beta+q_A$,
+$y_\beta=A'y_\alpha+q_B$, whose unique solution is $(\Theta_u,\Theta_w)$,
+independent of the block because no block row reads $\alpha$ and the two
+equations do not involve the block; at $L=(1,0)$, $y_\alpha=R_\alpha$ and
+$y_\beta=A'R_\alpha+q_B$; at $L=(0,1),(1,1)$, $y_\beta=R_\beta$.
+
+Write $G_\alpha=1$ when action $1$ of $\alpha$ is the better one at the
+current values, and likewise $G_\beta$; then $\alpha$ is switchable iff
+$G_\alpha\ne\sigma_\alpha$. Reading the table of \Cref{thm:blowup} with
+$\varphi$ in place of the parity gives, layer by layer,
+$G_\alpha=\sigma_\beta\wedge[\varphi=1]$ and
+$G_\beta=\sigma_\alpha\wedge[\varphi=0]$. Substituting the four layers'
+values turns these eight demands into exactly (C1)--(C4): at $L=(0,0)$ and
+$(1,0)$ the $\alpha$-comparison is $a\lessgtr\Theta_u$ in both cases, since
+$a<A(A'a+q_B)+q_A\iff a(1-AA')<Aq_B+q_A$; at $L=(0,1),(1,1)$ it is
+$a\lessgtr Ab+q_A$; dually for $\beta$. The inner coordinates give (C5), the
+outmap of a Max vertex of the block being read at the block values, which by
+\Cref{lem:readout} are the values of the block frozen at the drive
+$y^{L}_\beta$. For the last clauses: $\Phi+A\Psi=(1-AA')(a-\Theta_u)$ and
+$\Psi+A'\Phi=(1-AA')(b-\Theta_w)$. Finally (C1) gives
+$A'a+q_B<A'\Theta_u+q_B=\Theta_w$ and (C2) gives $b<\Theta_w$, which is the
+displayed strict domination of the drive.
+\end{proof}
+
+\begin{corollary}[What a level costs]\label{rs:cost}
+Let $\mathfrak B$ be a dyadic $\delta$-leaky driven block of denominator
+$2^{D}$ with $m$ Max and $k$ Min vertices, realising $s$ at every drive in
+$[0,t_1]$ and $s(\cdot\oplus z)$ at every drive in an interval $W$ with
+$\min W>t_1$, all margins at least $\mu$; and suppose there are dyadic
+substochastic readouts $R_\alpha,R_\beta$ of denominator $2^{D'}$ whose values
+lie below $t_1$ at every strategy and for which $\Phi=R_\alpha-AR_\beta-q_A$
+has the sign of $\varphi$ with margin $\mu_p$. Then $B_\varphi(s,z)$ is the
+improvement outmap of a nondegenerate stopping SSG with $m+2$ Max, exactly $k$
+Min and $O((m+2)^{2}D'')$ average vertices, where
+\[
+ D''\ \le\ \max(D,D')+\bigl\lceil\log_2(1/|W|)\bigr\rceil+O(1).
+\]
+Conversely, inside the pinned shape with the block fixed, the pin must place
+$\Theta_w$ inside $W$, so the pin data must be specified to precision $|W|$
+and $D''\ge\frac12\log_2(1/|W|)-O(1)$. Thus, in the pinned shape, the cost of
+one blow-up level is $\log_2(1/|W|)$ up to a factor of two and an additive
+$\max(D,D')$: \emph{the width of the block's translation window is the price
+of the level}.
+\end{corollary}
+
+\begin{proof}
+Take $A=A'=3/4$, $q_B=0$ and $q_A$ a multiple of $2^{-D''}$; then
+$\Theta_w=\tfrac{12}{7}q_A$ ranges over an arithmetic progression of step
+$\tfrac{12}{7}2^{-D''}$ inside $(0,3/4)$, so some choice lands in $W$ as soon
+as $2^{-D''}<\tfrac{7}{12}|W|$. All hypotheses of \Cref{rs:level} then hold:
+(C5) on the layer $(0,0)$ because $\Theta_w\in W$; (C5) elsewhere because the
+drives there are $A'R_\alpha+q_B\le R_\alpha<t_1$ and $R_\beta<t_1$; (C3),(C4)
+by the assumption on $\Phi$ --- concretely, $\Phi>0$
+together with $\Phi+A\Psi<0$ gives (C1) and forces $\Psi<0$, and dually. The
+vertex count is \Cref{thm:readout-realise}(b) with $r$ unchanged. The converse
+is immediate: $\Theta_w$ is determined by the pin data and must lie in $W$,
+and $\Theta_w$ has denominator at most $2^{2D''}$, while for a worst-case
+position of the window --- an interval $(\tfrac12,\tfrac12+|W|)$, say --- every
+rational in it has denominator above $1/(2|W|)$.
+\end{proof}
+
+\begin{proposition}[Where the drive of the next level must go]\label{rs:where}
+Let $G$ be a pinned extension whose block $\mathfrak B$ is itself a pinned
+extension of a block $\mathfrak B_0$ by $(A,A',q_A,q_B,R_\alpha,R_\beta)$, and
+suppose the outmap of $G$ is $B_\varphi\bigl(B_\psi(s,z'),z\bigr)$. Write $t$
+for the new drive.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item If no row of $\mathfrak B$ reads the new outer pair, then the value
+      vector of $\mathfrak B$ at a given inner strategy is the same on all
+      four new layers, so the new layer $(0,0)$ carries the same inner
+      orientation as the others and $z=0$. This is exactly the shape of
+      \Cref{prop:b3-outer}, and it is why that construction reaches only the
+      outer half.
+\item Suppose $z=e_\alpha$, the old outer coordinate --- the translation
+      vector of the canonical tower (\Cref{rem:blowup-measured}). If the new
+      drive reaches only the old pin rows (the action-$0$ rows of the old
+      $\alpha$ and $\beta$), so that $\mathfrak B_0$'s rows are unchanged and
+      the old pin $\Theta_w(t)$ is a nondecreasing function of $t$, then
+      along the drive line of $\mathfrak B_0$ the four values
+      \[
+        u<\Theta_w(t_0)\ \le\ \Theta_w(T)\ <\ A'R_\alpha+q_B
+      \]
+      ($t_0$ the largest new drive off the new layer $(0,0)$, $T$ the new pin)
+      must carry the outmaps $s,\ s(\cdot\oplus z'),\ s,\ s(\cdot\oplus z')$ in
+      this order. Hence some margin of $\mathfrak B_0$ changes sign at least
+      three times along its drive line, and by \Cref{rs:drive}(c)
+      $\mathfrak B_0$ has at least \emph{two} Min vertices.
+\item If instead the new drive reaches the rows of $\mathfrak B_0$, then for
+      every margin $\Delta$ of $\mathfrak B_0$ that must separate $s$ from
+      $s(\cdot\oplus z')$ the partial derivatives $\partial\Delta/\partial u$
+      and $\partial\Delta/\partial t$ have opposite signs somewhere on the
+      segment joining the two relevant points of the drive plane: the new
+      drive must \emph{reverse} the effect of the old one.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) If no row of $\mathfrak B$ reads the new pair
+then $\val_{(\sigma,L)}$ restricted to $C(\mathfrak B)$ solves the same system
+on all four layers and is therefore the same; the inner margins, functions of
+that vector alone, are the same, so the inner part of the outmap is layer-
+independent, which for $B_\varphi(\cdot,z)$ says $s(\cdot\oplus z)=s$, i.e.\
+$z=0$ (an orientation and a nontrivial translate of it differ, since the
+$z$-edges at the sink are reversed).
+
+(ii) By \Cref{rs:level} the new layer $(0,0)$ carries the outmap
+$B_\psi(s,z')(\cdot\oplus e_\alpha)$, whose inner part is $s(\cdot\oplus z')$
+on the old layer $(1,0)$ and $s$ on the other three, and whose outer part
+demands $R_\alpha>\Theta_u$ at every $\sigma$; the other new layers carry
+$B_\psi(s,z')$, whose inner part is $s(\cdot\oplus z')$ on the old layer
+$(0,0)$ and $s$ elsewhere. The drives at which $\mathfrak B_0$ is read are, by
+\Cref{rs:level} applied to the old pin, $\Theta_w$ on the old layer $(0,0)$
+and strictly smaller elsewhere off it, and $A'R_\alpha+q_B>A'\Theta_u+q_B
+=\Theta_w$ on the old layer $(1,0)$ at the new layer $(0,0)$. Since the old
+pin rows only gain nonnegative weight, $\Theta_w(t)$ is nondecreasing. The
+four displayed drives therefore carry the four displayed orientations. As $s$
+and $s(\cdot\oplus z')$ differ at some $(\sigma,v)$, that margin has the four
+signs $+,-,+,-$ at four increasing drives, so it changes sign at least three
+times; by \Cref{rs:drive}(c) this needs $2^{k}\ge3$.
+
+(iii) The two relevant points of the drive plane are $(u_0,t_0)$ and
+$(u_1,T)$ with $u_1\ge u_0$ and $T>t_0$, and $\Delta$ has opposite signs
+there. Along the segment between them $\Delta$ is piecewise affine and
+changes sign, so at some point
+$(u_1-u_0)\partial_u\Delta+(T-t_0)\partial_t\Delta$ has the sign opposite to
+$\Delta$'s sign at $(u_0,t_0)$; since $\partial_u\Delta$ has, at $u_0$, the
+sign that moves $\Delta$ towards the $s(\cdot\oplus z')$ side, the
+$t$-derivative must be of the opposite sign.
+\end{proof}
+
+\subsection{What is verified, and where the third level now stands}\label{rs:sec-verified}
+
+\begin{proposition}[The drive line of the level-two block, exactly]\label{rs:b2-window}
+Let $\mathfrak B_0$ be the block $\{c_1,c_2,c_3,c_6\}$ of
+\Cref{prop:b2-realised} driven by $u=y_{c_5}$ (its rows read no other vertex;
+in particular none reads $c_4$). Then, in exact arithmetic:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item the drive line $[0,1]$ has exactly $16$ interior breakpoints and $17$
+      cells of constant outmap; the $\tau$-optimality regions of
+      \Cref{rs:drive}(b) number one or two per $\sigma$ (bound $2^{1}=2$), and
+      no margin changes sign more than twice (twenty-two change once, two
+      twice; bound $2^{k}=2$);
+\item the outmap is $B^{1}$ exactly on $[0,\tfrac{47723619}{255897160})$ and
+      $B^{1}(\cdot\oplus e_{\beta_1})$ exactly on
+      $(\tfrac{1175936917}{2026652880},\tfrac{10168377}{16341335})$, of widths
+      $0.1864953\ldots$ and $W_1=0.0420128\ldots$; this proves the grid
+      measurement recorded in \Cref{rem:b2-anatomy};
+\item the pin of \Cref{prop:b2-realised} is
+      $(A,A',q_A,q_B)=(\tfrac{502}{512},\tfrac{509}{512},\tfrac8{512},0)$ with
+      $\Theta_u=\tfrac{2048}{3313}$, $\Theta_w=\tfrac{2036}{3313}$, and
+      $\Theta_w$ lies strictly inside the translation window, at distance
+      $0.0343$ from its lower and $0.0077$ from its upper fence.
+\end{enumerate}
+\end{proposition}
+
+\begin{proposition}[The two published games are pinned extensions]\label{rs:verified}
+Both \Cref{prop:b2-realised} (five Max, one Min, $z=e_{\beta_1}\ne0$) and
+\Cref{prop:b3-outer} (seven Max, one Min, $z=0$) are pinned extensions in the
+sense of \Cref{rs:def-pinned}, and all of (C1)--(C5) of \Cref{rs:level} hold at
+them, with no exception among the $4\cdot2^{m}$ outer conditions and the
+$4\cdot2^{m}m$ inner ones. The smallest outer margin is
+$\tfrac{1447620941}{889411092480}=1.6276\cdot10^{-3}$ for the first and
+$\tfrac{16281932731}{53967650046976}=3.0170\cdot10^{-4}$ for the second; the
+pinned-layer drive is $\tfrac{2036}{3313}$ resp.\ $\tfrac{2046}{4093}$ and the
+largest drive off that layer $\tfrac{270545851903}{778234705920}$ resp.\
+$\tfrac{26928313173661}{53967650046976}$, strictly below it as
+\Cref{rs:level} asserts. Over the same block and the same readouts
+$R_\alpha,R_\beta$, twenty-three further dyadic pins $(A,A',q_A)$ of
+denominator $512$ with $q_B=0$ realise $B^{2}$, so the realisation space
+contains a whole cell of pins and not merely the published point; three of
+them --- $(A,A',q_A)=(500,511,8),(502,509,8),(496,511,10)$ over $512$ --- were
+built into explicit fair-coin games by \Cref{lem:dyadic-row} on $137$, $138$
+and $139$ vertices and verified \emph{from the game} (greatest trap empty, the
+$32$ value vectors as minima over both Min strategies, no tied incidence,
+outmap $B^{2}$, acyclic unique sink orientation of height $10$, run
+$12,19,13,17,8,16,0,7,1,5,4$, values increasing along it); the $137$-vertex one
+is one vertex smaller than \Cref{prop:b2-realised}. For the level-two game
+($n=6$, denominator $2^{9}$) the robustness of \Cref{rs:inradius} satisfies
+$1.5138\cdot10^{-7}\le\rho\le1.9467\cdot10^{-4}$ --- the lower bound is the
+certified $\mu\delta/(6(n+1))$ with $\mu=1.6276\cdot10^{-3}$,
+$\delta=\tfrac1{256}$, the upper bound the exact axis-parallel one (raising
+the $t_1$-entry of $c_5$'s action-$0$ row by $\tfrac{1633}{2^{23}}$ destroys
+the orientation) --- so $\log_2(1/\rho)\in[12.33,22.66]$ against a bit cost
+of $9$, inside the bracket of \Cref{rs:inradius}.
+\end{proposition}
+
+\subsection{The pinned tower cannot double}\label{rs:sec-barrier}
+
+\begin{lemma}[The switchable set of an outer vertex is up-closed]\label{rs:upclosed}
+Let $H$ be a nondegenerate stopping pinned extension (\Cref{rs:def-pinned}) of a
+block $\mathfrak B_0$, with outer pair $(\alpha,\beta)$, pin $(\Theta_u,\Theta_w)$
+and readouts $R_\alpha,R_\beta$; let $T$ be its improvement outmap and, for
+$x\in\{\alpha,\beta\}$,
+\[
+  E_x\ :=\ \{\sigma\in\{0,1\}^{m}:\ x\in T(\sigma,(0,0))\}
+\]
+the set of inner strategies at which $x$ is switchable on the pinned layer.
+Then $E_x$ is closed under the bottom-antipodal steps of $\mathfrak B_0$'s
+improvement orientation at the drive $\Theta_w$: if $\sigma'=\sigma\oplus
+s_0(\sigma)$ with $s_0$ that orientation and $\sigma\in E_x$, then
+$\sigma'\in E_x$. More generally $E_x$ is up-closed for the componentwise order
+on the value vectors $\val_\sigma$ of $\mathfrak B_0$ frozen at $\Theta_w$.
+\end{lemma}
+
+\begin{proof}
+On the layer $(0,0)$ the outer pair is the closed two-cycle, so $y_\alpha
+=\Theta_u$ and $y_\beta=\Theta_w$ are constants (\Cref{rs:level}); hence
+$\alpha$ is switchable at $(\sigma,(0,0))$ iff $R_\alpha(\val_\sigma)>\Theta_u$
+and $\beta$ iff $R_\beta(\val_\sigma)>\Theta_w$. A readout is $y\mapsto p\cdot y
++r\,\Theta_w+q$ with $p,r,q\ge0$, hence nondecreasing in $y$. A
+bottom-antipodal step of $\mathfrak B_0$ frozen at $\Theta_w$ is an
+all-switches step of a stopping game, so $\val_{\sigma'}\ge\val_\sigma$
+componentwise (\Cref{lem:switch}).
+\end{proof}
+
+\begin{theorem}[No pinned extension realises a translate by its own outer pair]\label{rs:no-outer-translate}
+Let $s$ be an acyclic unique sink orientation of the $m$-cube of
+bottom-antipodal height $h\ge2$, let $\psi:\{0,1\}^{m}\to\{0,1\}$ alternate
+along a bottom-antipodal walk of $s$ of length $h$ --- as
+\Cref{prop:blowup-readout}(b) requires of an admissible readout --- and let
+$z'\in\{0,1\}^{m}$. Let $\zeta\in\{0,1\}^{m+2}$ have a nonzero component on
+$\alpha$ or on $\beta$. Then
+\[
+  B_\psi(s,z')(\cdot\oplus\zeta)
+\]
+is \emph{not} the improvement outmap of any nondegenerate stopping pinned
+extension whose outer pair is $(\alpha,\beta)$ --- for any pin, any readouts and
+any block.
+\end{theorem}
+
+\begin{proof}
+Write $\zeta=(w,\zeta_\alpha,\zeta_\beta)$ with $w$ its inner part and let $T$
+be the displayed outmap. Its inner part on the layer $(0,0)$ is the inner part
+of $B_\psi(s,z')$ on the layer $(\zeta_\alpha,\zeta_\beta)\ne(0,0)$, read at
+$v\oplus w$, that is $s(\cdot\oplus w)$; by \Cref{rs:level}(C5) that is the
+improvement orientation of the block frozen at $\Theta_w$, and its
+bottom-antipodal walks are the $w$-translates of those of $s$, along which
+$\psi(\cdot\oplus w)$ alternates. Its outer part on the layer $(0,0)$ is
+$O_{(\zeta_\alpha,\zeta_\beta)}(v\oplus w)$ of the table of \Cref{thm:blowup},
+so
+\[
+ (1,0):\ E_\alpha=\text{all},\
+ E_\beta=\{\psi(\cdot\oplus w)\ \text{even}\};\quad
+ (0,1):\ E_\alpha=\{\psi(\cdot\oplus w)\ \text{odd}\},\ E_\beta=\text{all};\quad
+ (1,1):\ E_\alpha=\{\text{even}\},\ E_\beta=\{\text{odd}\}.
+\]
+Along the walk $v_0\to\cdots\to v_h$ ($h\ge2$) the parities alternate and end
+at the sink, where the height is $0$ and $\psi$ is even; so the walk contains a
+step from an even vertex to an odd one and a step from an odd vertex to an even
+one. In each of the three cases one of $E_\alpha,E_\beta$ is a nontrivial
+parity class and is therefore not closed under one of those steps,
+contradicting \Cref{rs:upclosed}.
+\end{proof}
+
+\begin{corollary}[The doubly pinned tower stops at height $h+2+\text{(inner)}$]\label{rs:no-doubling}
+Call a stopping SSG \emph{doubly pinned} when it is a pinned extension of a
+block that is itself a pinned extension --- the shape of
+\Cref{prop:b2-realised} (with $z\ne0$) and of \Cref{prop:b3-outer} (with
+$z=0$), and the only shape in which a level of the tower has been realised.
+Let $S=B_\psi(s,z')$ with $\psi$ admissible and $h(s)\ge2$. Then no doubly
+pinned game has improvement outmap $B_\varphi(S,z)$ for a $z$ whose component
+on $S$'s outer pair is nonzero. Since by \Cref{prop:blowup-height} the height
+of $B_\varphi(S,z)$ is $h(S)+2+h_S(o_S\oplus z)$ and every vertex of $S$ of
+maximal height lies in a layer other than $(0,0)$ --- the sink is $(0,0,u)$ and
+the maximal vertices are $(1,1,v),(1,0,v),(0,1,v)$ --- every $z$ realising the
+doubling has a nonzero outer component. Hence \emph{the doubly pinned shape
+cannot double}: at the third level, $B^{3}=B(B^{2})$ of height $22$, whose
+translation vector is the outer coordinate $\alpha_2$
+(\Cref{rem:blowup-measured}), is out of reach, and the best height available to
+the shape is
+\[
+ h(B^{2})+2+\max\{h_{B^{2}}(o\oplus z):z\ \text{purely inner}\}\ =\ 10+2+4\ =\ 16,
+\]
+against $22$; the realised value is $12$ (\Cref{prop:b3-outer}, $z=0$).
+\end{corollary}
+
+\begin{remark}[Where the obstruction is, and where it is not]\label{rs:localised}
+The obstruction of \Cref{rs:no-outer-translate} sits at the \emph{outer pair},
+not at the block. What \Cref{rem:blowup-realise} asks the block to do --- present
+$s$ at one drive and $s(\cdot\oplus z')$ at another, and to reverse that under a
+second drive --- the published block does. Explicitly (all exact): let
+$\mathfrak B_0$ be the block $\{c_1,c_2,c_3,c_6\}$ of
+\Cref{prop:b2-realised}, driven by $u=y_{c_5}$, and let a second drive $t$
+enter the rows through nonnegative constants $c_{v,a}$ bounded by their slacks
+(so at $t=0$ the block is the published one). Then, with the rows in the order
+$(c_1,0),(c_1,1),(c_2,0),(c_2,1),(c_3,0),(c_3,1),(c_6,0),(c_6,1)$,
+\[
+  c\ =\ \Bigl(0,\ \tfrac{57}{1024},\ 0,\ \tfrac{35}{512},\ \tfrac{15}{1024},\ 0,\
+        \tfrac{13}{256},\ \tfrac3{1024}\Bigr),\qquad \lambda=\tfrac3{32},\qquad
+  \Theta=\tfrac{13}{20},
+\]
+gives, in exact arithmetic,
+\[
+ \Phi(\Theta\,;\,\lambda c)=B^{1}(\cdot\oplus e_{\beta_1})\ \text{ on }
+   \bigl(\tfrac{11331536989}{18529397760},\tfrac{136264371}{209169088}\bigr)\ni\Theta,
+ \qquad
+ \Phi(\Theta\,;\,c)=B^{1}\ \text{ on }\bigl[0,\tfrac{747670031}{1023588640}\bigr)\ni\Theta,
+\]
+\[
+ \Phi(u_2\,;\,c)=B^{1}(\cdot\oplus e_{\beta_1})\ \text{ on }
+  \bigl(\tfrac{3705472579}{4053305760},\tfrac{30518663}{32682670}\bigr),\quad u_2>\Theta ,
+\]
+and every $c_{v,a}$ is at most $\tfrac56$ of its row's slack, so the drive
+weights $\rho=\tfrac76c$ are substochastic with room to spare and reproduce $c$
+at the drive level $t=\tfrac67$ and $\lambda c$ at $t=\tfrac9{112}$;
+which is exactly the three-point pattern the third level needs of the block: at
+the small perturbation the pinned layer is translated, at the large one it is
+not, and the translate reappears higher up. So the drive plane of the block is
+not the obstacle; the pin is. Moreover the two branches available to a doubly
+pinned third level are both closed: if the new drive reaches only the old pin
+rows then the block's drive line must carry $s,s(\cdot\oplus z'),s,
+s(\cdot\oplus z')$ at four increasing drives, so some margin changes sign three
+times and by \Cref{rs:drive}(c) the block needs at least two Min vertices; and
+whichever branch is taken, \Cref{rs:no-outer-translate} forbids the outer pair
+from presenting the translate at all.
+\end{remark}
+
+\begin{remark}[Against \Cref{prop:rows-turn}]\label{rs:vs-rows-turn}
+\Cref{prop:rows-turn} says that a controlled vertex whose two reduced rows are
+comparable has an up-closed (or down-closed) switchable set, and
+\Cref{cor:b2-rows} says that in every realisation of $B^{2}$ \emph{no} Max
+vertex has comparable rows --- so \Cref{prop:rows-turn} is silent on the outer
+pair of a blow-up, and that is precisely what makes the blow-up possible. What
+\Cref{rs:upclosed} adds is that on the \emph{pinned} layer the comparison
+becomes monotone for a different reason: the outer values are constants there,
+so the outer vertex compares one substochastic readout of the block against a
+number, and a substochastic readout is monotone whatever the rows do elsewhere.
+The two statements are therefore complementary: \Cref{prop:rows-turn} applies
+globally to comparable rows, \Cref{rs:upclosed} applies to one layer of a
+pinned shape with arbitrary rows. The escape from \Cref{rs:upclosed} is equally
+explicit: let the rest action of an outer vertex read the block as well, so
+that its value on the pinned layer is no longer a constant but a monotone
+function of the block's values; the switchability condition then becomes a
+difference of two monotone functionals and the argument breaks. Neither
+published game does that, and doing it forfeits the constancy of the pinned
+drive on which \Cref{rs:level}(C5) --- the single frozen condition that made the
+level cost a window width --- depends.
+\end{remark}

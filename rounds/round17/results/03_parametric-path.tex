@@ -1,0 +1,465 @@
+%%% Round-17 route: the stopping-probability path.  Labels pp:*.
+
+\subsection{The stopping-probability path}\label{pp:sec}
+
+\begin{definition}[The damped family and its path]\label{pp:def}
+Let $G$ be an SSG, $V^{\circ}$ its non-sinks, $n:=|V^{\circ}|$, $C=\Vmax\cup\Vmin$,
+$\varepsilon_v:=+1$ at $\Vmax$ and $-1$ at $\Vmin$, and $T$ the Shapley operator
+of \Cref{def:shapley}, the sinks read as $0$ and $1$. For $\beta\in[0,1]$ put
+\[
+  T_\beta x:=\beta\,Tx\qquad(x\in\mathbb R^{V^{\circ}}),
+\]
+the operator of the game $G_\beta$ in which every step out of a non-sink is
+diverted to $t_0$ with probability $p=1-\beta$ before it is taken. For a
+positional pair $\pi$ let $Q_\pi$ be its substochastic transition matrix on
+$V^{\circ}$ and $b_\pi$ its vector of one-step probabilities into $t_1$, so
+$T_{\beta,\pi}x=\beta(Q_\pi x+b_\pi)$. For $\beta<1$ write $w_\beta$ for the
+unique fixed point of $T_\beta$ and
+$y^{\pi}_\beta:=\beta(I-\beta Q_\pi)^{-1}b_\pi$ for that of $T_{\beta,\pi}$, and
+put
+\[
+  \Opt(\beta):=\{\pi:\;T_\beta y^{\pi}_\beta=y^{\pi}_\beta\}.
+\]
+The \emph{stopping-probability path} of $G$ is $\beta\mapsto\Opt(\beta)$ on
+$(0,1)$; a \emph{breakpoint} is a $\beta\in(0,1)$ at which $\Opt$ is not
+constant on a neighbourhood, and $B(G)$ is the number of breakpoints.
+\end{definition}
+
+\begin{remark}[The family is Condon's damping, read as a path]\label{pp:damping}
+$G_\beta$ is not a new construction. For $\beta=1-2^{-m}$ it is exactly the
+damped game $G_m$ of \Cref{def:damping}: a chain replacing $u\to w$ has value
+$(1-2^{-m})\val(w)$ by \Cref{lem:gadget}, so in $G_m$ every vertex of $G$
+acquires the factor $\beta$ and $\val_{G_m}|_{V(G)}=w_\beta$. (Verified against
+brute force over all pairs on $120$ instances, random $5$-vertex SSGs,
+$m=1,2,3$, exact; $0$ mismatches.) What is new here is the \emph{path}:
+\Cref{thm:stopping-transform} fixes one $m$ and extracts one bit of $\val$,
+while everything below concerns the whole family and the motion of the optimal
+pair inside it. Note also that $\beta$ enters the transition matrix, not the
+rewards: in the harmonic normal form of \Cref{def:profile-orientation} the
+readouts of $G_\beta$ are $\beta q^{v,a}+\beta\sum_wp^{v,a}_wy_w$, so the matrix
+$M=E(I-Q_1)(I-Q_0)^{-1}E$ of \Cref{prop:lcp} moves with $\beta$. This is what
+separates the path from the bias homotopy of \Cref{def:bias}, where $M$ is
+fixed and only $q$ moves; \Cref{pp:differ} makes the separation a theorem.
+\end{remark}
+
+\begin{theorem}[Well-definedness and the count]\label{pp:basic}
+Let $G$ be an arbitrary SSG.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item For $\beta\in[0,1)$, $T_\beta$ and every $T_{\beta,\pi}$ are
+  $\beta$-contractions for the sup norm, $\det(I-\beta Q_\pi)>0$, and $w_\beta$,
+  $y^{\pi}_\beta$ exist and are unique.
+\item Put $N^{\pi}_v:=\det(I-\beta Q_\pi)\,y^{\pi}_\beta(v)$ for $v\in
+  V^{\circ}$, $N^{\pi}_{t_0}:=0$, $N^{\pi}_{t_1}:=\det(I-\beta Q_\pi)$. These
+  are polynomials in $\beta$ of degree at most $n$ with dyadic rational
+  coefficients, and with
+  \[
+    R_{\pi,v}(\beta):=\varepsilon_v\bigl(N^{\pi}_v(\beta)-\beta\,
+        N^{\pi}_{v^{\bar\pi(v)}}(\beta)\bigr)\in\mathbb Q[\beta],
+    \qquad \deg R_{\pi,v}\le n+1,
+  \]
+  one has $\pi\in\Opt(\beta)\iff R_{\pi,v}(\beta)\ge0$ for every $v\in C$.
+\item $\Opt(\beta)$ is a nonempty subcube of $\{0,1\}^{C}$, namely
+  $\{\pi:\pi(v)\in\arg\!\operatorname{opt}_aw_\beta(v^{(a)})\ \forall v\}$.
+\item Call $(\pi,v)$ \emph{flat} if $R_{\pi,v}\equiv0$; then the two actions of
+  $v$ have equal value under $\pi$ for every $\beta$ and the choice there is
+  immaterial. Let $Z\subset(0,1)$ be the set of zeros of the non-flat
+  $R_{\pi,v}$. Then $\Opt$ is constant on every component of $(0,1)\setminus Z$,
+  so
+  \[
+     B(G)\;\le\;|Z|\;\le\;(n+1)\,|C|\,2^{|C|},
+  \]
+  and $B(G)\le2(n+1)$ when $|C|=1$.
+\item If no flat pair $(\pi,v)$ has $\pi\in\Opt(\beta)$ for some $\beta$, then
+  $\Opt(\beta)$ is a singleton for every $\beta\in(0,1)\setminus Z$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) $T$ is nonexpansive (\Cref{lem:monotone}), so $T_\beta$ is $\beta$-Lipschitz
+and Banach gives the fixed point; $Q_\pi$ is substochastic so its spectral
+radius is at most $1$ and $I-\beta Q_\pi$ is invertible for $\beta<1$; the
+polynomial $\det(I-\beta Q_\pi)$ equals $1$ at $\beta=0$ and never vanishes on
+$[0,1)$, hence is positive there.
+
+(b) $y^{\pi}_\beta=\beta(I-\beta Q_\pi)^{-1}b_\pi$, so
+$N^{\pi}_v=\beta\bigl[\operatorname{adj}(I-\beta Q_\pi)b_\pi\bigr]_v$ has degree
+at most $1+(n-1)=n$; $R_{\pi,v}$ has degree at most $n+1$. By definition of
+$y^{\pi}$, $y^{\pi}(v)=\beta y^{\pi}(v^{\pi(v)})$ at $v\in C$; hence
+$T_\beta y^{\pi}=y^{\pi}$ holds at $\Vavg$ and the sinks automatically and at
+$v\in\Vmax$ iff $y^{\pi}(v^{\pi(v)})\ge y^{\pi}(v^{\bar\pi(v)})$, i.e.\ iff
+$y^{\pi}(v)\ge\beta y^{\pi}(v^{\bar\pi(v)})$; dually at $\Vmin$. Multiplying by
+$\det(I-\beta Q_\pi)>0$ gives the polynomial form.
+
+(c) If $\pi\in\Opt(\beta)$ then $y^{\pi}=w_\beta$ by uniqueness, and by (b)
+$\pi(v)$ attains $\operatorname{opt}_aw_\beta(v^{(a)})$. Conversely if $\pi'$
+attains it everywhere then $T_{\beta,\pi'}w_\beta=T_\beta w_\beta=w_\beta$, so
+$y^{\pi'}=w_\beta$ and $\pi'\in\Opt(\beta)$. The description is a product over
+$C$, hence a subcube, nonempty because an $\arg\!\operatorname{opt}$ exists.
+
+(d) A non-flat $R_{\pi,v}$ has at most $n+1$ zeros, and there are $|C|2^{|C|}$
+pairs $(\pi,v)$. On a component of $(0,1)\setminus Z$ every $R_{\pi,v}$ is
+either identically zero or of constant sign, so the family of $\pi$ satisfying
+the inequalities of (b) is constant; by (b) that family is $\Opt$. For $|C|=1$
+there are two profiles and one vertex. (e) is immediate from (b) and (c).
+\end{proof}
+
+\begin{proposition}[Monotonicity, and the limit]\label{pp:monotone}
+On every SSG and for $0\le\beta\le\beta'<1$: $y^{\pi}_\beta\le y^{\pi}_{\beta'}$
+and $w_\beta\le w_{\beta'}$ coordinatewise, $w_\beta\le\val$, and
+$w_\beta\uparrow\val$ as $\beta\uparrow1$, $\val$ being the least fixed point of
+$T$ (\Cref{thm:lfp-general}).
+\end{proposition}
+
+\begin{proof}
+$T$ maps nonnegative vectors to nonnegative vectors, so $T_\beta x\le
+T_{\beta'}x$ for $x\ge0$; $w_\beta\ge0$ because iterating $T_\beta$ from $0$
+gives a nondecreasing sequence with limit $w_\beta$. Hence
+$T_{\beta'}w_\beta\ge T_\beta w_\beta=w_\beta$, and iterating the monotone
+contraction $T_{\beta'}$ from $w_\beta$ gives a nondecreasing sequence with
+limit $w_{\beta'}$, so $w_\beta\le w_{\beta'}$; the same argument with
+$T_{\beta,\pi}$ gives the first inequality. Next $T_\beta\val=\beta\val\le\val$,
+so iterating $T_\beta$ downward from $\val$ stays below $\val$ and converges to
+$w_\beta$, whence $w_\beta\le\val$. Finally $w:=\lim_{\beta\uparrow1}w_\beta$
+exists by monotonicity and boundedness, $Tw=w$ by continuity of $T$ in
+$w_\beta=\beta Tw_\beta$, and $w\le\val$; since $\val$ is the least fixed point,
+$\val\le w$, so $w=\val$.
+\end{proof}
+
+\begin{corollary}[The path names an optimal pair, with no stopping hypothesis]\label{pp:pair}
+Let $G$ be an arbitrary SSG. By \Cref{pp:basic}(d) there are $\beta^{\ast}<1$
+and a pair $\pi^{\ast}=(\sigma^{\ast},\tau^{\ast})$ with $\pi^{\ast}\in\Opt(\beta)$
+for all $\beta\in[\beta^{\ast},1)$. For any such pair
+$\val_{\sigma^{\ast}}=\val=\val^{\tau^{\ast}}$, the values being least fixed
+points as in \Cref{thm:lfp-general}: $\pi^{\ast}$ is an optimal pair of $G$
+itself, and $\val=\val_{\pi^{\ast}}$ is then computed by one application of
+\Cref{thm:eval-stopfree}.
+\end{corollary}
+
+\begin{proof}
+$\sigma^{\ast}$ attains the maximum in $T_\beta w_\beta=w_\beta$ for
+$\beta\ge\beta^{\ast}$, so $T_{\beta,\sigma^{\ast}}w_\beta=w_\beta$ and
+$w_\beta$ is the unique fixed point of the contraction
+$T_{\beta,\sigma^{\ast}}$, i.e.\ $w_\beta=\min_\tau y^{\sigma^{\ast},\tau}_\beta$.
+Each $y^{\sigma^{\ast},\tau}_\beta$ increases to $\val_{\sigma^{\ast},\tau}$ as
+$\beta\uparrow1$ by \Cref{pp:monotone} applied to the one-profile operator, and
+a minimum over finitely many nondecreasing functions commutes with the limit;
+so $\lim_\beta w_\beta=\min_\tau\val_{\sigma^{\ast},\tau}=\val_{\sigma^{\ast}}$,
+which is $\val$ by \Cref{pp:monotone}. Dually for $\tau^{\ast}$.
+\end{proof}
+
+\begin{theorem}[The step is a derived discounted game]\label{pp:step}
+Let $\beta^{\ast}\in(0,1)$, $w:=w_{\beta^{\ast}}$,
+$J:=\{v\in C:\,w(v^{(0)})=w(v^{(1)})\}$ the free coordinates of
+$\Opt(\beta^{\ast})$, and $\pi^{\ast}\in\Opt(\beta^{\ast})$. Let $\mathcal D^{+}$
+be the \emph{derived game}: the same digraph, discount $\beta^{\ast}$, additive
+reward $r(v):=\tfrac12(w(v^{(0)})+w(v^{(1)}))$ at $v\in\Vavg$ and
+$r(v):=w(v^{\pi^{\ast}(v)})$ at $v\in C$, sinks rewarded $0$, controlled exactly
+at $J$ (Max at $J\cap\Vmax$, Min at $J\cap\Vmin$) and frozen at $\pi^{\ast}$
+elsewhere; its operator $Ux=r+\beta^{\ast}(\text{opt-linear part})$ is a
+$\beta^{\ast}$-contraction, with value $u^{+}$. Then
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $u^{+}=\lim_{h\downarrow0}\bigl(w_{\beta^{\ast}+h}-w\bigr)/h$;
+\item the pair optimal on $(\beta^{\ast},\beta^{\ast}+\varepsilon)$ agrees with
+  $\pi^{\ast}$ off $J$ and is on $J$ an optimal pair of $\mathcal D^{+}$;
+\item on $(\beta^{\ast}-\varepsilon,\beta^{\ast})$ the same holds for the derived
+  game $\mathcal D^{-}$ obtained from $\mathcal D^{+}$ by interchanging the roles
+  of Max and Min on $J$.
+\end{enumerate}
+Hence one step of path-following is the solution of an SSG with $|J|$ controlled
+vertices: $O(n^{3})$ exact rational operations when $|J|=1$, and
+$2^{|J|}$ linear solves by enumeration in general. There is no simplification
+at a degenerate breakpoint: $J$ may be forced to have size $2$ at every
+breakpoint of the path (\Cref{pp:tent}).
+\end{theorem}
+
+\begin{proof}
+By \Cref{pp:basic}(d) one pair $\pi^{+}$ is optimal throughout
+$(\beta^{\ast},\beta^{\ast}+\varepsilon)$; by continuity of the $R_{\pi,v}$ it
+lies in $\Opt(\beta^{\ast})$, so it agrees with $\pi^{\ast}$ off $J$ and
+$r(v)=w(v^{\pi^{+}(v)})$ for all $v\in C$. On that interval
+$w_\beta=y^{\pi^{+}}_\beta$ is a rational function of $\beta$ regular at
+$\beta^{\ast}$, so the right derivative $u^{+}$ exists; differentiating
+$w_\beta(v)=\beta\bigl(w_\beta(v^{(0)})+w_\beta(v^{(1)})\bigr)/2$ at $\Vavg$ and
+$w_\beta(v)=\beta w_\beta(v^{\pi^{+}(v)})$ at $C$ gives
+$u^{+}=r+\beta^{\ast}P_{\pi^{+}}u^{+}$, i.e.\ $u^{+}$ is the value of
+$\mathcal D^{+}$ with $J$ frozen at $\pi^{+}$. Let $v\in J\cap\Vmax$. Optimality
+of $\pi^{+}$ just above $\beta^{\ast}$ reads
+$y^{\pi^{+}}_\beta(v)\ge\beta y^{\pi^{+}}_\beta(v^{\bar\pi^{+}(v)})$, an equality
+at $\beta=\beta^{\ast}$ because $v\in J$; differentiating from the right,
+$u^{+}(v)\ge w(v^{\bar\pi^{+}(v)})+\beta^{\ast}u^{+}(v^{\bar\pi^{+}(v)})
+=r(v)+\beta^{\ast}u^{+}(v^{\bar\pi^{+}(v)})$, while
+$u^{+}(v)=r(v)+\beta^{\ast}u^{+}(v^{\pi^{+}(v)})$; hence
+$u^{+}(v^{\pi^{+}(v)})\ge u^{+}(v^{\bar\pi^{+}(v)})$ and $\pi^{+}$ attains the
+maximum of $U$ at $v$. Dually at $J\cap\Vmin$. So $Uu^{+}=u^{+}$, and by
+uniqueness $u^{+}$ is the value of $\mathcal D^{+}$ and $\pi^{+}|_J$ one of its
+optimal pairs. (iii) is the same computation with $h\uparrow0$, where the
+expansion $\operatorname{opt}_a\bigl(w(v^{(a)})-h\,u^{-}(v^{(a)})\bigr)$ turns
+a maximum into a minimum.
+\end{proof}
+
+\begin{proposition}[The easy end is degenerate]\label{pp:start}
+$w_0=0$, so $\Opt(0)=\{0,1\}^{C}$ and $J=C$: the path starts at a totally
+degenerate point, unlike Lemke's, which starts at a strictly feasible ray from
+an arbitrary base profile (\Cref{thm:lemke-homotopy}(b)). The tie is resolved by
+the expansion of $w_\beta$ at $0$. Let $D(v)$ be the order of vanishing of
+$w_\beta(v)$ at $\beta=0$; then $D(t_1)=0$, $D(t_0)=\infty$,
+$D(v)=1+\min\bigl(D(v^{(0)}),D(v^{(1)})\bigr)$ at $\Vmax\cup\Vavg$ and
+$D(v)=1+\max(\cdot)$ at $\Vmin$, and the leading coefficient $c(v)$ of
+$w_\beta(v)$ obeys a recursion which is well founded because $D$ strictly
+decreases along the successors it uses; both are computed in $O(N^{2})$
+arithmetic operations. If at every controlled vertex the pair $(D,c)$ of the two
+successors is distinct, the initial pair of the path is read off in polynomial
+time. In general it is the optimal pair of $G$ over the ordered field of formal
+Laurent series in $\beta$, and its complexity is not settled here. The variant
+$G_{\beta,c}$ in which the stop pays $c_v$ has $w_0=c$ and, for a $c$ whose
+values at the two successors of every controlled vertex differ, a nondegenerate
+start read off in $O(N)$; but then $\beta\mapsto w_\beta$ is no longer monotone
+(one non-sink with successors $t_0,t_0$ and $c\equiv1$ gives $w_\beta=1-\beta$).
+\end{proposition}
+
+\begin{theorem}[One player, one Max vertex: any dyadic breakpoint set]\label{pp:one}
+Let $R=\{r_1<\dots<r_k\}\subset(0,1)$ be dyadic rationals. There is a
+\emph{one-player} stopping SSG $\mathrm{OS}(R)$ with exactly one Max vertex whose
+stopping-probability path has breakpoint set exactly $R$; each breakpoint is a
+genuine reversal of the unique controlled vertex, and the optimal pair returns
+to a pair it has left whenever $k\ge2$. Writing
+$P(\beta)=\prod_i(\beta-r_i)=\sum_dA_d\beta^{d}/2^{K_0}$ with $A_d\in\mathbb Z$
+and $2^{K}\ge\sum_d|A_d|$, the two actions of the Max vertex lead to gadgets
+realising the hitting-time laws $(A_d)_{+}/2^{K}$ and $(A_d)_{-}/2^{K}$ shifted
+by $K$, so that
+$\val_{G_\beta}(u_0)-\val_{G_\beta}(u_1)=2^{K_0-K}\beta^{K}P(\beta)$.
+With $R=\{i2^{-t}:1\le i\le k\}$, $t=\lceil\log_2(k+1)\rceil$, one has
+$K=O(k\log k)$ and $|V|=O(kK)=O(k^{2}\log k)$. Consequently a single controlled
+vertex changes its action $\Omega\bigl(\sqrt{N/\log N}\bigr)$ times along the
+path, and $B(G)$ is bounded by no function of $|C|$.
+\end{theorem}
+
+\begin{proof}
+Realisation: by \Cref{lem:dyadic-row} a dyadic sub-probability vector of
+denominator $2^{K}$ over $\ell$ targets is realised by a pruned binary tree of
+average vertices with at most $\ell$ surviving nodes per depth, i.e.\ at most
+$\ell K$ vertices; a surviving edge is entered after exactly $j$ steps, where
+$j$ is its depth, so redirecting it into position $d-j$ of one shared
+deterministic chain $q_{L}\to\dots\to q_1\to t_1$ ($q_i$ an average vertex with
+both successors $q_{i-1}$, $\val(q_i)=\beta^{i}$) makes the token reach $t_1$
+after exactly $d$ steps; $d\ge K\ge j$ makes this legitimate. The chain is
+shared by both gadgets and has $L=K+\deg P$ vertices. Every vertex is average,
+every path leads to a sink, so the game is acyclic, hence stopping
+(\Cref{lem:trapchar}). The displayed identity is the definition of the two
+laws. Its zeros in $(0,1)$ are exactly $r_1,\dots,r_k$, all simple, so the sign
+of $\val(u_0)-\val(u_1)$ --- which by \Cref{pp:basic}(b) with $|C|=1$ decides the
+Max vertex --- changes exactly $k$ times. Size: $\sum_d|A_d|=2^{K_0}\prod_i(1+r_i)
+\le2^{K_0+k}$, so $K\le K_0+k\le tk+k$; the two trees cost at most $2(k+1)K$
+vertices and the chain $K+k$.
+\end{proof}
+
+\begin{remark}\label{pp:one-measured}
+Built and verified from the game for $k=1,\dots,8$: $|V|=8,17,32,61,94,129,169,250$
+and $K=2,4,7,11,15,18,21,28$; the game is stopping by the trap test of
+\Cref{lem:trapchar}, the optimal action was computed exactly at one rational
+strictly inside each of the $k+1$ intervals cut out by $R$ and alternates at
+every step, every $r_i$ is a tie and no other rational tested is, and the
+backward-induction values were cross-checked against brute force over both
+profiles with an exact linear solve at $\beta=\tfrac17,\tfrac37,\tfrac57,\tfrac67$.
+The smallest witness $\mathrm{OS}_2$ ($R=\{\tfrac12,\tfrac34\}$, $P=\beta^2-
+\tfrac54\beta+\tfrac38$, $A=(3,-10,8)$, $K=5$) has $19$ vertices, one Max and
+eighteen average, and
+$\val_{G_\beta}(u_0)-\val_{G_\beta}(u_1)=\tfrac14\beta^{5}(\beta-\tfrac12)(\beta-\tfrac34)$;
+its path is $0,1,0$.
+\end{remark}
+
+\begin{theorem}[The two homotopies differ]\label{pp:differ}
+On $\mathrm{OS}_2$ of \Cref{pp:one-measured} the stopping-probability path has
+two breakpoints and the sequence of optimal pairs $0,1,0$. By
+\Cref{thm:lemke-homotopy}(c) the bias homotopy of \Cref{def:bias} on a game with
+$|C|=1$ has at most $2^{1}-1=1$ breakpoint and pairwise distinct profiles; on
+$\mathrm{OS}_2$, whose readouts at $\beta=1$ are the constants
+$f_{v,0}=\tfrac{11}{32}$ and $f_{v,1}=\tfrac{10}{32}$, it makes no switch from
+the base profile $0$ and exactly one, at $\lambda=\tfrac1{32}d_v$, from the base
+profile $1$, for every covering vector $d>0$. More generally, for a parametric
+linear programme $\max\,(c+\lambda e)\cdot f$ over a \emph{fixed} polytope the
+set of $\lambda$ at which a given vertex is optimal is an interval, since the
+defining inequalities are affine in $\lambda$; so neither
+\Cref{thm:lemke-homotopy} nor the shadow-vertex reading of
+\Cref{prop:bias-shadow} can produce a path that returns to a pair it has left.
+Hence the two paths differ, and $\Opt^{-1}(\pi)$ need not be an interval.
+\end{theorem}
+
+\begin{theorem}[Exponentially many breakpoints]\label{pp:tent}
+For $D\ge1$ let $\mathrm{BP}(D)$ be the SSG with
+\[
+ \begin{aligned}
+  &F_0\text{ a deterministic chain of length }2\ (\val=\beta^{2}),\qquad G_0:=t_0,\\
+  &c_1\to(t_0,t_1);\quad
+   c_d=w^{d}_1\to(t_0,w^{d}_2),\ w^{d}_2\to(t_0,w^{d}_3),\
+   w^{d}_3\to(c_{d-1},c_{d-1})\quad(2\le d\le D),\\
+  &P_d\to(F_{d-1},F_{d-1}),\quad Q_d\to(G_{d-1},G_{d-1}),\quad B_d\to(c_d,c_d),\\
+  &X_d\to(P_d,t_0),\quad Y_d\to(Q_d,B_d),\quad
+   F_d\to(X_d,Y_d),\quad G_d\to(X_d,Y_d),
+ \end{aligned}
+\]
+all vertices average except $F_d\in\Vmax$ and $G_d\in\Vmin$. Then $\mathrm{BP}(D)$
+is stopping, has $N=10D+2$ vertices, $D$ Max and $D$ Min, and with
+$\kappa_d:=\val_{G_\beta}(c_d)=\tfrac{\beta}2\bigl(\tfrac{\beta^{3}}4\bigr)^{d-1}$,
+$\varphi_d:=\val_{G_\beta}(F_d)-\val_{G_\beta}(G_d)$ and
+$e_d:=\beta\bigl(\tfrac{\beta^{3}}4\bigr)^{d}$,
+\[
+  \varphi_d=\tfrac{\beta^{3}}2\bigl|\varphi_{d-1}-\kappa_d\bigr|,\qquad
+  \kappa_d=\tfrac12e_{d-1},\qquad
+  \frac{\varphi_d}{e_d}=T^{d}(\beta)\quad\text{for all }\beta\in(0,1),
+\]
+where $T(z)=|2z-1|$ is the tent map. Consequently $F_d$ and $G_d$ reverse
+exactly at the $\beta$ with $T^{d-1}(\beta)=\tfrac12$, i.e.\ at the odd multiples
+of $2^{-d}$, these sets are disjoint for distinct $d$, and
+\[
+  \text{breakpoint set of }\mathrm{BP}(D)=\{k2^{-D}:1\le k\le2^{D}-1\},\qquad
+  B(\mathrm{BP}(D))=2^{D}-1=2^{(N-2)/10}-1 .
+\]
+The path meets $2^{D}$ pairwise distinct optimal pairs --- its itinerary is the
+symbolic dynamics of the tent map --- the single vertex $F_D$ reverses $2^{D-1}$
+times, and every breakpoint has $|J|=2$, so by \Cref{pp:step} each step still
+costs $O(n^{3})$: the exponential cost is entirely in the number of steps.
+\end{theorem}
+
+\begin{proof}
+Acyclicity is visible: every edge goes to a sink, to a lower level, or down the
+$c$-chain; hence the game is stopping by \Cref{lem:trapchar}. In $G_\beta$ every
+non-sink carries the factor $\beta$, so
+$\val(P_d)=\beta f_{d-1}$, $\val(Q_d)=\beta g_{d-1}$, $\val(B_d)=\beta\kappa_d$,
+$\val(X_d)=\tfrac{\beta^{2}}2f_{d-1}$,
+$\val(Y_d)=\tfrac{\beta^{2}}2(g_{d-1}+\kappa_d)$; and
+$\val(w^{d}_3)=\beta\kappa_{d-1}$,
+$\val(w^{d}_2)=\tfrac{\beta^{2}}2\kappa_{d-1}$,
+$\kappa_d=\val(w^{d}_1)=\tfrac{\beta^{3}}4\kappa_{d-1}$, with
+$\kappa_1=\tfrac{\beta}2$. Since $F_d$ and $G_d$
+read the same pair,
+$f_d=\beta\max(\val X_d,\val Y_d)$ and $g_d=\beta\min(\val X_d,\val Y_d)$, so
+$\varphi_d=\beta|\val X_d-\val Y_d|=\tfrac{\beta^{3}}2|\varphi_{d-1}-\kappa_d|$.
+With $e_d=\beta(\beta^{3}/4)^{d}$ one has $e_{d-1}/e_d=4/\beta^{3}$ and
+$\kappa_d=e_{d-1}/2$, so
+\[
+ \frac{\varphi_d}{e_d}=\frac{\beta^{3}}2\cdot\frac{e_{d-1}}{e_d}
+   \Bigl|\frac{\varphi_{d-1}}{e_{d-1}}-\frac12\Bigr|
+   =2\Bigl|\frac{\varphi_{d-1}}{e_{d-1}}-\frac12\Bigr|
+   =T\Bigl(\frac{\varphi_{d-1}}{e_{d-1}}\Bigr),
+\]
+and $\varphi_0/e_0=\beta^{2}/\beta=\beta$, whence $\varphi_d/e_d=T^{d}(\beta)$.
+The multiplier $2$ is independent of $\beta$: that is the whole design, and it
+is what the naive transplant of \Cref{thm:fold} does not achieve, the fold's
+contraction $\beta^{3}/2$ and the constants' ratio $\beta^{3}/4$ having been
+matched. $T$ maps $[0,1]$ into itself and $T^{d-1}$ is an affine bijection of
+each $[j2^{-(d-1)},(j+1)2^{-(d-1)}]$ onto $[0,1]$ with slope $\pm2^{d-1}$, so
+$T^{d-1}(\beta)=\tfrac12$ has exactly $2^{d-1}$ solutions, the odd multiples of
+$2^{-d}$, each a transversal crossing. $F_d$ and $G_d$ reverse exactly there,
+since $\val X_d-\val Y_d=\tfrac{\beta^{2}}2e_{d-1}\bigl(T^{d-1}(\beta)-\tfrac12\bigr)$.
+If $T^{d-1}(\beta)=\tfrac12$ then $T^{d}(\beta)=0$, $T^{d+1}(\beta)=1$ and
+$T^{j}(\beta)=1$ for all $j>d$, so no other level reverses at the same $\beta$;
+the reversal sets are disjoint, their union over $d\le D$ is
+$\{j2^{-d}:j\text{ odd},\,d\le D\}=\{k2^{-D}:1\le k\le2^{D}-1\}$, of size
+$2^{D}-1$, and exactly two vertices tie at each. The optimal pair on an interval
+is determined by the sign vector $\bigl(\operatorname{sign}(T^{d-1}(\beta)-\tfrac12)
+\bigr)_{d\le D}$, which is the length-$D$ itinerary of $\beta$ under $T$ and is
+injective on the $2^{D}$ intervals.
+\end{proof}
+
+\begin{remark}\label{pp:tent-measured}
+Verified from the game for $D=1,\dots,11$ ($N=12,\dots,112$): stopping by the
+trap test; the identity $\varphi_d=T^{d}(\beta)e_d$ at $199$ (resp.\ $119$)
+rationals $\beta=j/200$ (resp.\ $j/120$) for every $d\le D$, $0$ mismatches; the
+optimal pair computed exactly at the midpoint of each of the $2^{D}$ intervals,
+pairwise distinct across intervals and different at every one of the $2^{D}-1$
+consecutive pairs, i.e.\ $2^{D}-1$ breakpoints and no more (four interior
+rationals per interval, no change); exactly two tied vertices at each $k2^{-D}$;
+and the values cross-checked at $\beta\in\{\tfrac1{32},\dots,\tfrac{31}{32}\}$
+against brute force over all $2^{2D}$ profiles with exact linear solves for
+$D\le4$. \Cref{pp:step} was checked at every one of the $1+3+7+15+31$
+breakpoints of $\mathrm{BP}(1..5)$ and at every breakpoint of three $\mathrm{OS}$
+instances: the derived game predicted the pair on both sides in all $57+10$
+cases. A variant $\mathrm{BP}'(D)$ in which $F_d$ and $G_d$ read two disjoint
+copies of the pair $(X_d,Y_d)$ --- so that no two controlled vertices share a
+successor pair, the feature \Cref{lem:same-successor} and $P_D$ of
+\Cref{thm:fold} rely on --- has $12D+2$ vertices and the same $2^{D}-1$
+breakpoints, verified for $D\le6$.
+\end{remark}
+
+
+\begin{proposition}[The barrier is not an artefact of the model or of the start]\label{pp:robust}
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{Damping only at the average vertices.} Let $T'_\beta$ damp at
+  $\Vavg$ only ($T'_\beta x=\beta\cdot\text{mean}$ at $\Vavg$, undamped
+  $\operatorname{opt}$ at $C$); on a stopping game the controlled subgraph is
+  acyclic (\Cref{lem:trapchar}) so $T'_\beta$ still has a unique fixed point.
+  The family $\mathrm{BP}^{a}(D)$ obtained from $\mathrm{BP}(D)$ by shortening
+  each block of the $\kappa$-chain from three vertices to two --- so that
+  $\kappa_d=(\beta/2)^{2}\kappa_{d-1}$, matching the fold multiplier
+  $\beta^{2}/2$ --- satisfies $\varphi_d/e_d=T^{d}(\beta)$ with
+  $e_d=\beta(\beta^{2}/4)^{d}$, has $9D+3$ vertices, and again exactly
+  $2^{D}-1$ breakpoints, at $\{k2^{-D}\}$.
+\item \emph{A nondegenerate start.} In the variant $G_{\beta,c}$ of
+  \Cref{pp:start} the crossings of \Cref{pp:tent} are transversal, so for each
+  $D$ there is $\varepsilon_D>0$ such that for $0<\varepsilon<\varepsilon_D$ and
+  $c_v=\varepsilon(v+1)$ the path of $\mathrm{BP}(D)_{\beta,c}$ still has at
+  least $2^{D}-1$ breakpoints while its start at $\beta=0$ has no tie at all and
+  is read off in $O(N)$. So the exponential lower bound applies to the homotopy
+  in the form in which it is an algorithm.
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}\label{pp:robust-measured}
+(a) was verified from the game for $D=1,\dots,8$ ($N=12,\dots,75$): the identity
+$\varphi_d=T^{d}(\beta)e_d$ at $99$ rationals for each $d\le D$, $0$ mismatches,
+and exactly $2^{D}-1$ changes of the optimal pair across the $2^{D}$ interval
+midpoints, all $2^{D}$ pairs distinct. (b) was verified for $D=1,\dots,7$ with
+$\varepsilon=2^{-(14D+30)}$ and $c_v=\varepsilon(v+1)$: no tie at $\beta=0$, and
+$1,3,7,16,33,64,129$ changes of the optimal pair over $2^{D+2}$ sample points,
+in each case at least $2^{D}-1$.
+\end{remark}
+
+\begin{corollary}[The barrier]\label{pp:barrier}
+No continuation method that follows the optimal pair of $G_\beta$ from $\beta=0$
+to $\beta=1$ is polynomial: on $\mathrm{BP}(D)$ it meets $2^{\Omega(N)}$ pairs,
+and by \Cref{pp:step} each step costs at least one exact linear solve; by
+\Cref{pp:robust} this survives both the
+average-vertices-only damping and the nondegenerate start, so it is not an
+artefact of the degeneracy at $\beta=0$. Moreover the last breakpoint of $\mathrm{BP}(D)$ is
+$1-2^{-D}$, so the optimal pair of $G_\beta$ differs from that of $G$ for every
+$\beta<1-2^{-(N-2)/10}$: the damping of \Cref{thm:stopping-transform} cannot be
+weakened below $2^{-\Omega(N)}$ if the optimal \emph{pair}, and not merely one
+bit of $\val(v_0)$, is wanted.
+\end{corollary}
+
+
+\begin{proposition}[The gap between the two homotopies is exponential]\label{pp:separation}
+On $\mathrm{BP}(D)$ the stopping-probability path has $2^{D}-1$ breakpoints
+(\Cref{pp:tent}) while the bias homotopy of \Cref{def:bias} with $d=\bbone$,
+maximised over all $2^{|C|}=4^{D}$ base profiles, has at most $|C|=2D$:
+measured $1,2,3,4,5$ at $D=1,\dots,5$ under the single-switch tie-breaking
+(exactly $D$) and $1,2,3,6,7$ under the switch-all-vanishing one, and
+$1,2,3,4$ resp.\ $1,2,3,6$ on $\mathrm{BP}'(D)$, $D\le4$. So the two are not two parametrisations of one
+path: on one family one of them is exponential and the other linear. The
+implementation reproduces \Cref{rem:bias-families} exactly on $L_n$ ($n$
+breakpoints, $n\le7$) and on $\mathrm{RC}(k)$ ($k$, $k\le7$), and the game
+$P_D$ of \Cref{thm:fold} --- whose values it also reproduces, $\val(F_D)=3\cdot
+2^{-D-2}$ for $2\le D\le6$ --- gives $0,2,3,4,7,8$ distinct breakpoints, a
+fourth convention-dependent reading of a profile-degenerate family for which
+\Cref{rem:bias-families} already records three. $\mathrm{BP}(D)$ is therefore
+one more family that does \emph{not} defeat the bias homotopy.
+\end{proposition}
+
+\begin{remark}[What is missing]\label{pp:gap}
+The fold that drives \Cref{pp:tent} is the device of \Cref{thm:fold}: one Max
+and one Min vertex reading the same pair, so that their difference is
+$|o_0-o_1|$. It is unavailable with one player, where every value is a
+nonnegative combination of the sink payoffs and $\max$ alone is monotone; and
+\Cref{pp:monotone} shows that no single value $\beta\mapsto w_\beta(v)$ can fold.
+The missing statement is exactly: \emph{there are $c>0$ and one-player stopping
+SSGs $G_n$ on $n$ vertices whose stopping-probability path has at least $2^{cn}$
+breakpoints}, or its negation. \Cref{pp:one} gives $\Omega(\sqrt{N/\log N})$ and
+\Cref{pp:basic}(d) gives $O(N2^{|C|}|C|)$; a polynomial bound for one player
+would not put \textsc{SSG-Value} in $\mathsf P$ --- one-player games are already
+easy by \Cref{thm:one-player} --- but a superpolynomial one would be the first
+lower bound for a path that, by \Cref{pp:differ}, is not the shadow-vertex path
+of \Cref{prop:bias-shadow} and is constrained by none of the barriers of this
+document. The second missing statement is the complexity of the initial pair of
+\Cref{pp:start}: the optimal pair of an SSG over $\mathbb R((\beta))$.
+\end{remark}

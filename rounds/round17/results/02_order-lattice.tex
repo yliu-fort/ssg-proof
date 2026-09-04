@@ -1,0 +1,354 @@
+% Route r17-order-lattice.  Paste-ready; labels prefixed ol:.
+% Depends on: lem:trapchar, def:residue, thm:contraction, thm:order-determines,
+% cor:comparison, thm:residue-correct, def:profile-orientation,
+% lem:profile-trichotomy, thm:profile-uso, thm:cyclic-uso, lem:normalform.
+
+\subsection{Orders as certificates: the consistent order is unique}
+\label{ol:sec-consistent}
+
+\Cref{thm:order-determines} decodes the true order of the average values
+into $w^\ast$. The question this subsection settles is the converse one:
+which orders survive their own decoding. Throughout,
+$C:=\Vmax\cup\Vmin$ and $A:=\Vavg\cup\{t_0,t_1\}$, the \emph{letters}.
+
+\begin{definition}[The decode, and consistency]\label{ol:def-consistent}
+Let $G$ be stopping and let $\preceq$ be a total preorder on $A$, given by
+its rank function $\mathrm{rk}:A\to\{0,\dots,\ell\}$, rank $0$ being the
+top class. The \emph{decode} of $\preceq$ is computed in two steps.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item By \Cref{lem:trapchar} the subgraph induced on $C$ is acyclic. Run the
+  backward induction of \Cref{def:residue} with the ordinal payoffs
+  $-\mathrm{rk}$ on $A$, obtaining $R(v)$ for every $v\in C$, and let
+  $\sigma$ choose at each $v\in\Vmax$ a successor attaining
+  $\max(R(v^{(0)}),R(v^{(1)}))$ and $\tau$ at each $v\in\Vmin$ one attaining
+  the minimum, ties broken arbitrarily.
+\item Put $x_{\preceq}:=v_{\sigma,\tau}$: one exact linear solve.
+\end{enumerate}
+$\preceq$ is \emph{consistent} if the total preorder induced by $x_\preceq$
+on $A$ is $\preceq$ again. Both steps are polynomial, and the certificate
+$\preceq$ names no strategy and carries $O(|A|\log|A|)$ bits.
+\end{definition}
+
+The decode is the decoder of \Cref{thm:order-determines} written out: there
+the classes are placed by iterated attractors, and on a stopping game the
+Max attractor of a level set in the deterministic residue is exactly that
+backward induction. (Both forms were implemented and agree on $56$ random
+stopping games at every one of the $75$, $541$ or $4683$ total preorders on
+their letters.)
+
+\begin{theorem}[The consistent order is unique]\label{ol:unique}
+Let $G$ be a stopping SSG. A total preorder $\preceq$ on $A$ is consistent
+--- for one tie-breaking in \Cref{ol:def-consistent}(i), equivalently for
+every one --- if and only if $\preceq$ is the preorder induced by $w^\ast$
+on $A$; and then $x_\preceq=w^\ast$ for every tie-breaking.
+\end{theorem}
+
+\begin{proof}
+That the true preorder is consistent, with $x_\preceq=w^\ast$ under every
+tie-breaking, is \Cref{thm:order-determines}.
+
+Conversely let $\preceq$ be consistent for some tie-breaking and write
+$x:=x_{\preceq}$, so that $\preceq$ is the preorder induced by $x$ on $A$.
+Then the classes of $\preceq$ are exactly the level sets of $x|_A$, so
+$\psi(r):=$ the common value of $x$ on the letters of rank $r$ is a well
+defined and strictly decreasing function of $r$, and
+$\theta(-r):=\psi(r)$ is a strictly increasing map from the payoffs
+$\{-\mathrm{rk}(p)\}$ used in \Cref{ol:def-consistent}(i) to the payoffs
+$x|_A$. Let $D$ be the backward induction of \Cref{def:residue} run with
+the payoffs $x|_A$. A strictly increasing map commutes with $\max$ and
+$\min$, so $D=\theta\circ R$ on $C$; in particular the successor chosen at
+$v\in\Vmax$ attains $\max(D(v^{(0)}),D(v^{(1)}))$ and the one chosen at
+$v\in\Vmin$ attains the minimum.
+
+Next, $x=D$ on $C$. Induct along a topological order of the acyclic
+subgraph induced on $C$. Since $G$ is stopping, $x=v_{\sigma,\tau}$ is the
+unique fixed point of $T_{\sigma,\tau}$ (\Cref{thm:contraction}), so
+$x(v)=x(\sigma(v))$ at $v\in\Vmax$ and $x(v)=x(\tau(v))$ at $v\in\Vmin$.
+If the chosen successor lies in $A$ then $x=D$ there by definition of $D$;
+otherwise it lies earlier in the topological order and $x=D$ there by the
+induction hypothesis. In both cases
+$x(v)=D(\text{chosen successor})=D(v)$, the last equality because the
+chosen successor attains the extremum defining $D(v)$.
+
+Hence $x=D$ on all of $V$, and therefore at $v\in\Vmax$
+\[
+  x(v)=D(v)=\max\bigl(D(v^{(0)}),D(v^{(1)})\bigr)
+       =\max\bigl(x(v^{(0)}),x(v^{(1)})\bigr)=(Tx)(v),
+\]
+and likewise at $v\in\Vmin$; at an average vertex and at the sinks
+$x=v_{\sigma,\tau}$ already satisfies the defining equation of $T$. So
+$Tx=x$, and $x=w^\ast$ by \Cref{thm:contraction}. Consequently $\preceq$,
+being the preorder induced by $x$, is the true one; and then every
+tie-breaking gives $w^\ast$ by \Cref{thm:order-determines}.
+\end{proof}
+
+\begin{corollary}[Only the read letters are needed]\label{ol:read}
+Let $B:=\{t_0,t_1\}\cup\{p\in\Vavg:\ p\ \text{is a successor of some vertex
+of}\ C\}$. The decode of \Cref{ol:def-consistent} depends on $\preceq$ only
+through $\preceq|_B$, and the unique total preorder on $B$ whose decode
+induces it back on $B$ is the one induced by $w^\ast$. Hence
+\textsc{SSG-Value} has a certificate of $O(b\log b)$ bits with
+$b:=|B|\le\min(a+2,\,2|C|+2)$, verifiable in polynomial time, and unique.
+\end{corollary}
+
+\begin{proof}
+Every value $D(v)$, $v\in C$, produced by the backward induction is a value
+$x(p)$ with $p\in B$, by induction along the topological order; so only the
+order of $\preceq$ on $B$ is consulted. With $B$ for $A$ throughout, the
+proof of \Cref{ol:unique} is unchanged: it derives $x=D$ on $C$ and then
+$Tx=x$.
+\end{proof}
+
+\begin{remark}\label{ol:rem-up}
+\Cref{ol:unique} makes the order a \emph{unique} witness: both the yes- and
+the no-instances of \Cref{prob:main} have exactly one accepted certificate
+of $O(b\log b)$ bits, which places \textsc{SSG-Value} in
+$\mathrm{UP}\cap\mathrm{coUP}$ with a witness far smaller than the value
+vector (whose entries need $\Theta(a)$ bits each by
+\Cref{lem:denominator-sharp}). That the problem lies in
+$\mathrm{UP}\cap\mathrm{coUP}$ is not new --- the value vector is itself a
+unique witness, and the membership is standard (from memory, unchecked
+against the source: Condon's $\mathrm{NP}\cap\mathrm{coNP}$ argument, with
+uniqueness of $w^\ast$); what \Cref{ol:unique} adds is the size and the
+fact that the small witness is unique too. No algorithm follows:
+enumerating preorders costs $2^{\Theta(a\log a)}$, worse than
+\Cref{thm:few-avg}.
+\end{remark}
+
+\begin{proposition}[Stopping is necessary]\label{ol:nonstopping}
+Let $\mathrm{NS}$ be the SSG on non-sinks $\{v,p,q\}$ with $v\in\Vmax$,
+$p,q\in\Vavg$, $v\to(v,p)$, $p\to(t_1,q)$, $q\to(v,t_0)$; it is not
+stopping, and $\val=(\tfrac23,\tfrac23,\tfrac13)$. Decode a preorder by the
+attractor form of \Cref{thm:order-determines} (a controlled vertex attracted
+to no level set is placed in the class of $t_0$) and evaluate by
+\Cref{thm:eval-stopfree}. Then two distinct total preorders on
+$A=\{p,q,t_0,t_1\}$ are consistent:
+$t_0\prec q\prec p\prec t_1$, which decodes to $\val$, and
+$t_0\sim q\prec p\prec t_1$, which decodes to
+$(0,\tfrac12,0)\ne\val$. Both consistencies use the tie-breaking freedom at
+$v$, whose two successors are placed in the same class by every preorder.
+\end{proposition}
+
+\begin{proof}
+$\{v\}$ is a trap, so $\mathrm{NS}$ is not stopping, and
+$\val$ is the least fixed point of $T$ (\Cref{thm:lfp-general}):
+$\val(v)=\val(p)$, $\val(p)=\tfrac12(1+\val(q))$,
+$\val(q)=\tfrac12\val(v)$ give $\val(v)=\tfrac23$. For either preorder the
+attractor of $\{t_1\}$ misses $v$ and the attractor of $\{t_1,p\}$ contains
+it, so $v$ lands in $p$'s class, which is also the class of its own value;
+both successors of $v$ then carry that class and the tie-breaking is free.
+Taking $\sigma(v)=p$ gives $v_{\sigma}=\val$, whose induced preorder is the
+first; taking $\sigma(v)=v$ makes $\{v\}$ a trap, so
+$v_\sigma=(0,\tfrac12,0)$ by \Cref{thm:eval-stopfree}, whose induced
+preorder is the second. (Exact rational arithmetic; the enumeration of all
+$75$ preorders and both tie-breakings returns exactly these two.)
+\end{proof}
+
+\subsection{The order lift, and what it really is}\label{ol:sec-lift}
+
+\begin{definition}[The order lift]\label{ol:def-lift}
+$\Phi(\preceq)$ is the total preorder induced by $x_\preceq$ on $A$. By
+\Cref{ol:unique} its unique fixed point is the true order, so the order
+lattice carries a fixed-point formulation of \Cref{prob:main} whose
+solution is unique and whose fixed-point test is one linear solve. Call $G$
+\emph{separated} if every successor of a controlled vertex lies in $A$;
+\Cref{lem:normalform} makes every game separated at the cost of average
+vertices.
+\end{definition}
+
+\begin{proposition}[The lift is the antipodal walk on the profile cube]
+\label{ol:profile-walk}
+Let $G$ be stopping, separated and profile-nondegenerate
+(\Cref{def:profile-orientation}), and let $\pi\in\{0,1\}^{C}$ be a profile
+with value $y_\pi$. Then the decode of the preorder induced by $y_\pi$ on
+$A$ is the profile $\pi\oplus s_C(\pi)$, so
+\[
+  \Phi\bigl(\mathrm{ord}(y_\pi|_A)\bigr)=\mathrm{ord}\bigl(y_{\pi\oplus s_C(\pi)}|_A\bigr):
+\]
+on the orbit of any profile the order lift is exactly the \emph{antipodal
+walk} of the profile orientation of \Cref{def:profile-orientation}, which
+switches at once every controlled vertex whose owner prefers its other
+action. In particular, on a separated one-player stopping game the order
+lift is the all-switches rule (\Cref{prop:allsw-auso}), and on an arbitrary
+one-player stopping game it is a residue improvement step in the sense of
+\Cref{def:residue-rule} --- the same rule up to the choice among successors
+attaining the residue maximum --- hence monotone and convergent
+(\Cref{thm:residue-correct}).
+\end{proposition}
+
+\begin{proof}
+$G$ is separated, so the backward induction of \Cref{ol:def-consistent}(i)
+has depth one: at $v\in\Vmax$ it compares the ranks of $v^{(0)},v^{(1)}\in
+A$, which by hypothesis are ordered as $y_\pi(v^{(0)})$ and
+$y_\pi(v^{(1)})$ are, and $y_\pi(v)=y_\pi(v^{(\pi(v))})$. So the decode
+keeps $\pi(v)$ when $y_\pi(v^{(\overline{\pi(v)})})<y_\pi(v)$ and switches
+when the inequality is reversed; nondegeneracy excludes equality. That is
+precisely the definition of $s_C(\pi)$, and dually at $\Vmin$. For one
+player: with $\Vmin=\emptyset$ the decode is a Max strategy $\sigma'$
+attaining $\max(D(v^{(0)}),D(v^{(1)}))$ at every $v$, which is the only
+property of $\rho(\sigma)$ used in the proof of
+\Cref{thm:residue-correct}(b),(c); hence $\val_{\sigma'}\ge D\ge\val_\sigma$
+with equality only at an optimum, and the decoded vectors increase
+strictly until the lift is at its fixed point.
+\end{proof}
+
+\begin{theorem}[Two controlled vertices: the lift converges]\label{ol:small-C}
+Let $G$ be stopping, separated and profile-nondegenerate with $|C|\le2$.
+Then the order lift has no cycle of length greater than one; from every
+start it reaches the true order within four decodes, and the bound is
+attained.
+\end{theorem}
+
+\begin{proof}
+If one player is absent the decoded vectors are monotone by
+\Cref{ol:profile-walk}, and a cycle would make them constant, so there is
+none. Let $\Vmax=\{v\}$, $\Vmin=\{u\}$, and write a profile as
+$(i,j)$, $y_{ij}=(V_{ij},U_{ij})$ its value on $C$. By
+\Cref{ol:profile-walk} the lift is the map $F(i,j)=(i,j)\oplus s_C(i,j)$ on
+the four profiles, so a cycle has length $2$, $3$ or $4$. Throughout we use
+\Cref{lem:profile-trichotomy}: for $\pi'=\pi\oplus e_w$ exactly one of
+$w\in s_C(\pi)$, $w\in s_C(\pi')$ holds (nondegeneracy excludes the flat
+case), and in the first case $y_\pi\le y_{\pi'}$ with strict inequality at
+$w$ when $w\in\Vmax$, $y_{\pi'}\le y_\pi$ strictly at $w$ when $w\in\Vmin$.
+Consequently each of the four edges of the square carries a well-defined
+direction, and we may write $M(j)\in\{0,1\}$ for the head of the $v$-edge
+at level $j$ and $m(i)$ for the head of the $u$-edge in column $i$; then
+$F(i,j)=(M(j),m(i))$.
+
+\emph{Length two.} If the two profiles differ in one coordinate $w$, the
+cycle asserts $w\in s_C(\pi)$ and $w\in s_C(\pi')$, contradicting
+\Cref{lem:profile-trichotomy}. If they differ in both, say
+$\pi=(0,0)$ and $\pi'=(1,1)$, then $v,u\in s_C(0,0)$ and $v,u\in s_C(1,1)$,
+whence $y_{00}\le y_{10}$ strictly at $v$, $y_{01}\le y_{00}$ strictly at
+$u$, $y_{11}\le y_{01}$ strictly at $v$ and $y_{10}\le y_{11}$ strictly at
+$u$: the four vectors are equal, contradicting strictness.
+
+\emph{Length three.} Three profiles of the square form a path; renaming the
+two actions of $v$ and of $u$ we may take them to be $(0,0),(1,0),(1,1)$.
+If the cycle is $(0,0)\to(1,0)\to(1,1)\to(0,0)$ then $u\in s_C(1,0)$ (the
+second step) and $u\in s_C(1,1)$ (the third), contradicting
+\Cref{lem:profile-trichotomy}. If it is $(0,0)\to(1,1)\to(1,0)\to(0,0)$
+then $v\in s_C(0,0)$ (first step) and $v\in s_C(1,0)$ (third), the same
+contradiction.
+
+\emph{Length four.} Here all four profiles occur, $M$ and $m$ are
+bijections and $M\circ m$ is the transposition; renaming the two actions of
+$v$ (which replaces $M$ by $1-M$ and $m$ by $m\circ(1-\cdot)$) we may take
+$M$ to be the transposition and $m$ the identity, so that the cycle is
+$(0,0)\to(1,0)\to(1,1)\to(0,1)\to(0,0)$, one coordinate at a time. Since
+$G$ is separated, first-passage decomposition of the average part to
+$C\cup\{t_0,t_1\}$ --- the affine readouts of
+\Cref{def:profile-orientation} --- gives constants
+$a_i,b_i,c_i\ge0$ and $d_j,e_j,g_j\ge0$, independent of the profile, with
+$a_i+b_i+c_i\le1$, $d_j+e_j+g_j\le1$, such that the value of $v$'s action
+$i$ at a profile with value $(V,U)$ is $a_iV+b_iU+c_i$ and that of $u$'s
+action $j$ is $d_jV+e_jU+g_j$. Moreover $a_i<1$: $a_i=1$ would force
+$b_i=c_i=0$ and make the play from $v$ under the profile $\pi(v)=i$ return
+to $v$ almost surely, so that the vertices it meets form a trap and $G$ is
+not stopping (\Cref{lem:trapchar}). The profile identities read
+\[
+  (1-a_i)V_{ij}=b_iU_{ij}+c_i \qquad (i,j\in\{0,1\}).
+\]
+The four preferences at $v$ along the cycle are: $v\in s_C(0,0)$,
+$v\notin s_C(1,0)$, $v\in s_C(1,1)$, $v\notin s_C(0,1)$, i.e.
+\[
+  (1-a_1)V_{00}<b_1U_{00}+c_1,\quad (1-a_0)V_{10}>b_0U_{10}+c_0,\quad
+  (1-a_0)V_{11}<b_0U_{11}+c_0,\quad (1-a_1)V_{01}>b_1U_{01}+c_1 .
+\]
+Put $\Delta V:=V_{10}-V_{11}$, $\Delta U:=U_{10}-U_{11}$,
+$\Delta V':=V_{01}-V_{00}$, $\Delta U':=U_{01}-U_{00}$; the steps
+$(1,0)\to(1,1)$ and $(0,1)\to(0,0)$ are improving switches of $u$, so
+$y_{11}\le y_{10}$ and $y_{00}\le y_{01}$ and all four quantities are
+$\ge0$. Subtracting the second and third displayed inequalities, and the
+fourth and first,
+\[
+  (1-a_0)\Delta V>b_0\Delta U,\qquad (1-a_1)\Delta V'>b_1\Delta U',
+\]
+while the profile identities give
+\[
+  (1-a_1)\Delta V=b_1\Delta U,\qquad (1-a_0)\Delta V'=b_0\Delta U'.
+\]
+Multiply the first inequality by $\Delta U'\ge0$ and the second identity by
+$\Delta U\ge0$ and subtract:
+$(1-a_0)(\Delta V\,\Delta U'-\Delta V'\,\Delta U)\ge0$, strictly if
+$\Delta U'>0$. Multiply the second inequality by $\Delta U\ge0$ and the
+first identity by $\Delta U'\ge0$ and subtract:
+$(1-a_1)(\Delta V'\,\Delta U-\Delta V\,\Delta U')\ge0$, strictly if
+$\Delta U>0$. As $a_0,a_1<1$ the two force
+$\Delta V\Delta U'=\Delta V'\Delta U$ and $\Delta U=\Delta U'=0$; then the
+identity $(1-a_1)\Delta V=b_1\Delta U=0$ gives $\Delta V=0$ and the
+inequality $(1-a_0)\Delta V>b_0\Delta U$ reads $0>0$.
+
+Since the orbit of a map without cycles on four points reaches its fixed
+point in at most three steps, at most four decodes are performed; four are
+needed on random instances.
+\end{proof}
+
+\begin{proposition}[Three controlled vertices: the lift cycles]
+\label{ol:lift-cycles}
+Let $\mathrm{OL}_3$ be the stopping SSG on $23$ non-sinks --- two Max
+vertices $a,b$, one Min vertex $m$ and twenty average vertices --- obtained
+from the normal form of \Cref{thm:cyclic-uso} with the two actions of $m$
+exchanged, each option realised by the balanced binary tree of average
+vertices over its sixteen dyadic units. It is separated and
+profile-nondegenerate, $w^\ast(a,b,m)=(\tfrac14,\tfrac{15}{64},\tfrac18)$,
+and the order lift started from the coarsest preorder enters, after one
+decode, the cycle of length three
+\[
+  \mathrm{ord}\,y_{(0,0,0)}\ \to\ \mathrm{ord}\,y_{(1,0,1)}\ \to\
+  \mathrm{ord}\,y_{(0,1,1)}\ \to\ \mathrm{ord}\,y_{(0,0,0)},
+\]
+whose profiles carry $(a,b,m)$-values
+$(\tfrac14,\tfrac{15}{64},\tfrac{225}{1024})$,
+$(\tfrac19,\tfrac5{48},\tfrac1{18})$ and
+$(\tfrac14,\tfrac18,\tfrac18)$, pairwise distinct as preorders on the
+letters. Six of the eight profile orders, and $1619$ of $2000$ random
+preorders, lead into it. So the order lift, unlike the residue rule it
+restricts to on one player, is not an algorithm.
+\end{proposition}
+
+\begin{proof}
+The game was built from the normal form and all eight profile values
+recomputed from the game in exact rational arithmetic, reproducing the table
+of \Cref{thm:cyclic-uso}; all $24$ vertex--coordinate comparisons are
+strict, so the game is profile-nondegenerate, and every option is a tree of
+average vertices, so it is separated. By \Cref{ol:profile-walk} the lift is
+the antipodal walk of the profile orientation, and the out-sets printed in
+\Cref{thm:cyclic-uso} give
+$\{a,m\},\{a,b\},\{b,m\}$ at the three profiles above (in the exchanged
+labelling), so the antipodal walk closes into the displayed triangle. The
+coarsest preorder decodes to the all-first-successor profile, which the
+exchange of $m$'s actions places on the triangle.
+\end{proof}
+
+\begin{remark}\label{ol:rem-where}
+The three statements bracket the order lattice exactly.
+\Cref{ol:unique} says the lattice carries a genuine certificate: a
+poly-time test with a unique accepting witness of $O(b\log b)$ bits that
+names no strategy. \Cref{ol:profile-walk} says the one iteration the
+certificate itself suggests --- decode, then re-sort --- is not new: it is
+the antipodal walk on the profile cube of \Cref{def:profile-orientation},
+hence the residue rule of \Cref{def:residue-rule} when one player is absent
+and the all-switches rule when moreover the game is separated. So on one
+player the order-lattice programme is exactly the pivot of this paper and
+inherits its open question, while with two players it fails outright at
+$|C|=3$ by \Cref{ol:lift-cycles} and cannot fail below it by
+\Cref{ol:small-C}. What breaks is the analogue of the parity-game
+lifting: on the value lattice the lift $x\mapsto\max(x,Tx)$ is monotone,
+local and convergent but has exponential range
+(\Cref{thm:vi-lower,lem:denominator-sharp}); on the order lattice the range
+is a lattice of height $O(a^{2})$ but the only monotone lift available is
+the one-player one. The comparison with the mechanisms of \Cref{sec:gap}
+is one-sided for the same reason: every family recorded there as a stall
+--- $G_8$, $S$, $H_m$, the wedge $\mathrm{WD}(e,j,m)$, $\mathrm{CV}(e,s)$
+--- has at most one Max vertex or no Min vertex at all, so the order lift
+converges on each of them (measured: the lift reaches the true order from
+the coarsest preorder and from $200$ random preorders on $G_8$, $S$,
+$H_3$, $H_5$, $\mathrm{WD}(4,2,6)$ and on $G^{\ast}$, whose seven
+controlled vertices it settles in two decodes), and its own failure needs
+two players and three controlled vertices. The defect
+$d(\preceq):=\#\{(p,q)\in A^2: \preceq \text{ and } \mathrm{ord}(x_\preceq)
+\text{ disagree}\}$, whose unique zero is the true order by
+\Cref{ol:unique}, is not decreased by the lift either: along the cycle of
+$\mathrm{OL}_3$ it takes the values $44,50,52,44,\dots$.
+\end{remark}

@@ -1,0 +1,108 @@
+{
+ "target": "Route r17 \"order-lattice\": the lattice of total preorders on the letters A = Vavg u {t0,t1}, the consistency operator Phi (decode by the residue backward induction with the ranks as ordinal payoffs, evaluate the profile, re-sort), the uniqueness of its fixed point, and the identification of the resulting lift with the antipodal walk on the profile cube.",
+ "sound": true,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "ol:small-C",
+   "defect": "The route's flagship proof is unnecessary: the statement is four lines from thm:profile-uso plus lem:profile-trichotomy, and in that form needs neither separatedness nor the affine readouts, so the GAP the route reports (non-separated |C| = 2) is an artifact of its own longer proof, not a real gap in the profile-cube statement.",
+   "evidence": "By lem:profile-trichotomy every edge of the profile square has one direction, so the antipodal step is F(i,j) = (M(j), m(i)) with M, m the heads of the two edge classes (the route derives this too). A 4-cycle forces M, m to be bijections with M o m the transposition, i.e. (M,m) in {(id,swap),(swap,id)}; in both cases every step flips exactly one coordinate, so |s_C(pi)| = 1 at all four profiles and the square has NO sink -- contradicting thm:profile-uso. The 3-cycle and the both-coordinate 2-cycle contradict lem:profile-trichotomy directly (the route's own case analysis). I confirmed the conclusion exhaustively: enumerating all orientations of the 2-cube, the 12 that are USOs all have an antipodal walk with no cycle of length > 1 (/tmp/claude-1000/-data-ssg-proof/5cc7fb9d-035b-424b-bca6-ec769216aeb1/scratchpad/aud/uso2.py). def:profile-orientation already puts every stopping game in harmonic normal form with affine readouts on R^C, separated or not, so the route's separatedness hypothesis is doing no work in the profile-cube reading."
+  },
+  {
+   "severity": "major",
+   "result_name": "ol:lift-cycles",
+   "defect": "Presented as a new refutation requiring an engineered instance; it is one line of arithmetic from the out-set table PRINTED INSIDE thm:cyclic-uso, on the paper's own unmodified instance, and the paper already records (inside thm:cyclic-uso, attributed to Condon) that simultaneous switching by both players need not converge.",
+   "evidence": "Recomputing thm:cyclic-uso's eight profile values exactly from its printed normal form and flipping each printed out-set gives the antipodal walk (0,0,1)->(1,0,0)->(0,1,0)->(0,0,1), a 3-cycle, with values (1/4,15/64,225/1024), (1/9,5/48,1/18), (1/4,1/8,1/8) -- exactly the route's triple; the other two profiles (0,0,0) and (1,1,1) converge, matching its 'six of the eight' (/tmp/claude-1000/-data-ssg-proof/5cc7fb9d-035b-424b-bca6-ec769216aeb1/scratchpad/aud/cyc.py). frontier.tex l.10608: 'That simultaneous switching by both players need not converge is in Condon's analysis of algorithms for these games, from memory, unchecked against the source.' The route's only additions are a relabelling of m's actions (so that the coarsest preorder feeds the cycle) and a built game -- and thm:cyclic-uso already asserts the normal form is 'realisable by depth-4 trees of average vertices', so the build is verification, not a theorem."
+  },
+  {
+   "severity": "major",
+   "result_name": "ol:read",
+   "defect": "The new structural parameter b = |B| is dominated by a parameter the paper already owns: B minus the sinks meets every directed cycle through a controlled vertex, so mu_k <= b - 2 and thm:modulator already solves every bounded-b game in N^{O(b)}. The route's next_steps 4 ('whether bounded b gives a polynomial class beyond the trivial enumeration is untested') is therefore answered negatively, and the parameter yields no class.",
+   "evidence": "lem:trapchar makes the subgraph induced on C acyclic, so a directed cycle through a controlled vertex must leave C, and it can only leave to an average successor of a controlled vertex, i.e. into B. thm:modulator (l.3073): 'with mu_k the least number of vertices meeting every directed cycle through a kind-k vertex, the value of a stopping SSG is computable in time N^{O(mu_k)}'. Consistently, the route's own example WD(4,2,6) has b = 6 while the paper already records mu_max = 2 for the wedge (l.3293). The 'only B is read' half is itself three lines from thm:order-determines' proof via lem:det-game: every play of the residue stops at a successor of a controlled vertex."
+  },
+  {
+   "severity": "major",
+   "result_name": "ol:unique",
+   "defect": "Closest label mis-identified, and the class is over-stated. The route names thm:order-determines; the genuinely closest statement is lem:profile-faces, from which (with the route's own ol:profile-walk) ol:unique is three lines on separated profile-nondegenerate games. In general it is a five-line assembly of def:residue, lem:trapchar and thm:contraction. Class new-object -> new-relation.",
+   "evidence": "lem:profile-faces already proves, for J = C: 'at a profile of F with no strictly switchable free coordinate each player's chosen action attains the optimum of its two options against val_pi, so val_pi is a fixed point of the Shapley operator ... making pi an optimal pair'. That IS the soundness half. By ol:profile-walk a consistent preorder on a separated nondegenerate game is ord(y_pi) with s_C(pi) empty, hence optimal, hence the true order; uniqueness of the true order is trivial. The route's extra content is exactly the propagation x = D on C along the acyclic controlled subgraph, needed only for residue chains of depth >= 2 and for degenerate games. The proof itself is correct: I checked every step (theta o R = D, the topological induction, Tx = x, thm:contraction)."
+  },
+  {
+   "severity": "major",
+   "result_name": "the certificate programme (ol:unique, ol:read, rem:ol-up)",
+   "defect": "Circular at the programme level and pre-deflated by the paper. The contribution is a new sound-complete certificate FORMAT, and the paper's section 'What a certificate would look like' already states that no cleverer format can close the gap; the route itself concedes no algorithm follows and itself files thm:gap-equivalence/thm:top as showing the whole programme target-equivalent.",
+   "evidence": "frontier.tex, remark after prop:bracket: 'the certificate system is complete and its verification is trivial; what is missing is a way to FIND a bracket other than by computing w* itself. prop:bracket(d) makes precise that this is not a gap that a cleverer certificate format could close --- any sound complete format has the same property, since by (b) the value vector is always a witness and by (a) no witness can be wrong.' The route's own rem:ol-up: 'No algorithm follows: enumerating preorders costs 2^{Theta(a log a)}, worse than thm:few-avg', and its own restatement entry under thm:gap-equivalence: 'The order-lattice programme as a whole is therefore target-equivalent'. The residual content is witness SIZE and UNIQUENESS in UP n coUP, which is not a complexity distinction (both witnesses are polynomial) and which the paper nowhere needs."
+  },
+  {
+   "severity": "minor",
+   "result_name": "ol:nonstopping",
+   "defect": "The phenomenon is already recorded twice in the paper, and the refutation turns on an under-specified tie-breaking; the stronger 'every tie-breaking' version is supported only by random sampling, which this round's rules exclude as evidence.",
+   "evidence": "thm:modulator's statement: 'the algorithm ends by checking T_H w = w exactly, which certifies the output because a stopping game has a unique fixed point --- on a non-stopping game the same check can pass at a wrong vector, as its auditor exhibited, so the stopping hypothesis is not decorative'; also ex:pi-fails, ex:nonstopping-nonsubcube, prop:bsi-nonstopping. The route's own verification says both consistencies 'use the tie-breaking freedom at v', and that '3000 random non-stopping games ... found no preorder other than the true one that is consistent under EVERY tie-breaking' -- a sampling statement, not a theorem (standing rule: 'RANDOM SAMPLING HAS NEVER FOUND A HARD INSTANCE IN THIS PROJECT'). The arithmetic is correct: val = (2/3,2/3,1/3) as the lfp, and sigma(v) = v makes {v} a trap with v_sigma = (0,1/2,0)."
+  },
+  {
+   "severity": "note",
+   "result_name": "ol:lift-cycles (OL3 verification)",
+   "defect": "No defect: the built game verifies exactly as claimed. Recorded so the root agent need not re-verify.",
+   "evidence": "Independent exact recomputation from OL3.json (/tmp/claude-1000/-data-ssg-proof/5cc7fb9d-035b-424b-bca6-ec769216aeb1/scratchpad/aud/ver_ol3.py): 23 non-sinks (2 max, 1 min, 20 avg), greatest trap empty (stopping), all eight profile values reproduce thm:cyclic-uso's table with m's actions exchanged, no flat comparison (profile-nondegenerate), w*(a,b,m) = (1/4, 15/64, 1/8), and the antipodal walk has the 3-cycle (0,0,0)->(1,0,1)->(0,1,1)->(0,0,0) with the route's three value triples."
+  },
+  {
+   "severity": "note",
+   "result_name": "restatements[thm:matching-barrier]",
+   "defect": "An unproved claim parked in the restatements field: that every sound lift whose derivations are radius-one clauses 'is a local matching calculus in the sense of def:lmc', and that the attractor-closure lift 'is exactly the (up)/(down) fragment of def:simorder'. Neither membership is argued.",
+   "evidence": "The restatements field is for statements that follow from the named label in three lines; a claim that a whole family of unnamed lifts falls inside def:lmc is a theorem about a class, not a three-line consequence of thm:matching-barrier. Low severity because it is not counted among the results."
+  }
+ ],
+ "novelty_table": [
+  {
+   "result_name": "ol:unique — the consistent order is unique",
+   "closest_label": "lem:profile-faces (route named thm:order-determines)",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "ol:read — only the read letters are needed",
+   "closest_label": "thm:order-determines (and thm:modulator for the parameter)",
+   "class": "restatement"
+  },
+  {
+   "result_name": "ol:nonstopping — the stopping hypothesis is necessary",
+   "closest_label": "thm:modulator (the non-stopping fixed-point-check clause); ex:pi-fails",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "ol:profile-walk — the order lift IS the antipodal walk on the profile cube",
+   "closest_label": "def:profile-orientation",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "ol:small-C — with at most two controlled vertices the order lift cannot cycle",
+   "closest_label": "thm:profile-uso (with lem:profile-trichotomy)",
+   "class": "restatement"
+  },
+  {
+   "result_name": "ol:lift-cycles — the order lift cycles with period three at |C| = 3",
+   "closest_label": "thm:cyclic-uso",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatements[thm:residue-correct] — one-player order lift is a residue improvement step",
+   "closest_label": "thm:residue-correct",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatements[prop:allsw-auso] — separated one-player order lift is all-switches",
+   "closest_label": "prop:allsw-auso",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatements[thm:matching-barrier] — radius-one lifts are local matching calculi",
+   "closest_label": "thm:matching-barrier",
+   "class": "unproved"
+  },
+  {
+   "result_name": "restatements[thm:gap-equivalence] — the order-lattice programme is target-equivalent",
+   "closest_label": "thm:gap-equivalence, thm:top",
+   "class": "restatement"
+  }
+ ],
+ "verdict": "DEAD-END (the route says new-theorem; it clears the letter of the rubric and fails its spirit).\n\n1. THE OBJECT. The object is the set of total preorders on the letters A = Vavg u {t0,t1} carrying the operator Phi = \"decode by the residue backward induction, evaluate the profile, re-sort\". The paper already owns the preorders and the decode (thm:order-determines, Gimbert-Horn's reconstruction half, as the paper itself attributes), and — by the route's own ol:profile-walk — it owns the dynamics: after one decode Phi IS the antipodal walk on the profile cube of def:profile-orientation. So the object collapses, and to the route's credit the collapse is PROVED, not merely noticed. That proof is the route's most useful output and it is what closes the route.\n\n2. DOES IT CLEAR THE BAR? Formally yes: ol:unique and ol:profile-walk are proved and are not three-line consequences of any single existing label, so the \"new-relation, proved\" box is ticked. In substance the ticked box is empty. Of the six results, two are three-to-four-line corollaries of theorems the paper already has (ol:small-C from thm:profile-uso — I verified exhaustively that all 12 USOs of the 2-cube have acyclic antipodal walks; ol:lift-cycles from the out-set table printed inside thm:cyclic-uso — I recomputed the 3-cycle exactly from the paper's own unmodified instance), one is dominated by an existing parameter (ol:read: mu_k <= b-2, so thm:modulator already gives N^{O(b)}), one restates a recorded phenomenon (ol:nonstopping), one is definitional (ol:profile-walk), and the remaining one (ol:unique) is a five-line assembly of def:residue, lem:trapchar and thm:contraction whose separated case is three lines from lem:profile-faces.\n\n3. CIRCULAR / VACUOUS? Circular at the programme level, by the route's own admission (it files thm:gap-equivalence and thm:top as restatements showing the programme target-equivalent), and vacuous at the certificate level: the paper's remark after prop:bracket already says that no sound complete certificate format can close the gap, and the route concedes no algorithm follows from ol:unique. The UP n coUP framing adds no mathematics the paper needs. Nothing here is presented as standard published work without acknowledgement — the Gimbert-Horn, Condon and Stickney-Watson attributions are all made, honestly and flagged unchecked. Honesty is this route's strongest feature: the headline itself says the lift \"is not new and not an algorithm\".\n\n4. THE REAL REMAINING GAP, precisely: not the one the route states. Its stated GAP (no cycle of the order lift for non-separated stopping games with |Vmax| = |Vmin| = 1) is spurious in the only form that matters — the profile-cube statement needs no separatedness, since def:profile-orientation puts every stopping game in harmonic normal form and the no-sink argument is purely combinatorial; what survives is only the artifact that on a non-separated game the route's depth-two decode is not the antipodal step. The genuine open item the route leaves is its next_steps 1, which is not about orders at all: whether some polynomial-time procedure, given the free seeds Z_0 and Z_1, can output ONE true strict comparison between two letters of B — weaker than prop:bracket(d) and thm:top, and not settled by either.\n\n5. INTEGRATION: WORSE as written, BETTER as a 20-line remark. Do NOT integrate the route's framing — a subsection \"Orders as certificates\" with six numbered results, an operator Phi, a defect d(<=), a 23-vertex game OL3 duplicating a normal form thm:cyclic-uso already prints and already declares realisable, and a 40-line affine proof of a four-line corollary. That would add a section whose own conclusion is that its object is the profile cube, and would put two corollaries of thm:profile-uso and thm:cyclic-uso on the paper's numbered-result list.\n\nWORTH INTEGRATING (about twenty lines total):\n (a) ol:unique + the \"only B is read\" clause of ol:read, as a single remark appended to thm:order-determines: the decode consults only the average successors of controlled vertices, a preorder that reproduces itself under its own decode is the true one, hence the certificate is unique — with one sentence pointing at prop:bracket's remark to say this changes nothing algorithmically, one sentence noting mu_k <= b-2 so bounded b is inside thm:modulator, and one clause of ol:nonstopping (stopping is necessary, with the three-vertex NS instance) as the closing sentence. It answers a question a reader asks at thm:order-determines and it removes the temptation to re-open the parameter b in a later round.\n (b) Two sentences at thm:cyclic-uso, with the SHORT proofs: the simultaneous-switch (antipodal) walk on that very instance is the 3-cycle (0,0,1)->(1,0,0)->(0,1,0), which turns the paper's unchecked Condon attribution into an owned instance; and at |C| <= 2 no such cycle exists, because a 4-cycle would make every profile have out-degree one and leave the square without a sink, against thm:profile-uso, while 3- and 2-cycles contradict lem:profile-trichotomy.\n\nNOT worth integrating: ol:profile-walk as a numbered proposition (a remark sentence at most), ol:small-C's affine-readout proof and its GAP, ol:lift-cycles as a proposition, OL3.json, rem:ol-up, the defect function, and the b-parameter as a \"new structural parameter\"."
+}
