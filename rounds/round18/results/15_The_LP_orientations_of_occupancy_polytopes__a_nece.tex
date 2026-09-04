@@ -1,0 +1,137 @@
+% Paste-ready LaTeX, amsthm style of frontier.tex, labels prefixed oc:.
+% Also in /tmp/claude-1000/-data-ssg-proof/296b18c1-9dc5-4a0b-94cf-9bde3946ecfe/scratchpad/r18-beyond-holt-klee/RESULTS.tex
+
+\begin{theorem}[$h^{\ast,\mathrm{nd}}_{1}(5)=h^{\ast}_{\mathrm{LP}}(5)=h^{\ast}_{\mathrm{HK}}(5)=11$]
+\label{oc:hstar-one-five-eleven}
+The one-player readout system on five states with denominator $2^{13}=8192$,
+written as $(p^{v,a}_{x_0},\dots,p^{v,a}_{x_4}\,|\,q^{v,a})$ in $8192$-ths with
+the remaining mass going to $t_0$,
+\[
+ \begin{array}{r@{\quad}l@{\qquad}l}
+  x_0: & (0,0,2,0,5501\,|\,2213) & (0,0,7873,0,6\,|\,63)\\
+  x_1: & (7790,0,4,390,2\,|\,3) & (0,0,0,1,8187\,|\,0)\\
+  x_2: & (7470,0,0,0,0\,|\,287) & (9,1367,0,6808,0\,|\,4)\\
+  x_3: & (0,2923,0,0,0\,|\,3818) & (0,498,5,0,7680\,|\,5)\\
+  x_4: & (0,7887,0,233,0\,|\,0) & (1,0,8072,5,0\,|\,111)
+ \end{array}
+\]
+--- every row substochastic with $p^{v,a}_v=0$ and a strict leak --- realises
+the orientation
+\[
+ s=(8,7,22,5,12,17,19,18,4,25,27,26,16,29,30,31,
+    20,23,10,21,24,3,14,9,28,15,6,13,2,11,1,0)
+\]
+of the $5$-cube: an acyclic unique sink orientation, Holt--Klee, of
+bottom-antipodal height $11$, whose walk from $\sigma=10$ is
+$10,17,6,21,22,24,4,8,12,28,30,31$ with switched sets
+\[
+ \{0,1,3,4\},\{0,1,2,4\},\{0,1,4\},\{0,1\},\{1,2,3\},
+ \{2,3,4\},\{2,3\},\{2\},\{4\},\{1\},\{0\}.
+\]
+By \Cref{lem:dyadic-row} the system is the harmonic normal form of an explicit
+one-player stopping SSG on $260$ vertices ($5$ Max, $253$ average and the two
+sinks), and, verified from that game in exact arithmetic by two independent
+evaluators: the greatest trap is empty, no incidence is tied (least margin
+$580908876268806955/409811754332034205696\approx1.4\cdot10^{-3}$), the outmap
+is $s$, the unique optimal strategy is $\sigma=31$ with
+$\val(x_0)=43268990393782259/48907301256112636$, and the value vector
+increases at every vertex along the run. Since
+$h^{\ast,\mathrm{nd}}_{1}\le h^{\ast}_{\mathrm{LP}}\le h^{\ast}_{\mathrm{HK}}$
+(\Cref{prop:oneplayer-lp}) and $h^{\ast}_{\mathrm{HK}}(5)=11$
+(\Cref{prop:hkfive}),
+\[
+  h^{\ast,\mathrm{nd}}_{1}(5)\;=\;h^{\ast}_{\mathrm{LP}}(5)\;=\;h^{\ast}_{\mathrm{HK}}(5)\;=\;11
+  \qquad\text{against } h^{\ast}(5)=12 .
+\]
+In particular $h^{\ast}_{1}(5)\ge11$, and $h^{\ast}_{1}(m)\ge m+6$ for
+every $m\ge5$ (\Cref{prop:oneplayer-plus-one}), one row lower than before.
+The class of $s$ is \emph{not} the orbit of the height-$11$ witness of
+\Cref{prop:hkfive}: a second Holt--Klee class of height $11$, and the one that
+is realised. Its ten facets have heights $5,5,5,5,5,5,6,6,6,6$, all at most
+$h^{\ast}_{1}(4)=6$ (\Cref{cor:hstar-one}), so no freezing of it sees the
+run of length $11$.
+\end{theorem}
+
+\begin{corollary}[The stacking slope rises from $12/7$ to $11/6$]\label{oc:slope}
+$h^{\ast}_{1}(6k-1)\ge11k$ for every $k\ge1$, and
+$\liminf_{m}h^{\ast}_{1}(m)/m\ge11/6$.
+\end{corollary}
+
+\begin{proof}
+The system of \Cref{oc:hstar-one-five-eleven} is nondegenerate and every one of
+its ten rows leaks, so $\rho=\max_{b,c}\sum_{b'}p^{b,c}_{b'}<1$ and
+$g_{\min}>0$: \Cref{lem:balance} balances it on six states and it may be used
+as the stacked block of \Cref{thm:stack}. \Cref{cor:stack-family}'s
+$h^{\ast}_{1}(m_1+m_2+1)\ge h^{\ast}_{1}(m_1)+h^{\ast,\mathrm{nd}}_{1}(m_2)$
+with $m_2=5$ reads $h^{\ast}_{1}(m_1+6)\ge h^{\ast}_{1}(m_1)+11$; induct from
+$h^{\ast}_{1}(5)\ge11$. The last display is the same corollary's
+$\liminf_m h^{\ast}_{1}(m)/m\ge\sup_{m_0}h^{\ast,\mathrm{nd}}_{1}(m_0)/(m_0+1)$
+evaluated at $m_0=5$, and $11/6>12/7$.
+\end{proof}
+
+\begin{theorem}[The diagonal labelling: the value laws are vacuous on the cube]
+\label{oc:diagonal}
+Let $s$ be an acyclic orientation of the $m$-cube and $r:\{0,1\}^{m}\to\mathbb R$
+strictly increasing along every directed edge (such an $r$ exists by
+acyclicity). Put $V(\sigma):=r(\sigma)\bbone\in\mathbb R^{m}$, and for
+$\sigma\in\{0,1\}^{m}$, $v\le m$ write $D:=V(\sigma[v])-V(\sigma)$ and
+$\varepsilon:=+1$ if $v\in s(\sigma)$, $-1$ otherwise. Then
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $\varepsilon D\ge0$ componentwise and $\varepsilon D_v>0$;
+\item $|D_w|\le|D_v|$ for every $w$;
+\end{enumerate}
+and if $s$ is moreover a unique sink orientation, then for all $\sigma,\sigma'$
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em,start=3]
+\item $\sigma'$ reachable from $\sigma$ implies $V(\sigma')\ge V(\sigma)$, and
+      $\max_w\bigl(V(\sigma')-V(\sigma)\bigr)_w$ is attained on
+      $\Delta(\sigma,\sigma')\cap s(\sigma)$, which is nonempty;
+\item $\bigl(V(\sigma')-V(\sigma)\bigr)_u\le\max_w\bigl(V(\sigma')-V(\sigma)\bigr)_w$
+      for every $u\notin s(\sigma)$;
+\item $s(\sigma')\cap\Delta(\sigma,\sigma')=\emptyset$ implies
+      $V(\sigma)\le V(\sigma')$.
+\end{enumerate}
+So \Cref{lem:switch}, \Cref{lem:monotone-law}, \Cref{thm:peak-law},
+\Cref{cor:peak-sharp}, \Cref{lem:rise-bound} and the transfer-impedance bound
+of \Cref{thm:impedance} --- every all-switches law that speaks about the
+improvement orientation only through the value vectors --- are satisfied by a
+labelling of \emph{every} acyclic orientation of the cube. Read as constraints
+on a labelling, none of them is a condition on the improvement orientation
+beyond acyclicity, and in particular none of them can be the sought law of
+one-player realisability beyond Holt--Klee.
+\end{theorem}
+
+\begin{proof}
+(a) $D=(r(\sigma[v])-r(\sigma))\bbone$ and $r$ increases along directed edges,
+so the scalar $r(\sigma[v])-r(\sigma)$ has the sign $\varepsilon$. (b) all
+coordinates of $D$ are equal. (c) reachability makes $r$ increase, and all
+coordinates of $V(\sigma')-V(\sigma)$ are equal, so the maximum is attained at
+every coordinate; nonemptiness of $\Delta\cap s(\sigma)$ is
+\Cref{cor:no-return} in the following form, which needs only the unique sink
+axiom and acyclicity: if $s(\sigma)\cap\Delta=\emptyset$ then $\sigma$ is the
+sink of the face $F$ spanned by $\Delta$ at $\sigma$, and in an acyclic unique
+sink orientation every vertex of $F$ reaches the sink of $F$ inside $F$ (from
+a non-sink of $F$ some $F$-coordinate is out, and acyclicity forbids
+cycling), so $\sigma'$ reaches $\sigma$; with $\sigma$ reaching $\sigma'$ this
+contradicts acyclicity unless $\sigma=\sigma'$. (d) equality. (e) as in (c),
+$\sigma'$ is the sink of the face spanned by $\Delta$, so $\sigma$ reaches
+$\sigma'$ and $r(\sigma)<r(\sigma')$.
+\end{proof}
+
+\begin{proposition}[The one-player records are strict local maxima]
+\label{oc:local-max}
+Let $s$ be the improvement orientation of the height-$10$ five-state witness of
+\Cref{prop:hstar-one-five}, of the height-$12$ six-state block behind
+\Cref{cor:stack-family}, or of the height-$13$ seven-state witness of
+\Cref{prop:oneplayer-plus-one}. Then no reversal of a single edge of $s$ gives
+a unique sink orientation of greater bottom-antipodal height: of the
+$m2^{m-1}$ reversals, $63$ of $80$ ($m=5$), $135$ of $192$ ($m=6$) and $272$
+of $448$ ($m=7$) are not unique sink orientations at all, and every reversal
+that is one has height at most $h(s)$ --- the surviving heights being
+$\{7,8,9,10\}$, $\{9,10,11,12\}$ and $\{10,11,12,13\}$ respectively. The
+height-$11$ witness of \Cref{oc:hstar-one-five-eleven} lies at outmap Hamming
+distance $26$ from the height-$10$ one after minimisation over the $3840$
+automorphisms of the $5$-cube, and was reached from it by a walk of $76$
+single edge reversals through Holt--Klee acyclic unique sink orientations,
+\emph{each of them realised} by a one-player readout system warm-started from
+its predecessor.
+\end{proposition}

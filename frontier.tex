@@ -15245,7 +15245,120 @@ number of controlled vertices of that player whose successor difference
 changes sign on $Q(G)$ --- it did not prove, and it is recorded here as a
 claim; it would in any case be dominated by enumerating the $2^{\rho}$ choices of the smaller side
 and solving one-player games, so no class comes of it, and exactness at
-any fixed level is target-equivalent and is not conjectured.
+any fixed level is target-equivalent and is not conjectured. Level one is
+not merely inexact but asymptotically vacuous, already with one player
+(\Cref{prop:router-tree}), and the one-player level is governed by a
+branching process (\Cref{rem:merged-matrix}).
+\end{remark}
+
+\begin{proposition}[The router tree: level one is asymptotically vacuous, with one player]\label{prop:router-tree}
+For $d\ge1$, $e\ge1$ and a dyadic $\kappa\in(0,1)$ let $T_d(e,\kappa)$ be the
+one-player SSG whose Max vertices are the $2^{d+1}-1$ nodes of the complete
+binary tree of depth $d$, with $u\to(u0,u1)$ at every internal node and
+$\ell\to(c_1,k_1)$ at every leaf, where the average chain
+$c_r\to(\mathrm{root},c_{r+1})$ $(r<e)$, $c_e\to(\mathrm{root},t_0)$ is shared
+by all leaves, so that $c_1$ has first-passage law $g\,e_{\mathrm{root}}$ with
+$g:=1-2^{-e}$, and $k_1$ heads the dyadic chain of \Cref{lem:dyadic-row} of
+value $\kappa$ and length $D$. Then $N=2^{d+1}+e+D+1$ with $a=e+D$ average
+vertices, constant in $d$; for $\kappa<g$ the game is stopping with
+$w^{\ast}\equiv\kappa$ at every Max vertex and $\max_{Q}x(\mathrm{root})=1$;
+and with $n:=2^{d}$, $S:=n\kappa+1-\kappa$ and $n(g-\kappa)\ge1-\kappa$ the
+vector $x_\ell:=n\kappa\bigl(g+(1-g)2^{-\ell}\bigr)/S$, indexed by the depth
+$\ell$ of the vertex, lies in the level-one lift $R_1(T_d(e,\kappa))$ of
+\Cref{rem:choice-lift}, so
+\[
+  \max_{R_1}x(\mathrm{root})\;\ge\;\frac{n\kappa}{n\kappa+1-\kappa}
+  \;=\;1-\Theta(1/N):
+\]
+level one closes only a $\Theta(1/N)$ fraction of the transport interval
+$[\kappa,1]$. Under the same hypothesis, for $\kappa<\tfrac12$ and
+$2^{d}\kappa>1-\kappa$ the level-one interval at the root straddles
+$\tfrac12$ on a one-player game: $T_1(2,\tfrac38)$ on $10$ vertices ($3$
+Max, $5$ average) has $w^{\ast}(\mathrm{root})=\tfrac38$ and level-one
+interval $[\tfrac38,\tfrac6{11}]$, and $T_2(3,\tfrac14)$ on $14$ vertices
+has $w^{\ast}(\mathrm{root})=\tfrac14$ and $[\tfrac14,\tfrac47]$.
+\end{proposition}
+
+\begin{proof}
+Stopping and the values: $\kappa\bbone$ on the Max vertices, extended by the
+average equalities, is a fixed point of $T$ ($\max(\kappa,\kappa)$ at an
+internal node, $\max(g\kappa,\kappa)=\kappa$ at a leaf), and a trap avoiding
+$t_1$ would contain $k_D$, which has the successor $t_0$; so
+$w^{\ast}=\kappa\bbone$ by \Cref{cor:comparison}, and $\bbone\in Q$ gives
+$\max_Qx(\mathrm{root})=1$. Write $\Delta_j:=x_{j-1}-x_j=K2^{-j}$ with
+$K:=n\kappa(1-g)/S$; then $x_d-gx_0=K/n=\Delta_d$, $x_d\ge\kappa$ (this is
+$g\ge\kappa$) and $gx_0\ge\kappa$ (the hypothesis), so $x\in Q$. By
+\Cref{rem:choice-lift}, $R_1=\bigcap_v\operatorname{conv}(F^{0}_v\cup F^{1}_v)$
+with $F^{i}_v=\{y\in Q:y(v)=y(v^{(i)})\}$, and one exhibits the two
+decompositions. At the leaves: $A_\ell:=(ng+n(1-g)2^{-\ell}-1)/(n-1)$ lies in
+$Q$, is tight at the feedback action of every leaf ($A_d=gA_0$), and
+$w^{\ast}=\kappa\bbone$ is tight at the constant action of every leaf; with
+$\mu:=\kappa(n-1)/S\in[0,1]$ one checks $\mu A_\ell+(1-\mu)\kappa=x_\ell$
+for every $\ell$. At an internal node $u$ of depth $\ell$: with
+$\theta_j:=K2^{-j}$ let $Y$ agree with $x$ outside the subtree of $u$, be
+$x_j+\theta_j$ on the subtree of $u0$ and $x_j-\theta_j$ on that of $u1$
+(at depth $j$), and let $Z$ be its mirror image; then $\tfrac12(Y+Z)=x$,
+$Y(u)=x_\ell=x_{\ell+1}+\theta_{\ell+1}=Y(u0)$, $Z(u)=Z(u1)$, and both lie
+in $Q$: the order rows in the two subtrees read
+$\theta_j-\theta_{j+1}=\Delta_{j+1}$, satisfied with equality, the leaf rows
+in the lowered subtree read $x_d-\theta_d\ge\max(\kappa,gx_0)$, which is
+$\Delta_d=\theta_d$ together with $gx_0\ge\kappa$, and
+$x_j+\theta_j=x_{j-1}\le1$. The straddle is $n\kappa>1-\kappa$, and
+$\min_{R_1}x=w^{\ast}$ since $w^{\ast}$ is the least element of $Q$ when
+$\Vmin=\emptyset$ (\Cref{thm:one-player}). The round-$18$ rlt-two route;
+its correctness auditor rebuilt the family independently at seven sizes up
+to $N=263$, and here the explicit points were verified in $Q$ and in $R_1$
+by the per-vertex disjunctive linear programmes on $T_1(2,\tfrac38)$,
+$T_2(2,\tfrac14)$, $T_1(3,\tfrac12)$, $T_2(3,\tfrac14)$ and $T_3(3,\tfrac14)$
+(\texttt{scripts/round18-verify/rl\_verify.py}); the ten- and
+thirteen-vertex instances were found by the route's correctness auditor. The family is easy by
+two counts --- $a$ is constant, so \Cref{thm:few-avg} decides it, and it
+carries escape certificates of rate $1-\Theta(1/\log N)$ --- so, as with
+\Cref{thm:lasserre-vacuous}, this is weakness where the problem is easy;
+whether level two is exact on it is measured only ($d\le2$, exact dual
+certificates at the root).
+\end{proof}
+
+\begin{remark}[The merged matrix bounds the level, with one player]\label{rem:merged-matrix}
+On a stopping game with $\Vmin=\emptyset$ let $(p^{v,i};q^{v,i})$ be the
+first-passage law of the action $(v,i)$ over $C\cup\{t_1\}$, so that
+$x(v^{(i)})=p^{v,i}\cdot x+q^{v,i}$ on $Q(G)$ (\Cref{lem:transport-dim}), and
+let $M_{v,u}:=\max(p^{v,0}_u,p^{v,1}_u)$, the \emph{merged matrix}, the mean
+matrix of the branching process in which Max fires both actions at once
+(not the survival operator of \Cref{def:survival}, which takes the maximum
+of the two successor \emph{values}). Every $x\in R_1(G)$ satisfies
+$D:=x-w^{\ast}\ge0$ and $D\le MD$: $w^{\ast}$ is the least element of $Q(G)$,
+and at $v$ the decomposition $x=\lambda Y+(1-\lambda)Z$ with $Y\in F^{0}_v$,
+$Z\in F^{1}_v$ gives, with $P:=\lambda(Y-w^{\ast})\ge0$ and
+$R:=(1-\lambda)(Z-w^{\ast})\ge0$, $x(v)=p^{v,0}\cdot P+p^{v,1}\cdot R
++\lambda w^{\ast}(v^{(0)})+(1-\lambda)w^{\ast}(v^{(1)})\le(MD)(v)+w^{\ast}(v)$.
+Hence if $M$ is \emph{transient} ($\sum_kM^{k}\bbone$ converges, one linear
+solve) then $R_1(G)=\{w^{\ast}\}$; in particular level one is exact
+whenever no Max vertex is a \emph{splitter} --- one whose two rows are
+incomparable componentwise --- since then $M$ is the first-passage matrix
+of one positional strategy, transient on a stopping game. (The route
+extends this to higher levels of its own formalisation of the lift, in
+which a point of level $j$ decomposes along any $j-1$ pinned vertices
+into level-one pieces: exactness whenever some $j-1$ vertices, frozen to
+actions in every way, make the merged matrix transient, hence for every
+$j$ above the number of splitters; the paper defines only levels zero and
+one and does not carry it.) This is the first proved statement of the
+shape the round-$17$ claim above has, with a parameter incomparable with
+$\rho$: on $W_{14}$ that claim gives level three from $\rho_{\max}=3$
+while one frozen vertex makes every merged variant transient, giving the
+true first exact level two, and $\mathrm{WD}(4,2,6)$ has $\rho_{\max}=2$,
+a non-transient $M$, and is level-one exact. It inherits the same
+dismissal: on one-player games $R_1$-exactness has no algorithmic content
+(\Cref{thm:one-player}); the freezing here commits a controlled vertex to
+an action and is not the retyping of \Cref{thm:modulator}, so no class and
+no comparison with that theorem's exponent comes of it (the route's
+identification of the two was refuted by both its auditors); and on the
+document's own instances the transience criterion fires only where
+$|C|=1$ or on the ladders, which are exact at level zero already. The
+first step, $D\ge0$, is exactly what fails at the first Min vertex, and no
+two-player form of the bound is known. (The round-$18$ rlt-two route; the bound and the
+transience criterion recomputed here on $120$ random one-player games,
+\texttt{scripts/round18-verify/rl\_verify.py}.)
 \end{remark}
 
 \begin{remark}[The complementarity route, and why we do not pursue it]\label{rem:lcp}

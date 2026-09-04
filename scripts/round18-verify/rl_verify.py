@@ -132,7 +132,7 @@ def build_tree(d, e, kappa_bits):
     n = len(names); ix = {nm: i for i, nm in enumerate(names)}; ix['t0'] = n; ix['t1'] = n + 1
     return G(kinds, [(ix[a], ix[b]) for a, b in succ]), ix, names
 
-for d, e, kb, kappa, want in ((2, 3, [0, 1], F(1, 4), F(4, 7)), (3, 3, [0, 1], F(1, 4), F(8, 11)), (1, 3, [1], F(1, 2), F(2, 3))):
+for d, e, kb, kappa, want in ((2, 3, [0, 1], F(1, 4), F(4, 7)), (3, 3, [0, 1], F(1, 4), F(8, 11)), (1, 3, [1], F(1, 2), F(2, 3)), (1, 2, [0, 1, 1], F(3, 8), F(6, 11)), (2, 2, [0, 1], F(1, 4), F(4, 7))):
     g, ix, names = build_tree(d, e, kb); assert is_stopping(g)
     w = wstar(g); C = [v for v in range(g.n) if g.kinds[v] == 'max']
     assert all(w[v] == kappa for v in C)
