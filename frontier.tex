@@ -12693,6 +12693,25 @@ for either bijection $\pi$. The intended reading of $\Delta_k(x,y)$ is
 the pair.
 \end{definition}
 
+\begin{remark}\label{rem:slack-grade}
+Read over the two-element grade set: with $\chi_R(x,y):=0$ for $(x,y)\in R$
+and $1$ otherwise, one round of the clauses above applied to $\chi_R$ and
+rounded up to $\{0,1\}$ is the indicator of $\mathcal F(R)$ with the
+diagonal adjoined, $\mathcal F$ the operator of \Cref{def:simorder} --- in
+$\{0,1\}$ a minimum is $0$ iff some argument is, a maximum or a mean iff
+both are, which is exactly clauses (i)--(iii) --- and the greatest fixed
+point of that iteration from the all-related relation is $\preceq$. So
+\Cref{def:simorder} is this calculus over $\{0,1\}$ read coinductively,
+and \Cref{def:slack} is the same clause set over the dyadic grades read
+inductively (the round-$17$ oracle-barrier route; an unfolding of the two
+definitions, in the sense of the abstract interpretation of the remark
+after \Cref{cor:grid-iteration}). The two readings are not
+interchangeable: iterating the bare clause map from the all-related
+relation converges to $\preceq$, while the running minimum with the
+current state that \Cref{def:slack} keeps would freeze at once at the
+unsound all-related state.
+\end{remark}
+
 \begin{theorem}[Soundness and cost]\label{thm:slack-sound}
 For every SSG, every $k$ and all $x,y$: $\Delta_k(x,y)\ge
 w^\ast(x)-w^\ast(y)$, and $\Delta_{k+1}\le\Delta_k$. Every entry of
@@ -15325,6 +15344,122 @@ $\mathcal P(\Delta'_k)=\Lambda(K(\Delta'_k))\ge\Lambda(P_{k+1})$. Taking the
 minimum and closing again preserves the bound.
 \end{proof}
 
+\begin{lemma}\label{lem:ratio-sign}
+For nonempty compact $P\subseteq\mathcal X$ and all $x,y$:
+$\Lambda_{\times}(P)(x,y)\le1$ if and only if $\Lambda(P)(x,y)\le0$.
+\end{lemma}
+
+\begin{proof}
+If $\Lambda(P)(x,y)\le0$ then $z(x)\le z(y)$ for every $z\in P$; in
+particular $z(y)=0$ forces $z(x)=0$, so the $+\infty$ case does not occur
+and every ratio with positive denominator is at most $1$. Conversely
+$\Lambda_\times(P)(x,y)\le1$ excludes the $+\infty$ case, so $z(y)=0$
+implies $z(x)=0$, and where $z(y)>0$ the ratio bound gives
+$z(x)\le z(y)$.
+\end{proof}
+
+\begin{theorem}[Convex certificates bound the calculi in both registers]\label{thm:convex-barrier-both}
+Let $G$ be an SSG, $Z_0,Z_1$ as in \Cref{def:simorder}, $L_Z:=\bbone_{Z_1}$,
+$U_Z:=\bbone-\bbone_{Z_0}$ the \emph{free bracket}, and for a nonempty
+compact $P\subseteq\mathcal X$ put
+\[
+  \Lambda_{\times}(P)(x,y):=
+  \begin{cases}
+    0,&z(x)=0\text{ for all }z\in P,\\
+    +\infty,&z(y)=0<z(x)\text{ for some }z\in P,\\
+    \max\{z(x)/z(y):z\in P,\ z(y)>0\},&\text{otherwise,}
+  \end{cases}
+\]
+the multiplicative counterpart of $\Lambda(P)$. Consider any run that
+starts from $\Delta_0(x,y)=\mathrm{clamp}_{[-1,1]}(U_Z(x)-L_Z(y))$,
+$R_0\equiv+\infty$ and applies, in any order, the operators
+\textup{(D1)} $\Delta\mapsto\min(\Delta,\mathcal L\Delta)$, one round of
+\Cref{def:slack}; \textup{(D2)} the min-plus closure of
+\Cref{def:trans-slack}; \textup{(D3)} $\Delta\mapsto\min(\Delta,\Lambda(K_Z(\Delta)))$,
+the transport step over $K_Z(\Delta):=\{z\in Q(G;L_Z,U_Z):z(x)-z(y)\le\Delta(x,y)\}$;
+\textup{(D4)} $R\mapsto\min(R,\mathcal R_\times R)$, one round of
+\Cref{def:ratio}; \textup{(D5)} rounding every entry of $\Delta$ or $R$ up
+onto a finite grid; \textup{(D6)} the entrywise minimum with the state of
+another such run on the same game (combination, and seeding one calculus
+with another's output; the other run's applications are counted);
+\textup{(D7)} $\Delta(x,y)\leftarrow0$ where $R(x,y)\le1$ and
+$R(x,y)\leftarrow1$ where $\Delta(x,y)\le0$ (order transfer). The slack
+calculus, its closure, the transport step, the hybrid of \Cref{def:hybrid}
+and the ratio calculus are such runs, $k$ rounds costing $O(k)$
+applications. Let $P_0\supseteq P_1\supseteq\cdots\supseteq P_K$ be nonempty compact
+convex subsets of $Q(G;L_Z,U_Z)$ such that for every $k<K$
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.6em]
+\item every clause of \Cref{def:slack} evaluated at $\Lambda(P_k)$ is at
+  least $\Lambda(P_{k+1})$ entrywise, and
+\item every clause of \Cref{def:ratio} evaluated at
+  $\Lambda_{\times}(P_k)$ is at least $\Lambda_{\times}(P_{k+1})$
+  entrywise.
+\end{enumerate}
+Then every such run has, after $k\le K$ operator applications, a state with $\Delta\ge\Lambda(P_k)$ and
+$R\ge\Lambda_{\times}(P_k)$. Consequently, within $K$ applications it
+decides $v\in\Vmax$ only if one of the four quantities
+$\Lambda(P_K)(v,v^{(0)})$, $\Lambda(P_K)(v,v^{(1)})$,
+$\Lambda(P_K)(v^{(0)},v^{(1)})$, $\Lambda(P_K)(v^{(1)},v^{(0)})$ is
+$\le 0$, or one of $\Lambda(P_K)(v^{(0)},v)$, $\Lambda(P_K)(v^{(1)},v)$
+is $<0$, or the corresponding multiplicative quantity is $\le1$
+resp.\ $<1$; dually at $\Vmin$.
+\end{theorem}
+
+\begin{proof}
+Induction on the number $k$ of applications, with invariant
+$\Delta\ge\Lambda(P_k)$ and $R\ge\Lambda_{\times}(P_k)$; both sequences
+are nonincreasing in $k$ because the $P_k$ are nested.
+
+\emph{Start.} Every $z\in P_0\subseteq Q(G;L_Z,U_Z)$ has
+$L_Z\le z\le U_Z$, so $z(x)-z(y)\le U_Z(x)-L_Z(y)$, and $\Lambda$ is
+$\ge-1$ on $\mathcal X$, so $\Lambda(P_0)\le\Delta_0$;
+$R_0\equiv+\infty\ge\Lambda_\times(P_0)$.
+
+\textup{(D1)}: the clauses are monotone in the matrix, so
+$\mathcal L\Delta\ge\mathcal L\Lambda(P_k)\ge\Lambda(P_{k+1})$ by (i), and
+$\Delta\ge\Lambda(P_k)\ge\Lambda(P_{k+1})$.
+\textup{(D2)}: $\Lambda(P_{k+1})$ obeys the triangle inequality
+(\Cref{lem:hybrid-cutting}), so the min-plus closure of a matrix
+$\ge\Lambda(P_{k+1})$ stays $\ge\Lambda(P_{k+1})$.
+\textup{(D3)}: every $z\in P_{k+1}$ lies in $Q(G;L_Z,U_Z)$ and satisfies
+$z(x)-z(y)\le\Lambda(P_{k+1})(x,y)\le\Delta(x,y)$, so
+$P_{k+1}\subseteq K(\Delta)$ and $\Lambda(K(\Delta))\ge\Lambda(P_{k+1})$.
+\textup{(D4)}: as \textup{(D1)}, with (ii).
+\textup{(D5)}: rounding up only raises entries.
+\textup{(D6)}: the cost counts the whole computation, so the run
+supplying $(\Delta',R')$ has made at most $k$ applications and
+$\Delta'\ge\Lambda(P_k)\ge\Lambda(P_{k+1})$, likewise for $R'$; a minimum
+of two such matrices is again $\ge\Lambda(P_{k+1})$.
+\textup{(D7)}: if $R(x,y)\le1$ then $\Lambda_\times(P_k)(x,y)\le1$, so
+$\Lambda(P_k)(x,y)\le0$ by \Cref{lem:ratio-sign} and setting $\Delta(x,y):=0$
+preserves the invariant at that entry; symmetrically in the other
+direction.
+
+The last sentence is the reporting rule of \Cref{thm:convex-barrier-both} applied to a
+state satisfying the invariant.
+\end{proof}
+
+\begin{remark}\label{rem:convex-barrier-both}
+\Cref{thm:convex-barrier-both} is \Cref{thm:hybrid-convex-barrier} with the
+free seed, the ratio calculus and every combination of the mechanisms
+adjoined (the round-$17$ oracle-barrier route); its additive half restricted
+to \Cref{def:hybrid} is that theorem verbatim. What it does not cover is
+any operator that evaluates a strategy --- $M(p,k)$ of \Cref{def:seeded},
+all-switches, \Cref{def:bsi} --- and any coinductive reading over a grid
+(\Cref{def:simorder} is one, see the remark after \Cref{def:slack}), whose
+iteration starts unsound. Two consequences. A stationary certificate ---
+$P$ with $\mathcal L\Lambda(P)\ge\Lambda(P)$ --- bounds nothing for ever:
+taking the constant chain gives $\Delta_k\ge\Lambda(P)$ for the slack
+calculus at every $k$, while \Cref{thm:slack-vi-upper} and
+\Cref{thm:contraction} give $\Delta_{2k}(x,y)\to w^\ast(x)-w^\ast(y)$, so
+$\Lambda(P)(x,y)\le w^\ast(x)-w^\ast(y)$ and every lower bound of this
+kind is a rate, as \Cref{rem:frontier-moved} says. And the proof step
+that a linear-fractional function with positive denominator attains its
+extrema over a polytope at vertices, used in the multiplicative cases
+below, is elementary (it is quasi-convex and quasi-concave) and is not
+among the four imports; it is used as stated.
+\end{remark}
+
 \begin{remark}\label{rem:hybrid-barrier-lift}
 \Cref{thm:slack-barrier} and \Cref{thm:seeded-barrier} do \emph{not} lift to the
 hybrid, and $H_m$ shows it: there $A=\{h\}$ and $B=\{c_1,\dots,c_{2m}\}$ satisfy
@@ -15878,6 +16013,526 @@ Random and hill-climbed search over games of this size never exceeded three
 rounds (a report: neither the two prose constructions above nor the search
 are printed). As everywhere else in this document, whatever is hard has to
 be engineered.
+\end{remark}
+
+
+\subsection{A one-player family the whole propagation side loses on}\label{sec:bc}
+
+Every stall recorded so far --- $H_m$, $\mathrm{CC}$, $\mathrm{WD}$,
+$\mathrm{CV}$ --- is decided at round zero by the simulation preorder M1,
+and $\mathrm{CV}$ is decided by the ratio calculus M6 within a few dozen
+rounds (\Cref{prop:cv-measured}). The round-$17$ oracle-barrier route
+built a one-player family on which nothing on the propagation side fires:
+at its unique value-distinguishing vertex the pair carries the fooling
+frame of $G_8$, so no sound local matching calculus (M1 included) derives
+it, and three Max vertices carry a wedge shrinking by $1-\tfrac32\cdot2^{-e}$
+per round, so a convex-certificate chain keeps the slack calculus, its
+closure, the transport step, the hybrid and the ratio calculus silent for
+$2^{\Omega(N)}$ rounds, in both registers of
+\Cref{thm:convex-barrier-both}. One exact policy evaluation decides it,
+as \Cref{thm:seed-dichotomy} predicts: all-switches converges on it in one
+round. It is, like every family here, easy --- one player,
+\Cref{thm:one-player} --- and its denominator is $2^{\Theta(e)}$, so unlike
+$\mathrm{CV}$ it lies outside \Cref{thm:few-denominator}'s class.
+
+\begin{definition}[$\mathrm{BC}(e,s)$]\label{def:bc}
+For $e\ge2$, $s\ge5$ put $u:=2^{-e}$, $\gamma:=2^{-s}$. Let
+$\mathrm{CQ},\mathrm{CE},\mathrm{CH},\mathrm{Q}_0$ be the dyadic sink
+chains of \Cref{lem:dyadic-row} realising the constants
+$\tfrac14,\tfrac38,\tfrac34,\tfrac12+2\gamma$, of lengths $2,3,2,s-1$;
+every vertex of them is average and reads only the two sinks.
+$\mathrm{BC}(e,s)$ has $\Vmax=\{v_0,v_1,v_2\}$, $\Vmin=\emptyset$, all
+other non-sinks average, and, with $o:=3-i$,
+$\mathrm{HI}_1:=t_1$, $\mathrm{HI}_2:=\mathrm{CH}$,
+$\mathrm{LO}_1:=\mathrm{CQ}$, $\mathrm{LO}_2:=\mathrm{CE}$:
+\[
+\begin{aligned}
+&\alpha^{i}_q\to(v_{o},\alpha^{i}_{q+1})\ (q<e), &&\alpha^{i}_{e}\to(v_{o},\mathrm{HI}_i),\\
+&A^{i}_1\to(\alpha^{i}_1,A^{i}_2),&&
+A^{i}_q\to(v_{o},A^{i}_{q+1})\ (2\le q<e),\qquad A^{i}_{e}\to(v_{o},\mathrm{LO}_i),\\
+&\beta^{i}_q\to(v_{i},\beta^{i}_{q+1})\ (q<2e),&&\beta^{i}_{2e}\to(v_{i},\mathrm{HI}_i),\\
+&B^{i}_1\to(\beta^{i}_1,B^{i}_2),&&
+B^{i}_q\to(v_{i},B^{i}_{q+1})\ (2\le q<2e),\qquad B^{i}_{2e}\to(v_{i},\mathrm{LO}_i),\\
+&v_i\to(A^{i}_1,B^{i}_1)\ (i=1,2),&&\\
+&g\to(g,t_1),\qquad P\to(g,t_0),&&\\
+&D_q\to(v_1,D_{q+1})\ (q<s-3),&&D_{s-3}\to(v_1,t_0),\\
+&Q\to(\mathrm{Q}_0,D_1),\qquad v_0\to(Q,P),&&
+\end{aligned}
+\]
+with start vertex $v_0$.
+\end{definition}
+
+\begin{proposition}[Basic data]\label{prop:bc-values}
+$\mathrm{BC}(e,s)$ is a stopping one-player SSG with $N=12e+2s+11$.
+Put $\eta_1:=\tfrac12$, $\eta_2:=\tfrac14$ (so
+$\eta_i=w^\ast(\mathrm{HI}_i)-\tfrac12$) and $\zeta_i:=\tfrac12\eta_i$
+(so $\zeta_i=\tfrac12-w^\ast(\mathrm{LO}_i)$). Then
+\[
+\begin{aligned}
+&w^\ast(v_0)=w^\ast(v_1)=w^\ast(v_2)=w^\ast(P)=w^\ast(A^{i}_1)=w^\ast(B^{i}_1)=\tfrac12,
+\qquad w^\ast(g)=1,\qquad w^\ast(Q)=\tfrac12-\gamma,\\
+&w^\ast(\alpha^{i}_q)=\tfrac12+2^{-(e-q+1)}\eta_i,\qquad
+ w^\ast(A^{i}_q)=\tfrac12-2^{-(e-q+1)}\zeta_i\quad(q\ge2),\\
+&w^\ast(\beta^{i}_q)=\tfrac12+2^{-(2e-q+1)}\eta_i,\qquad
+ w^\ast(B^{i}_q)=\tfrac12-2^{-(2e-q+1)}\zeta_i\quad(q\ge2),\qquad
+ w^\ast(D_q)=\tfrac12-2^{-(s-1-q)} .
+\end{aligned}
+\]
+Hence $Z_0=\{t_0\}$, $Z_1=\{g,t_1\}$, and $v_0$ is the \emph{unique}
+value-distinguishing controlled vertex, with $w^\ast(P)-w^\ast(Q)=\gamma$
+and $P$ optimal. The lift for $C=\{v_0,v_1,v_2\}$, in coordinates
+$(e_0,e_1,e_2)$, is $\theta_{v_j}=e_j$, $\theta=0$ at $g$, $P$, the two
+sinks and every dyadic chain, and
+\[
+\begin{aligned}
+&\theta_{\alpha^{i}_q}=\bigl(1-2^{-(e-q+1)}\bigr)e_{o}\ (q\ge1),\quad
+ \theta_{A^{i}_q}=\bigl(1-2^{-(e-q+1)}\bigr)e_{o}\ (q\ge2),
+&&\theta_{A^{i}_1}=a\,e_{o},\\
+&\theta_{\beta^{i}_q}=\bigl(1-2^{-(2e-q+1)}\bigr)e_{i}\ (q\ge1),\quad
+ \theta_{B^{i}_q}=\bigl(1-2^{-(2e-q+1)}\bigr)e_{i}\ (q\ge2),
+&&\theta_{B^{i}_1}=b\,e_{i},\\
+&\theta_{D_q}=\bigl(1-2^{-(s-2-q)}\bigr)e_1,&&\theta_Q=c\,e_1,
+\end{aligned}
+\qquad
+a:=1-\tfrac32u,\quad b:=1-\tfrac32u^{2},\quad c:=\tfrac12-4\gamma .
+\]
+Every $\theta_x$ is $0$, $e_0$, or $c'e_1$ or $c'e_2$ with
+$c'\in(0,1]$; every $y$ with $\theta_y=c'e_2$ has
+$w^\ast(y)\ge\tfrac14+\tfrac{c'}4$, and every $y$ with $\theta_y=c'e_1$
+has $w^\ast(y)\ge\tfrac{c'}2$.
+\end{proposition}
+
+\begin{proof}
+Counting: $3+3+\bigl(2+3+2+(s-1)\bigr)+2\cdot6e+(s-3)=12e+2s+9$
+non-sinks. Stopping (\Cref{lem:trapchar}): every dyadic chain vertex has
+a sink successor, so lies outside any trap $U$; then
+$\alpha^{i}_e,\beta^{i}_{2e}\notin U$, inductively $\alpha^{i}_1,
+\beta^{i}_1\notin U$, hence the average vertices $A^{i}_1,B^{i}_1\notin U$,
+hence $v_1,v_2\notin U$ (no successor inside); then $D_{s-3}$, every
+$D_q$, $Q$, $g$, $P$ and $v_0$. So $U=\emptyset$.
+
+The displayed vector is a fixed point of $T$. On the dyadic chains this is
+\Cref{lem:dyadic-row}; $w^\ast(g)=\tfrac12(1+1)$ and $w^\ast(P)=\tfrac12(1+0)$.
+Along $\alpha^{i}$, writing $y_q:=w^\ast(\alpha^{i}_q)-\tfrac12$, the last
+vertex gives $y_e=\tfrac12\bigl(w^\ast(\mathrm{HI}_i)-\tfrac12\bigr)=\tfrac12\eta_i$
+and $y_q=\tfrac12y_{q+1}$, which is the display; the same computation on
+$\beta^{i}$, and on $A^{i}$, $B^{i}$ for $q\ge2$ with
+$-\tfrac12\zeta_i$ in place of $\tfrac12\eta_i$. Then
+\[
+  w^\ast(A^{i}_1)=\tfrac12\bigl(w^\ast(\alpha^{i}_1)+w^\ast(A^{i}_2)\bigr)
+  =\tfrac12+\tfrac12\bigl(2^{-e}\eta_i-2^{-(e-1)}\zeta_i\bigr)=\tfrac12
+\]
+because $\eta_i=2\zeta_i$, and identically $w^\ast(B^{i}_1)=\tfrac12$;
+so $w^\ast(v_i)=\max(\tfrac12,\tfrac12)=\tfrac12$. Backwards from
+$w^\ast(D_{s-3})=\tfrac12(\tfrac12+0)=\tfrac14$ gives the $D$-chain,
+whence $w^\ast(D_1)=\tfrac12-2^{-(s-2)}=\tfrac12-4\gamma$ and
+$w^\ast(Q)=\tfrac12\bigl((\tfrac12+2\gamma)+(\tfrac12-4\gamma)\bigr)
+=\tfrac12-\gamma$, and $w^\ast(v_0)=\max(\tfrac12-\gamma,\tfrac12)=\tfrac12$.
+Since $G$ is stopping, \Cref{cor:comparison} identifies this fixed point
+with $w^\ast$. The qualitative sets are read off: only $t_0$ has value
+$0$, only $g$ and $t_1$ have value $1$. $v_1$ and $v_2$ are not
+value-distinguishing; $v_0$ is, with gap $\gamma$.
+
+The lift is the same backward substitution with $\theta_{v_j}=e_j$; a
+chain of $r$ average vertices reading $v_j$ and ending at a
+$\theta$-free vertex carries $\theta=(1-2^{-r})e_j$ at its head, and
+$\theta_{A^{i}_1}=\tfrac12\bigl((1-2^{-e})+(1-2^{-(e-1)})\bigr)e_o
+=(1-\tfrac32u)e_o$, $\theta_{B^{i}_1}=(1-\tfrac32u^{2})e_i$,
+$\theta_Q=\tfrac12\bigl(0+(1-2^{-(s-3)})\bigr)e_1=(\tfrac12-4\gamma)e_1$.
+
+Last sentence. A vertex $y$ with $\theta_y=c'e_2$, $c'>0$, is one of
+$v_2$, $\alpha^{1}_\bullet$, $A^{1}_\bullet$, $\beta^{2}_\bullet$,
+$B^{2}_\bullet$; its value is $\tfrac{c'}2+(1-c')\tau_y$ where $\tau_y$
+is a convex combination of the terminal values it reaches, namely
+$1,\tfrac34,\tfrac14,\tfrac38$, all $\ge\tfrac14$, so
+$w^\ast(y)\ge\tfrac{c'}2+\tfrac{1-c'}4=\tfrac14+\tfrac{c'}4$. A vertex
+with $\theta_y=c'e_1$ may in addition reach the terminal $t_0$ (along
+$D$), so only $w^\ast(y)\ge\tfrac{c'}2$ is available --- and it is
+attained, $w^\ast(D_q)=\tfrac12\theta_{D_q}$ exactly.
+\end{proof}
+
+\begin{proposition}[No sound local matching calculus decides
+$v_0$]\label{prop:bc-lmc}
+In $\mathrm{BC}(e,s)$ the pair $(Q,P)$ carries the frame of the pair
+$(4,1)$ of $G_8$ (\Cref{prop:simorder-stalls,lem:fooling-partner}) and the
+pair $(v_0,P)$ carries the frame of $(5,1)$, in each case with the same
+set of value-true atoms. Hence no sound local matching calculus
+(\Cref{def:lmc}) derives $(Q,P)$ or $(v_0,P)$, in either reading; and
+$(v_0,Q)$, $(P,Q)$ are value-false. So no sound local matching calculus
+decides $v_0$ by any of the four tests of \Cref{rem:own-successor}
+available to an order-only mechanism. Moreover the preorder $\preceq$ of
+\Cref{def:simorder} decides neither $v_1$ nor $v_2$.
+\end{proposition}
+
+\begin{proof}
+The frames. Writing $x,x^{(0)},x^{(1)},y,y^{(0)},y^{(1)}$ for the six
+symbols, $(Q,P)$ interprets them at $Q,\mathrm{Q}_0,D_1,P,g,t_0$, of types
+$(\mathrm{avg},\mathrm{avg},\mathrm{avg},\mathrm{avg},\mathrm{avg},t_0)$,
+all six distinct, with value tuple
+$(\tfrac12-\gamma,\tfrac12+2\gamma,\tfrac12-4\gamma;\tfrac12,1,0)$; the
+value-true atoms are exactly
+$\Pi=\{(x,y^{(0)}),(x^{(0)},y^{(0)}),(x^{(1)},y),(x^{(1)},y^{(0)})\}$,
+which is what \Cref{lem:fooling-partner} computes at $(4,1)$ of $G_8$
+(value tuple $(\tfrac25,\tfrac35,\tfrac15;\tfrac12,1,0)$) and at
+$(a_0,d)$ of $G_{\mathrm f}$. The proof of \Cref{thm:matching-barrier}
+applies verbatim: a sound clause deriving $(Q,P)$ is contained in $\Pi$,
+and the same clause derives $(a_0,d)$ in $G_{\mathrm f}$, where
+$w^\ast(a_0)>w^\ast(d)$.
+
+$(v_0,P)$ interprets the symbols at $v_0,Q,P,P,g,t_0$, of types
+$(\max,\mathrm{avg},\mathrm{avg},\mathrm{avg},\mathrm{avg},t_0)$, with
+equality pattern $\{x^{(1)}=y\}$ and value-true atoms
+$\Pi\cup\{(x^{(0)},y)\}$, the extra atom interpreting as $(Q,P)$. That is
+precisely the frame, equality pattern and true-atom set of $(5,1)$ in
+$G_8$. Since $(Q,P)$ is underivable, a clause deriving $(v_0,P)$ is
+contained in $\Pi$, and the game $K_\sharp$ of \Cref{thm:matching-barrier}
+fools every such clause.
+
+For $\preceq$ at $v_1$ (and symmetrically $v_2$) put
+$\mathcal S_0:=\mathcal V:=\{(x,y):w^\ast(x)\le w^\ast(y)\}$ and
+$\mathcal S_{j+1}:=\mathcal V\cap\mathcal F(\mathcal S_j)$; since
+$\preceq\subseteq\mathcal V$ (\Cref{thm:simorder-sound}) and
+$\preceq=\mathcal F(\preceq)$, induction gives
+$\preceq\subseteq\mathcal S_j$ for every $j$. Write
+$\rho:=2^{-e}\eta_1$ and $\rho':=2^{-2e}\eta_1$, so that the successors of
+$A^{1}_1$ have values $\tfrac12\pm\rho$ and those of $B^{1}_1$ have values
+$\tfrac12\pm\rho'$, with $0<\rho'<\rho$. Then
+$(B^{1}_1,A^{1}_1)\notin\mathcal S_1$: the (down) clause at $A^{1}_1$
+needs $(B^{1}_1,A^{1}_2)$, i.e.\ $\tfrac12\le\tfrac12-\rho$; the (up)
+clause at $B^{1}_1$ needs $(\beta^{1}_1,A^{1}_1)$, i.e.\
+$\tfrac12+\rho'\le\tfrac12$; the (match) clause needs, for
+$\pi=\mathrm{id}$, $(B^{1}_2,A^{1}_2)$, i.e.\
+$\tfrac12-\rho'\le\tfrac12-\rho$, false since $\rho'<\rho$, and for the
+transposition $(\beta^{1}_1,A^{1}_2)$, comparing a value above $\tfrac12$
+with one below. Symmetrically $(A^{1}_1,B^{1}_1)\notin\mathcal S_1$, the
+$\pi=\mathrm{id}$ branch failing at $(\alpha^{1}_1,\beta^{1}_1)$, i.e.\ at
+$\tfrac12+\rho\le\tfrac12+\rho'$. Hence
+$(v_1,A^{1}_1)\notin\mathcal S_2$: its (up) clause needs
+$(B^{1}_1,A^{1}_1)\in\mathcal S_1$, its (down) clause needs
+$(v_1,A^{1}_2)\in\mathcal V$, i.e.\ $\tfrac12\le\tfrac12-\rho$, and no
+match clause applies, the types differing; likewise
+$(v_1,B^{1}_1)\notin\mathcal S_2$. The remaining two tests at $v_1$ are
+the pair tests, which are the two pairs just excluded.
+
+Two remarks on the shape of the construction. First, the two halves of the
+engine must carry \emph{different} straddle amplitudes: if
+$\eta_1=\eta_2$ the match clause relates $A^{1}_1$ with $A^{2}_1$ and
+$B^{1}_1$ with $B^{2}_1$ in both directions, and then
+$v_1\preceq v_2\preceq v_1$, so $\preceq$ contributes the cuts
+$z(v_1)=z(v_2)$; those cuts collapse $\Xi_k$ of \Cref{thm:bc-cert} to its
+diagonal, and \Cref{thm:bc-lower}'s clause on seeding by $M1$ fails.
+(Verified: with $\eta_1=\eta_2$ the preorder still decides no controlled
+vertex, but its cuts are violated by the certificate at every round.)
+Second, $\preceq$ is already transitive on $\mathrm{BC}(e,s)$ --- verified
+exactly at the ten sizes of \Cref{rem:bc-measured} --- so reading
+\Cref{def:simorder} with transitive closure changes nothing. For a
+\emph{general} sound local matching calculus read with transitive closure
+we make no claim: \Cref{thm:matching-barrier}'s closure paragraph turns on
+the value multiset of $G_8$, which has only three vertices in the relevant
+interval, and $\mathrm{BC}(e,s)$ has many.
+\end{proof}
+
+\begin{lemma}[What a lifted certificate has to check]\label{lem:lift-reduction}
+Let $G$ be a stopping SSG whose non-sink vertices outside a set
+$C\subseteq\Vmax$ are all average, let $\theta\colon V\to\mathbb R^{C}_{\ge0}$
+be the \emph{lift} --- the unique solution of
+$\theta_x=\tfrac12(\theta_{x^{(0)}}+\theta_{x^{(1)}})$ at average $x$,
+$\theta_v=e_v$ on $C$, $\theta_{t_0}=\theta_{t_1}=0$ --- and let
+$\Xi_{K}\subseteq\cdots\subseteq\Xi_0\subseteq\mathbb R^{C}_{\ge0}$ be
+nonempty compact convex, with
+$P_k:=\{x\mapsto w^\ast(x)+\langle\theta_x,\xi\rangle:\xi\in\Xi_k\}$.
+Suppose
+\begin{itemize}[leftmargin=2.6em]
+\item[$(\alpha)$] $P_k\subseteq Q(G;L_Z,U_Z)$ for every $k\le K$;
+\item[$(\beta)$] for every $v\in C$, every $y\in V$ and every $k<K$,
+\[
+  \max_{i}\Lambda(P_k)\bigl(v^{(i)},y\bigr)\ \ge\ \Lambda(P_{k+1})(v,y)
+  \qquad\text{and}\qquad
+  \max_{i}\Lambda_\times(P_k)\bigl(v^{(i)},y\bigr)\ \ge\
+  \Lambda_\times(P_{k+1})(v,y).
+\]
+\end{itemize}
+Then $(P_k)_{k\le K}$ satisfies hypotheses \textup{(i)} and \textup{(ii)}
+of \Cref{thm:convex-barrier-both}.
+\end{lemma}
+
+\begin{proof}
+Write $\Lambda_k:=\Lambda(P_k)$, $\Lambda^{\times}_k:=\Lambda_\times(P_k)$.
+
+\emph{Average vertices.} If $x$ is average then $w^\ast(x)$ and
+$\theta_x$ are the means of those of $x^{(0)},x^{(1)}$, so
+$z(x)=\tfrac12(z(x^{(0)})+z(x^{(1)}))$ for every $z\in P_{k+1}$; taking
+$z$ attaining $\Lambda_{k+1}(x,y)$,
+$\Lambda_{k+1}(x,y)=\tfrac12\sum_i(z(x^{(i)})-z(y))
+\le\tfrac12\sum_i\Lambda_{k+1}(x^{(i)},y)\le\tfrac12\sum_i\Lambda_k(x^{(i)},y)$,
+the (up) clause. The (down) clause at an average $y$ and the two
+average--average composites are the same computation applied to
+$\theta_x-\theta_y=\tfrac12\sum_i(\theta_{x^{(i)}}-\theta_{y^{(\pi(i))}})$.
+Multiplicatively, for $z$ attaining $\Lambda^\times_{k+1}(x,y)$: the (up)
+clause at an average $x$ is
+$\tfrac12\sum_i\Lambda^\times_k(x^{(i)},y)\ge
+\tfrac12\sum_iz(x^{(i)})/z(y)=z(x)/z(y)$; the (down) clause at an average
+$y$ is the harmonic mean, which is monotone, so
+$\mathrm{hm}\bigl(\Lambda^\times_k(x,y^{(0)}),\Lambda^\times_k(x,y^{(1)})\bigr)
+\ge\mathrm{hm}\bigl(z(x)/z(y^{(0)}),z(x)/z(y^{(1)})\bigr)
+=z(x)\big/\tfrac12\textstyle\sum_jz(y^{(j)})=z(x)/z(y)$; and the
+average--average composite is the mediant inequality
+$z(x)/z(y)=\sum_iz(x^{(i)})\big/\sum_iz(y^{(\pi(i))})
+\le\max_iz(x^{(i)})/z(y^{(\pi(i))})$.
+
+\emph{(down) at $v\in C$.} $P_m\subseteq Q(G)$ gives $z(v)\ge z(v^{(j)})$
+pointwise, hence $\Lambda_m(x,v)\le\Lambda_m(x,v^{(j)})$ and
+$\Lambda^\times_m(x,v)\le\Lambda^\times_m(x,v^{(j)})$ for all $m,x,j$;
+with $\Lambda_{k+1}\le\Lambda_k$,
+$\min_j\Lambda_k(x,v^{(j)})\ge\Lambda_k(x,v)\ge\Lambda_{k+1}(x,v)$, which
+is the clause, and likewise multiplicatively. There are no $\Vmin$
+vertices, so no dual case arises.
+
+\emph{Base clauses.} By $(\alpha)$ every $z\in P_{k+1}$ has $z(t_0)=0$,
+$z(t_1)=1$, $0\le z\le1$, $z\equiv0$ on $Z_0$ and $z\equiv1$ on $Z_1$.
+Hence $\Lambda_{k+1}\le1$; $\Lambda_{k+1}(x,x)=0$;
+$\Lambda_{k+1}(x,y)\le0$ when $x\in Z_0$ or $y\in Z_1$;
+$\Lambda_{k+1}(t_0,t_1)=-1$; and $\Lambda^\times_{k+1}(x,y)=0$ when
+$x\in Z_0$, $\Lambda^\times_{k+1}(x,y)\le1$ when $y\in Z_1$,
+$\Lambda^\times_{k+1}(x,x)=1$.
+
+\emph{Composites at two vertices of $C$.} By $(\beta)$ and the pointwise
+fact just used,
+$\Lambda_{k+1}(x,y)\le\max_i\Lambda_k(x^{(i)},y)
+\le\max_i\min_j\Lambda_k(x^{(i)},y^{(j)})$ and
+$\Lambda_{k+1}(x,y)\le\min_j\Lambda_{k+1}(x,y^{(j)})
+\le\min_j\max_i\Lambda_k(x^{(i)},y^{(j)})$; identically in the
+multiplicative register.
+
+Every clause of \Cref{def:slack} and of \Cref{def:ratio} is now
+accounted for.
+\end{proof}
+
+\begin{theorem}[The certificate]\label{thm:bc-cert}
+With $a,b,c$ as in \Cref{prop:bc-values} put $\ell:=\gamma/c$,
+$M_k:=\tfrac14a^{k}$,
+\[
+  \Xi_k:=\bigl\{\xi\in\mathbb R^{3}:\ \ell\le\xi_1,\xi_2\le M_k,\
+  \xi_1\ge a\xi_2,\ \xi_2\ge a\xi_1,\ \xi_0=c\xi_1-\gamma\bigr\},\qquad
+  P_k:=\{x\mapsto w^\ast(x)+\langle\theta_x,\xi\rangle:\xi\in\Xi_k\},
+\]
+and let $K$ be the largest $k$ with $aM_k\ge\ell$. Then $(P_k)_{k\le K}$
+satisfies the hypotheses of \Cref{thm:convex-barrier-both}.
+\end{theorem}
+
+\begin{proof}
+Write $h_k(\cdot):=\max_{\Xi_k}\langle\cdot,\xi\rangle$, so
+$\Lambda(P_k)(x,y)=w^\ast(x)-w^\ast(y)+h_k(\theta_x-\theta_y)$; on $\Xi_k$,
+$\langle e_0,\xi\rangle=c\xi_1-\gamma$. For $k\le K$, $\Xi_k$ is a
+hexagon with vertices
+$(\ell,\ell),(\ell,\ell/a),(\ell/a,\ell),(M_k,M_k),(M_k,aM_k),(aM_k,M_k)$
+in the coordinates $(\xi_1,\xi_2)$, all admissible because $aM_k\ge\ell$
+(hence $\ell/a\le M_k$) and $a<1$; and $\Xi_{k+1}\subseteq\Xi_k$ because
+$M_{k+1}=aM_k$. We verify $(\alpha)$ and $(\beta)$ of
+\Cref{lem:lift-reduction}.
+
+$(\alpha)$. The average rows hold by definition of $\theta$. On $\Xi_k$,
+$\xi_1,\xi_2\ge\ell>0$ and $\xi_0=c\xi_1-\gamma\ge0$, so $\xi\ge0$ and,
+$\theta$ being nonnegative, $z\ge w^\ast\ge0$. Every $\theta_x$ is a
+convex combination of $0$ and the $e_j$, and
+$\langle e_0,\xi\rangle\le cM_k\le M_k$, so
+$\langle\theta_x,\xi\rangle\le M_k\le\tfrac14$; the largest value carried
+by a vertex with $\theta_x\ne0$ is $\tfrac34$ (at $\alpha^{i}_e$ and
+$\beta^{i}_{2e}$), so $z\le1$; at $g$ and $t_1$, $\theta=0$ and $z=1$; at
+$t_0$, $z=0$: these are the box rows and the $Z$ pins. Max rows: at
+$v_1$, $z(v_1)\ge z(A^{1}_1)$ reads $\xi_1\ge a\xi_2$ and
+$z(v_1)\ge z(B^{1}_1)$ reads $\xi_1\ge b\xi_1$, true because $\xi_1\ge0$
+and $b\le1$; at $v_2$ symmetrically; at $v_0$, $z(v_0)\ge z(P)$ reads
+$\xi_0\ge0$ and $z(v_0)\ge z(Q)$ reads $\xi_0\ge c\xi_1-\gamma$, an
+equality.
+
+$(\beta)$ at $v_0$. On every $P_k$ one has
+$z(v_0)=\tfrac12+\xi_0=\tfrac12-\gamma+c\xi_1=z(Q)$ \emph{identically},
+so $\Lambda(P_{k+1})(v_0,y)=\Lambda(P_{k+1})(Q,y)\le\Lambda(P_k)(Q,y)$
+and $\Lambda_\times(P_{k+1})(v_0,y)=\Lambda_\times(P_{k+1})(Q,y)
+\le\Lambda_\times(P_k)(Q,y)$, and $Q$ is one of the two successors.
+
+$(\beta)$ at $v_1$ (the case of $v_2$ exchanges $e_1$ and $e_2$). Since
+$w^\ast(A^{1}_1)=w^\ast(B^{1}_1)=w^\ast(v_1)=\tfrac12$, the additive
+condition is
+\[
+  \max\bigl(h_k(a\,e_2-\theta_y),\ h_k(b\,e_1-\theta_y)\bigr)\ \ge\
+  h_{k+1}(e_1-\theta_y)\qquad\text{for every }y,
+\]
+and by \Cref{prop:bc-values} there are four cases.
+\emph{$\theta_y=0$}: the left side is at least $bM_k$, the right side is
+$M_{k+1}=aM_k$, and $b>a$.
+\emph{$\theta_y=c'e_1$}: the right side is $(1-c')M_{k+1}=a(1-c')M_k$,
+and at $\xi=(aM_k,M_k)\in\Xi_k$ the first term is
+$aM_k-c'aM_k=a(1-c')M_k$.
+\emph{$\theta_y=c'e_2$}: as $\xi_2\ge a\xi_1$, the right side is at most
+$(1-c'a)M_{k+1}=a(1-c'a)M_k$; at $\xi=(M_k,aM_k)\in\Xi_k$ the second term
+is $(b-c'a)M_k$; and
+$(b-c'a)-a(1-c'a)=(b-a)-c'a(1-a)=\tfrac32u(1-u)-\tfrac32u\,c'a
+=\tfrac32u\,(1-u-c'a)\ge0$ because $c'a\le a=1-\tfrac32u\le1-u$.
+\emph{$\theta_y=e_0$}: the right side is $\gamma+(1-c)M_{k+1}$, and at
+$\xi=(aM_k,M_k)$ the first term is $aM_k-caM_k+\gamma=\gamma+(1-c)M_{k+1}$.
+
+The multiplicative condition at $v_1$ is
+\[
+  \max\Bigl(\max_{\Xi_k}\frac{\tfrac12+a\xi_2}{z_\xi(y)},\
+  \max_{\Xi_k}\frac{\tfrac12+b\xi_1}{z_\xi(y)}\Bigr)\ \ge\
+  \max_{\Xi_{k+1}}\frac{\tfrac12+\xi_1}{z_\xi(y)},\qquad
+  z_\xi(y)=w^\ast(y)+\langle\theta_y,\xi\rangle .
+\]
+The denominator vanishes only at $y=t_0$, where both sides are $+\infty$.
+Elsewhere all three maxima are attained at vertices of the hexagons, a
+linear-fractional function with positive denominator being both
+quasi-convex and quasi-concave.
+\emph{$\theta_y=0$}: the denominator is constant and the claim is
+$bM_k\ge aM_k$.
+\emph{$\theta_y=c'e_1$}: both sides depend only on $\xi_1$, through
+$t\mapsto(\tfrac12+t)/(w^\ast(y)+c't)$, which is nondecreasing because
+$w^\ast(y)\ge c'/2$ (\Cref{prop:bc-values}); so the right side is
+$(\tfrac12+M_{k+1})/(w^\ast(y)+c'M_{k+1})$, and the first term at
+$\xi=(aM_k,M_k)\in\Xi_k$ is the same number.
+\emph{$\theta_y=c'e_2$}: the right-hand function increases in $\xi_1$ and
+decreases in $\xi_2$, so its maximum lies on the edge $\xi_2=a\xi_1$ of
+$\Xi_{k+1}$, where it is $g(t)=(\tfrac12+t)/(w^\ast(y)+c'at)$,
+$t\in[\ell/a,M_{k+1}]$; $g$ is nondecreasing because
+$w^\ast(y)\ge\tfrac14+\tfrac{c'}4\ge\tfrac{c'}2\ge\tfrac{c'a}2$, so the
+maximum is $g(M_{k+1})=(\tfrac12+aM_k)/(w^\ast(y)+c'a^{2}M_k)$. The
+second term at $\xi=(M_k,aM_k)\in\Xi_k$ is
+$(\tfrac12+bM_k)/(w^\ast(y)+c'aM_k)$; writing $W:=w^\ast(y)$, $M:=M_k$,
+the required inequality
+$(\tfrac12+bM)(W+c'a^{2}M)\ge(\tfrac12+aM)(W+c'aM)$ expands, after
+dividing by $\tfrac32u$, to $(1-u)W\ge c'a(\tfrac12+uaM)$. Since
+$M\le\tfrac14$ and $a\le1$ the right side is at most
+$c'(1-\tfrac32u)(\tfrac12+\tfrac u4)=c'(\tfrac12-\tfrac u2-\tfrac38u^{2})$,
+while $W\ge\tfrac14+\tfrac{c'}4$ makes the left side at least
+$\tfrac14(1+c')(1-u)$, and
+\[
+  \tfrac14(1+c')(1-u)-c'\bigl(\tfrac12-\tfrac u2-\tfrac38u^{2}\bigr)
+  \;=\;\tfrac{(1-c')(1-u)}4+\tfrac{3c'u^{2}}8\;\ge\;0 .
+\]
+\emph{$\theta_y=e_0$}: $z_\xi(v_0)=\tfrac12-\gamma+c\xi_1$ and
+$t\mapsto(\tfrac12+t)/(\tfrac12-\gamma+ct)$ increases because
+$\tfrac12-\gamma\ge\tfrac c2=\tfrac14-2\gamma$; the right side is
+attained at $\xi_1=M_{k+1}=aM_k$, and equals the first term at
+$\xi=(aM_k,M_k)\in\Xi_k$.
+
+This is $(\beta)$; \Cref{lem:lift-reduction} finishes the proof. The bound
+$M_0\le\tfrac14$ is used exactly twice: in the box row of $(\alpha)$ and
+in the third multiplicative case.
+\end{proof}
+
+\begin{theorem}[The lower bound]\label{thm:bc-lower}
+For every $k\le K$,
+\[
+  \Lambda(P_k)(v_0,P)=\Lambda(P_k)(Q,P)=cM_k-\gamma>0,\qquad
+  \Lambda(P_k)(Q,v_0)=0,
+\]
+\[
+  \Lambda(P_k)(v_1,A^{1}_1)=(1-a^{2})M_k>0,\quad
+  \Lambda(P_k)(v_1,B^{1}_1)=(1-b)M_k>0,\quad
+  \Lambda(P_k)(A^{1}_1,B^{1}_1)=a(1-b)M_k>0,\quad
+  \Lambda(P_k)(B^{1}_1,A^{1}_1)=(b-a^{2})M_k>0,
+\]
+symmetrically at $v_2$; each of the six strictly positive quantities is
+$>1$ in the multiplicative register, and $\Lambda_\times(P_k)(Q,v_0)=1$
+exactly. Consequently no run of the slack calculus, its min-plus closure,
+the transport step, the hybrid or the ratio calculus --- in any
+interleaving, with any seeding of one by another's output, any up-rounding
+onto a grid, and the order transfer of \Cref{thm:convex-barrier-both} ---
+decides any controlled vertex of $\mathrm{BC}(e,s)$ within
+\[
+  K+1\;=\;\Bigl\lfloor\frac{\ln\bigl(c/4\gamma\bigr)}{\ln(1/a)}\Bigr\rfloor
+  \;\ge\;\Bigl\lfloor\frac{(2^{e+1}-3)(s-4)\ln2}{3}\Bigr\rfloor
+\]
+operator applications; with $s$ fixed and $e=(N-2s-11)/12$ that is
+$2^{\Omega(N)}$. The simulation preorder $\preceq$ of \Cref{def:simorder}
+itself decides nothing (\Cref{prop:bc-lmc}); whether seeding the calculi
+with its verdicts changes the bound is settled here only by measurement:
+at the ten sizes of \Cref{rem:bc-measured} every point of every $P_k$
+satisfies every cut $z(x)\le z(y)$ with $x\preceq y$, so at those sizes
+the seeded composite obeys the same bound (a proof would need the
+certificate to respect the preorder's cuts at every size, which is not
+argued).
+\end{theorem}
+
+\begin{proof}
+The displayed quantities. $\Lambda(P_k)(v_0,P)=h_k(e_0)=cM_k-\gamma$,
+which is positive for $k\le K$ because $M_k\ge aM_k\ge\ell=\gamma/c$ and
+$a<1$; $\Lambda(P_k)(Q,P)=-\gamma+h_k(c\,e_1)=cM_k-\gamma$;
+$\Lambda(P_k)(Q,v_0)=-\gamma+h_k(c\,e_1-e_0)=-\gamma+\gamma=0$, since
+$c\xi_1-\xi_0\equiv\gamma$ on $\Xi_k$;
+$\Lambda(P_k)(v_1,A^{1}_1)=h_k(e_1-a\,e_2)=(1-a^{2})M_k$, attained at
+$(M_k,aM_k)$; $\Lambda(P_k)(v_1,B^{1}_1)=h_k((1-b)e_1)=(1-b)M_k$;
+$\Lambda(P_k)(A^{1}_1,B^{1}_1)=h_k(a\,e_2-b\,e_1)=a(1-b)M_k$, attained at
+$(aM_k,M_k)$; and $\Lambda(P_k)(B^{1}_1,A^{1}_1)=h_k(b\,e_1-a\,e_2)
+=(b-a^{2})M_k$, attained at $(M_k,aM_k)$ and positive because
+$b-a^{2}=3u(1-\tfrac54u)>0$. Each of these being $>0$, \Cref{lem:ratio-sign}
+makes the corresponding multiplicative quantity $>1$; and
+$\Lambda_\times(P_k)(Q,v_0)=1$ because $z(Q)=z(v_0)>0$ identically on
+$P_k$.
+
+Now let any such run report after $k\le K$ applications from a sound
+state (\Cref{thm:convex-barrier-both}). At $v_0$: clause~(i) needs $\Delta(v_0,P)\le0$ or
+$\Delta(v_0,Q)\le0$, but $\Delta(v_0,P)\ge\Lambda(P_k)(v_0,P)>0$ by
+\Cref{thm:convex-barrier-both} and $\Delta(v_0,Q)\ge w^\ast(v_0)-w^\ast(Q)=\gamma>0$
+by soundness; clause~(ii) needs $\Delta(Q,v_0)<0$ or $\Delta(P,v_0)<0$,
+but $\Delta(Q,v_0)\ge\Lambda(P_k)(Q,v_0)=0$ and
+$\Delta(P,v_0)\ge w^\ast(P)-w^\ast(v_0)=0$; the pair tests need
+$\Delta(Q,P)\le0$ or $\Delta(P,Q)\le0$, but
+$\Delta(Q,P)\ge\Lambda(P_k)(Q,P)>0$ and $\Delta(P,Q)\ge\gamma>0$. At
+$v_1$ and $v_2$ all three of $w^\ast(v_i)$, $w^\ast(A^{i}_1)$,
+$w^\ast(B^{i}_1)$ equal $\tfrac12$, so clause~(ii) is blocked by soundness
+alone ($\Delta(A^{i}_1,v_i),\Delta(B^{i}_1,v_i)\ge0$), while clause~(i)
+and \emph{both} pair tests --- which soundness does not block there, all
+three values being equal --- are blocked by the four positive quantities
+displayed. The multiplicative register is blocked entry by entry by
+\Cref{lem:ratio-sign}, by $\Lambda_\times(P_k)(Q,v_0)=1$, and by
+$w^\ast(v_0)/w^\ast(Q)=\tfrac12/(\tfrac12-\gamma)>1$.
+
+The count. $K$ is the largest $k$ with $a\cdot\tfrac14a^{k}\ge\gamma/c$,
+i.e.\ $a^{k+1}\ge4\gamma/c$, i.e.\ $k+1\le\ln(c/4\gamma)/\ln(1/a)$; and
+$\ln(1/a)=-\ln(1-\tfrac32u)\le\tfrac{3u/2}{1-3u/2}=\tfrac{3}{2^{e+1}-3}$
+while $c/4\gamma=2^{s-3}-1\ge2^{s-4}$ for $s\ge5$.
+\end{proof}
+
+\begin{remark}[Measured, and what the family separates]\label{rem:bc-measured}
+Everything above was verified by the route in exact rational arithmetic,
+from the game, at $(e,s)=(2,5),(3,5),(4,5),(5,5),(6,5),(2,6),(3,6),(2,7),(3,8),(4,8)$,
+$N=45,\dots,93$: the closed forms of $w^\ast$ and $\theta$; stopping;
+$w^\ast$ by enumeration of the eight profiles; $Z_0=\{t_0\}$,
+$Z_1=\{g,t_1\}$; the two frame identities of \Cref{prop:bc-lmc}; the
+greatest fixed point of \Cref{def:simorder} computed outright, transitive,
+and relating none of the twelve pairs the four tests read at
+$v_0,v_1,v_2$; and at every $k\le K$, $P_k\subseteq Q(G;L_Z,U_Z)$, every
+clause of \Cref{def:slack} at $\Lambda(P_k)$ at least $\Lambda(P_{k+1})$
+and every clause of \Cref{def:ratio} at $\Lambda_\times(P_k)$ at least
+$\Lambda_\times(P_{k+1})$ at all $N^{2}$ entries, every point of $P_k$
+obeying every $\preceq$-cut, and none of the twelve tests firing. The
+round counts $K+1$ are $2,5,11,22,46$ at $s=5$, $e=2,\dots,6$, doubling
+with $e$, and $4,9$ at $s=6$, $5$ at $s=7$, $16,34$ at $s=8$, the closed
+form agreeing at every size; the certificate check was also run at
+$N=105$, $99$, $79$ ($93$, $144$, $49$ rounds). Both audits rebuilt the
+family from the definition and reproduced all of it. Here, with the
+harness's own implementations of the calculi seeded with $Z_0,Z_1$ and
+both clauses of \Cref{rem:own-successor} at every controlled vertex
+(\texttt{scripts/round17-verify/bc\_light.py}, \texttt{bc\_m1.py}): on
+$\mathrm{BC}(2,5)$ the slack calculus first fires at $v_0$ at round $39$
+and its closure at round $21$, both by clause (ii), the ratio calculus
+never within $40$ rounds; on $\mathrm{BC}(3,5)$ and $\mathrm{BC}(4,5)$
+all three are silent for $40$ rounds; and the preorder relates none of
+the twelve pairs at any of the three sizes --- the certificate's
+$K+1=2,5,11$ is a lower bound, and the mechanisms are slower still.
+Two remarks on the design. The two engine halves carry \emph{different}
+straddle amplitudes on purpose: with $\eta_1=\eta_2$ the (match) clause
+gives $v_1\preceq v_2\preceq v_1$, and those cuts collapse $\Xi_k$ to its
+diagonal, so the seeded composite would escape. And the family answers
+the M1 half of \Cref{rem:wedge}'s open item only: by
+\Cref{thm:seed-dichotomy} the M3 half is a superpolynomial all-switches
+family, which this document does not have, and on $\mathrm{BC}(e,s)$
+every $\sigma$ with $\sigma(v_0)=P$ has an empty strictly switchable set,
+so all-switches halts within one round from every start and the seeded
+calculus $M(1,0)$ decides everything at once: what is exponentially
+separated here is the propagation side from one linear solve.
 \end{remark}
 
 
