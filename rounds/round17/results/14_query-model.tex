@@ -1,0 +1,389 @@
+%% Paste-ready. Files: code_dir/qm.tex (this text), qm.py (Algorithm E, the
+%% harmonic form, both oracles), hdp.py (HDP_m), sep.py + m3check.py +
+%% outmap_qc.py + dout_check.py (the separation), runrank.py (cor:qm-runs),
+%% lb2.py (an auxiliary two-Max indistinguishable pair), verify_all.py /
+%% verify_E.py (one-shot verification; logs verify_all.log, verify_E.log).
+
+\subsection{The strategy-evaluation oracle: how many evaluations a game costs}\label{sec:qm}
+
+Every rule in this paper interrogates its game in exactly one way: it
+evaluates a positional strategy.  All-switches, \Cref{def:bsi},
+$R_{\mathrm{BR}}$, the least-index rule of \Cref{thm:ladder}, the
+one-player bias homotopy of \Cref{sec:bias} and the random facet of
+\Cref{def:rf} all consist of a sequence of evaluations together with a
+recipe for choosing the next strategy from the ones already evaluated.
+This subsection takes the number of evaluations as the cost and asks what
+it is.  The answer is $\Theta(|C|)$, both halves proved: at most
+$|C|+2$ evaluations always suffice (\Cref{thm:qm-eval}) and $|\Vmax|$ are
+sometimes necessary (\Cref{thm:qm-hdp}).  The consequence for this paper
+is negative and sharp: none of its exponential lower bounds --- and none
+that a family of exponential bottom-antipodal height would add --- is an
+obstruction to an algorithm that is allowed to choose which strategies to
+evaluate.  They are all bounds on the number of rounds of a fixed rule.
+
+\begin{definition}[The controlled skeleton and the evaluation oracle]\label{def:qm-oracle}
+Let $G$ be a stopping SSG and $C:=\Vmax\cup\Vmin$, $c:=|C|$.  The
+\emph{controlled skeleton} of $G$ is
+$\Sigma(G):=\bigl(C,\ \mathrm{owner},\ (v^{(0)},v^{(1)})_{v\in C}\bigr)$:
+the controlled vertices, the owner of each, and the \emph{names} of the two
+successors of each, with the information of which of those names coincide
+and which are sinks.  It says nothing whatever about $\Vavg$.  The
+\emph{evaluation oracle} of $G$ answers a query $\sigma\in\{0,1\}^{\Vmax}$
+with
+\[
+  \mathcal O_G(\sigma)\ :=\
+  \bigl(\val_\sigma(u)\bigr)_{u\in C\,\cup\,\{v^{(a)}\;:\;v\in C,\ a\in\{0,1\}\}},
+\]
+the values, under $\sigma$ and an optimal Min reply, of the controlled
+vertices and of everything they read.  An \emph{evaluation algorithm} is
+given $\Sigma(G)$, queries the oracle adaptively, and must output an
+optimal Max strategy.  For a class $\mathcal G$ of stopping games,
+$Q(\mathcal G)$ denotes the least $q$ for which some deterministic
+evaluation algorithm is correct on every $G\in\mathcal G$ using at most
+$q$ queries.  The \emph{outmap oracle} $\mathcal O^{\mathrm{out}}_G$ is
+the weaker one returning only $S_\sigma$, and $Q^{\mathrm{out}}$ its
+complexity.
+\end{definition}
+
+Three remarks fix the model.  \emph{First}, one query is a polynomial-time
+operation (\Cref{thm:eval-stopfree}), so $Q$ measures the shape of an
+algorithm and not a concealed call to the problem itself; this is what
+separates \Cref{def:qm-oracle} from the \textsc{SSG-Compare} oracle of
+\Cref{thm:compare-equivalence}, where $n$ non-adaptive calls suffice for
+the trivial reason that one call is already as hard as the game.
+\emph{Second}, the halting test is free: an answer with $S_\sigma=\emptyset$
+certifies optimality by \Cref{lem:local-global}, so a correct algorithm may
+always stop with a proof, and $Q$ is unchanged if we demand one.
+\emph{Third}, an evaluation algorithm is not required to run in polynomial
+time between queries, and the one built below does not; \Cref{thm:qm-eval}
+is a statement about information, and says nothing about
+\textsc{SSG-Value} being in \textsf{P}.
+
+\begin{definition}[Harmonic systems]\label{def:qm-harmonic}
+A \emph{harmonic system} on a finite owner-labelled set $C$ is a family of
+rows $\rho_{v,a}=(q_{v,a},p_{v,a})\in\mathbb R_{\ge0}\times\mathbb R_{\ge0}^{C}$,
+$v\in C$, $a\in\{0,1\}$, with $q_{v,a}+|p_{v,a}|_1\le1$, subject to the
+\emph{stopping condition}: there is no nonempty $U\subseteq C$ such that
+every $v\in U$ has an action $a$ with $q_{v,a}=0$, $|p_{v,a}|_1=1$ and
+$\operatorname{supp}p_{v,a}\subseteq U$.  Its operators are
+$(T_\rho y)_v:=\operatorname{opt}_a(q_{v,a}+p_{v,a}\cdot y)$ on $\mathbb R^{C}$,
+$\max$ at Max and $\min$ at Min, and $T_{\rho,\sigma}$, $T_{\rho,\sigma,\tau}$
+with the indicated players frozen.
+\end{definition}
+
+\begin{lemma}[The harmonic form of a game]\label{lem:qm-form}
+Let $G$ be stopping and let $\rho_{v,a}$ be the first-passage law of the
+action $a$ at $v$ onto $C\cup\{t_1\}$ --- $p_w$ the probability that the
+token, leaving $v$ by $a$, next meets a controlled vertex at $w$, and $q$
+that it reaches $t_1$ first; the harmonic normal form used at
+\Cref{lem:rise-bound} and \Cref{thm:lasserre-vacuous}.  Then
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $\rho$ is a harmonic system;
+\item if $y\in[0,1]^{V}$ is the mean of its two successors at every average
+      vertex, with $y(t_0)=0$ and $y(t_1)=1$, then
+      $y(v^{(a)})=q_{v,a}+p_{v,a}\cdot y|_{C}$ for all $v\in C,a\in\{0,1\}$.
+      In particular $\val_{\sigma,\tau}|_C$ is a fixed point of
+      $T_{\rho,\sigma,\tau}$, $\val_\sigma|_C$ one of $T_{\rho,\sigma}$, and
+      $w^\ast|_C$ one of $T_\rho$;
+\item every operator of a harmonic system has exactly one fixed point.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) Absorption in $C\cup\{t_0,t_1\}$ is almost sure from every vertex:
+a trajectory that stayed in $\Vavg$ for ever would never reach a sink,
+which has probability $0$ under every positional pair since $G$ is
+stopping.  So $\rho_{v,a}$ is a substochastic law.  For the stopping
+condition let $U\ne\emptyset$ be as excluded and pick at each $v\in U$ a
+full-mass action $a(v)$.  Leaving $v$ by $a(v)$ the token meets
+$C\cup\{t_0,t_1\}$ inside $U$ almost surely, so no average vertex $u$ on
+the way can have a sink among its successors (that would give a positive
+probability of a sink first), and every successor of such a $u$ is again
+either such an average vertex or a member of $U$.  Hence $U$ together with
+those average vertices is a nonempty trap, against \Cref{lem:trapchar}.
+
+(b) Let $H$ be the hitting time of $C\cup\{t_0,t_1\}$ by the token started
+at $v^{(a)}$ and moving by fair coins at average vertices ($H=0$ if
+$v^{(a)}$ already lies there).  By the previous paragraph $H<\infty$ a.s.;
+$y$ is bounded and $(y(X_{k\wedge H}))_k$ is a martingale because $y$ is
+the mean of its successors at every average vertex; optional stopping gives
+$y(v^{(a)})=\mathbb E\,y(X_H)=q_{v,a}+p_{v,a}\cdot y|_C$.  Each
+$\val_{\sigma,\tau}$, $\val_\sigma$ and $w^\ast$ satisfies the average
+equations and the sink pinning, and equals, at a controlled vertex, the
+frozen resp.\ optimised choice among its two successors' values.
+
+(c) Let $(S\xi)_v:=\max_a p_{v,a}\cdot\xi$ on $\mathbb R_{\ge0}^{C}$.
+$S^{n}\bbone$ decreases to a fixed point $\xi$ of $S$.  If
+$\mu:=\max\xi>0$ then for $v\in U:=\{\xi=\mu\}$ some action has
+$p_{v,a}\cdot\xi=\mu$; since $\xi\le\mu$ and $p\ge0$ this forces
+$|p_{v,a}|_1=1$, hence $q_{v,a}=0$, and equality forces
+$\operatorname{supp}p_{v,a}\subseteq U$ --- the configuration excluded by
+\Cref{def:qm-harmonic}.  So $S^{n}\bbone\to0$, and for some $n$,
+$\lVert S^{n}\bbone\rVert_\infty\le\frac12$.  As
+$|\operatorname{opt}_aA_a-\operatorname{opt}_aB_a|\le\max_a|A_a-B_a|$ we get
+$|T_\rho^{n}y-T_\rho^{n}y'|\le S^{n}|y-y'|$ pointwise, so $T_\rho^{n}$ is a
+sup-norm contraction; the same domination holds for the frozen operators.
+This is the argument of \Cref{lem:survival-contract}, which states it for
+an arbitrary finite family of substochastic first-passage rows over $C$.
+\end{proof}
+
+\begin{definition}[Evaluation dimension]\label{def:qm-dim}
+For a stopping SSG $G$ put
+$\mathcal V(G):=\{\val_\sigma|_C\;:\;\sigma\in\{0,1\}^{\Vmax}\}\subseteq[0,1]^{C}$
+and $d(G):=\dim\operatorname{aff}\mathcal V(G)\le|C|$.
+\end{definition}
+
+\begin{theorem}[Evaluation is cheap]\label{thm:qm-eval}
+Let $G$ be a stopping SSG.  The following deterministic evaluation
+algorithm outputs an optimal Max strategy of $G$, together with a
+certificate of optimality, after at most $d(G)+2\le|C|+2$ queries.
+\begin{quote}
+\textsc{Algorithm E}.  Keep the list $D$ of answers received, an answer
+being a pair $(x,A)$ with $x=\val_\sigma|_C$ and $A(v,a)=\val_\sigma(v^{(a)})$.
+Choose a harmonic system $\hat\rho$ on $\Sigma(G)$ \emph{consistent with
+$D$}, i.e.\ with $\hat q_{v,a}+\hat p_{v,a}\cdot x=A(v,a)$ for every
+$(x,A)\in D$ and every $(v,a)$; let $\hat w$ be the fixed point of
+$T_{\hat\rho}$ and $\hat\sigma$ a Max-greedy strategy at $\hat w$; query
+$\hat\sigma$.  If the answer has $S_{\hat\sigma}=\emptyset$, output
+$\hat\sigma$; otherwise append it to $D$ and repeat.
+\end{quote}
+Consequently $Q(\mathcal G)\le c+2$ for every class $\mathcal G$ of
+stopping SSGs with $|C|\le c$; since $|C|\le N-2$ this is $Q\le N$ always.
+\end{theorem}
+
+\begin{proof}
+\emph{Well defined.}  By \Cref{lem:qm-form}(a),(b) the harmonic form
+$\rho_G$ of $G$ is a harmonic system consistent with $D$ at every stage, so
+the choice is from a nonempty set.  By \Cref{lem:qm-form}(c) the fixed
+point $\hat w$ exists and is unique; if $\hat\sigma$ is Max-greedy at
+$\hat w$ then $T_{\hat\rho,\hat\sigma}\hat w=\hat w$, so $\hat w$ is
+\emph{the} value of $\hat\sigma$ in the hypothesis and no Max vertex is
+strictly switchable at $\hat\sigma$ there.
+
+\emph{Correct.}  The halting test is applied to the true answer, so it
+says that no Max vertex of $G$ is strictly switchable at $\hat\sigma$;
+by \Cref{lem:local-global}, $\val_{\hat\sigma}=w^\ast$.
+
+\emph{At most $d(G)+1$ non-halting queries.}  Write
+$u(x):=(1,x)\in\mathbb R^{1+C}$ and let $V_t:=\operatorname{span}\{u(x):(x,A)\in D\}$
+after $t$ answers have been recorded.  Consistency with $D$ says exactly
+that $\hat\rho_{v,a}-\rho_{G,v,a}\perp u(x)$ for every recorded $x$, hence
+$\hat\rho_{v,a}-\rho_{G,v,a}\perp V_t$ for all $(v,a)$.  Suppose the
+$(t+1)$-st query $\hat\sigma$ does not halt, and let
+$x:=\val_{\hat\sigma}|_C$ be the true answer's value part.  If
+$u(x)\in V_t$ then for every $(v,a)$
+\[
+  \hat q_{v,a}+\hat p_{v,a}\cdot x
+  \;=\;q_{v,a}+p_{v,a}\cdot x\;=\;\val_{\hat\sigma}(v^{(a)})
+\]
+by \Cref{lem:qm-form}(b); taking the frozen/optimised choice at each
+controlled vertex, $x$ is a fixed point of $T_{\hat\rho,\hat\sigma}$, hence
+by \Cref{lem:qm-form}(c) \emph{the} value of $\hat\sigma$ in the hypothesis,
+and the displayed identity says that the hypothesis's appeals at
+$\hat\sigma$ are the true ones.  So the hypothesis's strictly switchable
+set at $\hat\sigma$ --- empty by construction --- is the true one, and the
+query halts: a contradiction.  Hence $u(x)\notin V_t$ and
+$\dim V_{t+1}=\dim V_t+1$.  Since $\dim V_0=0$ and every recorded $x$ lies
+in $\mathcal V(G)$, whose points span an affine space of dimension $d(G)$,
+we have $\dim V_t\le d(G)+1$ throughout, so there are at most $d(G)+1$
+non-halting queries and at most $d(G)+2$ in all.
+\end{proof}
+
+\begin{remark}\label{rem:qm-eval}
+Three features of the proof deserve emphasis.  (i) It uses \emph{no}
+property of the choice of $\hat\rho$ beyond consistency and the stopping
+condition; any selection rule gives the same bound.  (ii) It never needs
+the true rows: when $\dim V_t=|C|+1$ they are determined, but the algorithm
+stops long before if it can.  (iii) The step it cannot perform in
+polynomial time is solving the hypothesis --- which is an SSG-valued
+problem on the same controlled set --- so \Cref{thm:qm-eval} is not a step
+towards \textsc{(Poly-Rule)}.  Call $\sigma$ \emph{justified} by $D$ if some harmonic system
+consistent with $D$ has $\sigma$ optimal.  The proof shows that a
+polynomial-time rule producing a justified strategy from $D$ would put
+\textsc{SSG-Value} in \textsf{P}; and the reformulation is
+target-equivalent rather than a genuine simplification, because once
+$\dim V_t=|C|+1$ the only consistent harmonic system is the game's own,
+so the last justified strategy demanded is an optimal strategy of the
+given game.  It is a relaxation only while the data has less than full
+rank --- which is where all but $|C|+1$ of the rounds of any long run
+sit (\Cref{cor:qm-runs}).
+\end{remark}
+
+\begin{remark}[The profile oracle]\label{rem:qm-profile}
+\Cref{thm:qm-eval} holds verbatim for the \emph{profile} oracle, which
+takes a positional pair $(\sigma,\tau)$ and returns $\val_{\sigma,\tau}$ on
+$C$ and on the successors of $C$ --- the cheapest evaluation there is, a
+Markov chain.  Algorithm E is modified only in that $\hat\sigma$ is
+replaced by a greedy \emph{pair} at $\hat w$ and the halting test asks that
+no controlled vertex be strictly switchable, which by \Cref{lem:qm-form}(b)
+makes $\val_{\sigma,\tau}$ a fixed point of the Shapley operator and hence
+$w^\ast$ by \Cref{thm:contraction}.  The rank argument is unchanged.  So
+the bidirectional rules of \Cref{def:bsi} and $R_{\mathrm{BR}}$, whose unit
+of work is exactly a pair evaluation, also live in a model whose
+information-theoretic cost is $|C|+2$.
+\end{remark}
+
+\begin{corollary}[No evaluation-model barrier]\label{cor:qm-nobarrier}
+No adversary argument in the model of \Cref{def:qm-oracle} can prove a
+lower bound exceeding $|C|+2$.  In particular each of $L_n$
+(\Cref{thm:ladder}), $H_m$ (\Cref{cor:slack-stalls}), $\mathrm{WD}(e,j,m)$
+(\Cref{thm:wedge-proved}), $\mathrm{CC}(L,m)$ (\Cref{thm:hybrid-lower})
+and $\mathrm{CV}(e,s)$ (\Cref{thm:cv-lower}) --- each of which defeats some
+rule or calculus for $2^{\Omega(N)}$ rounds --- is solved by at most
+$|C|+2$ evaluations, and a family of exponential bottom-antipodal height
+realised on polynomially many vertices (\Cref{rem:blowup-realise}) would
+defeat all-switches without being an informational obstacle: the same
+instances would be solved by $|C|+2$ evaluations of the very operation
+those rules perform once per round.  The subexponential bound of
+\Cref{thm:subexp} is likewise a bound on a rule that follows improving
+switches and reads only the orientation, not on the number of evaluations.
+\end{corollary}
+
+\begin{corollary}[A run stops informing after $|C|+1$ rounds]\label{cor:qm-runs}
+Let $\sigma^{0},\sigma^{1},\dots$ be \emph{any} sequence of Max strategies
+--- a run of any rule --- and let
+$R_s:=\operatorname{span}\{(1,\val_{\sigma^{r}}|_C):r\le s\}$.  Then
+$(1,\val_{\sigma^{s}}|_C)\notin R_{s-1}$ for at most $d(G)+1\le|C|+1$
+indices $s$, and at every other index the value vector $\val_{\sigma^{s}}|_C$
+\emph{and} all its appeals $\val_{\sigma^{s}}(v^{(a)})$ are already
+determined: every harmonic system consistent with the answers at
+$\sigma^{0},\dots,\sigma^{s-1}$ predicts them exactly, by the argument of
+\Cref{thm:qm-eval}.  An exponentially long run therefore spends all but at
+most $|C|+1$ of its rounds recomputing consequences of what its first few
+evaluations already implied.
+\end{corollary}
+
+\begin{definition}[The hidden decision path]\label{def:qm-hdp}
+For $m\ge1$ and $z\in\{0,1\}^{m}$ let $\mathrm{HDP}_m(z)$ be the one-player
+stopping SSG on $6m$ non-sink vertices with $\Vmax=\{v_1,\dots,v_m\}$
+built as follows.  Vertex $v_j$ owns the block
+$e^{j}_0,e^{j}_1,x_j,y_j,s_j$ of five average vertices and points at
+$(e^{j}_0,e^{j}_1)$ --- \emph{the same for every $z$}.  Write
+$b_j:=e^{j}_{z_j}$ and $c_j:=e^{j}_{1-z_j}$.  For $j=1$:
+$b_1\to(t_1,t_0)$, of value $\tfrac12$, and $c_1\to(t_0,x_1)$,
+$x_1\to(t_1,t_0)$, of value $\tfrac14$ (the two remaining vertices of the
+block are unreachable padding, wired $\to(t_0,t_0)$, and are present only
+so that the layout does not depend on $z$).  For $j\ge2$:
+$b_j\to(v_{j-1},x_j)$, $x_j\to(t_0,y_j)$, $y_j\to(t_1,t_0)$, whose
+first-passage law onto $C\cup\{t_1\}$ is $(\tfrac18;\tfrac12\,e_{v_{j-1}})$,
+and $c_j\to(t_0,s_j)$, $s_j\to(t_1,t_0)$, of value $\tfrac14$.  All
+$2^{m}$ members have literally the same vertex kinds and the same
+successor map on $C$, hence the same controlled skeleton; only the wiring
+inside the gadgets, which $\Sigma(G)$ does not see, depends on $z$.
+\end{definition}
+
+\begin{theorem}[Evaluation is not free]\label{thm:qm-hdp}
+Fix $m$ and let $\mathcal H_m:=\{\mathrm{HDP}_m(z):z\in\{0,1\}^m\}$.  Then
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item every $\mathrm{HDP}_m(z)$ is stopping, all $2^{m}$ members have the
+      same controlled skeleton, and $\Opt(\mathrm{HDP}_m(z))=\{z\}$;
+\item writing $i(\sigma,z):=\min\{j:\sigma_j\ne z_j\}$ (and $m+1$ if there
+      is none), the value part of the oracle's answer is
+      $x_j=\tfrac14+2^{-j-1}$ for $j<i$ and $x_j=\tfrac14$ for $j\ge i$;
+      the appeals at $v_1$ are $\tfrac12$ against $\tfrac14$, and at $v_j$,
+      $j\ge2$, are $\tfrac18+x_{j-1}/2$ against $\tfrac14$, so that
+      $S_\sigma=\{v_i\}$ for $i\le m$ and $S_\sigma=\emptyset$ for $i=m+1$;
+      consequently $\mathcal O(\sigma)$ depends on $z$ only through
+      $z_1,\dots,z_{i(\sigma,z)}$, and reveals exactly those bits;
+\item $Q(\mathcal H_m)=m$; and every randomised evaluation algorithm that
+      is correct with probability $1$ makes at least $m/\log_2(m+1)$
+      queries in expectation on a uniformly random member.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) Stopping: the trap test of \Cref{lem:trapchar} deletes first $y_j$ and
+$s_j$, which have $t_0$ among their successors, then $x_j$ and $c_j$, which
+have $t_0$ and a deleted vertex, then $b_j$, then every $v_j$, which now has
+no successor left.  The skeleton is
+$m$ Max vertices with $2m$ pairwise distinct successor names, none a sink
+and none controlled, for every $z$: only which name is action $0$ changes,
+and a name carries no other information.
+(b) By \Cref{lem:qm-form}(b) the value restriction $x$ is the unique fixed
+point of $x_j=\Psi_{j,\sigma_j}(x)$ where $\Psi_{j,z_j}(x)=\tfrac18+x_{j-1}/2$
+($=\tfrac12$ for $j=1$) and $\Psi_{j,1-z_j}=\tfrac14$.  If $\sigma_j\ne z_j$
+then $x_j=\tfrac14$; if $\sigma_j=z_j$ and $x_{j-1}=\tfrac14$ then
+$x_j=\tfrac18+\tfrac18=\tfrac14$; and if $x_{j-1}=\tfrac14+2^{-j}$ then
+$x_j=\tfrac14+2^{-j-1}$.  Induction on $j$ gives the displayed $x$, whence
+the appeals: at $v_j$ with $j<i$ the pair is
+$(\tfrac14+2^{-j-1},\tfrac14)$ with the first chosen, at $j=i$ the same
+pair with the second chosen --- so $v_i$ is strictly switchable --- and at
+$j>i$ the pair is $(\tfrac14,\tfrac14)$, a tie.  The answer is therefore
+determined by $\sigma$ and $i$; and it determines $i$, hence
+$z_1,\dots,z_{i-1}=\sigma_1,\dots,\sigma_{i-1}$ and $z_i=1-\sigma_i$, and
+says nothing else.  $\Opt=\{z\}$ because $S_z=\emptyset$ and $S_\sigma\ne\emptyset$
+for $\sigma\ne z$.
+(c) \emph{Upper bound.}  Query $\sigma^1:=(0,\dots,0)$; the answer gives
+$i_1$ and the bits $z_1..z_{i_1}$; query $\sigma^2$ agreeing with the known
+prefix and $0$ elsewhere, and so on.  Each query enlarges the known prefix
+by at least one bit, so after at most $m$ queries the whole of $z$ is known
+and is output (and the algorithm stops earlier if some answer has
+$S_\sigma=\emptyset$).
+\emph{Lower bound.}  Let an algorithm be given.  The adversary keeps a
+prefix $p$, initially empty.  On a query $\sigma$ it puts
+$i:=\min\{j\le|p|:\sigma_j\ne p_j\}$ if that set is nonempty, and otherwise
+$i:=|p|+1$ and extends $p$ by the bit $1-\sigma_{|p|+1}$; it answers with
+the (unique, by (b)) answer belonging to $\sigma$ and $i$.  Every $z$
+extending $p$ is consistent with all answers given so far, since
+$z_j=p_j$ for $j\le|p|$ makes $i(\sigma^s,z)=i_s$ for each past query.
+After $q$ queries $|p|\le q$; if $q\le m-1$ at least two extensions remain
+and they have different optima by (a), so an output now is wrong for one of
+them.  \emph{Randomised.}  Fix the random string: the algorithm becomes a
+deterministic decision tree whose branching is at most $m+1$ (the answer is
+a function of $\sigma$ and $i\in\{1,\dots,m+1\}$) and which must have at
+least $2^{m}$ leaves, one per $z$.  A tree with branching $\le b$ and
+$L$ leaves has average leaf depth at least $\log_b L$, so the expected
+number of queries under the uniform $z$ is at least $m/\log_2(m+1)$;
+averaging over the random string preserves the bound.
+\end{proof}
+
+\begin{corollary}[The cost of a game is linear in its controlled set]\label{cor:qm-theta}
+$|\Vmax|\le Q\le|C|+2$ over the stopping SSGs with a given controlled set,
+already for one player: the evaluation-query complexity of finding an
+optimal strategy is $\Theta(|C|)$, and the two bounds differ by at most an
+additive $2$.
+\end{corollary}
+
+\begin{proposition}[Values beat orientations]\label{prop:qm-separation}
+There is a family $\mathcal S$ of stopping SSGs with four Max vertices and
+at most one Min vertex, on at most $152$ vertices, with
+$Q(\mathcal S)=1$ and $Q^{\mathrm{out}}(\mathcal S)=4$.
+\end{proposition}
+
+\begin{proof}
+Every acyclic unique sink orientation of the $3$-cube is the improvement
+orientation of a nondegenerate stopping SSG with three Max vertices and at
+most one Min vertex: \Cref{prop:m3-realised} and \Cref{prop:m3-one-min}
+supply one game per class, and realisability is invariant under the two
+generators of the symmetry group --- renaming Max vertices, and swapping
+the two successors of one Max vertex --- whose orbits of the eighteen
+classes are the $728$ orientations.  For such a game $G_s$ with sink
+$z\in\{0,1\}^{3}$ let $\mathrm{SEP}(s)$ adjoin a disjoint Max vertex $u$
+whose action $0$ enters a chain of five average vertices of value
+$\theta(z):=(2\,\mathrm{idx}(z)+1)/32$ and whose action $1$ enters
+$h\to(t_1,t_0)$.  The two parts do not interact, so
+$\val_\sigma$ splits and the improvement orientation of $\mathrm{SEP}(s)$
+is the product of $s$ with the $1$-cube combed towards action $1$; its
+sink is $(1,z)$.  One evaluation returns $\val_\sigma(u^{(0)})=\theta(z)$,
+from which $z$ is read off, so $Q(\mathcal S)=1$.  An outmap query at
+$(b,\sigma)$ returns $s(\sigma)\cup\{u\ \text{if}\ b=0\}$, so an outmap
+algorithm for $\mathcal S$ is an outmap algorithm for the class of all
+AUSOs of the $3$-cube, whose deterministic query complexity is $4$
+(exhaustive minimax, below).  Hence $Q^{\mathrm{out}}(\mathcal S)\ge4$, and
+$4$ suffices.
+\end{proof}
+
+\begin{remark}\label{rem:qm-separation}
+\Cref{prop:qm-separation} is the exact answer to ``is the value oracle
+stronger than the orientation?''\ and it is a cheap one: the family
+broadcasts its own solution in a value.  The substantial half is
+\Cref{thm:qm-eval}: since $Q\le|C|+2$ unconditionally, \emph{any} class on
+which the outmap oracle provably needs more than $|C|+2$ queries separates
+the two by that margin, and none is known --- for the realisable
+orientations the outmap-query complexity is not known to be superlinear.
+What \Cref{cor:qm-nobarrier} does settle is that the abstraction of
+\Cref{prop:allsw-auso} --- passing from the game to its improvement
+orientation --- is exactly where the exponential lower bounds of this paper
+live.  Discarding the numbers is not a harmless simplification: it is the
+whole source of the difficulty in the cube picture.
+\end{remark}
