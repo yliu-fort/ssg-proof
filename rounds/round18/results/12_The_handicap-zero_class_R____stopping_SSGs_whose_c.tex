@@ -1,0 +1,499 @@
+% Round-18 route "convex-class".  Labels prefixed hz:.
+% Paste-ready, amsthm style of frontier.tex.  The full file is
+% /tmp/claude-1000/-data-ssg-proof/296b18c1-9dc5-4a0b-94cf-9bde3946ecfe/scratchpad/r18-convex-class/hz.tex
+% (497 lines); it is reproduced verbatim below.
+
+\begin{definition}[The tangent-cut mechanism $M_7$]\label{hz:m7}
+Let $G$ be a stopping SSG lying in the class $\mathcal R=\{B\succeq0\}$ of
+\Cref{rem:handicap-base}, $C:=\Vmax\cup\Vmin$, and
+\[
+  q(x)\;:=\;\sum_{v\in C}\bigl(x(v)-x(v^{(0)})\bigr)\bigl(x(v)-x(v^{(1)})\bigr),
+\]
+the complementarity sum of \Cref{thm:transport-objective}, read as a quadratic
+on $\mathbb R^{V}$ with $x(t_0)=0$, $x(t_1)=1$. Write $g_{v,i}$ for the
+nonnegative controlled rows of \Cref{lem:wedge-face}. Start from
+$P_0:=Q(G;L_Z,U_Z)$ with the free $Z$-seed of \Cref{thm:convex-barrier-both}.
+At round $k$:
+\begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.6em]
+\item evaluate $\operatorname{Sep}$ over $P_k$ at the six pairs
+      $(v,v^{(i)})$, $(v^{(i)},v)$, $(v^{(0)},v^{(1)})$, $(v^{(1)},v^{(0)})$
+      of the three readings of \Cref{rem:own-successor} at every $v\in C$, and
+      halt at the first controlled vertex any of them decides;
+\item otherwise, for every $v\in C$, $i\in\{0,1\}$ and every sign pair
+      $(s_1,s_2)\in\{\pm1\}^2$ let $x^{s_1s_2}_{v,i}$ be the lexicographic
+      optimum over $P_k$ of $(s_1g_{v,i},\,s_2x(v))$ --- two linear programmes
+      each --- and put
+      \[
+        P_{k+1}\;:=\;P_k\cap\bigcap_{x}\bigl\{y:\ \nabla q(x)\cdot(y-x)\le-q(x)\bigr\},
+      \]
+      the intersection over those of the $8|C|$ points $x$ with $q(x)>0$. If
+      some $x$ has $q(x)=0$ then $x=w^\ast$ and the game is solved.
+\end{enumerate}
+One round is $O(|C|)$ linear programmes with $N$ variables and $O(N+k|C|)$ rows.
+\end{definition}
+
+\begin{lemma}[The cut is sound, and strict]\label{hz:cut}
+Let $G$ be stopping and let $\mathcal A$ be the affine hull of $Q(G)$, i.e.\ the
+vectors satisfying the average equalities of \Cref{def:transport} and the sink
+pins. For $x,y\in\mathcal A$ and $d:=(y-x)|_C$,
+\[
+  q(y)\;=\;q(x)+\nabla q(x)\cdot(y-x)+d^{\mathsf T}Bd .
+\]
+If $G\in\mathcal R$ then for every $x\in Q(G)$
+\[
+  \nabla q(x)\cdot(w^\ast-x)\;\le\;-q(x)-\|w^\ast-x\|_B^{2}\;\le\;-q(x)\;\le\;0,
+\]
+and $q(x)=0$ for $x\in Q(G)$ if and only if $x=w^\ast$. Hence every cut of
+\Cref{hz:m7} is satisfied by $w^\ast$, and it excludes its own cut point unless
+that point is $w^\ast$. In particular every $P_k$ contains $w^\ast$ and every
+decision $M_7$ makes is correct.
+\end{lemma}
+
+\begin{proof}
+$q$ is a quadratic and, on the direction space of $\mathcal A$ --- which is
+$\Psi(\mathbb R^{C})$ of \Cref{lem:transport-dim} --- its Hessian is $2B$
+(\Cref{rem:handicap-base}); Taylor's formula for a quadratic is the display.
+Every term of $q$ is nonnegative on $Q(G)$ by the controlled rows, so $q\ge0$
+there, and $q(x)=0$ forces $Tx=x$, hence $x=w^\ast$
+(\Cref{thm:transport-objective}). Putting $y=w^\ast$ and using
+$q(w^\ast)=0$, $B\succeq0$ gives the inequality. Soundness of the tests is
+\Cref{thm:transport-sound} applied to $P_k\ni w^\ast$.
+\end{proof}
+
+\begin{theorem}[The wedge lies in $\mathcal R$, and $M_7$ decides it at round one]\label{hz:m7-wedge}
+Let $e\ge1$, $j\ge2$, $m\ge j+2$ and $G:=WD(e,j,m)$ of \Cref{def:wedge}; put
+$\lambda:=1-2^{1-j}$, $\gamma:=2^{-m}$, $\mu:=2\gamma/\lambda$ and
+$\xi_i:=x(v_i)-\tfrac12$. Then
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=2.2em]
+\item $Z_0=\{t_0\}$ and $Z_1=\{t_1\}$, so the free seed is vacuous, and in the
+      coordinates $\xi$ of \Cref{lem:transport-dim}
+      \[
+        Q(G;L_Z,U_Z)=P_0:=\bigl\{\xi\in[0,\tfrac12]^{2}:\
+        \xi_1\ge\lambda\xi_2-2\gamma,\ \xi_2\ge\lambda\xi_1-2\gamma\bigr\},
+      \]
+      with $g_{v_i,0}=2^{-e}\xi_i$ and
+      $g_{v_i,1}=\gamma+\tfrac12(\xi_i-\lambda\xi_{3-i})$;
+\item $q=2^{-e}\bigl[\gamma(\xi_1+\xi_2)+\tfrac12(\xi_1^{2}+\xi_2^{2}-2\lambda\xi_1\xi_2)\bigr]$,
+      so $B=2^{-(e+1)}\left(\begin{smallmatrix}1&-\lambda\\-\lambda&1\end{smallmatrix}\right)\succ0$:
+      \emph{every} member of the wedge family lies in $\mathcal R$, and
+      $\lambda_{\min}(B)=2^{-(e+1)}(1-\lambda)=2^{-(e+j)}$;
+\item the lexicographic minimiser of $(g_{v_1,1},x(v_1))$ over $P_0$ is the
+      vertex $A_5=(0,\mu)$ of \Cref{lem:wedge-verts}; its tangent cut is,
+      after division by $2^{-e}>0$,
+      \[
+        -\gamma\,\xi_1+(\gamma+\mu)\,\xi_2\;\le\;\tfrac12\mu^{2},
+      \]
+      and every $\xi\in P_0$ with $g_{v_1,1}(\xi)=0$ violates it;
+\item consequently $\min_{P_1}g_{v_1,1}>0$, that is
+      $\operatorname{Sep}(v_1,b_1)<0$, and clause \textup{(ii)} of
+      \Cref{rem:own-successor} decides $v_1$; symmetrically $A_1=(\mu,0)$
+      decides $v_2$. $M_7$ halts at round one at both Max vertices, for every
+      admissible $(e,j,m)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) All values of $WD$ lie in $[\tfrac14,\tfrac12]$ off the sinks
+(\Cref{def:wedge} and $m\ge j+2$), so $Z_0=\{t_0\}$, $Z_1=\{t_1\}$ and
+$L_Z=0$, $U_Z=\bbone$. The average rows of \Cref{def:transport} pin the
+chains: $x(a_{i,q})=\tfrac12(x(v_i)+x(a_{i,q+1}))$ and $x(a_{i,e})=\tfrac12(x(v_i)+x(H))$
+give $x(a_{i,1})=(1-2^{-e})x(v_i)+2^{-e}x(H)$, and the $w$-chain is closed
+under successors, so \Cref{lem:transport-exact} pins $x(H)=\tfrac12$ and
+$x(w_1)=\tfrac12-2^{\,j-m}$; then
+$x(c_{i,1})=\lambda x(v_{3-i})+(1-\lambda)x(w_1)$ and
+$x(b_i)=\tfrac12(x(v_i)+x(c_{i,1}))$. Substituting $x(v_i)=\tfrac12+\xi_i$ and
+$1-\lambda=2^{1-j}$ gives
+$x(v_i)-x(a_{i,1})=2^{-e}\xi_i$ and
+$x(v_i)-x(b_i)=\tfrac12(\xi_i-\lambda\xi_{3-i})+2^{-m}$. The two Max rows at
+$v_i$ are therefore $\xi_i\ge0$ and $\xi_i\ge\lambda\xi_{3-i}-2\gamma$; every
+other row of $Q(G)$ is an average equality (already used) or a box constraint
+$0\le x\le1$, and each of the pinned coordinates is a convex combination of
+$x(v_1),x(v_2)$ and constants in $[0,1]$, hence lies in $[0,1]$ as soon as
+$x(v_i)$ does. So $P_0$ is as displayed.
+
+(b) is (a) summed, and $\lambda<1$ makes the two eigenvalues
+$2^{-(e+1)}(1\mp\lambda)$ positive.
+
+(c) $\min_{P_0}g_{v_1,1}=0$: the constraint $\xi_1\ge\lambda\xi_2-2\gamma$ is
+tight exactly on $F:=\{(\lambda t-2\gamma,t):\mu\le t\le\tfrac12\}$, which is
+nonempty because $\mu=2\gamma/\lambda\le2^{-j}\le\tfrac14$
+(using $\lambda\ge\tfrac12$ and $m\ge j+2$), and $F\subseteq P_0$. Among the
+minimisers $F$ the least $x(v_1)$ is $\xi_1=0$, attained only at $t=\mu$, i.e.\
+at $A_5=(0,\mu)$. There $\nabla q=2^{-e}(\gamma+\xi_1-\lambda\xi_2,\
+\gamma+\xi_2-\lambda\xi_1)=2^{-e}(-\gamma,\ \gamma+\mu)$ and
+$q(A_5)=2^{-e}(\gamma\mu+\tfrac12\mu^{2})>0$, so
+$\nabla q(A_5)\cdot(\xi-A_5)\le-q(A_5)$ reads
+$-\gamma\xi_1+(\gamma+\mu)\xi_2\le\mu(\gamma+\mu)-\gamma\mu-\tfrac12\mu^{2}=\tfrac12\mu^{2}$.
+On $F$, with $\xi_1=\lambda t-2\gamma$ and $\xi_2=t\ge\mu$, the left side is
+\[
+  -\gamma(\lambda t-2\gamma)+(\gamma+\mu)t
+  \;=\;t\bigl(\gamma(1-\lambda)+\mu\bigr)+2\gamma^{2}
+  \;\ge\;\mu^{2}+\mu\gamma(1-\lambda)+2\gamma^{2}\;>\;\tfrac12\mu^{2},
+\]
+so no point of $F$ survives the cut.
+
+(d) $P_1\subseteq P_0$ is compact and contains $w^\ast$ ($\xi=0$, which
+satisfies the cut since $0\le\tfrac12\mu^{2}$), and $g_{v_1,1}\ge0$ on $P_0$
+vanishes only on $F$, which (c) removes; so $\min_{P_1}g_{v_1,1}>0$, i.e.\
+$\max_{P_1}(x(b_1)-x(v_1))<0$. The index exchange $1\leftrightarrow2$ is an
+automorphism of $WD$ and carries $A_5$ to $A_1$.
+\end{proof}
+
+\begin{corollary}[No chain of convex sets bounds $M_7$]\label{hz:escape}
+Let $j\ge2$, $e\ge2j-1$, $m\ge j+2$, and let $(P_k)_{k\le K}$ be the wedge
+chain of \Cref{def:wedge-chain}, for which \Cref{thm:wedge-proved} gives
+$\Delta_k\ge\Lambda(P_k)$ and silence of \Cref{def:slack},
+\Cref{def:trans-slack}, \Cref{def:transport} and \Cref{def:hybrid} at both Max
+vertices for all $k\le K$, with $K\ge2^{(N-15)/6}$ (\Cref{cor:wedge-count}).
+Then for every $k\le K$ the vertex $A_4^{(k)}=(M_{k+1},M_k)$ of $P_k$
+(\Cref{lem:wedge-verts}) violates the cut of \Cref{hz:m7-wedge}(c). Hence
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=2.2em]
+\item $P_{k+1}\not\subseteq\{y:\nabla q(A_5)\cdot(y-A_5)\le-q(A_5)\}$, so the
+      step \textup{(D3)} of the induction of \Cref{thm:convex-barrier-both} ---
+      which needs $P_{k+1}\subseteq K(\Delta)$ --- fails for the tangent-cut
+      operator, at every $k$ and for this chain;
+\item and the conclusion fails too: the chain certifies $2^{\Omega(N)}$ silence
+      of every run of the operators \textup{(D1)}--\textup{(D7)}, while $M_7$
+      decides both Max vertices at round one (\Cref{hz:m7-wedge}).
+\end{enumerate}
+So the tangent cut cannot be adjoined to \textup{(D1)}--\textup{(D7)}, and the
+convex-certificate method of
+\Cref{thm:hybrid-convex-barrier,thm:convex-barrier-both} --- whose certificates
+are nested convex \emph{sets} --- does not bound a mechanism that uses the
+tangent halfspaces of a convex \emph{function} vanishing at $w^\ast$.
+\end{corollary}
+
+\begin{proof}
+At $A_4^{(k)}=(M_{k+1},M_k)$ one has $\xi_1=\lambda\xi_2-2\gamma$ by
+$M_{k+1}=\lambda M_k-2\gamma$, and $M_k\ge\mu^{\dagger}>\mu$
+(\Cref{lem:wedge-verts}), so $A_4^{(k)}\in F$ and the computation in
+\Cref{hz:m7-wedge}(c) applies verbatim. For (a), $A_4^{(k)}$ is a vertex of
+$P_k$ and $P_{k+1}\ni A_4^{(k+1)}$, which is again in $F$; both are excluded.
+(b) is \Cref{thm:wedge-proved} against \Cref{hz:m7-wedge}(d).
+\end{proof}
+
+\begin{proposition}[Where the published stalls sit relative to $\mathcal R$]\label{hz:stalls}
+$G_8$, $S$, $S_r$ and $H_m$ have $|C|=1$ and lie in $\mathcal R$ with
+$B=(1-p_0)(1-p_1)>0$; $CC(L,m)$ lies in $\mathcal R$ with
+$B=4^{-L}I-\tfrac{2^{L}-1}{2^{3L}}(J-I)$ and
+$\lambda_{\min}(B)=2^{-3L}$; $WD(e,j,m)$ lies in $\mathcal R$ for every
+admissible triple (\Cref{hz:m7-wedge}). Measured, in exact arithmetic: the
+ten-vertex $R$ of \Cref{prop:own-stall}, the seven-vertex both-readings stall
+of \Cref{rem:own-stall}, $\mathrm{BC}(2,s)$ for $s=5,6,7$ and
+$\mathrm{CV}(1,3)$ lie in $\mathcal R$, while $G^{\ast}$, $\mathrm{NCX}$,
+$\mathrm{BC}(e,s)$ for $e\ge3$, $\mathrm{CV}(e,s)$ for $e\ge2$ and every known
+realisation of a blow-up level ($B^{1}$ on $58$ vertices, $B^{2}$ on $137$,
+$138$ and $155$) do not. $M_7$ decides the seven-vertex both-readings stall and
+$\mathrm{BC}(2,s)$, $s=5,6,7$, at round one, and $H_m$, $CC(L,m)$, $G_8$, $S$,
+$S_r$ and the ten-vertex $R$ at round zero.
+\end{proposition}
+
+\begin{proof}
+For $|C|=1$, $B=(1-p_0)(1-p_1)$ with $p_a<1$ because a first-passage
+probability $1$ back to the only controlled vertex would make the profile
+choosing that action non-absorbing. For $CC(L,m)$ (\Cref{thm:hybrid-lower})
+the chain $A_i=\mathrm{ch}(L,v_{3-i},e)$ delivers mass $1-2^{-L}$ to
+$v_{3-i}$ and $B_i=\mathrm{ch}(2L,v_i,d_1)$ mass $1-4^{-L}$ to $v_i$, so
+$P_0=(1-2^{-L})(J-I)$, $P_1=(1-4^{-L})I$, $R_1=4^{-L}I$ and
+$B=\operatorname{sym}(R_0^{\mathsf T}R_1)=4^{-L}R_0$, which is the stated
+matrix, with eigenvalues $4^{-L}(1\mp(1-2^{-L}))$ and least eigenvalue
+$2^{-3L}$. For $WD$ see \Cref{hz:m7-wedge}(b). The remaining memberships and
+the firing rounds were computed exactly from the games ($H_m$, $m\le7$;
+$CC(L,m)$, $L\le5$; $\mathrm{BC}(2,s)$, $s=5,6,7$; $\mathrm{BC}(e,5)$ and
+$\mathrm{CV}(e,s)$ for $e\le3$; $G^{\ast}$; the round-$17$ game files
+$\mathrm{CVX}_4$, $\mathrm{CVX}_6$, $\mathrm{NCX}$; the blow-up realisations
+$B^{1}$ on $58$ and $B^{2}$ on $137,138,155$ vertices).
+\end{proof}
+
+\begin{definition}[The two-player family $\mathrm{HZ}(n)$]\label{hz:ring}
+For even $n\ge4$ put $s:=n$, $D:=n^{2}$. $\mathrm{HZ}(n)$ has
+\begin{itemize}[leftmargin=1.6em]
+\item controlled vertices $c_{i,j}$, $i,j\in\mathbb Z_n$, with $c_{i,j}\in\Vmax$
+      if $i+j$ is even and $c_{i,j}\in\Vmin$ if $i+j$ is odd;
+\item average \emph{bridges} $b^{0}_{i,j}\to(c_{i+1,j},h^{0}_{i,j})$ and
+      $b^{1}_{i,j}\to(c_{i,j+1},h^{1}_{i,j})$, and
+      $c_{i,j}\to(b^{0}_{i,j},b^{1}_{i,j})$;
+\item $n$ disjoint \emph{slow blocks} $\mathrm{SL}_i$, each a copy of the
+      player-free family $G_s$ of \Cref{thm:vi-lower}
+      ($\mathrm{SL}_i=\{p^{i}_1,\dots,p^{i}_{2s}\}$, all average,
+      $p^{i}_r\to(o_r,p^{i}_{r+1})$ for $r<2s$ with $o_r=p^{i}_1$ for $r<s$,
+      $t_1$ for $r=s$ and $t_0$ for $s<r<2s$, and $p^{i}_{2s}\to(t_0,t_1)$);
+\item one \emph{depth chain} $d_1,\dots,d_D$, average, $d_q\to(d_{q+1},t_0)$
+      for $q<D$ and $d_D\to(t_1,t_0)$;
+\end{itemize}
+with $h^{1}_{i,0}:=p^{i}_1$, $h^{0}_{0,0}:=d_1$, and otherwise
+$h^{0}_{i,j}:=t_1$ if $i+2j\equiv0\ (3)$ else $t_0$, and
+$h^{1}_{i,j}:=t_1$ if $i+2j+1\equiv0\ (3)$ else $t_0$. Start vertex $c_{0,0}$.
+Then $N=6n^{2}+2$, $a=5n^{2}$, $|\Vmax|=|\Vmin|=n^{2}/2$.
+\end{definition}
+
+\begin{proposition}[$\mathrm{HZ}(n)$ is a two-player member of $\mathcal R$ outside the eight classes]\label{hz:ring-out}
+$\mathrm{HZ}(n)$ is stopping, every non-sink is reachable from $c_{0,0}$, and
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.4em]
+\item its first-passage matrices over $C$ are
+      $P_0=\tfrac12\Pi_0$ and $P_1=\tfrac12\Pi_1$ with $\Pi_0,\Pi_1$ the two
+      commuting shift permutations of $\mathbb Z_n\times\mathbb Z_n$, so
+      $B$ is the circulant with eigenvalues
+      $1-\tfrac12(\cos\theta_p+\cos\theta_q)+\tfrac14\cos(\theta_p-\theta_q)$,
+      $\theta_p=2\pi p/n$; the minimum of that function over
+      $(\theta_p,\theta_q)\in\mathbb R^{2}$ is $\tfrac14$, attained at
+      $\theta_p=\theta_q=0$. Hence $\mathrm{HZ}(n)\in\mathcal R$ with
+      $\lambda_{\min}(B)=\tfrac14$, independent of $n$;
+\item $|\Vmax|=|\Vmin|=n^{2}/2=\Theta(N)$, so neither the enumeration of the
+      smaller player's strategies (\Cref{thm:bsi-tracks}) nor
+      \Cref{thm:subexp} ($e^{2\sqrt{n^{2}/2}}=e^{\Theta(\sqrt N)}$) is
+      polynomial;
+\item $a=5n^{2}=\tfrac56(N-2)$, so \Cref{thm:few-avg} gives $2^{\Theta(N)}$;
+\item $w^\ast(d_1)=2^{-n^{2}}$, so by \Cref{lem:descent-refined}
+      $d(\sigma^{\ast})\ge\log_2(1/w^\ast(d_1))=n^{2}$ for \emph{every}
+      optimal $\sigma^{\ast}$, whence $d(G)\ge n^{2}=\Theta(N)$ and
+      \Cref{thm:few-escape} gives $2^{\Theta(N)}$; and the common denominator
+      satisfies $2^{n^{2}}\mid D(G)$, so \Cref{thm:few-denominator} gives
+      $4^{\Theta(N)}$;
+\item every row $R_i:=\{c_{i,j},b^{1}_{i,j}:j\in\mathbb Z_n\}$ is a directed
+      cycle carrying $n/2$ Max, $n/2$ Min and $n$ average vertices, so no
+      colour is acyclic and \Cref{thm:kacyclic} (hence
+      \Cref{thm:avg-acyclic,thm:player-free,thm:one-player}) does not apply;
+      the torus part is strongly connected, so all $n^{2}/2$ Max vertices are
+      mutually reachable, $H(G)$ of \Cref{def:maxreach} is a single strongly
+      connected component of size $n^{2}/2$, and
+      \Cref{thm:bounded-components} gives $2^{\Theta(N)}$;
+\item every escape certificate $(\lambda,x)$ of $\mathrm{HZ}(n)$ has
+      $\lambda>1-2^{1-s}=1-2^{1-n}$, so
+      $\log_2(1/\lambda)<2^{1-n}=2^{-\Theta(\sqrt N)}$ and
+      \Cref{thm:escape-class} gives $2^{\Theta(\sqrt N)}$;
+\item the $n$ rows $R_i$ and the $n$ slow blocks $\mathrm{SL}_i$ are pairwise
+      disjoint, so the feedback vertex number, $\mu_{\max}$, $\mu_{\min}$,
+      $\mu_{\mathrm{avg}}$, $\mu_{\mathcal K_k}$ for every $k<n/2$, and
+      $\mu_{\mathcal P}$ for $\mathcal P$ the escape class of any fixed rate
+      $\lambda_0\le1-2^{1-n}$, are all at least $n$; and
+      $\mu_{\{a\le a_0\}}\ge5n^{2}-a_0$. So \Cref{thm:modulator} gives
+      $N^{\Theta(\sqrt N)}$ for each of its freezing-closed classes;
+\item every $X\subseteq V$ with $|X|<2n/5$ leaves a connected component of
+      $\Gamma(\mathrm{HZ}(n))-X$ with more than half the non-terminals, so the
+      treewidth is at least $2n/5-1=\Theta(\sqrt N)$ and \Cref{thm:qp} gives
+      $N^{\Theta(\sqrt N\log N)}$.
+\end{enumerate}
+$\mathrm{HZ}(n)$ therefore lies in $\mathcal R$ and, as posed and on the
+subgame reachable from its start vertex, in none of the eight polynomial
+classes of this document, nor in the quasipolynomial class of \Cref{thm:qp}.
+\end{proposition}
+
+\begin{proof}
+\emph{Stopping and reachability.} Each bridge has a successor outside every
+trap (a sink, or the head of a slow block or of the depth chain, both of which
+are trap-free by the cascade of \Cref{lem:trapchar} run from their last
+vertex), so no bridge lies in a trap, and then no controlled vertex does; the
+greatest trap is empty. The torus is strongly connected, so all $c_{i,j}$ and
+their bridges are reached from $c_{0,0}$, and $\mathrm{SL}_i$, $d_1$ hang off
+bridges.
+
+(i) A bridge $b^{a}_{i,j}$ sends the token to its controlled target with
+probability $\tfrac12$ and otherwise to a sink or into a block containing no
+controlled vertex; so the first-passage row of action $a$ at $c_{i,j}$ is
+$\tfrac12$ at $\pi_a(c_{i,j})$ and nothing else, i.e.\ $P_a=\tfrac12\Pi_a$ with
+$\Pi_0,\Pi_1$ the shifts $(i,j)\mapsto(i+1,j)$, $(i,j)\mapsto(i,j+1)$. They
+commute and are simultaneously diagonalised by the characters
+$\chi_{p,q}(i,j)=\omega^{pi+qj}$, $\omega=e^{2\pi\mathrm i/n}$, with eigenvalues
+$\omega^{p},\omega^{q}$; $B=I-\operatorname{sym}(P_0+P_1)+\operatorname{sym}(P_0^{\mathsf T}P_1)$
+therefore has eigenvalue
+$f(\theta_p,\theta_q)=1-\tfrac12(\cos\theta_p+\cos\theta_q)+\tfrac14\cos(\theta_p-\theta_q)$.
+The critical points of $f$ satisfy $\sin a+\sin b=0$; on $b=-a$ they reduce to
+$\sin a\,(1-\cos a)=0$, giving $f=\tfrac14$ at $a=0$ and $f=\tfrac94$ at
+$a=\pi$; on $b=a+\pi$ they give $\sin a=0$ and $f=\tfrac34$. So
+$\min f=\tfrac14$.
+
+(iv) $w^\ast(d_q)=\tfrac12w^\ast(d_{q+1})$ and $w^\ast(d_D)=\tfrac12$ give
+$w^\ast(d_1)=2^{-D}$. By \Cref{lem:descent-refined} the play from $d_1$ under
+any optimal $\sigma^{\ast}$ reaches $t_1$ with probability at least
+$2^{-A_{\sigma^\ast}(d_1)}$, so $w^\ast(d_1)\ge2^{-A_{\sigma^{\ast}}(d_1)}$ and
+$d(\sigma^{\ast})\ge A_{\sigma^{\ast}}(d_1)\ge D$; minimising over
+$\sigma^{\ast}$ gives $d(G)\ge D=n^{2}$. The denominator claim is
+$w^\ast(d_1)=2^{-n^{2}}$.
+
+(vi) Let $(\lambda,x)$ be an escape certificate. $\mathrm{SL}_i$ consists of
+average vertices whose successors lie in $\mathrm{SL}_i\cup\{t_0,t_1\}$, so for
+$r<s$ the inequality $Sx\le\lambda x$ reads
+$\lambda x_r\ge\tfrac12(x_1+x_{r+1})$ (indices inside $\mathrm{SL}_i$). Put
+$u:=2\lambda$ and $b_r:=x_r/x_1$; then $b_1=1$ and $b_{r+1}\le ub_r-1$, so
+$b_r\le a_r$ where $a_1=1$, $a_{r+1}=ua_r-1$, i.e.\
+$a_r=(u^{r-1}(u-2)+1)/(u-1)$ for $u\ne1$. Since $x\ge\bbone$ we need
+$a_r>0$ for $r\le s$. If $u\le1$ then $a_{r+1}\le a_r-1$ and $a_2\le0$; so
+$u>1$, and then $a_s>0$ is $g(u):=u^{s-1}(2-u)<1$. On $(1,2)$, $g(1)=1$, $g$
+increases up to $u=2-2/s$ and decreases after, and
+$g(2-2^{2-s})=2(1-2^{1-s})^{s-1}\ge2(1-(s-1)2^{1-s})>1$ for $s\ge4$; so
+$g(u)<1$ forces $u>2-2^{2-s}$, i.e.\ $\lambda>1-2^{1-s}$.
+
+(vii) The $n$ rows are pairwise disjoint directed cycles carrying vertices of
+all three kinds, and the $n$ slow blocks are pairwise disjoint; freezing
+retypes vertices as terminals and so only deletes edges. A set $X$ with
+$|X|<n$ misses some row --- which is then still a cycle through $n/2$ Max, $n/2$
+Min and $n$ average vertices, so the frozen game is acyclic for no colour, is
+not acyclic, and has an $H$-component with $n/2$ Max vertices --- and misses
+some $\mathrm{SL}_i$, whose vertices and rows are untouched, so (vi) applies to
+the frozen game verbatim.
+
+(viii) Suppose $|X|=t<2n/5$. Call row $i$ \emph{clean} if
+$X\cap(R_i\cup \mathrm{SL}_i)=\emptyset$ and column $j$ clean if
+$X\cap C_j=\emptyset$, $C_j:=\{c_{i,j},b^{0}_{i,j}:i\}$; there are at least
+$n-t$ of each. In $\Gamma(G)$ a clean row is connected, contains its slow
+block ($p^{i}_1$ is a successor of $b^{1}_{i,0}\in R_i$), and meets every clean
+column at a vertex of both; so all clean rows and columns lie in one component
+$W$, and
+$|W|\ge(n-t)(2n+2s)+(n-t)n=5n(n-t)$, counting each clean row's $n$ controlled
+and $n$ bridge vertices and $2s=2n$ slow-block vertices, and each clean
+column's $n$ vertices $b^{0}_{i,j}$, which lie in no row. Since
+$5n(n-t)>3n^{2}=\tfrac12(N-2)$ for $t<2n/5$, no such $X$ is a balanced
+separator, and by the bag-selection step in the proof of \Cref{thm:qp} a tree
+decomposition of width $k$ supplies a balanced separator of size $k+1$; hence
+$k+1\ge2n/5$.
+
+Everything else is a count. Stopping, reachability, $B$ and its least
+eigenvalue, $w^\ast$ (by strategy iteration on the reduced system over $C$,
+certified by $Tw=w$, which certifies because the game is stopping,
+\Cref{thm:contraction}), $D(G)$, the strongly connected components and the
+single $H$-component were recomputed exactly for $n=4,6,8$
+($N=98,218,386$).
+\end{proof}
+
+\begin{remark}[What $\lambda_{\min}(B)$ does and does not buy]\label{hz:cond}
+On $\mathcal R$ the first-order route to minimising $q$ over $Q(G)$ is blocked
+quantitatively, not only in principle. By \Cref{hz:m7-wedge}(b) and
+\Cref{hz:stalls}, $\lambda_{\min}(B)=2^{-(e+j)}$ on $WD(e,j,m)$ and $2^{-3L}$
+on $CC(L,m)$, both $2^{-\Theta(N)}$, while $\operatorname{diam}Q(G)\le\sqrt{|C|}$;
+so every convergence bound of the shape
+$O\bigl((L_q/\lambda_{\min})(\operatorname{diam}/\delta)^{2}\log(1/\varepsilon)\bigr)$
+--- the away-step form, whatever the pyramidal width $\delta$ --- is
+$2^{\Omega(N)}$ on members of $\mathcal R$, and this is not an artefact of
+small $|C|$: the same games are the paper's hardest propagation stalls.
+Conversely $\lambda_{\min}(B)=\tfrac14$ on $\mathrm{HZ}(n)$
+(\Cref{hz:ring-out}(i)), so strong convexity is not what separates the easy
+members from the hard ones. The exactness threshold is
+$\varepsilon<\lambda_{\min}2^{-4a}$: by \Cref{hz:cut},
+$q(x)\ge\|x-w^\ast\|_B^{2}$ on $Q(G)$, so an $\varepsilon$-minimiser is within
+$\sqrt{\varepsilon/\lambda_{\min}}$ of $w^\ast$ and
+\Cref{lem:round-recover} then returns $w^\ast$ exactly.
+\end{remark}
+
+\begin{proposition}[The cut is a perpendicular bisector against $w^{\ast}$]\label{hz:bisector}
+Let $G$ be stopping, $G\in\mathcal R$, and $x\in Q(G)$. For $y$ in the affine
+hull of $Q(G)$ write $\|y\|_B^{2}:=(y|_C)^{\mathsf T}B(y|_C)$. Then
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=2.2em]
+\item $y$ survives the tangent cut at $x$ if and only if
+      $\|y-x\|_B^{2}\ge q(y)$;
+\item $q(y)\ge\|y-w^\ast\|_B^{2}$ for every $y\in Q(G)$;
+\item consequently
+      \[
+        P_{k+1}\ \subseteq\ \bigcap_{x}\bigl\{y:\ \|y-w^\ast\|_B\le\|y-x\|_B\bigr\},
+      \]
+      the intersection over the round's cut points: \emph{every point of the
+      programme strictly $B$-closer to a cut point than to $w^{\ast}$ is
+      removed}. Equivalently, each cut contains the halfspace
+      $\bigl\langle y,\,x-w^\ast\bigr\rangle_B\le\bigl\langle\tfrac12(x+w^\ast),\,x-w^\ast\bigr\rangle_B$,
+      whose boundary passes through the $B$-midpoint of $x$ and $w^{\ast}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) By \Cref{hz:cut}, $q(y)=q(x)+\nabla q(x)\cdot(y-x)+\|y-x\|_B^{2}$, so
+$\nabla q(x)\cdot(y-x)\le-q(x)$ is $q(y)-\|y-x\|_B^{2}\le0$.
+(b) $q\ge0$ on $Q(G)$ with $q(w^\ast)=0$, so $\nabla q(w^\ast)\cdot(y-w^\ast)\ge0$
+for $y\in Q(G)$; substituting in the same expansion at $x=w^\ast$ gives
+$q(y)\ge\|y-w^\ast\|_B^{2}$.
+(c) If $\|y-x\|_B<\|y-w^\ast\|_B$ then $\|y-x\|_B^{2}<q(y)$ by (b), so $y$ is
+removed by (a). The displayed halfspace is
+$\|y-w^\ast\|_B^{2}\le\|y-x\|_B^{2}$ expanded.
+\end{proof}
+
+\begin{remark}[What \Cref{hz:bisector} is, and the exact gap]\label{hz:gap}
+\Cref{hz:bisector} is a separation oracle for the singleton
+$Q(G)\cap\{q\le0\}=\{w^\ast\}$ that is stronger than a supporting hyperplane
+at the query point: the returned halfspace already passes through the
+$B$-midpoint of the query point and the unknown $w^{\ast}$, and it is
+computed from the game by one gradient evaluation. What is missing for a
+polynomial algorithm on $\mathcal R$ is a rule for choosing polynomially many
+cut points per round under which the $B$-diameter of $P_k$ falls by a constant
+factor; by \Cref{hz:cond} that would give $w^{\ast}$ exactly after
+$O(a+\log N)$ rounds. Precisely:
+\begin{quote}
+\emph{Missing statement.} There is a polynomial-time rule assigning to a
+polytope $P\subseteq\mathbb R^{C}$ given by an explicit system of linear
+inequalities a set of $\mathrm{poly}(N)$ points of $P$, computable by linear
+programming, such that the intersection of $P$ with the bisector halfspaces of
+\Cref{hz:bisector} at those points has $B$-diameter at most half that of $P$,
+for every $w^{\ast}\in P$.
+\end{quote}
+Two remarks on what this is not. First, the classical route --- exact convex
+quadratic programming over a rational polytope in polynomial time --- would
+settle $\mathcal R$ at once, and $\mathcal R$ is then a polynomial class in the
+ordinary sense; but that theorem (Kozlov--Tarasov--Khachiyan; from memory,
+unchecked against the source) is not proved in this document and would be a
+fifth import. Second, the ellipsoid method is not directly available even with
+the oracle, because the feasible set $Q(G)\cap\{q\le0\}$ is the single point
+$w^{\ast}$ and has no volume; the oracle of \Cref{hz:bisector} is what
+replaces the volume argument, and it is why the missing statement is about
+$B$-diameter and not about volume.
+\end{remark}
+
+\begin{proposition}[$B$ can be singular on a stopping game in $\mathcal R$]\label{hz:singular}
+Let $G$ be the stopping SSG on $\{0,\dots,5\}$ with $t_0=6$, $t_1=7$,
+$\Vmin=\{0,1\}$, $\Vmax=\{2,3\}$, $\Vavg=\{4,5\}$ and
+$0\to(t_1,3)$, $1\to(t_0,5)$, $2\to(t_1,4)$, $3\to(1,2)$, $4\to(t_0,2)$,
+$5\to(1,t_0)$. Every vertex is reachable from $0$,
+$w^\ast=(1,0,1,1,\tfrac12,0)$, the value-distinguishing controlled vertices are
+$2$ and $3$, and over $C=(0,1,2,3)$
+\[
+  P_0=\begin{psmallmatrix}0&0&0&0\\0&0&0&0\\0&0&0&0\\0&1&0&0\end{psmallmatrix},\qquad
+  P_1=\begin{psmallmatrix}0&0&0&1\\0&\frac12&0&0\\0&0&\frac12&0\\0&0&1&0\end{psmallmatrix},\qquad
+  B=\begin{psmallmatrix}1&0&0&-\frac12\\0&\frac12&\frac12&-\frac12\\
+  0&\frac12&\frac12&-\frac12\\-\frac12&-\frac12&-\frac12&1\end{psmallmatrix},
+\]
+so $B\succeq0$ and $Bd=0$ for $d=\epsilon_1-\epsilon_2$: $G\in\mathcal R$ and
+$\lambda_{\min}(B)=0$. Hence on $\mathcal R$ the bound
+$q(x)\ge\|x-w^\ast\|_B^{2}$ of \Cref{hz:bisector}(b) does not localise
+$w^{\ast}$ in the kernel directions of $B$, and any first-order method for
+\textup{(A)} must handle a singular Hessian; in particular the strong-convexity
+hypothesis of the away-step form is not merely exponentially weak
+(\Cref{hz:cond}) but sometimes absent.
+\end{proposition}
+
+\begin{proof}
+Stopping and the values are immediate ($5\to(1,t_0)$ and $1\to(t_0,5)$ give
+$w^\ast(1)=w^\ast(5)=0$; $4\to(t_0,2)$ and $2\to(t_1,4)$ give
+$w^\ast(2)=1$, $w^\ast(4)=\tfrac12$; then $w^\ast(3)=\max(0,1)=1$ and
+$w^\ast(0)=\min(1,1)=1$). The first-passage rows are read off the graph, and
+rows $1$ and $2$ of $B$ coincide. Everything was recomputed in exact
+arithmetic.
+\end{proof}
+
+\begin{remark}[Closure of $\mathcal R$ under \Cref{def:damping}: still open]\label{hz:damping}
+Damping is the substitution $\varrho:=1-2^{-m}$ of \Cref{rem:discount-path}, and
+in the reduced coordinates it has a clean form: writing $Q_a$ for the
+transition matrix on the non-sinks under the profile ``all controlled vertices
+play $a$'', $A:=(I-E)Q$ for the average block and $E$ for the projector on $C$,
+one has $P_a^{\varrho}=\varrho\,EQ_a(I-\varrho A)^{-1}E$ and hence
+$I-P_a^{\varrho}=E(I-\varrho Q_a)(I-\varrho A)^{-1}E$, so with
+$Y_\varrho:=(I-\varrho A)^{-1}E$
+\[
+  B_\varrho\;=\;Y_\varrho^{\mathsf T}\,
+  \operatorname{sym}\bigl((I-\varrho Q_0)^{\mathsf T}E(I-\varrho Q_1)\bigr)\,Y_\varrho ,
+\]
+a congruence by a factor whose \emph{range} --- the graph of the
+$\varrho$-harmonic extension --- moves with $\varrho$; equivalently
+$d^{\mathsf T}B_\varrho d=\sum_{v\in C}(y(v)-\varrho y(v^{(0)}))(y(v)-\varrho y(v^{(1)}))$
+over the $\varrho$-harmonic $y$ with $y|_C=d$. That is why $B_1\succeq0$ does
+not visibly imply $B_\varrho\succeq0$: the form and the subspace move together.
+No counterexample exists among $80\,000$ random small stopping games
+(1352 of them in $\mathcal R$, 311 with a leading principal minor below
+$\tfrac1{20}$), each damped at $m=1,\dots,8$, in exact arithmetic; nor among
+the round-$17$ sample. The statement
+\begin{quote}
+\emph{Missing statement.} If $B\succeq0$ for a stopping SSG $G$ then
+$B_\varrho\succeq0$ for the damped game $G_m$, $\varrho=1-2^{-m}$, for every
+$m\ge1$.
+\end{quote}
+is therefore neither proved nor refuted here. (Note that a route reporting a
+counterexample must number the fresh chain vertices \emph{after} carrying the
+old sinks as sentinels: the first version of the computation here numbered a
+chain head at the old $t_0$ and produced three spurious counterexamples.)
+\end{remark}

@@ -1,0 +1,118 @@
+{
+ "target": "Route \"rlt-two\": The level-two choice lift: an integrality gap engineered from the level-one obstruction, or an exactness theorem on a named class",
+ "sound": false,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "rl:modulator \u2014 the certifiable level is a freezing-modulator number",
+   "defect": "FALSE AS STATED. The result equivocates between two different freezing operations and its displayed inequality does not follow. thm:modulator's freezing is RETYPING a vertex as a terminal with an ARBITRARY payoff theta, so 'A is a freezing modulator into M' means M(G[A:=theta]) transient for every theta, i.e. the principal submatrix M restricted to C\\A is transient. rl:levels needs the strictly stronger 'M^{A,p} transient for every p in {0,1}^A' (freezing to an ACTION). Transience of M^{A,p} implies transience of its principal submatrix M_{C\\A}, never the converse, so nu(G) >= mu_M(G) and the display '(first exact level) <= 1 + mu_M(G)' is UNPROVED \u2014 rl:levels only gives <= 1 + nu(G). Under the other reading (freeze to an action) the identification is correct but thm:modulator's N^{O(mu)} Tarski algorithm does not apply at all, the conclusion 'the lift is never the cheaper of the two' collapses, and what remains is verbatim the sentence already in rem:choice-lift ('it would in any case be dominated by enumerating the 2^rho choices of the smaller side and solving one-player games, so no class comes of it'). Either way rl:modulator is not a result, and it is the route's headline sentence ('the first exact level, wherever it can be bounded at all, is thm:modulator's number in disguise').",
+   "evidence": "Computed exactly (fractions.Fraction, transience by the least nonnegative solution of y = My + 1 with a Neumann cross-check) on the route's OWN family T_d(3,1/4), in /tmp/claude-1000/-data-ssg-proof/296b18c1-9dc5-4a0b-94cf-9bde3946ecfe/scratchpad/r18-audit-rlt-two-nov/v6.py: d=1 mu_M=1, nu=1; d=2 mu_M=1 (A={root}), nu=3 (A={0,1,2}); d=3 mu_M=1, nu=7. The gap is exponential in d on the route's own witness. Consequence: rl:modulator's display applied to T_2 would prove 'first exact level of T_2 <= 2', i.e. R_2(T_2) = {w*} \u2014 which the route itself lists under verification as 'NOT proved'. The route's own code confirms which number it computes: topo.mu is min|A| such that rho_ge_one(frozen_merged(R,A,p)) fails for every action pattern p, i.e. nu, not mu_M."
+  },
+  {
+   "severity": "major",
+   "result_name": "rl:modulator \u2014 the certifiable level is a freezing-modulator number",
+   "defect": "FABRICATED ATTRIBUTION plus a miscitation. The LaTeX asserts 'This is the answer to the question left open in rem:choice-lift', and the structured why_not_implied quotes rem:choice-lift as asking 'is the first exact level the modulator number in disguise?'. No such question exists. rem:choice-lift (l.14981-15005) records only the round-17 rho_max claim, says it 'did not prove' it, and dismisses it; it never mentions a modulator. Separately, rl:modulator cites def:freeze for 'freezing c in C to its action i', but def:freeze (l.10136) declares AVERAGE vertices terminal with payoff val_sigma \u2014 it does not freeze a controlled vertex to an action.",
+   "evidence": "grep -n 'in disguise' frontier.tex returns one hit, l.14176, unrelated (branch compensation); 'modulator' does not occur anywhere between l.14981 and l.15010. def:freeze read in full at l.10136-10144."
+  },
+  {
+   "severity": "major",
+   "result_name": "rl:merge / rl:levels / rl:splitters \u2014 significance",
+   "defect": "Every proved statement is confined to Vmin = empty, where R_j-exactness has NO algorithmic content (thm:one-player already returns w* by one LP \u2014 the route says so, honestly, in restatement 1). Worse, on the paper's own instance list the transience criterion fires only where the answer is already free: mu = 0 holds exactly on the |C| = 1 instances G8, S, S_r(3), H_3, H_4, H_5 and on the ladders L_2..L_6, and on the ladders Q(G) itself is already exact (level 0), so rl:merge adds nothing there. On every listed instance with |C| >= 2 that is not a ladder \u2014 W_14, WD(4,2,6)/(6,3,7)/(8,4,8), CC(1,2)/(2,2)/(1,4), CV(1,3)/(1,4)/(2,4), BC(2,5)/(2,6)/(3,5), and the route's own T_d \u2014 M is non-transient, so the criterion either does not fire or (mu = 2 against a measured level of 1) is loose. The only instances where rl:merge does non-trivial work are the controlled-cycle and mixing families the route built for the purpose, whose values are read off by inspection.",
+   "evidence": "The route's own /tmp/claude-1000/-data-ssg-proof/296b18c1-9dc5-4a0b-94cf-9bde3946ecfe/scratchpad/r18-rlt-two/exact_levels.txt, columns mu and level, read against thm:one-player (l. of \\label{thm:one-player}: val is the unique optimum of the minimise-sum LP over Q(G))."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rl:levels and rl:splitters \u2014 closest_label misidentified",
+   "defect": "The route names prop:rows-turn as the closest existing statement. The genuinely closest statement is the one recorded three lines above the route's own insertion point: rem:choice-lift's round-17 claim 'max_{R_j} x = w* once j >= min(|Vmax|, rho_max+1), with rho the number of controlled vertices of that player whose successor difference changes sign on Q(G)' \u2014 the SAME shape as rl:splitters (level bounded by a count of ambiguous vertices, plus one), with a different and incomparable parameter. Naming prop:rows-turn instead conceals that the paper already records a statement of this shape AND already dismisses its value in the next clause. rl:splitters is not a restatement (the recorded claim is unproved and sp is incomparable with rho_max, since a splitter is defined by the p-rows alone and ignores the constants q), but the audit reader must see the dismissal it inherits.",
+   "evidence": "frontier.tex l.15001-15005, verbatim: '\\max_{R_j}x=w^\\ast once j\\ge\\min(|\\Vmax|,\\rho_{\\max}+1) ... it did not prove, and it is recorded here as a claim; it would in any case be dominated by enumerating the 2^{\\rho} choices of the smaller side and solving one-player games, so no class comes of it'."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rl:splitters \u2014 the bound is exponentially loose on the route's own family",
+   "defect": "sp(T_d) = 2^d - 1 (every internal node is a splitter; every leaf is NOT, because splitters are defined from the p-rows only and a leaf has p^{0} = g e_root >= p^{1} = 0), so rl:splitters certifies exactness only at level 2^d, while the measured first exact level of T_1 and T_2 is 2. The route's own next_steps concedes that the resource for a gap is 'a leaf whose two actions are a constant and a feedback' \u2014 i.e. precisely a NON-splitter \u2014 which is the clearest sign that the splitter count is not the parameter that governs the level.",
+   "evidence": "v6.py above (nu(T_d) = 2^d - 1 for d = 1,2,3, and sp = the internal nodes by inspection of the merged rows); exact_levels.txt for the measured levels."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rl:cone \u2014 the cone relaxation CR_j",
+   "defect": "Two weaknesses. (a) The 'strictly stronger than rl:levels' claim rests entirely on D1 (and D2, D3, the mixing families), which exist only as reduced harmonic normal forms in red.Red \u2014 they were never built as out-degree-two SSGs, contrary to the route's blanket verification sentence 'Everything verified in exact rational arithmetic FROM THE BUILT GAME', which is true of the tree family only (tgame.py) and of nothing else. (b) The criterion is one-sided and its two demonstrated successes are on instances whose answer was already recorded: CR_2(W_14) = {0} re-derives R_2(W_14) = {w*}, which rem:choice-lift already states and round 17 already verified in scripts/round17-verify/cl_verify.py; and CR_2 != {0} on T_d, which is (measured) level-two exact, so the criterion fails on the route's own family. Its proof is one line ('the containment is the display in the proof of rl:levels'), so it is a corollary-strength wrapper, not an object with a theory.",
+   "evidence": "designs.py builds instances through R_of/red.Red (reduced rows), with no game construction; only tgame.py builds an SSG. rem:choice-lift l.14992: 'the route reports the maximum as exactly 3/5 and level two as exact; the certificate was re-verified here, scripts/round17-verify/cl_verify.py'."
+  },
+  {
+   "severity": "note",
+   "result_name": "rl:tree-vacuous / rl:tree-threshold \u2014 independently confirmed",
+   "defect": "No defect. Rebuilt the games from scratch (my own generator, my own average-chain solver, my own Q-membership and trap tests) and confirmed every load-bearing claim in exact rational arithmetic at seven sizes, including freshly generated larger instances the route did not use for development. Recorded here as the one result that survives the audit intact.",
+   "evidence": "/tmp/claude-1000/-data-ssg-proof/296b18c1-9dc5-4a0b-94cf-9bde3946ecfe/scratchpad/r18-audit-rlt-two-nov/v2.py, v3.py, v4.py. T_d(e,kappa) stopping (greatest non-sink trap empty), w* = kappa.1 a fixed point of T at every Max vertex (and the brute-force componentwise max over all 2^{|Vmax|} strategies of val_sigma agrees for d = 1,2,3), x, A, w* and every Y, Z in Q, every tightness and every convex identity exact, for (d,e,kappa) = (2,3,1/4) N=14, (3,3,1/4) N=22, (4,3,1/4) N=38, (5,3,1/4) N=70, (6,3,1/4) N=134, (4,5,3/8) N=41, (7,3,1/8) N=263; x(root) = 4/7, 8/11, 16/19, 32/35, 64/67, 48/53, 128/135 against w*(root) = 1/4, 1/4, 1/4, 1/4, 1/4, 3/8, 1/8. The 14-vertex one-player straddle [1/4, >= 4/7] around 1/2 is real."
+  },
+  {
+   "severity": "note",
+   "result_name": "rl:tree-vacuous \u2014 what it does and does not mean",
+   "defect": "The family has a = e + D average vertices, constant in d, so thm:few-avg decides it in poly(N)2^a and the escape class contains it; the route states this. So the result is the choice-lift analogue of thm:lasserre-vacuous and inherits that theorem's own verdict verbatim: 'it is not evidence that the lift is weak where the problem is hard. It is evidence that it is weak already where the problem is easy.' It also does not close anything the paper had open: rem:choice-lift already declares exactness of the lift at any fixed level target-equivalent and 'not conjectured'. The route's framing that its family is inside thm:few-avg and the escape class 'which rem:choice-lift's witnesses are not known to be' is empty \u2014 W_14 and DW are single 14- and 27-vertex games, not families, and are trivially decidable.",
+   "evidence": "rem:lasserre l.14876-14879; rem:choice-lift l.15005-15006; the route's own rl:tree-values, which proves the escape certificate and the constant a."
+  }
+ ],
+ "novelty_table": [
+  {
+   "result_name": "rl:merge \u2014 the merged matrix bounds the level-one relaxation",
+   "closest_label": "rem:choice-lift",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "rl:levels \u2014 a freezing set bounds the exact level",
+   "closest_label": "rem:choice-lift",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "rl:splitters \u2014 incomparable rows bound the exact level",
+   "closest_label": "rem:choice-lift",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "rl:cone \u2014 the cone relaxation CR_j certifies exactness in one linear programme",
+   "closest_label": "rem:choice-lift",
+   "class": "new-object"
+  },
+  {
+   "result_name": "rl:modulator \u2014 the certifiable level is a freezing-modulator number",
+   "closest_label": "thm:modulator",
+   "class": "unproved"
+  },
+  {
+   "result_name": "rl:tree-vacuous \u2014 level one is asymptotically vacuous, on a one-player family with five average vertices",
+   "closest_label": "rem:choice-lift",
+   "class": "new-object"
+  },
+  {
+   "result_name": "rl:tree-threshold \u2014 level one does not decide the threshold, with one player",
+   "closest_label": "rem:choice-lift",
+   "class": "new-object"
+  },
+  {
+   "result_name": "restatement: w* is the least element of Q(G) with Vmin empty",
+   "closest_label": "thm:one-player",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement: min over R_0 = w* on one-player Max games",
+   "closest_label": "rem:choice-lift",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement: R_1 = intersection over v of conv(F_v^0 u F_v^1), Balas' disjunctive closure",
+   "closest_label": "rem:choice-lift",
+   "class": "restatement"
+  },
+  {
+   "result_name": "exact_levels.txt \u2014 the first exact level and mu of every instance of the document",
+   "closest_label": "rem:choice-lift",
+   "class": "measurement-only"
+  },
+  {
+   "result_name": "the exhaustive enumeration of 50625 four-vertex one-player topologies (303750 systems), 0 hits",
+   "closest_label": "prop:auso-size",
+   "class": "measurement-only"
+  }
+ ],
+ "verdict": "NEW-THEOREM, but with one of the five reported results struck as false and the headline sentence withdrawn. DID THE ROUTE CHANGE THE OBJECT? Yes. The object is the merged matrix M(G) \u2014 the componentwise maximum of a Max vertex's two first-passage ROWS, i.e. the mean matrix of the branching process in which the controller fires both actions at once \u2014 and the paper does not own it: def:survival takes the max of the two successor VALUES (Sx = max_pi M_pi x, every row substochastic), whereas M has row mass up to 2, and def:reduced-rows' p-hat are the rows conditioned on leaving the vertex. The collapse the route did NOT prove but should have noticed is the containment {M transient} \u2282 {escape class}, since Mx >= (Sx)|_C for x >= 0; the route only observes it and correctly says the rate degrades. RUBRIC. At least one proved result of class new-object or new-relation exists \u2014 rl:tree-vacuous (proved, independently rebuilt and re-verified here on freshly generated games at seven sizes up to N = 263) and rl:merge/rl:levels/rl:splitters (proved, elementary but correct) \u2014 so the verdict is new-theorem and not blocked. Against that: rl:modulator is false as stated (mu_M(T_2) = 1 while the number rl:levels needs is 3, and 7 at d = 3), it is asserted as an answer to a question rem:choice-lift never asks, and it miscites def:freeze; rl:cone is a one-line corollary whose only demonstrated successes reproduce results already in the paper and which fails on the route's own family; and everything proved lives strictly on the Vmin = empty side, where R_j-exactness is algorithmically empty by thm:one-player and where, by rem:choice-lift's own sentence, 'no class comes of it'. THE REAL REMAINING GAP, more precisely than the route states it: the route's stated gap ('there is a stopping SSG and a vertex v with max_{R_2} x(v) > w*(v)') is not what blocks it \u2014 the binding gap is that rl:merge-bound's first step, D = x - w* >= 0, is exactly thm:one-player and fails at the first Min vertex, so the route has no lower bound on x - w* for two players and therefore not one of rl:merge, rl:levels, rl:splitters, rl:cone or rl:modulator can be evaluated on any instance where the problem is not already polynomial; the missing statement is a two-player replacement for 'D >= 0 and D <= MD' that survives iteration, and the route's own proposed additive substitute D(v) <= (MD)(v) + sum_u L_u |p^{v,0}_u - p^{v,1}_u| was never iterated. INTEGRATION \u2014 BETTER, IF CUT TO ROUGHLY A THIRD. Worth integrating: rl:tree-def, rl:tree-values, rl:tree-vacuous and rl:tree-threshold, appended to rem:choice-lift as its own short proposition \u2014 they upgrade the paper's record from 'level one is inexact on W_14 by 1/10, and a 27-vertex two-player join straddles the threshold' to 'level one closes only a Theta(1/N) fraction of the transport interval on a proved one-player family, and a 14-vertex one-player member already straddles', which is precisely the form the paper chose for thm:lasserre-vacuous and should be stated with the same caveat the paper attaches there (the family is inside thm:few-avg and the escape class, so this is weakness where the problem is easy). Also worth integrating, but compressed into a single remark of at most fifteen lines with rl:merge-bound's three-line proof inline and rl:levels/rl:splitters stated without proof or with a two-line proof: they are the first PROVED statement of the shape the paper currently carries only as an unproved round-17 claim, and the remark should say so and should retain the paper's existing dismissal ('dominated by enumerating the 2^sp choices'). NOT worth integrating: rl:modulator (false as stated; delete, and do not repair it \u2014 under the only reading that makes it true it is the sentence already in rem:choice-lift), rl:cone and its CR_j (a corollary-strength LP filter, sufficient but not necessary, whose witnesses D1/D2/D3 were never built as games), the exact_levels table (a measurement; at most one clause of verification text inside the rl:merge remark), and the four-vertex enumeration (a search record). Integrating the return as submitted would make the paper WORSE, because rl:modulator would import a false identification into the neighbourhood of thm:modulator and a fabricated open question into rem:choice-lift; integrating the tree family plus a compressed merged-matrix remark makes it modestly better."
+}
