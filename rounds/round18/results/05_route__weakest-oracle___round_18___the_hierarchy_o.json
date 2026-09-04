@@ -1,0 +1,125 @@
+{
+ "target": "route \"weakest-oracle\" (round 18): the hierarchy of partial-information oracles \u2014 which fragments of the value order are target-equivalent and which are polynomial",
+ "sound": true,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "wo:free-pair",
+   "defect": "The headline (\"choosing the comparison is free, naming it is the whole problem\") is already a paragraph of the paper, sitting fifteen lines above the route's own intended insertion point, and it is neither cited nor distinguished. The mathematical core is lem:alphabet-cover applied at the extreme letters; the rest is one line of arithmetic. Classified restatement.",
+   "evidence": "frontier.tex l.12176-12178, immediately after thm:top and immediately before def:bracket (the route asks to be inserted \"after prop:bracket\"): \"Note the contrast with the threshold: by \\Cref{lem:alphabet-cover} every letter in (0,1) is the midpoint of two others, so the largest of them is at least 1/2, and some vertex has value at least 1/2 unless every value is 0 or 1, which the attractor sweeps decide in linear time; the threshold plays no part in the difficulty, the naming of a vertex does.\" The three lines: (i) lem:alphabet-cover (l.2585) at lambda_max gives an AVERAGE vertex v of value lambda_max whose successors have distinct values straddling lambda_max; the larger exceeds every non-sink value, so it is t_1 (reduced), i.e. v in H u M; dually at lambda_min, L u M nonempty. (ii) w*(v)=(1+w*(u))/2>1/2 on H, =1/2 on M, <1/2 on L since w*>0 off the sinks. (iii) H nonempty -> pair (H, LuM); H empty, L nonempty -> (M,L); H=L=empty -> both extremes are 1/2, so 'all equal' is correct. I re-verified the statement independently on 525 reduced random stopping games (my /tmp/.../r18-audit-weakest-oracle-novelty/rnd.py, exact rationals): H>1/2, M=1/2, L<1/2, H u M and L u M nonempty, 'all equal' correct in all 293 flat cases, 0 failures. The mathematics is right; the novelty is not."
+  },
+  {
+   "severity": "major",
+   "result_name": "wo:free-pair (paste-ready LaTeX)",
+   "defect": "The submitted lem:wo-extreme re-proves the paper's lem:alphabet-cover trap argument verbatim without citing it, contradicting the route's own prior_art claim (6) that the argument 'is attributed to it in the write-up'. Integrating the LaTeX as submitted would put a near-duplicate lemma into the paper 9,000 lines from the original.",
+   "evidence": "grep of the route's wo.tex for 'alphabet-cover' returns nothing (the file cites thm:top, prop:no-halving, thm:compare-equivalence, lem:trapchar, lem:duality, prop:qualitative only); its proof of lem:wo-extreme is the same trap/Perron argument as frontier.tex l.2585-2606."
+  },
+  {
+   "severity": "major",
+   "result_name": "wo:any-set",
+   "defect": "Restatement of prop:no-halving(b): the gadget is thm:top's own boost chain truncated to length one, and the derivation is three lines. The route's why_not_implied concedes that the only thing added is that construction.",
+   "evidence": "prop:no-halving(b) (frontier.tex l.12018) already gives target-equivalence of comparing two NAMED average vertices; thm:top's proof (l.12137-12160) already builds c^{(1)}_p -> (t_1,p) chains and already performs the reduction to interior values. Three lines: adjoin P_1..P_{s-1} -> (t_1,p) and Q -> (t_1,q); nothing old points at them so values are unchanged and the game stays stopping; the P_i are tied at (1+w*(p))/2, Q sits at (1+w*(q))/2, all four in H, so a strict pair inside S (or '=') names sign(w*(p)-w*(q)), which is prop:no-halving(b). The instance ANYSET_GAME.json is real and correct (I recomputed w* = 1/2,1/2,7/16,3/8,1/4,1/2,3/4,3/4,3/4,5/8 with the independent harness), but it verifies a three-line corollary."
+  },
+  {
+   "severity": "major",
+   "result_name": "wo:free-blind",
+   "defect": "The stated consequence needs no construction at all: it follows in one line from wo:free-pair (Any in P) plus thm:decide-one-bit (Any-Decision target-equivalent), since a problem reducing to a polynomial-time problem is polynomial-time. And the blindness itself is already witnessed by prop:locality's own pair, whose free blocks are identical labelled sets under the route's own reading of that proposition. FB(L) adds only non-isomorphism and a one-edge difference.",
+   "evidence": "The route's why_not_implied says of prop:locality that 'its two games are the same game with the two out-edges of v relabelled' \u2014 i.e. the vertex sets, the kinds and every edge except v's out-edge order agree, hence H, M, L agree as labelled sets while the correct i at v differs; that is exactly 'the block datum does not decide'. The FB games are correct (I recomputed FB5+/-: w*(A)=33/64 vs 31/64, w*(v)=33/64 vs 1/2, identical blocks H={4,6,7,8}, M={0,5,10}, L={1,2,3,9}, both stopping), but they support a claim that is trivial given the two preceding theorems."
+  },
+  {
+   "severity": "minor",
+   "result_name": "wo:gate-lipschitz",
+   "defect": "The stated derivative of the RUIN(K) amplifier at p = 1/2 is wrong for even K. The correct value at start i is 2i(K+1-i)/(K+1); with i = ceil(K/2) this is (K+1)/2 only for odd K.",
+   "evidence": "Exact-arithmetic central difference at h = 10^{-7} (my chk): K=1,2,3,5,7,9,11,15,21 give slopes 1, 1.3333, 2, 3, 4, 5, 6, 8, 11. K=2 gives 4/3, not (K+1)/2 = 3/2. The route's own verification field reports the measured 1.333 and then asserts 'i.e. (K+1)/2 exactly', which the same row refutes. The Theta(1/delta) and factor-8/3 tightness claims survive."
+  },
+  {
+   "severity": "minor",
+   "result_name": "wo:free-pair(e)",
+   "defect": "Off-by-one in the bracket clause: with x := T^N(1_{t_1}) the identity used is x(v) = (1 + x(u))/2, but in fact x(v) = (1 + (T^{N-1}1_{t_1})(u))/2, and positivity at step N-1 has to be argued (it holds, the support saturating in at most N-2 steps).",
+   "evidence": "wo.tex, proof of thm:wo-free-pair(d): 'whence x(v)=1/2(1+x(u))>1/2 for v in H'."
+  },
+  {
+   "severity": "note",
+   "result_name": "wo:free-pair",
+   "defect": "'ANY-COMPARISON is LINEAR time' holds only on the promised reduced input; on a general stopping game the fragment costs the O(N^3) arithmetic-free sweep of prop:qualitative(b). The route states this but the headline does not.",
+   "evidence": "prop:qualitative (frontier.tex l.12923): {val>0} in O(N^2), {val=1} in O(N^3), both without arithmetic."
+  },
+  {
+   "severity": "note",
+   "result_name": "wo:free-pair / rem:wo-stalls",
+   "defect": "The free datum is contained in the paper's mechanism M1 up to strictness, and by the route's own measurement it separates no controlled vertex on any hard family in the paper \u2014 so the fragment adds nothing to sec:gap. This is measurement with no theorem attached.",
+   "evidence": "The route's own rem:wo-boundary: 'the simulation preorder is sound for <= only, and z <= v holds for every z in L and v in H through the (match) clause'; rem:wo-stalls reports free-separated = False at every value-distinguishing controlled vertex of H_m, WD, CC, S, S_2, G_8. The briefing already records that M1 decides all of H_m, CC, WD, CV at round zero."
+  },
+  {
+   "severity": "note",
+   "result_name": "wo:gate-lipschitz (RUIN(K))",
+   "defect": "RUIN(K) is the paper's own gambler's-ruin chain GR(n) with the fair coin replaced by a gate; the route attributes the amplifier to folklore but not to the paper's family.",
+   "evidence": "frontier.tex l.2757-2760: 'the gambler's-ruin chain GR(n) --- u_i in Vavg with u_i -> (u_{i-1},u_{i+1}), u_0 = t_0, u_{n+1} = t_1 --- has val(u_i) = i/(n+1)'."
+  },
+  {
+   "severity": "note",
+   "result_name": "wo:eps-ladder / GAP 1",
+   "defect": "The route's central open question (does SSG-Value reduce to its own 1/poly-gap promise version) sits exactly on a prior-art item the round's briefing lists as already rediscovered by this project \u2014 Dai-Ge, 'approximation collapse' \u2014 which the route neither cites nor distinguishes. Flagged from memory, unchecked against the source; frontier.tex itself contains no 'Dai'.",
+   "evidence": "Round briefing, PRIOR ART list: 'Dai-Ge (approximation collapse)'. grep -i 'Dai' frontier.tex: no hit."
+  }
+ ],
+ "novelty_table": [
+  {
+   "result_name": "wo:free-pair -- ANY-COMPARISON is free (Q1)",
+   "closest_label": "lem:alphabet-cover (frontier.tex l.2585) + the unnumbered paragraph at l.12176",
+   "class": "restatement"
+  },
+  {
+   "result_name": "wo:any-set -- naming the set restores the difficulty (Q4)",
+   "closest_label": "prop:no-halving(b) (l.12018), with thm:top's boost gadget (l.12145)",
+   "class": "restatement"
+  },
+  {
+   "result_name": "wo:free-blind -- the free comparison entails no controlled decision (Q2)",
+   "closest_label": "prop:locality (l.12766) + thm:decide-one-bit (l.12683)",
+   "class": "restatement"
+  },
+  {
+   "result_name": "wo:eps-ladder (a) Ord/App/Gap interreducible, (b) target-equivalent at eps <= 2^{-N^gamma}",
+   "closest_label": "thm:order-determines (l.11882); the preamble of thm:vi-lower (l.11318, 'it suffices to approximate val(v_0) to within 1/(2D)')",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "wo:eps-ladder (c) the polynomial end, eps > 1 - 2^{-(N-2)}",
+   "closest_label": "lem:denominator-sharp (l.1180) + prop:qualitative (l.12923)",
+   "class": "restatement"
+  },
+  {
+   "result_name": "wo:gate-lipschitz -- the Lipschitz bound without admissibility, with the matching RUIN(K) amplifier",
+   "closest_label": "rem:no-amplification (l.4112)",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "cor:wo-context-blind -- a coarse order oracle is blind on compositions",
+   "closest_label": "rem:no-amplification (l.4112)",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement listed by the route: thm:order-determines note",
+   "closest_label": "thm:order-determines",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement listed by the route: thm:few-denominator note",
+   "closest_label": "thm:few-denominator / thm:alphabet-denominator",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement listed by the route: rem:no-amplification note",
+   "closest_label": "rem:no-amplification",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement listed by the route: cor:wrong-equivalence note",
+   "closest_label": "cor:wrong-equivalence / rem:order-unique(ii)",
+   "class": "restatement"
+  }
+ ],
+ "verdict": "VERDICT: blocked (downgraded from the route's \"new-theorem\").\n\n1. DID THE OBJECT CHANGE? Half. The object is \"fragments of the value order under polynomial-time reduction, coordinatised by scope and slack\". The SCOPE coordinate is an object the paper already owns under another name: sec:selection is precisely a list of order fragments graded by what is named (thm:compare-equivalence, thm:order-determines, prop:no-halving, cor:wrong-equivalence, thm:top, thm:decide-one-bit, prop:bracket, rem:bsi, rem:alphabet-equivalence), and the paper even states the route's headline moral in prose at l.12176 (\"the threshold plays no part in the difficulty, the naming of a vertex does\"). The route adds one point to that list (choose-your-own-pair, which is free) and reproves two existing ones. The SLACK coordinate (Ord_eps / App_eps / Gap_eps) is genuinely new to the paper -- there is no approximation result anywhere in 229 pages -- but the two ends the route establishes are the trivial ones: standard complexity padding at the hard end, and lem:denominator-sharp in two lines at the easy end. The collapse of the scope axis into the paper's existing list was noticed, not proved.\n\n2. QUALIFYING RESULT? Yes, barely: wo:eps-ladder(a)+(b) is a proved new-relation between objects the paper does not own (an eps-order oracle, an eps-approximation, a promise-threshold oracle) -- so the route is not automatically dead. But three of five results are restatements of lem:alphabet-cover, prop:no-halving(b) and prop:locality respectively, each derivable in three lines from the cited label; the round's rule 2 makes that a defect that costs the verdict, and round 17's failure mode (five of seven routes restating) repeats here. The one surviving new-relation is textbook binary search plus textbook padding, it terminates exactly at a known open question, and the route's fifth result is a one-hypothesis scope fix to an existing remark. Under rule 7 the route ends at statements of the same strength as the target (a tenth target-equivalent reformulation) and must say so; it does not.\n\n3. CIRCULAR OR VACUOUS? Not circular -- the reductions are honest and the constructions are real (I rebuilt FB5+/-, FB9+/- and ANYSET from the JSON with the independent harness: stopping, values as claimed, blocks identical, answers opposite). But two of the three \"hard\" results are new names for target-equivalences the paper has, and the \"free\" result is vacuous as a tool: by the route's own rem:wo-stalls the free datum separates no controlled vertex on H_m, WD, CC, S, S_2 or G_8, and it is contained in M1's preorder up to a strictness that comes from the sweeps the paper already runs. wo:free-blind's stated consequence is a one-liner from its own two neighbours and needs no witness family at all.\n\n4. THE REAL REMAINING GAP, stated more precisely than the route states it. The route proves nothing about prob:main that was not already available, and its only live direction, GAP 1, is the classical question whether SSG-Value reduces to its own inverse-polynomial-gap promise version; the route's barrier against it -- a black-box context on s vertices multiplies a gap by O(s) -- is rem:no-amplification, already in the paper, and rem:no-amplification already says black-box compositions are not the interesting class (\"every transformation this document performs reads the input's edges and is outside their scope\"). So the gap is: an amplifier, or a barrier, for edge-reading reductions -- the class in which thm:stopping-transform, thm:compare-equivalence, lem:normalform and thm:top all live -- and nothing here touches that class.\n\n5. INTEGRATION. As submitted (500 lines of LaTeX, a new five-fragment definition block, a duplicated lem:alphabet-cover, a witness family redundant with prop:locality, and two renamed target-equivalences), integrating this makes the paper WORSE: more pages, a second copy of an existing lemma 9,000 lines from the first, and three theorem environments whose content is already numbered elsewhere. Compressed to about 25 lines it makes the paper slightly better. Worth integrating: (i) the admissibility-free form of rem:no-amplification -- two sentences inside that remark, replacing the misleading clause \"what is excluded is a replay loop through calls and controlled vertices alone, which is not stopping\" (the CONTEXT fails to be stopping there, the COMPOSITION need not), plus the biased GR(K) as the tight example (with the derivative corrected to 2i(K+1-i)/(K+1), i = ceil(K/2), and GR attributed to the paper's own l.2757); this is the route's one genuine correction. (ii) Two sentences appended to the l.12176 paragraph: the sink-adjacent average vertices split for free as H > M > L around 1/2 by lem:alphabet-cover at the extreme letters, so a strict pair is readable in one pass while every named-scope refinement is prop:no-halving(b) or thm:top -- cited to lem:alphabet-cover, not restated as a lemma. (iii) Optionally one short remark defining Ord_eps/App_eps/Gap_eps, recording their interreducibility, the padding end at 2^{-N^gamma}, and the pointer that the middle is the promise-gap question sec:composition cannot close. NOT worth integrating: lem:wo-extreme, def:wo-fragments as a display block, thm:wo-any-set as a theorem (one sentence under prop:no-halving), def:wo-fb and prop:wo-free-blind, cor:wo-context-blind, rem:wo-stalls (a measurement whose content is that the datum is useless), and thm:wo-eps-ladder(c).\n\nHousekeeping: no background jobs started; my scripts are in /tmp/claude-1000/-data-ssg-proof/296b18c1-9dc5-4a0b-94cf-9bde3946ecfe/scratchpad/r18-audit-weakest-oracle-novelty/ (chk.py, rnd.py); nothing written to /data/ssg-proof or to the route's directory."
+}

@@ -196,9 +196,12 @@ $\alpha<1$, since a longer padding of the same kind blinds every such
 rule at once (\Cref{thm:window-barrier}); and no submodular
 minimisation argument, in any orientation of either strategy cube
 (\Cref{prop:no-submodular}); Condon's damping read as a homotopy in
-the survival probability has $2^{\Omega(N)}$ breakpoints, so no
-continuation method following its optimal pair is polynomial, and it is
-not the bias homotopy (\Cref{prop:discount-fold,cor:two-homotopies}); and
+the survival probability has $2^{\Omega(N)}$ breakpoints already with
+one player, its path a Hamiltonian walk of the Max cube that no
+all-switches run follows, so no continuation method following its
+optimal pair is polynomial even on Markov decision processes with two
+actions per state, and it is not the bias homotopy
+(\Cref{prop:discount-fold,prop:one-player-fold,cor:two-homotopies}); and
 every such bound is a bound on the rounds of a rule, not on information,
 since an optimal strategy is found from $|C|+2$ adaptively chosen
 evaluations (\Cref{thm:eval-queries}). For the all-switches rule
@@ -1051,8 +1054,9 @@ $N^{\pi}_v\ge\varrho N^{\pi}_{v^{\bar\pi(v)}}$ at every $v\in\Vmax$ and
 $\le$ at every $v\in\Vmin$; for $0<\varrho<1$, $\Opt(\varrho)$ is the
 nonempty subcube of the pairs greedy for $w_{\varrho}$ (at $\varrho=0$ every
 pair is optimal, $w_0=0$); and, a nonzero polynomial of degree at most
-$n+1$ having at most $n+1$ roots, $B(G)\le(n+1)|C|2^{|C|}$, a bound nowhere
-near attained below. Moreover $\varrho\mapsto w_{\varrho}$ is nondecreasing
+$n+1$ having at most $n+1$ roots, $B(G)\le(n+1)|C|2^{|C|}$, whose factor
+$2^{|C|}$ is attained with one player and whose other factor is needed up
+to $O(|C|\sqrt n)$ (\Cref{prop:one-player-fold}). Moreover $\varrho\mapsto w_{\varrho}$ is nondecreasing
 with $w_{\varrho}\uparrow\val$ as $\varrho\uparrow1$, $\val$ the least fixed
 point of \Cref{thm:lfp-general} ($T$ preserves nonnegativity, so
 $T_{\varrho'}w_{\varrho}\ge w_{\varrho}$ for $\varrho'\ge\varrho$, and
@@ -3280,7 +3284,9 @@ explosion, and nothing to gain: by \Cref{prop:forest-k1} below such
 stopping games lie in $\mathcal K_1$. Neither $P_D$ nor $\mathrm{FL}(D)$
 is a hardness family --- both lie in $\mathcal K_1$ as well, their Max
 vertices reaching only their predecessors --- so what explodes is the
-table, not the instance.
+table, not the instance. Nor does the explosion need a Min vertex:
+\Cref{prop:one-player-response}'s one-player game has $2^{D}+1$ pieces on
+$7D+7$ vertices, its levels meeting in three vertices.
 \end{remark}
 
 \begin{proposition}[Treewidth one is inside $\mathcal K_1$]\label{prop:forest-k1}
@@ -15326,7 +15332,10 @@ all values lie in $[0,1]$.
 \begin{remark}\label{rem:fold}
 The mechanism is a fold, and it is cheap: one Max and one Min vertex sharing the
 same two successors compute $\max$ and $\min$ of the same pair, whose difference
-is $|o_0-o_1|$, and one such pair doubles the number of monotone stretches.
+is $|o_0-o_1|$, and one such pair doubles the number of monotone stretches ---
+and the Min vertex is not even needed, an average vertex over the same pair
+giving the mean and $2\max(a,b)-(a+b)=|a-b|$
+(\Cref{prop:one-player-response}, one player, a convex response).
 Every constant the construction needs sits on a single shared chain, so $D$
 folds cost $O(D)$ vertices. What the theorem rules out is the parametric route
 in the form that motivates it: sweeping $\theta$ and tracking the optimal pair
@@ -15338,6 +15347,74 @@ every midpoint and five off-grid rationals for $D=1,\dots,12$, with no mismatch
 and the slope set exactly $\{0,2^{-D}\}$; $P_{12}$ has $74$ vertices and
 $4096$ pieces.
 \end{remark}
+
+\begin{proposition}[The fold with one player: a convex response with $2^{D}+1$ pieces]\label{prop:one-player-response}
+For $D\ge1$ let $\mathrm{OP}_D$ be the one-player SSG with non-sink
+vertices $u$, $X_0,Y_0,F_0,H_0$ and $S^{a}_d,S^{b}_d,S_d,X_d,Y_d,F_d,H_d$
+$(1\le d\le D)$, $F_0,\dots,F_D\in\Vmax$, all others average, with
+\[
+\begin{aligned}
+ &X_0\to(u,u),\quad Y_0\to(t_1,t_0),\quad F_0\to(X_0,Y_0),\quad H_0\to(X_0,Y_0),\\
+ &S^{a}_d\to(S_{d-1},t_0),\quad S^{b}_d\to(S^{a}_d,t_0),\quad S_d\to(S^{b}_d,t_0)\ \ (S_0:=t_1),\\
+ &X_d\to(F_{d-1},t_0),\quad Y_d\to(H_{d-1},S_d),\quad F_d\to(X_d,Y_d),\quad H_d\to(X_d,Y_d),
+\end{aligned}
+\]
+$N=7D+7$ with $u$ and the sinks. Freeze $u$ at the payoff $\theta\in[0,1]$
+as in \Cref{thm:fold}. Then, with $x_d,y_d,\varphi_d$ as before and
+$e_d:=\tfrac12 8^{-d}$, $\varphi_d=\tfrac14|\varphi_{d-1}|-e_d$ and
+$\varphi_d/e_d=2T^{d}(\theta)-1$, and
+\[
+  \val_{\mathrm{OP}_D[u:=\theta]}(F_D)
+  \;=\;2^{-(D+1)}\theta+\sum_{d=1}^{D}2^{-D-1-2d}\,T^{d}(\theta)
+  +2^{-3D-2}\,T^{D+1}(\theta)+c_D,
+  \qquad c_D=\frac{4^{D+1}-1}{3\cdot2^{3D+2}},
+\]
+a \emph{convex} piecewise affine function of $\theta$ with exactly
+$2^{D}+1$ pieces, of slopes $j4^{-D}$, $j=0,1,\dots,2^{D}$, each attained
+on one interval. So the exponential piece count of \Cref{thm:fold} needs no
+Min vertex, and what the Min vertex buys there is the alternating slopes:
+with one player every response map $\theta\mapsto\val_{G[u:=\theta]}(v)$ is
+a maximum of at most $2^{|\Vmax|}$ affine functions with slopes in $[0,1]$,
+hence convex, and $\mathrm{OP}_D$ attains $2^{|\Vmax|-1}+1$ of them.
+\end{proposition}
+
+\begin{proof}
+Freezing $u$ leaves an acyclic game with terminal payoffs, so the values are
+a backward induction: $x_0=\theta$, $y_0=\tfrac12$, $\val(S_d)=8^{-d}$,
+$x_d=\tfrac12\max(x_{d-1},y_{d-1})$ and
+$y_d=\tfrac14(x_{d-1}+y_{d-1})+\tfrac12 8^{-d}$, whence
+$\varphi_d=\tfrac14|\varphi_{d-1}|-e_d$ and, with $e_{d-1}/e_d=8$,
+$\varphi_d/e_d=2|\varphi_{d-1}/e_{d-1}|-1$, $\varphi_0/e_0=2\theta-1$, so
+$\varphi_d/e_d=2T^{d}(\theta)-1$ and $|\varphi_d|=e_dT^{d+1}(\theta)$ as in
+\Cref{prop:one-player-fold}. For $s_d:=x_d+y_d$, $2\max(a,b)=a+b+|a-b|$
+gives $s_d=\tfrac12s_{d-1}+\tfrac14|\varphi_{d-1}|+\tfrac12 8^{-d}
+=\tfrac12s_{d-1}+8^{-d}T^{d}(\theta)+\tfrac12 8^{-d}$ with $s_0=\theta+\tfrac12$,
+so $s_D=2^{-D}(\theta+\tfrac12)+\sum_{d=1}^{D}2^{-(D-d)}8^{-d}(T^{d}(\theta)+\tfrac12)$,
+and $\val(F_D)=\max(x_D,y_D)=\tfrac12s_D+\tfrac12|\varphi_D|
+=\tfrac12s_D+2^{-3D-2}T^{D+1}(\theta)$ is the display, the constant being
+$2^{-D-2}\sum_{d=0}^{D}4^{-d}$. Convexity: under a fixed strategy $\sigma$
+the value at $F_D$ is $\Pr_\sigma[\text{reach }u]\,\theta+\Pr_\sigma[\text{reach }t_1]$,
+affine in $\theta$ with slope in $[0,1]$, and the value is the maximum of
+these over the $2^{|\Vmax|}$ strategies. On an interval where every $T^{d}$
+is affine, with slope $\sigma_d2^{d}$, $\sigma_d=\pm1$, the slope of the
+display is
+$2^{-(D+1)}\bigl(1+\sum_{d=1}^{D}2^{-d}\sigma_d+2^{-D}\sigma_{D+1}\bigr)
+=2^{-2D-1}\bigl(2^{D}+\sum_{d=1}^{D}2^{D-d}\sigma_d+\sigma_{D+1}\bigr)$.
+The integer $\sum_{d\le D}2^{D-d}\sigma_d$ is odd, and every odd integer in
+$[-(2^{D}-1),2^{D}-1]$ arises from exactly one sign vector; adding
+$\sigma_{D+1}=\pm1$ gives every even integer in $[-2^{D},2^{D}]$, so the
+slope is $j4^{-D}$ with $j\in\{0,\dots,2^{D}\}$ and every $j$ occurs for some
+sign vector. Every sign vector occurs on some interval: the slope sign of
+$T^{d}$ is $\prod_{j\le d}\tau_j$ with $\tau_j=\operatorname{sign}(T^{j-1}(\theta)-\tfrac12)$,
+and $(\tau_1,\dots,\tau_{D+1})$ takes all $2^{D+1}$ values on the $2^{D+1}$
+dyadic intervals of length $2^{-(D+1)}$, by the distinctness argument in
+the proof of \Cref{prop:one-player-fold}. A convex piecewise affine
+function takes each of its slopes on one interval, so there are exactly
+$2^{D}+1$ pieces. (Exact arithmetic for $D\le8$, the closed form, the
+convexity and the $257$ slopes at $D=8$:
+\texttt{scripts/round18-verify/fold1p\_verify.py}. The construction was
+proposed by the route's novelty auditor.)
+\end{proof}
 
 \begin{proposition}[The stopping-probability path is exponentially long]\label{prop:discount-fold}
 For $D\ge1$ let $\mathrm{BP}(D)$ be the SSG with non-sink vertices
@@ -15446,7 +15523,10 @@ optimum is unique: it is unique at every breakpoint of $\mathrm{BP}(D)$ and
 of the one-Max games below, but the route's auditor built a $14$-vertex
 one-player game with $\val(u^{(0)})-\val(u^{(1)})=\tfrac14\varrho^{4}(\varrho-\tfrac12)^{2}$,
 at whose breakpoint $\tfrac12$ both actions are optimal in the derived
-game. Like $P_D$, $\mathrm{BP}(D)$ is acyclic, hence in
+game. Whether the fold needs the Min vertex was the natural question,
+and it does not: \Cref{prop:one-player-fold} below folds with one player,
+at nine average vertices per level, by taking the maximum and the mean of
+the same pair. Like $P_D$, $\mathrm{BP}(D)$ is acyclic, hence in
 \Cref{thm:avg-acyclic}'s class and solved by backward induction; the
 statement constrains one algorithm schema and none of the mechanisms
 M1--M6, the improvement rules or the bias homotopy, to which the fold does
@@ -15455,6 +15535,141 @@ $D\le11$ by the route and for $D\le8$ here
 (\texttt{scripts/round17-verify/bp\_verify.py}): the tent identity at every
 level, the tied set $\{F_d,G_d\}$ at every $k2^{-D}$, and $2^{D}$ pairwise
 distinct pairs, constant inside each interval.
+\end{remark}
+
+\begin{proposition}[A one-player fold: the stopping-probability path is exponential with one player]\label{prop:one-player-fold}
+For $D\ge0$ let $\mathrm{OF}(D)$ be the SSG with non-sink vertices
+$u_1,X_0,Y_0,F_0$, $H_d$ $(0\le d<D)$ and
+$P_d,X_d,R_d,S_d,S'_d,S''_d,Y_d,F_d$ $(1\le d\le D)$, all average except
+$F_0,\dots,F_D\in\Vmax$, with $\Vmin=\emptyset$ and
+\[
+\begin{aligned}
+ &u_1\to(t_1,t_1),\quad X_0\to(u_1,u_1),\quad Y_0\to(t_1,t_0),\quad
+  F_0\to(X_0,Y_0),\quad H_d\to(X_d,Y_d),\\
+ &P_d\to(F_{d-1},F_{d-1}),\quad X_d\to(P_d,t_0),\quad
+  R_d\to(H_{d-1},H_{d-1}),\quad Y_d\to(R_d,S_d),\quad F_d\to(X_d,Y_d),\\
+ &S_d\to(S'_d,t_0),\quad S'_d\to(S''_d,t_0),\quad
+  S''_d\to(S_{d-1},t_0)\ \ (S_0:=t_1).
+\end{aligned}
+\]
+It is acyclic, hence stopping, on $N=9D+6$ vertices with $m=D+1$ Max
+vertices and no Min vertex. With $x_d:=\val(X_d)$, $y_d:=\val(Y_d)$,
+$\varphi_d:=x_d-y_d$ and $e_d:=\tfrac\varrho2(\tfrac{\varrho^{3}}8)^{d}$, in
+$\mathrm{OF}(D)_\varrho$ (\Cref{def:discount-path}), for $0<\varrho<1$,
+\[
+  x_d=\tfrac{\varrho^{3}}2\max(x_{d-1},y_{d-1}),\qquad
+  y_d=\tfrac{\varrho^{3}}4(x_{d-1}+y_{d-1})+e_d,\qquad
+  \varphi_d=\tfrac{\varrho^{3}}4\,|\varphi_{d-1}|-e_d ,
+\]
+so that $\psi_d:=\varphi_d/e_d$ satisfies $\psi_0=2\varrho-1$,
+$\psi_d=2|\psi_{d-1}|-1$, i.e.\ $\psi_d=2T^{d}(\varrho)-1$ for the tent map
+$T(z)=|2z-1|$. Consequently $F_d$ reverses exactly at the odd multiples of
+$2^{-(d+1)}$, these sets being disjoint across $d$; the breakpoint set of the
+path is exactly $\{k2^{-(D+1)}:1\le k\le2^{D+1}-1\}$, so
+$B(\mathrm{OF}(D))=2^{m}-1=2^{(N+3)/9}-1$; exactly one Max vertex ties at
+each breakpoint, the level $D-\nu_2(k)$ at the $k$-th; the $2^{m}$
+strategies met are pairwise distinct, so the path is a Hamiltonian path of
+the Max cube flipping one coordinate per step (the reflected binary code);
+and $F_D$ alone reverses $2^{m-1}$ times. The factor $2^{m}$ of the ceiling
+$(n+1)m2^{m}$ of \Cref{rem:discount-path} is therefore attained, and its
+other factor is needed up to $O(m\sqrt n)$: replacing $u_1,X_0,Y_0$ by the
+two gadgets of \Cref{prop:one-vertex-path} realising
+$x_0-y_0=e_0\,T_k(2\varrho-1)$, $T_k$ the Chebyshev polynomial and
+$e_0=(\varrho/2)^{K}$, on $O(k^{2})$ vertices, and feeding the constants
+from one halving chain, gives $\psi_d=2T^{d}(u_0)-1$ with
+$u_0=\tfrac12(1+T_k(2\varrho-1))$ and $k(2^{m}-1)$ breakpoints on
+$9(m-1)+O(k^{2})$ vertices, so with $B^{\ast}(n,m)$ the greatest breakpoint
+count of a one-player stopping SSG with $n$ non-sinks and $m$ Max vertices,
+$\Omega(\sqrt{n-9m})\,2^{m}\le B^{\ast}(n,m)\le(n+1)m2^{m}$.
+\end{proposition}
+
+\begin{proof}
+Every edge leads to a sink, to a strictly lower level or down the $S$-chain,
+so the game is acyclic and its damped values are a backward induction in
+which every non-sink contributes a factor $\varrho$, a Max vertex the maximum
+and an average vertex the mean: $\val(u_1)=\varrho$, $x_0=\varrho^{2}$,
+$y_0=\varrho/2$, $\val(S_d)=(\varrho^{3}/8)^{d}$,
+$\val(F_d)=\varrho\max(x_d,y_d)$, $\val(H_d)=\tfrac\varrho2(x_d+y_d)$, whence
+the two recursions. \emph{The device is that a Max vertex and an average
+vertex reading the same pair return its maximum and its mean, and
+$2\max(a,b)-(a+b)=|a-b|$}: subtracting the recursions gives
+$\varphi_d=\tfrac{\varrho^{3}}4|\varphi_{d-1}|-e_d$, and dividing by $e_d$,
+with $e_{d-1}/e_d=8/\varrho^{3}$, gives $\psi_d=2|\psi_{d-1}|-1$ and
+$\psi_0=2\varrho-1$; since $2|2u-1|-1=2T(u)-1$, induction gives
+$\psi_d=2T^{d}(\varrho)-1$. By \Cref{rem:discount-path} the optimal pairs at
+$\varrho$ are the greedy ones, and $F_d$ prefers $X_d$ exactly when
+$T^{d}(\varrho)\ge\tfrac12$. $T^{d}$ is affine onto $[0,1]$ with slope
+$\pm2^{d}$ on every dyadic interval of length $2^{-d}$, so $T^{d}=\tfrac12$
+exactly at the odd multiples of $2^{-(d+1)}$, transversally; there
+$T^{d+1}=0$ and $T^{j}=1$ for $j\ge d+2$, so no other level ties, and the
+union over $d\le D$ is $\{k2^{-(D+1)}\}$, $k2^{-(D+1)}$ being an odd multiple
+of $2^{-(d+1)}$ exactly for $d=D-\nu_2(k)$. Two intervals of length
+$2^{-(D+1)}$ with the same sign vector $(\operatorname{sign}(T^{d}\varrho-\tfrac12))_{d\le D}$
+would lie on the same side of $\tfrac12$, where $T$ is an affine bijection
+onto $[0,1]$ carrying them to distinct intervals of length $2^{-D}$ with the
+same shorter sign vector, against induction on $D$. For the seed,
+$T_k(\cos t)=\cos kt$ makes $T_k(2\varrho-1)$ sweep $[-1,1]$ monotonically
+$k$ times on $[0,1]$, so $u_0$ sweeps $[0,1]$ $k$ times, each of the $2^{d}$
+transversal solutions of $T^{d}(u_0)=\tfrac12$ acquiring $k$ preimages. The
+coefficients of $T_k(2\varrho-1)$ sum in absolute value to $T_k(3)\le(3+2\sqrt2)^{k}$,
+so $K=O(k)$; the digit $2^{b}$ of $|A_d|$ is realised, as in
+\Cref{prop:one-vertex-path}, by a leaf of the row's tree at depth $K-b$
+pointing at the chain vertex of value $\varrho^{d+b}$, the token then
+reaching $t_1$ after exactly $K+d$ steps, and since the leaf masses
+$2^{-(K-b)}$ sum to at most $1$ a binary tree of average vertices with
+those leaf depths exists, with $O(kK)=O(k^{2})$ internal vertices; the
+halving chain $c_j\to(c_{j-1},t_0)$ supplies
+$e_d=(\varrho/2)^{K}(\varrho^{3}/8)^{d}$ through $Y_d\to(R_d,c_{K-1+3d})$,
+which leaves the fold identity unchanged.
+\end{proof}
+
+\begin{remark}[What the one-player fold does and does not do]\label{rem:one-player-fold}
+Four readings. First, it corrects \Cref{rem:fold}: the second controlled
+vertex of \Cref{thm:fold}'s device is not needed, an average vertex over the
+same pair giving the mean and the sign being supplied by the next Max
+vertex's difference of options; so no continuation method following the
+optimal policy of $G_\varrho$ is polynomial already on Markov decision
+processes with two actions per state, the tied set at every breakpoint being
+a single vertex. Second, the path is never an all-switches run, of this or
+of any stopping game: along a run $\sigma_{t}\oplus\sigma_{t+1}=S_t$ and the
+switched sets are pairwise distinct (\Cref{cor:law-u}), whereas on
+$\mathrm{OF}(D)$ the singleton $\{F_d\}$ is the step $2^{d}$ times (and on
+$\mathrm{BP}(D)$ the pair $\{F_d,G_d\}$ $2^{d-1}$ times); more generally a
+sequence flipping one coordinate per step is a run only if it has at most
+$m$ steps, and at any fixed $\varrho$ the values along the path rise and
+then fall. Nor can a clock drive the fold: under a \emph{fixed} strategy the
+cascade is affine, $\psi^{\sigma}_{d}=2\varepsilon_{d-1}\psi^{\sigma}_{d-1}-1$
+with $\varepsilon_{d}=\pm1$ the choice at $F_d$, the absolute value being a
+property of the greedy choice and not of the game, and $\mathrm{OF}(D)$ is
+acyclic, so every component of its Max-reachability digraph is a singleton
+and all-switches halts within $D+1$ rounds from every start
+(\Cref{thm:component-bound}; measured $1,1,2,3,3,4,5$ at $D\le6$). The
+tent device therefore serves the pivot of \Cref{rem:blowup-realise} neither
+as a visiting order nor as a driven block, and what survives is a fold fed
+back into its own drive. Third, one player makes the envelope convex: each
+$y^{\pi}_{\varrho}(v)=\sum_{\ell\ge1}h^{\pi,v}_{\ell}\varrho^{\ell}$ is the
+probability generating function of the first-passage time to $t_1$, hence
+absolutely monotone on $[0,1)$, and with $\Vmin=\emptyset$ one positional
+strategy attains the maximum at all vertices at once (\Cref{thm:determinacy}), so
+$\varrho\mapsto w_\varrho(v)$ is convex with $w_0=0$; one Min vertex breaks
+this ($0\in\Vmin$, $0\to(1,2)$, $1\to(t_1,t_0)$, $2\to(3,3)$,
+$3\to(t_1,t_1)$: $w_\varrho(0)=\varrho\min(\tfrac\varrho2,\varrho^{2})$ takes
+the values $\tfrac8{125},\tfrac18,\tfrac9{50}$ at $\varrho=\tfrac25,\tfrac12,\tfrac35$
+and $\tfrac18>\tfrac{61}{500}$). Fourth, everything above was verified in
+exact rational arithmetic, by the route for $D\le11$ ($4095$ breakpoints on
+$103$ non-sinks) and here, from the statements alone
+(\texttt{scripts/round18-verify/of\_verify.py}, \texttt{ofc\_verify.py}):
+the tent identity at ten rationals and the breakpoint structure for
+$D\le9$, the affine cascade at every strategy and the run bound for
+$D\le5$, the values from gated games with genuine average vertices on up to
+$281$ vertices by brute force over all strategies, the Chebyshev identity
+for $k\le6$, $D\le4$, the per-level counts $k2^{d}$ for $k\le4$, $D\le3$;
+the route's correctness auditor counted the Chebyshev breakpoints by exact
+Sturm sequences ($k\le7$) and found the identity under every strategy
+(1524 cases) with the switchability criterion
+$\varepsilon_d\varphi^{\sigma}_d<0$, ties excluded.
+Like $P_D$ and $\mathrm{BP}(D)$ the family is acyclic and solved by
+backward induction; it bounds a parametric schema, not the problem.
 \end{remark}
 
 
@@ -17632,7 +17847,14 @@ $7$ breakpoints at $|C|=3$ and $22$ at $|C|=6$
 (\Cref{sec:bias,prop:bias-witnesses}); Condon's damping read as a homotopy
 in the survival probability is a different path, exponentially long on
 $\mathrm{BP}(D)$ and on \Cref{thm:fold}'s $P_D$ with a two-vertex seed
-(\Cref{prop:discount-fold,cor:two-homotopies}). Bidirectional improvement and its
+(\Cref{prop:discount-fold,cor:two-homotopies}), and already with one
+player: on $\mathrm{OF}(D)$, nine average vertices per level, the path
+is a Hamiltonian walk of the Max cube with $2^{m}-1$ breakpoints, the
+$2^{m}$ of the general ceiling is attained and the remaining factor is
+$O(m\sqrt n)$, while no all-switches run of any stopping game follows
+that walk, and the fold's response map needs no Min vertex either, being
+convex with $2^{D}+1$ pieces on one player
+(\Cref{prop:one-player-fold,rem:one-player-fold,prop:one-player-response}). Bidirectional improvement and its
 one-sided form, best-response restart, are covered by no barrier here and
 have no known superpolynomial family
 (\Cref{def:bsi,thm:bsi-nostall,prop:bsi-br}); the restart rule beats the

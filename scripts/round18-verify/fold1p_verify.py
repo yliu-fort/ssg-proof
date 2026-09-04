@@ -65,3 +65,31 @@ for D in range(1, 9):
     print(f'D={D}: {len(names)-1} non-sinks besides u, one player, stopping; response map pieces on the grid: {pieces} (2^D+1={2**D+1}); distinct slopes {distinct_slopes}')
     assert pieces == 2**D + 1 and distinct_slopes == 2**D + 1
 print('ALL ONE-PLAYER UNDAMPED FOLD CHECKS PASSED (pieces counted on the dyadic grid of mesh 2^-(D+4); breakpoints of T^{D+1} are dyadic of that mesh)')
+
+# ---- closed form: val(F_D)(theta) = 2^{-(D+1)} theta + sum_{d=1}^{D} 2^{-D-1-2d} T^d(theta) + 2^{-3D-2} T^{D+1}(theta) + c_D,
+#      from s_d := x_d + y_d = s_{d-1}/2 + |phi_{d-1}|/4 + 8^{-d}/2, |phi_d| = e_d T^{d+1}(theta), val(F_D) = s_D/2 + |phi_D|/2;
+#      and the slopes: on a piece the slope is 2^{-(D+1)}(1 + sum_{d<=D} 2^{-d} sigma_d + 2^{-D} sigma_{D+1}), sigma_d the slope sign of T^d.
+def closed(D, theta):
+    v = F(1, 2**(D+1)) * theta
+    t = theta
+    for d in range(1, D+2):
+        t = T(t)
+        v += (F(1, 2**(D+1+2*d)) if d <= D else F(1, 2**(3*D+2))) * t
+    return v
+for D in range(1, 9):
+    names, kinds, succ, idx = build(D)
+    c = None; ok = True
+    for j in range(0, 2**(D+3)+1):
+        th = F(j, 2**(D+3))
+        diff = values(kinds, succ, idx, th)[idx[f'F{D}']] - closed(D, th)
+        if c is None: c = diff
+        ok = ok and diff == c
+    # slopes on the pieces: the set of distinct slopes, in units of 2^-(D+1)
+    Mg = 2**(D+3); pts = [F(j, Mg) for j in range(Mg+1)]
+    R = [values(kinds, succ, idx, t)[idx[f'F{D}']] for t in pts]
+    slopes = sorted(set((R[j+1]-R[j])*Mg for j in range(Mg)))
+    units = [s_ * 2**(D+1) for s_ in slopes]
+    convex = all(R[j+1]-R[j] <= R[j+2]-R[j+1] for j in range(Mg-1))
+    print(f'D={D}: closed form holds with constant c_D={c}: {ok}; convex: {convex}; {len(slopes)} distinct slopes, in units of 2^-(D+1): {[str(u) for u in units]}')
+    assert ok and convex
+print('CLOSED FORM AND CONVEXITY CONFIRMED FOR D<=8')

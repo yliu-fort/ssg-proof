@@ -1,0 +1,77 @@
+{
+ "target": "Round-18 route \"one-player-envelope\": The upper envelope of monotone rational functions \u2014 is the one-player stopping-probability path superpolynomial, and can the tent itinerary drive an all-switches run (results ue:onefold, ue:cheb, ue:path-not-run, ue:linearise+ue:cascade, ue:pgf)",
+ "sound": true,
+ "confidence": "high",
+ "verdict": "Everything substantive reproduces. I rebuilt OF(D) and OFC(D,k) from the STATEMENTS (not the route's code) in /tmp/claude-1000/-data-ssg-proof/296b18c1-9dc5-4a0b-94cf-9bde3946ecfe/scratchpad/r18-audit-one-player-envelope-correctness/ in exact rational arithmetic and confirmed: (i) OF(D) is acyclic, stopping, one-player, out-degree two, n=9D+4, m=D+1, |Vmin|=0 (D=0..7); (ii) psi_d = 2T^d(rho)-1 at eleven rationals for D=0..10 (726 triples, 0 mismatches); (iii) Opt(rho) by BRUTE FORCE over all 2^{D+1} strategies (D<=4) is a singleton on each of the 2^{D+1} intervals, has exactly 2 elements at each of the 2^{D+1}-1 grid points, the itineraries are pairwise distinct with consecutive Hamming distance 1, exactly one Max vertex ties per grid point, the level tied at the k-th point is D-nu_2(k), and the per-level tie counts are 1,2,4,...,2^D; the same by exact backward induction up to D=11 (4095 breakpoints on 103 non-sinks, 12 Max), so B(OF(D)) = 2^m-1 = 2^{(N+3)/9}-1 with Vmin empty is CONFIRMED; (iv) the values were recomputed FROM THE GAME at seven (D,rho) by rebuilding OF(D)_rho as an ordinary SSG through dyadic rho-gates (22 to 281 vertices), stopping by the trap test, value by brute force over all positional strategies \u2014 agreement at every vertex; the shipped OF_2.json matches my build vertex by vertex. For ue:cheb I built my own canonical Kraft tree for the two Chebyshev rows and confirmed psi_0 = Tt_k(rho), psi_d = 2T^d(u_0)-1 (540 checks, k<=6, D<=4, 0 mismatches), and I counted the breakpoints by EXACT STURM ROOT COUNTS rather than a grid: Tt_k(rho)=c has exactly k simple roots in (0,1) for every level value c (k<=7, d<=4), hence B = k(2^{D+1}-1), reconfirmed by offset-grid sign counting directly on the built game and by realising OFC(D,k)_rho as an ordinary SSG at five (D,k,rho) up to 409 vertices. Sizes: my build gives 7,17,28,37,52,65,86 (D=0, k=1..6,8) and 220/709/2312 at k=16/32/64 against the route's 8,19,30,40,55,69,90 and 227/720/2331 \u2014 same construction up to a couple of nodes, and O(k^2) holds because sum_d|A_d| = T_k(3) exactly (checked to k=32), so K = ceil(k log_2(3+2sqrt2)) ~ 2.54k. ue:path-not-run: the switched sets are singletons with exactly m distinct sets against 2^{D+1}-1 steps (D=1..7); cor:law-u (l.5059) does say the switched sets are pairwise distinct, so the deduction is valid; clause (c) reproduces exactly with Phi = sum_v val_sigma(v) (argmax 2,4,6 / 5,9,12 / 10,19,24 and 5,3,1 / 10,6,3 / 21,12,7 strictly decreasing steps after it); I also rebuilt BP(D) from prop:discount-fold and confirmed 10D non-sinks, the tent identity and 2^{d-1} reversals per level (D<=5), which is what the BP clause of (a) needs. ue:linearise's recursion holds at all 2^{D+1} strategies times six rho for D=0..6 (1524 checks, 0 mismatches); all-switches on OF(D)_rho over every start and those rho gives 1,1,2,3,3,4,5 at D=0..6, and the abstract cascade over 244 arbitrary seeds attains exactly D+1, so the D+2 ceiling is valid and near-tight; ue:cascade's general successor-closed projection identity and additive bound hold on 78 random two-player stopping SSGs. ue:pgf's generating-function identity, one-player convexity/monotonicity/simultaneity (14000 exact checks, 0 violations) and the four-vertex Min counterexample (8/125, 1/8, 9/50 against the chord midpoint 61/500, stopping by the trap test) all reproduce. No fatal or major defect survives. What must be fixed before integration: (1) ue:linearise's switchability biconditional is FALSE at ties \u2014 explicit witness OF(2), rho=3/8, sigma=(Y_0,Y_1,X_2): psi^sigma_2 = 0 so sign psi = 0 != eps_2 = +1 and the statement predicts \"strictly switchable\", but val_sigma(X_2) = val_sigma(Y_2) = 19683/134217728; the correct criterion, which the proof itself derives, is eps_d psi^sigma_d < 0 (106 tie cases in the tested range); (2) ue:onefold-cor(b)'s \"B is not bounded by any function of n alone\" is false and is contradicted by the ceiling B <= (n+1)m2^m quoted in the same sentence (m <= n) \u2014 the intended and true claim is \"by no polynomial in n\"; (3) the paper's rem:discount-fold (l.15387-15432) states no one-player gap and gives no reason that two players are needed, so \"the gap left open at rem:discount-fold is closed\" and \"refutes the reason given there\" are unsupported citations (the open question appears only in the round-17 briefing digest, and grep over every occurrence of \"breakpoint\" in frontier.tex confirms it is nowhere in the text); (4) two small true-but-unstated steps in ue:cheb's proof (K = O(k), and the existence and O(kK) node count of a binary tree with the prescribed leaf DEPTHS, which lem:dyadic-row does not supply since it controls probabilities only \u2014 prop:one-vertex-path's device is the right citation and the route does give it, but the cost bound is inherited from the wrong tree); (5) minor mis-citations: thm:lfp-general is cited for the simultaneous attainment of the max by one sigma (that is thm:determinacy), and rem:discount-path is credited with a polynomial g_{pi,v} it does not define; (6) ue:multiplier's \"the multiplier is exactly two\", invoked inside ue:onefold's proof, assumes without argument that the multiplier c cannot depend on rho and does not treat c < 1, so it is a heuristic remark and should not be cited as settling anything.",
+ "findings": [
+  {
+   "severity": "minor",
+   "result_name": "ue:linearise (part (i) of \"ue:linearise + ue:cascade\")",
+   "defect": "The statement's switchability criterion is a false biconditional: \"F_d is strictly switchable at sigma exactly when eps_d != sign psi^sigma_d\" wrongly predicts switchability whenever psi^sigma_d = 0, i.e. at a tie between the two successors. The proof derives the correct criterion (eps_d phi^sigma_d < 0), so the statement and its own proof disagree; the fix is one clause.",
+   "evidence": "Explicit witness recomputed from the game: OF(2) at rho = 3/8, sigma = (F_0 -> Y_0, F_1 -> Y_1, F_2 -> X_2) gives psi^sigma_2 = 0, so sign psi^sigma_2 = 0 != eps_2 = +1 and the statement predicts \"strictly switchable\", while val_sigma(X_2) = val_sigma(Y_2) = 19683/134217728 is a tie and F_2 is NOT strictly switchable. Two further witnesses: OF(2), rho=3/8, sigma=(1,1,1), d=2; OF(3), rho=9/16, sigma=(0,1,0,0), d=3 (val = 73222472421/281474976710656). Over all 2^{D+1} strategies and six rho for D = 0..6 the recursion psi^sigma_d = 2 eps_{d-1} psi^sigma_{d-1} - 1 holds in all 1524 cases with 0 mismatches, and the biconditional fails in exactly the 106 cases with psi^sigma_d = 0. (t8.py)"
+  },
+  {
+   "severity": "minor",
+   "result_name": "ue:onefold-cor(b) (in the paste-ready LaTeX; not in the JSON results list)",
+   "defect": "\"B is not bounded by any function of n alone\" is false, and is contradicted by the ceiling quoted in the same sentence: rem:discount-path gives B(G) <= (n+1)|C|2^{|C|} and |C| <= n, so B <= (n+1)n2^n is a function of n alone. The true and intended claim is that B is bounded by no polynomial in n, which OF(D) does establish (B = 2^{(n-4)/9}).",
+   "evidence": "frontier.tex l.1052-1054 (rem:discount-path): \"a nonzero polynomial of degree at most n+1 having at most n+1 roots, B(G) <= (n+1)|C|2^{|C|}\". ue.tex ue:onefold-cor(b) asserts the negation and then cites that very ceiling three words later."
+  },
+  {
+   "severity": "minor",
+   "result_name": "ue:onefold-cor(a) and the route's headline",
+   "defect": "Misattributed gap. The corollary claims \"the gap left open at rem:discount-fold is closed in the affirmative\" and the headline claims the result \"refutes the reason given there for needing two players\". rem:discount-fold contains neither a one-player question nor any claim that two players are needed; rem:fold merely describes the max/min device. The open one-player question exists only in the round-17 briefing digest, not in the paper.",
+   "evidence": "I read rem:discount-fold in full (frontier.tex l.15387-15432): its three readings are (a) the transplant of thm:fold's fold to the discount parameter, (b) robustness of the length, (c) what follows and what does not; no one-player clause. grep over every occurrence of \"breakpoint\" in frontier.tex (28 hits, lines 198-17601) finds no statement of the one-player question as open. The route's own new content is unaffected; only the citation must be restated (e.g. \"the question recorded in the round-17 briefing\")."
+  },
+  {
+   "severity": "minor",
+   "result_name": "ue:cheb (proof)",
+   "defect": "Two true-but-unproved steps. (a) The size claim n <= 9D + O(k^2) is derived from \"each row costs at most (k+1)K = O(k^2)\", which needs K = O(k); that is never justified. (b) The gadget is described only by its leaves and their depths (\"the corresponding leaf carries probability 2^{-(K-b)} ... redirected into chain position d+b\"), and the node count is imported from lem:dyadic-row, whose pruned tree realises prescribed PROBABILITIES, not prescribed DEPTHS; in lem:dyadic-row's tree one target may receive mass at several depths, so its bound does not apply verbatim to the depth-indexed tree. GAP, in one sentence each: \"sum_d |A_d| = T_k(3) <= (3+2sqrt2)^k, hence K = O(k)\"; and \"the multiset of prescribed leaf depths satisfies Kraft (its masses sum to 2^{-K} sum (A_d)_pm <= 1), so a binary tree realising it exists, and the canonical assignment has at most (number of leaves) + K - 1 internal nodes\".",
+   "evidence": "Both are true and I verified them constructively. sum_d|A_d| = T_k(3) exactly for k = 1,2,3,4,6,8,12,16,24,32 (3, 17, 99, 577, 19601, 665857, ... , 1572584048032918633353217), giving K/k = 2.500..2.542, so K = ceil(k log_2(3+2sqrt2)). My own canonical Kraft tree (audc.py) builds the rows for k <= 64 with total sizes n(0,k) = 220, 709, 2312 at k = 16, 32, 64 (n/k^2 = 0.86, 0.69, 0.56) against the route's 227, 720, 2331; all identities and the breakpoint count reproduce on my tree, so the O(k^2) conclusion stands."
+  },
+  {
+   "severity": "note",
+   "result_name": "ue:pgf (proof)",
+   "defect": "Two mis-citations. (i) \"the damped game is stopping for rho<1, so thm:lfp-general supplies a single sigma attaining the value at all vertices at once\" \u2014 thm:lfp-general asserts only that val and each val_sigma are least fixed points; simultaneous attainment by one positional sigma is thm:determinacy (which is what thm:lfp-general's own proof invokes, for the Min side). (ii) \"the single polynomial g_{pi,v} of rem:discount-path\" \u2014 rem:discount-path defines N^pi_v = det(I - rho Q_pi) y^pi_rho(v), not g_{pi,v}; the degree-(n+1) advantage numerator is introduced in the route's own proof.",
+   "evidence": "frontier.tex l.539-556 (thm:lfp-general statement and the first lines of its proof: \"As G_sigma has no Max vertices, thm:determinacy applied to it yields a positional tau*\"); frontier.tex l.1045-1052 (rem:discount-path, which names only N^pi_v). Neither affects the truth of ue:pgf(c) or (b), both of which I verified: 14000 exact convexity/monotonicity checks on 400 random 7-vertex one-player games with 0 violations and the max attained simultaneously by one sigma in every case."
+  },
+  {
+   "severity": "note",
+   "result_name": "ue:multiplier (remark, cited inside ue:onefold's proof)",
+   "defect": "Presented as settling that no other fold multiplier is available (\"ue:multiplier says no other ratio is available\"; the JSON's ue:onefold argument says \"The multiplier 2 is forced\"), but the argument assumes without justification that c must not depend on rho \u2014 the step \"First, c must not depend on rho, so the two rho-degrees agree and c is a power of 2\" is an assertion, not a derivation \u2014 and it does not treat c < 1 at all, only c = 1 and c > 2. It is a remark and ue:onefold's statement does not depend on it, so nothing else is affected, but it should not be cited as a proved constraint.",
+   "evidence": "ue.tex, ue:multiplier: \"Two constraints pin c=2. First, c must not depend on varrho, so the two varrho-degrees agree and c is a power of 2.\" No reason is given why a rho-dependent multiplier is excluded; c = 2^{j'-j-1} also admits the values 1/2, 1/4, ... which are not discussed."
+  },
+  {
+   "severity": "note",
+   "result_name": "ue:cheb (the two-sided display) and the route's verification method",
+   "defect": "Two small hygiene points. (i) The display Omega(sqrt(n-9m)) 2^m <= B*(n,m) needs OFC(m-1,k) padded to exactly n non-sinks (B* is defined over games with n non-sinks); padding is harmless (extend the q- or c-chain) but is unstated. (ii) The route counts per-level sign changes \"on a grid of 400k2^{D+1} exact rationals\"; such a grid can contain the dyadic roots and then UNDERCOUNTS, because a sample landing exactly on a root destroys two sign transitions.",
+   "evidence": "I reproduced the undercount: with the naive grid rho = i/M, M = 4000k2^{D+1}, OFC(1,2) reports per-level (2,2) instead of (2,4) (the level-1 roots 1/4 and 3/4 are grid points) and OFC(1,3) reports (2,6) instead of (3,6) (the level-0 root 1/2 is a grid point). With the offset grid rho = (i+1/3)/M the counts are exactly k2^d for OFC at (D,k) = (1,2),(2,2),(1,3),(0,4),(2,3),(3,2), and the exact Sturm counts agree, so the route's reported numbers are correct \u2014 but the recipe is fragile and should not be inherited as printed."
+  }
+ ],
+ "novelty_table": [
+  {
+   "result_name": "ue:onefold",
+   "closest_label": "prop:discount-fold",
+   "class": "new-object"
+  },
+  {
+   "result_name": "ue:cheb",
+   "closest_label": "prop:one-vertex-path",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "ue:path-not-run",
+   "closest_label": "cor:law-u",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "ue:linearise + ue:cascade",
+   "closest_label": "thm:component-bound",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "ue:pgf",
+   "closest_label": "rem:discount-path",
+   "class": "new-relation"
+  }
+ ]
+}
