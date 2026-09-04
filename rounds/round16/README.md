@@ -64,8 +64,8 @@ one-player plus-one gadget); `53824d6` the stacking proof repaired per its
 correctness audit; `ab914cb` the abstract and summary updated for the
 round; `1f45e32` sec:bias repaired per the bias-homotopy correctness
 audit; `092ed9b` batch I (the few-denominator stall $\mathrm{CV}(e,s)$,
-rescoped per both audits). The paper stands at 209 pages with no
-undefined references.
+rescoped per both audits); `f5ed1b0` the ratio row completed at $e=5$.
+The paper stands at 209 pages with no undefined references.
 The verification scripts behind every "verified" above are in
 `scripts/round16-verify/`.
 
