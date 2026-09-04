@@ -1,0 +1,31 @@
+Full paste-ready text (346 lines, amsthm style, labels rl:*, intended position immediately after rem:choice-lift at l.14882) is in /tmp/claude-1000/-data-ssg-proof/296b18c1-9dc5-4a0b-94cf-9bde3946ecfe/scratchpad/r18-rlt-two/rl.tex. It contains rl:notation, rl:merged (M, M^{A,p}, splitters), rl:merge-bound, rl:merge, rl:levels, rl:splitters, rl:rows-turn (relation to prop:rows-turn and the dual half by lem:duality), rl:cone-def, rl:cone, rl:modulator, rl:tree-def, rl:tree-values (with the escape-certificate bound and its proof), rl:tree-vacuous, rl:tree-threshold, rl:tree-remark, rl:table (the exact-level table) and rl:where (what a level-two gap must contain, and the search record). Central statements, verbatim:
+
+\begin{lemma}[The merged bound]\label{rl:merge-bound}
+Let $G$ be a stopping SSG with $\Vmin=\emptyset$ and let $x\in R_1(G)$. Then $D:=x-w^{\ast}\ge0$ on $C$ and $D\le MD$.
+\end{lemma}
+
+\begin{theorem}[Merged transience forces level one]\label{rl:merge}
+Let $G$ be stopping with $\Vmin=\emptyset$. If $M(G)$ is transient then $R_1(G)=\{w^{\ast}\}$.
+\end{theorem}
+
+\begin{theorem}[The level of a freezing set]\label{rl:levels}
+Let $G$ be stopping with $\Vmin=\emptyset$, let $j\ge1$ and let $A\subseteq C$ with $|A|=j-1$. If $M^{A,p}$ is transient for every $p\in\{0,1\}^{A}$ then $R_j(G)=\{w^{\ast}\}$.
+\end{theorem}
+
+\begin{corollary}[Splitters bound the level]\label{rl:splitters}
+Let $G$ be stopping with $\Vmin=\emptyset$. Then $R_j(G)=\{w^{\ast}\}$ for every $j>\operatorname{sp}(G)$. Contrapositively, if $\max_{R_j}x(v)>w^{\ast}(v)$ for some $v$ then $G$ has at least $j$ splitters.
+\end{corollary}
+
+\begin{proposition}[The cone relaxation certifies exactness]\label{rl:cone}
+$\{x-w^{\ast}:x\in R_j(G)\}\subseteq\mathrm{CR}_j(G)$; so if $\mathrm{CR}_j(G)=\{0\}$ --- one linear programme --- then $R_j(G)=\{w^{\ast}\}$. The criterion is strictly stronger than \Cref{rl:levels}.
+\end{proposition}
+
+\begin{theorem}[Level one is asymptotically vacuous]\label{rl:tree-vacuous}
+Let $n:=2^{d}$, $g=1-2^{-e}$, $S:=n\kappa+1-\kappa$, and assume $\kappa<g$ and $n(g-\kappa)\ge1-\kappa$. Then $x_\ell:=n\kappa(g+(1-g)2^{-\ell})/S$ (indexed by the depth $\ell$) lies in $R_1(T_d(e,\kappa))$, so $\max_{R_1}x(\mathrm{root})\ge n\kappa/(n\kappa+1-\kappa)=1-\Theta(1/N)$ while $w^{\ast}(\mathrm{root})=\kappa$ and $\max_{R_0}x(\mathrm{root})=1$.
+\end{theorem}
+
+\begin{corollary}[Level one does not decide the threshold, with one player]\label{rl:tree-threshold}
+For $\kappa<\tfrac12$ and $2^{d}\kappa>1-\kappa$, $\min_{R_1}x(\mathrm{root})=\kappa<\tfrac12<\max_{R_1}x(\mathrm{root})$. The smallest instance is $T_2(3,\tfrac14)$: $14$ vertices, $7$ Max, $5$ average, $R_1$-interval $[\tfrac14,\tfrac47]$, $R_2$ exact at the root.
+\end{corollary}
+
+Files named in the results, all in the code directory: rl.tex (the LaTeX); exact_levels.txt (the first exact level of every instance of the document, with mu); Tgames.json (the games T_1,T_2,T_3 at e=3, kappa=1/4, with kinds, successors, sinks, names and w*); cert_tree.py (entrywise exact verification of the level-one certificate from the built game); cone.py (CR_j); topo.py (M, M^{A,p}, mu, the refined mhat); sa.py (the level-j lift and the exact active-set dual certificates); red.py, tgame.py, tree.py, cyc.py, mix.py, designs.py, inst.py (instances); taskA.py (the table); escape.py (exact escape certificates by policy iteration); search3.py with log_m4_*.txt and h3_m4_*.json (the exhaustive four-vertex enumeration, 0 hits).

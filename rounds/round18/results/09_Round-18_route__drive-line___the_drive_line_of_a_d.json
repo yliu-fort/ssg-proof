@@ -1,0 +1,123 @@
+{
+ "target": "Round-18 route \"drive-line\": the drive line of a driven block, the combed-flip graph, and the escape shape at the third level",
+ "sound": true,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "dl:b2-line",
+   "defect": "The 14-cell / 13-fence partition of the level-two block's drive line, WITH THE SAME FOURTEEN ORIENTATIONS IN THE SAME ORDER, was already computed in exact arithmetic by the round-17 correctness audit of the realisation-space route, which reported it as a correction to that route's claim of 16 breakpoints/17 cells. The route presents it as a result and cites only rem:pinned-escape (three of the thirteen fences). This is a rediscovery of a project record, uncited.",
+   "evidence": "/data/ssg-proof/rounds/round17/results/18_route_\"realisation-space\":_R(s;S)_as_a_semialgebra.json, finding 'rs:b2-window(a)': 'The exact partition into maximal intervals of constant OUTMAP has 13 interior breakpoints and 14 cells', evidence field lists all fourteen outmaps (0,1,3,6,7,4,5,2), ..., (7,6,4,5,0,3,2,1) -- identical to dl:b2-line's list. I re-derived the same partition from the paper's printed normal form (my ind_block.py, 19 candidate roots, 13 true ties, 14 cells, all AUSO); the genuinely new data are the ten unpublished exact fence values, the simplicity of every fence and the combedness at each -- three lines of data for rem:pinned-escape, not a numbered result."
+  },
+  {
+   "severity": "major",
+   "result_name": "dl:fences",
+   "defect": "Parts (a) and (b) are lem:readout(a) specialised: retype the drive vertex beta as a terminal of payoff t (def:readout, rem:terminals); lem:readout(a) then says every readout of the block is a minimum of at most 2^k substochastic affine maps of (y,t), hence val_sigma is concave piecewise affine with at most 2^k pieces and every margin is affine on each piece with at most one root. That is the whole of (a),(b) in three lines. The route's closest_label is rem:b2-anatomy, which is not the closest statement in the paper -- and the round-17 novelty audit had already ruled the identical statement (rs:drive(b),(c),(d)) a RESTATEMENT of lem:readout(a) with exactly this correction. The route repeats the mis-labelling while honestly flagging the rs:drive overlap. Only (c), the Cramer-plus-Hadamard height bound on a fence, is new, and it is routine and used nowhere in the route.",
+   "evidence": "frontier.tex l.8114 lem:readout(a); /data/ssg-proof/rounds/round17/results/11_...json novelty_table row {'result_name': 'rs:drive ...', 'closest_label': 'lem:readout', 'class': 'restatement'} and its finding 'Restatement of lem:readout(a) ... Retype the drive vertex beta as a terminal of payoff t'."
+  },
+  {
+   "severity": "minor",
+   "result_name": "dl:escape-level (the four complementarity laws) and dl:tournament's verification field",
+   "defect": "The route advertises the four complementarity laws (alpha switchable at (0,0) iff not at (1,0), etc.) as content of the level theorem and their satisfaction by the blow-up table as 'a nontrivial consistency check that the shape is exactly right'. They are automatic: lem:trichotomy says that for sigma and sigma+e_i exactly one of i in S(sigma), i in S(sigma'), i in D-both holds, and a nondegenerate game has D empty -- so the improvement outmap is an orientation of the cube and the two ends of every edge disagree, for EVERY game. The check has zero discriminating power.",
+   "evidence": "frontier.tex l.4940 lem:trichotomy. I re-ran the complementarity test on B^2 and on all four translates B^2(.xor z), z = 8,10,24,26: 0 violations in all five cases, including the two the route excludes. A test passed by the excluded objects verifies nothing."
+  },
+  {
+   "severity": "minor",
+   "result_name": "dl:escape-level",
+   "defect": "Classified new-object; it is a strengthening of prop:pinned-level, as the route's own restatements field concedes ('the case Dhat = 0'). Worse, the exact verification does not exercise the new regime: both published realisations are PINNED, so the checking script sets Ca = Cb = [0,0,0,0] and w00 is the constant Theta_w at every inner strategy. The genuinely new ingredient -- a layer-(0,0) drive that varies with the inner strategy -- is untested numerically. The theorem itself is correct: I re-derived all eight switchability conditions by hand (including |Dhat|_1 + ehat < 1, which is what makes Phi_sigma well defined) and found no error.",
+   "evidence": "dl_verify_b2.py lines 'Ca = [F(0)]*4; Cb=[F(0)]*4'; b2_level_check.txt shows w00 = 0.614549 = Theta_w at all eight sigma. def:pinned (frontier.tex l.6243) states both games are pinned extensions."
+  },
+  {
+   "severity": "minor",
+   "result_name": "dl:drive-flip",
+   "defect": "Its content is three lines from lem:flat-class(a): at a fence the tied incidence (sigma,v) puts v in D(sigma), so the flat class is the subcube {sigma, sigma+e_v} and S is constant on it, i.e. the two outmaps agree off v -- combedness. The number of simple fences is then at least the number of differing edges by counting alone. The extra half, '#fences >= D (the combed-flip distance)', is the only new part and the route's own dl:fences(a) shows it is never binding: a block with m Max and k Min has room for (m+1)2^{m+k} fences while d <= m 2^{m-1}.",
+   "evidence": "frontier.tex l.4953 lem:flat-class(a) ('S and D are constant on each flat class, and the class of sigma is the subcube sigma + span{e_i : i in D(sigma)}'). The route's own dl:b2-distance states 'no lower bound on (m,k,D) follows from counting fences at any k; the fence count is not the invariant that measures the cost of a level.'"
+  },
+  {
+   "severity": "minor",
+   "result_name": "dl:m3-decision (b),(c)",
+   "defect": "Scope narrower than the question it is attached to. rem:pinned-escape asks whether a DRIVEN block that is not pinned can present B^2 at one drive and B^2(.xor z) at another; (b) and (c) assume the inner three-Max block is exactly the published {c1,c2,c3,c6} AND that it does not read the new (level-three) drive -- otherwise its drive line, on which both arguments turn, is a different curve. The paper's cor:pinned-no-doubling carries an equivalent restriction and says so explicitly ('read neither the new outer pair nor the drive'); the route does not. Separately, (c)'s statement quotes the interval [0, 23232377303/48259671705] while its verification field says the comparison was checked on [0, 6856791/18130160].",
+   "evidence": "frontier.tex l.6405 rem:pinned-escape ('Whether a driven block that is not pinned can present B^2 at one drive and B^2(.xor z) at another ... is the question every route to the height-22 level now runs through'); cor:pinned-no-doubling's proof, the parenthesis 'were the pin rows to read the drive, those values would move with the inner strategy through the drive at the upper layers'. I verified the wider interval claim does hold (y_6 <= y_3 componentwise on [0, 0.48140]), so this is a presentation defect, not an error."
+  },
+  {
+   "severity": "note",
+   "result_name": "dl:tournament / dl:no-beta-translate",
+   "defect": "Correct and NOT vacuous (I checked the one way it could have been: all four translates B^2(.xor z), z = 8,10,24,26, are acyclic unique sink orientations, so prop:allsw-auso does not already exclude them, and the tournament is strictly stronger than acyclicity of the outer 2-face -- acyclicity forbids (P,Q,R,S) in {(1,0,1,0),(0,1,0,1)} while the tournament forbids (P,Q,R) in {(1,0,1),(0,1,0)}, and the actual violation at z=24,26 is the pattern (1,0,1,1) that acyclicity permits). But the route proves it the long way. Three lines suffice and give a much wider theorem: at layers (0,1) and (1,1) the drive solves the same equation t = R_beta.y_sigma(t)+q'_B, so w(0,1)=w(1,1); by lem:switch an improving switch raises the value vector componentwise, so along each edge of the outer 2-face y_beta is nondecreasing, whence P,Q,R ARE the three pairwise comparisons of w00,w10,w01; the patterns (1,0,1) and (0,1,0) force w00=w10=w01, and then equality of the two layer values of y_alpha through A'>0 makes alpha's margin zero, contradicting nondegeneracy. Nothing about alpha's rows (A, C_alpha, R_alpha, q_A, q'_A) is used -- so the exclusion holds for ANY nondegenerate stopping game whose outer pair satisfies only: no block row reads alpha, beta's action-1 row reads only the block, beta's action-0 row reads alpha with positive weight. dl:escape-level is not load-bearing for the route's one qualifying result.",
+   "evidence": "frontier.tex l.3503 lem:switch; my acyclicity test on B^2(.xor z) for z = 0,8,10,24,26 (all acyclic USOs, 0 cycles) and the tournament test (0,0,5,5 violating inner strategies for z = 0,8,10,24,26 respectively), reproducing the route's exclusion from the outmaps alone."
+  },
+  {
+   "severity": "note",
+   "result_name": "dl:b2-distance, dl:sign",
+   "defect": "Measurement with an explicitly null consequence, by the route's own statement ('no lower bound on (m,k,D) follows from counting fences at any k'; 'the sign is a genuine invariant of the flip but yields no obstruction'). z = 10 left undecided (search cut at 3e5 nodes). The two translates for which the flip-distance searches were run, z = 24 and 26, are precisely the two the route kills outright by dl:no-beta-translate, so the searches are redundant with the stronger theorem.",
+   "evidence": "bfs2.log; the route's own 'WHAT DOES NOT FOLLOW' clause in dl:b2-distance and its dl:sign remark. I reproduced d = 42,52,32,44, the 17 combed edges of B^2, sgn(B^2)=+1, and the length-42 monotone acyclic combed path to B^2(.xor 8) (10753 nodes, every intermediate an AUSO, every step one combed flip)."
+  }
+ ],
+ "novelty_table": [
+  {
+   "result_name": "dl:flippable (single-edge reversal of a USO is possible iff the endpoints share their bottom-antipodal successor; the flip transposes the outmap and reverses its sign; acyclicity law)",
+   "closest_label": "prop:allsw-auso / lem:flat-class (nothing in frontier.tex modifies an abstract orientation)",
+   "class": "new-object"
+  },
+  {
+   "result_name": "dl:drive-flip (a drive line moves by single combed flips; #simple fences >= combed-flip distance)",
+   "closest_label": "lem:flat-class(a)",
+   "class": "restatement"
+  },
+  {
+   "result_name": "dl:fences (fence count (a),(b) and the determinantal height bound (c))",
+   "closest_label": "lem:readout(a)",
+   "class": "restatement"
+  },
+  {
+   "result_name": "dl:b2-line (the level-two block's drive line in full; the realised doubling as a geodesic)",
+   "closest_label": "rem:pinned-escape (and the round-17 realisation-space correctness audit, which computed the identical 14 cells)",
+   "class": "measurement-only"
+  },
+  {
+   "result_name": "dl:b2-distance (flip distances 42,52,32,44; no monotone combed path for z = 24,26)",
+   "closest_label": "cor:pinned-no-doubling",
+   "class": "measurement-only"
+  },
+  {
+   "result_name": "dl:escape-level (the level theorem for the escape shape: three drives w00,w10,w01 and the comparison rho)",
+   "closest_label": "prop:pinned-level",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "dl:tournament / dl:no-beta-translate (no escape extension of any block realises a translate with a nonzero beta-component; z = 24, 26 dead)",
+   "closest_label": "thm:pinned-no-translate",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "dl:escape-mixed / dl:escape-updown / dl:m3-decision (the sign trichotomy on R_alpha - C_alpha; z = 10 dead over the published block; z = 8 dead there unless the sign is mixed)",
+   "closest_label": "lem:pinned-upclosed",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "RESTATEMENT declared: lem:flat-class (ties come in edge pairs, val constant on the flat class)",
+   "closest_label": "lem:flat-class",
+   "class": "restatement"
+  },
+  {
+   "result_name": "RESTATEMENT declared: rem:pinned-escape (the two published windows of the drive line)",
+   "closest_label": "rem:pinned-escape",
+   "class": "restatement"
+  },
+  {
+   "result_name": "RESTATEMENT declared: prop:pinned-level as the Dhat = 0 case of dl:escape-level (Theta_u, Theta_w recovered as ehat and its partner)",
+   "closest_label": "prop:pinned-level",
+   "class": "restatement"
+  },
+  {
+   "result_name": "RESTATEMENT declared: lem:layer-order as P = Q = 0 on the untranslated layer (0,0)",
+   "closest_label": "lem:layer-order",
+   "class": "restatement"
+  },
+  {
+   "result_name": "UNDECLARED restatement: the four complementarity laws of dl:escape-level (alpha's switchability at (0,0) and (1,0) complementary, etc.)",
+   "closest_label": "lem:trichotomy",
+   "class": "restatement"
+  }
+ ],
+ "verdict": "VERDICT: new-theorem, on ONE result, and not the one the headline leads with. Everything reproduces; nothing is false; the novelty is about a third of what is submitted.\n\n1. THE OBJECT. The route says its object is the drive line read as a walk in the combed-flip graph. Half of that the paper already owns under its own name: def:pinned defines the driven block and the map t |-> s_B(t) verbatim, and lem:readout(a) is its analysis (retype the drive vertex as a terminal of payoff t and every readout is a minimum of at most 2^k substochastic affine maps). The round-17 novelty audit had already ruled the identical statement, rs:drive, a restatement of lem:readout(a); this route repeats it under a new name with rem:b2-anatomy as its closest label, while honestly flagging the rs:drive overlap. What IS new is the combed-flip graph -- and it does no work. dl:flippable is a correct, elementary, self-contained characterisation (I proved it by hand and checked it exhaustively over all 744 USOs of the 3-cube and all 8976 single-edge flips at m <= 3, 0 violations, plus the acyclicity law over 4256 combed flips), but the drive-line application needs only its converse half, which is three lines from lem:flat-class(a); the distance bound it supports is shown non-binding by the route's own fence count; and dl:b2-distance's table of distances is declared consequence-free by the route itself. The one result that qualifies for new-theorem, dl:no-beta-translate, does not touch the combed-flip graph at any point. The advertised object is decorative; the substance comes from extending the paper's own pinned-level machinery by two readout terms.\n\n2. WHAT SURVIVES. dl:tournament + dl:no-beta-translate: a genuine new-relation of status refuted. rem:pinned-escape names the escape in which the layer-(0,0) outer values stop being constant and states that lem:pinned-upclosed \"then says nothing\"; this closes half of that escape, by a mechanism (transitivity of an order on three drives) the pinned proof never forms. I checked the one way it could have been vacuous: all four translates B^2(.xor z), z = 8,10,24,26, are acyclic unique sink orientations, so prop:allsw-auso does not already exclude them, and the tournament is strictly stronger than acyclicity of the outer 2-face -- the violation at z = 24,26 is the pattern (P,Q,R,S) = (1,0,1,1), which an acyclic square permits. The exclusion reproduces from the outmaps alone: 5 violating inner strategies at z = 24 and at z = 26, 0 at z = 8, 10 and at B^2 itself. Also surviving, at lower weight: dl:escape-level (a correct strengthening of prop:pinned-level; I re-derived all eight switchability identities and the contraction bound |Dhat|_1 + ehat < 1 by hand) and the conditional trichotomy dl:escape-mixed / dl:escape-updown with the block-specific exclusions dl:m3-decision(b),(c), whose arithmetic I reproduced exactly: the nine strategy-layer failures for z = 10 at sigma in {0,2,3,5,7} and {1,4,5,6}, and the eight psi-even <= psi-odd comparable pairs, (6,3) among them, that break up-closedness for z = 8.\n\n3. NOT CIRCULAR, NOT VACUOUS, BUT NARROW. No target-equivalent oracle, no class, no family. This is a construction-avenue closure of exactly the genre the paper itself disclaims for cor:pinned-no-doubling: \"it closes a construction avenue and is not a barrier in the sense of sec:gap; it covers none of the mechanisms M1-M6 or def:bsi.\" And it closes the wrong two of four: the canonical third level is B_phi(B^2, alpha_2), z = 8 (rem:blowup-measured, cor:pinned-no-doubling's \"in particular the alpha_2 of B^3\"), and z = 8 is precisely the translate dl:no-beta-translate does NOT cover. What the route leaves standing for z = 8 is an unproved sixteen-parameter feasibility question over one block, backed by a float search the route correctly refuses to count.\n\n4. THE REAL REMAINING GAP, more precisely than the route states it. rem:pinned-escape asks whether a DRIVEN five-Max block that is not pinned can present B^2 at one drive and B^2(.xor z) at another. The route answers a different question -- whether a five-Max ESCAPE EXTENSION of the fixed, drive-independent three-Max block {c1,c2,c3,c6} of prop:b2-realised can have outmap B^2(.xor z) -- and answers it only for the two z carrying beta_2 (generally) and for z = 10 and the unmixed-sign z = 8 (over that one block). So after this route the open item is unchanged in kind and smaller by two corners: a driven three-Max block, possibly reading the level-three drive and possibly not the published one, carrying an escape extension with R_alpha - C_alpha mixed in sign, presenting B^2(.xor 8).\n\n5. INTEGRATE, HEAVILY CUT -- and the paper is better for the cut half, worse for the whole.\nINTEGRATE (about two pages, after cor:pinned-no-doubling, closing rem:pinned-escape's first corner): dl:escape-level, stated as what it is, the Dhat != 0 extension of prop:pinned-level, with the complementarity clause deleted (it is lem:trichotomy) and with a warning that both published realisations are pinned, so the theorem's new regime is proved and not measured; dl:tournament and dl:no-beta-translate, but GENERALISED and reproved by the short argument the route missed -- the drive is shared by the layers (0,1) and (1,1), lem:switch makes y_beta nondecreasing along every edge of the outer 2-face, so P,Q,R are the three pairwise comparisons of w00,w10,w01 and transitivity does the rest; nothing about alpha's rows is needed, so the statement holds for any nondegenerate stopping game whose outer pair satisfies only \"no block row reads alpha; beta's action-1 row reads only the block; beta's action-0 row reads alpha positively\", a strictly larger class than the escape shape; and dl:escape-mixed, dl:escape-updown, dl:m3-decision(b),(c) with the drive-independence of the inner block stated as a hypothesis, as cor:pinned-no-doubling states its analogue.\nDO NOT INTEGRATE: dl:flippable, dl:drive-flip, dl:b2-distance and dl:sign -- a definition, a bound the route shows is never binding, a table of four distances declared consequence-free and one entry undecided, and an invariant declared to give no obstruction; a section no later result would cite, in a document whose value is that every negative claim carries a live instance. dl:fences(a),(b) -- lem:readout(a). dl:b2-line as a numbered result -- its thirteen exact fences and the fact that every one is simple belong as three lines of data inside rem:pinned-escape, credited to the round-17 correctness audit that first computed the fourteen cells."
+}
