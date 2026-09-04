@@ -4127,13 +4127,32 @@ outputs at least $\tfrac34$ when the plugged-in value is at least
 $\tfrac12$ and at most $\tfrac14$ when it is at most $\tfrac12-\delta$
 has $s\ge3/(16\delta)-3$ vertices --- with $\delta=2^{-(a+1)}$
 (\Cref{lem:denominator-sharp}), exponentially many. Admissibility ---
-$H$ stopping with its calls read as controlled vertices --- restricts
-less than it may seem: by \Cref{lem:trapchar} it forbids only directed
-cycles inside the controlled-plus-call subgraph, so a device that replays
-the plugged-in game through an average vertex (a call $c\to(x,t_0)$ with
-$x\in\Vavg$, $x\to(c,t_0)$, which repeats $G$ a geometric number of times)
-is a context, and the bound covers it; what is excluded is a replay loop
-through calls and controlled vertices alone, which is not stopping. And since a gate's two
+$H$ stopping with its calls read as controlled vertices --- is not needed
+for the bound: the proof uses only that the induced chain on $V_H$ is
+absorbing under every selection of actions at the controlled vertices and
+gates, which the composition being stopping already gives, so the bound
+holds for every context whose composition with $G$ is stopping (the
+round-$18$ weakest-oracle route; an earlier version excluded ``a replay
+loop through calls and controlled vertices alone'' as not stopping, but
+it is the context read with controlled calls that fails to stop there,
+not the composition). That excluded class is exactly where amplification
+lives: the gambler's-ruin chain of \Cref{sec:alphabet} with a call at each
+of its $K$ states, the $t_1$-exit one state up and the $t_0$-exit one
+state down, has for $K\ge2$ its calls on a directed cycle and is not
+admissible; composed with a \emph{player-free} stopping game of value $p$
+(a dyadic chain) it is stopping --- with a two-player $G$ it need not be,
+two adjacent copies driven out through one exit each forming a trap, the
+route's correctness auditor --- and its value at state $i$ is
+$(1-r^{i})/(1-r^{K+1})$ with $r=(1-p)/p$, of derivative
+$2i(K+1-i)/(K+1)$ at $p=\tfrac12$, i.e.\ $(K+1)/2$ from the middle state
+for odd $K$, against the bound $\tfrac43(K+3)$: amplifying a gap $\delta$
+to a constant is possible, costs $\Theta(1/\delta)$ context vertices, and
+the bound is tight within a factor approaching $\tfrac83$ (verified
+exactly, \texttt{scripts/round18-verify/wo\_verify.py},
+\texttt{wo\_lip.py}: the ruin values and slopes for $K\le11$, and the bound
+on $300$ random contexts composed with chains, $228$ of them not
+admissible; random admissible contexts do amplify, by factors up to
+$1.52$ at $s=8$, the auditor). And since a gate's two
 actions have the same support whatever $p,q\in(0,1)$, the sets
 $\{\val=1\}$ and $\{\val>0\}$ of $H^{p,q}$ do not depend on $(p,q)$
 (\Cref{prop:qualitative}), so no context turns the threshold
@@ -12190,6 +12209,30 @@ has value at least $\tfrac12$ unless every value is $0$ or $1$, which
 the attractor sweeps decide in linear time; the threshold plays no part
 in the difficulty, the naming of a vertex does.
 
+The free datum is a little larger than one vertex above $\tfrac12$. On a
+\emph{reduced} game (every non-sink value in $(0,1)$, after the sweeps)
+the sink-adjacent average vertices split into $\mathrm H$ (one successor
+$t_1$, the other a non-sink), $\mathrm M$ (successors $t_0,t_1$) and
+$\mathrm L$ (one successor $t_0$, the other a non-sink), with
+$w^\ast>\tfrac12$, $=\tfrac12$ and $<\tfrac12$ respectively; and
+\Cref{lem:alphabet-cover} at the extreme letters --- the largest non-sink
+value is attained at an average vertex with $t_1$ as a successor, the
+smallest at one with $t_0$, else the set attaining it would be a trap ---
+makes $\mathrm H\cup\mathrm M$ and $\mathrm L\cup\mathrm M$ nonempty. So
+one pass over the edge list returns \emph{some} strict comparison between
+two average vertices, or correctly reports that every non-sink value is
+$\tfrac12$: the fragment \textsc{Any-Comparison}, in which the algorithm
+chooses the pair, is linear, whereas restricted to any named set of
+average vertices, even a set inside $\mathrm H$, it is
+\Cref{prop:no-halving}(b) again (tied boosted copies $P_i\to(t_1,p)$
+against $Q\to(t_1,q)$). And the free datum decides no controlled vertex:
+two reduced stopping games on $2L+4$ non-sinks differing in one edge
+have the same three blocks and opposite answers at their only Max vertex,
+with gaps $\pm2^{-(L+1)}$ (the round-$18$ weakest-oracle route;
+recomputed, \texttt{scripts/round18-verify/wo\_verify.py}: the blocks on
+$778$ random reduced games, the copies, the pair $\mathrm{FB}(L)^{\pm}$
+for $L\le9$).
+
 \subsection{What a certificate would look like}
 
 It is worth recording exactly what object a polynomial-time algorithm
@@ -12244,6 +12287,47 @@ format has the same property, since by (b) the value vector is always a
 witness and by (a) no witness can be wrong. Soundness was also checked
 numerically: over $713$ randomly generated brackets on stopping games,
 the $3506$ comparisons they decided were correct without exception.
+\end{remark}
+
+\begin{remark}[The order up to a slack]\label{rem:eps-ladder}
+Let $\varepsilon(N)\in(0,1]$ be nonincreasing with
+$\log(1/\varepsilon)=\mathrm{poly}(N)$, and let $\textsc{Ord}_\varepsilon$
+ask for a total preorder on $\Vavg\cup\{t_0,t_1\}$ placing $x$ strictly
+above $y$ whenever $w^\ast(x)\ge w^\ast(y)+\varepsilon$,
+$\textsc{App}_\varepsilon$ for every value to within $\varepsilon$, and
+$\textsc{Gap}_\varepsilon$ for the bit of $w^\ast(v)\ge\tfrac12$ with
+either answer allowed within $\varepsilon$ of $\tfrac12$. The three are
+interreducible up to a constant factor in $\varepsilon$ (for dyadic
+$\varepsilon$; a general one is first rounded up to a dyadic, at the cost
+of a further factor $2$):
+$\textsc{Ord}_\varepsilon\Rightarrow\textsc{App}_{3\varepsilon/2}$ by a
+binary search against spliced dyadic reference chains,
+$\textsc{App}_\varepsilon\Rightarrow\textsc{Ord}_{3\varepsilon}$ by
+sorting, $\textsc{Ord}_\varepsilon\Rightarrow\textsc{Gap}_\varepsilon$ by
+one query against $m\to(t_0,t_1)$, and
+$\textsc{Gap}_\varepsilon\Rightarrow\textsc{App}_{3\varepsilon}$ by the
+same search through the difference vertex $s\to(v,\bar c)$ of
+\Cref{lem:duality}. The ladder has two known ends. For every fixed
+$\gamma\in(0,1]$ and $\varepsilon(N)\le2^{-N^{\gamma}}$ the fragment
+$\textsc{Ord}_\varepsilon$ is target-equivalent by a single query: padding
+the instance of \Cref{thm:compare-equivalence} with average vertices
+$\to(t_0,t_1)$ raises $N$ without touching the gap $4^{-a}$ of
+\Cref{lem:denominator-sharp}, so a polynomial padding puts $\varepsilon$
+below the gap. For $\varepsilon>1-2^{-(N-2)}$ it is the qualitative
+preorder $Z_1\sqsupset\cdot\sqsupset Z_0$ of \Cref{prop:qualitative},
+since a gap that large forces the values $1$ and $0$. Between the two
+ends nothing here decides, and by the interreducibility the question is
+exactly whether \Cref{prob:main} reduces in polynomial time to its own
+promise version with gap $1/\mathrm{poly}(N)$, or $\tfrac14$;
+\Cref{rem:no-amplification} shows that one black-box composition cannot
+supply the amplification, a context on $s$ vertices reading one plugged-in
+game through its gate multiplying the gap by at most $\tfrac43(s+3)$ at
+its own vertices and the ruin chain attaining $\Theta(s)$ (nested
+compositions and outputs read inside the copies are not covered), while
+every transformation of this document reads the edges and is outside that
+scope (the round-$18$ weakest-oracle route, its reductions checked
+against adversarial $\varepsilon$-faithful oracles, the padding at
+$\gamma=1,\tfrac12$ in $300$ runs).
 \end{remark}
 
 \section{A subexponential upper bound}\label{sec:randomfacet}
