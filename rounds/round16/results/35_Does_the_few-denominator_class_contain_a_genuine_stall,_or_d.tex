@@ -1,0 +1,319 @@
+% ============ paste-ready; full text also at
+% /tmp/claude-1000/-data-ssg-proof/d1fe2115-9b72-4784-bb94-87421ac1106c/scratchpad/few-denominator-stall/fd_cv.tex
+\subsection{A hybrid stall inside the few-denominator class}\label{sec:fdcv}
+
+The paragraph after \Cref{prop:fv-stall} asks whether
+$\{D(G)=\mathrm{poly}(N)\}$ contains a stall at a \emph{value-distinguishing}
+controlled vertex. It does, and for the strongest mechanism this document
+has: the family below keeps the Z-seeded own-successor hybrid of
+\Cref{def:hybrid} silent for $2^{\Omega(N)}$ rounds at a Max vertex whose two
+successors differ by exactly $1/D(G)$ --- with $D(G)$ not merely polynomial but
+\emph{constant}, $D(G)=16$ along the family. The mechanism of the construction
+is the one \Cref{rem:alphabet-compare} predicted: a small denominator gives no
+rate for the bracket $u_k-l_k$, and the hybrid cannot manufacture one.
+
+\begin{definition}[The coarse core]\label{def:fd-cv}
+For $e\ge1$ and $s\ge3$ let $\mathrm{CV}(e,s)$ have
+$\Vmax=\{v_0,v_1,v_2\}$, $\Vmin=\emptyset$, every other non-sink average, and
+\[
+ \begin{aligned}
+  &H\to(t_1,t_0);\\
+  &A^{i}_q\to(v_{3-i},A^{i}_{q+1})\ (q<e),\qquad A^{i}_{e}\to(v_{3-i},H);\\
+  &B^{i}_q\to(v_{i},B^{i}_{q+1})\ (q<2e),\qquad B^{i}_{2e}\to(v_{i},H);\\
+  &v_i\to(A^{i}_1,B^{i}_1)\qquad(i=1,2);\\
+  &d_q\to(v_1,d_{q+1})\ (q<s-1),\qquad d_{s-1}\to(v_1,t_0);\qquad
+   v_0\to(H,d_1),
+ \end{aligned}
+\]
+with start vertex $v_0$. Put $u:=2^{-e}$, $\lambda:=1-u$, $\beta:=1-u^{2}$,
+$\gamma:=2^{-s}$, $\beta_0:=1-2\gamma$.
+\end{definition}
+
+\begin{proposition}[Basic data]\label{prop:fd-cv-values}
+$\mathrm{CV}(e,s)$ is a stopping one-player SSG with $N=6e+s+5$ and
+$a=N-5$; every non-sink has value $\tfrac12$ except
+$w^\ast(d_q)=\tfrac12\bigl(1-2^{-(s-q)}\bigr)$, so
+\[
+  \Lambda(G)=\{0,1\}\cup\{\tfrac12\}\cup
+  \{\tfrac12(1-2^{-r}):1\le r\le s-1\},\qquad k(G)=s+2,\qquad D(G)=2^{s},
+\]
+and $Z_0=\{t_0\}$, $Z_1=\{t_1\}$, so the free seed of \Cref{def:hybrid} adds
+nothing. The vertex $v_0$ is value-distinguishing with gap exactly
+$w^\ast(H)-w^\ast(d_1)=2^{-s}=1/D(G)$, the least a value-distinguishing vertex
+can have; $v_1$ and $v_2$ are not value-distinguishing. Every parameter is read
+on the subgame reachable from $v_0$, which is all of $G$.
+\end{proposition}
+
+\begin{proof}
+The displayed vector is a fixed point of $T$: at $H$ it reads
+$\tfrac12(1+0)$; at $A^{i}_q$ and $B^{i}_q$ it is a mean of two vertices of
+value $\tfrac12$; at $v_1,v_2$ it is $\max(\tfrac12,\tfrac12)$; at $d_{s-1}$ it
+reads $\tfrac12(\tfrac12+0)=\tfrac14$ and backwards
+$w^\ast(d_q)=\tfrac12(\tfrac12+w^\ast(d_{q+1}))$ gives the display; at $v_0$ it
+reads $\max(\tfrac12,\tfrac12-2^{-s})$. Stopping: let $U$ be a trap
+(\Cref{lem:trapchar}). $H$ has the successor $t_0$, so $H\notin U$; then
+$A^{i}_e,B^{i}_{2e}\notin U$ and inductively no $A^{i}_q$ or $B^{i}_q$ lies in
+$U$, so $v_1,v_2\notin U$; $d_{s-1}$ has the successor $t_0$, so no $d_q$ lies
+in $U$, and $v_0$ has no successor in $U$. Hence $U=\emptyset$, and the fixed
+point is $w^\ast$ (\Cref{cor:comparison}). The denominator of
+$w^\ast(d_1)=(2^{\,s-1}-1)/2^{s}$ is $2^{s}$ because $2^{\,s-1}-1$ is odd, and
+no value has a larger one, so $D(G)=2^{s}$, attaining
+\Cref{thm:alphabet-denominator}'s bound $2^{k-2}$. Counting:
+$3+1+2(e+2e)+(s-1)=6e+s+3$ non-sinks.
+\end{proof}
+
+By \Cref{lem:transport-dim} every $z\in Q(G)$ is determined by
+$(z(v_0),z(v_1),z(v_2))$; write $\xi$ for that triple minus
+$(\tfrac12,\tfrac12,\tfrac12)$ and $z(x)=w^\ast(x)+\langle\theta_x,\xi\rangle$.
+
+\begin{lemma}[The lift]\label{lem:fd-cv-lift}
+$\theta_{v_j}=e_j$, $\theta_H=\theta_{t_0}=\theta_{t_1}=0$, and
+\[
+  \theta_{A^{1}_q}=(1-2^{-(e-q+1)})e_2,\quad
+  \theta_{A^{2}_q}=(1-2^{-(e-q+1)})e_1,\quad
+  \theta_{B^{i}_q}=(1-2^{-(2e-q+1)})e_{i},\quad
+  \theta_{d_q}=(1-2^{-(s-q)})e_1 .
+\]
+In particular $\theta_{A^{1}_1}=\lambda e_2$, $\theta_{B^{1}_1}=\beta e_1$,
+$\theta_{A^{2}_1}=\lambda e_1$, $\theta_{B^{2}_1}=\beta e_2$,
+$\theta_{d_1}=\beta_0e_1$; \emph{every} $\theta_x$ is $0$, $e_0$, or $ce_i$
+with $i\in\{1,2\}$ and $c\in(0,1]$.
+\end{lemma}
+
+\begin{proof}
+Backward substitution: $p\to(b,p')$ has
+$\theta_p=\tfrac12(\theta_b+\theta_{p'})$ and the last vertex of a chain has
+$\theta=\tfrac12\theta_b$. Every chain reads exactly one of $v_1,v_2$.
+\end{proof}
+
+\begin{theorem}[The hybrid is silent for $2^{\Omega(N)}$ rounds]\label{thm:fd-cv-lower}
+Put $\ell:=\gamma/\beta_0$, $M_k:=\lambda^{k}/2$, and
+\[
+  \Xi_k:=\bigl\{\xi\in\mathbb R^{3}:\ \ell\le\xi_1\le M_k,\ \ell\le\xi_2\le M_k,\
+  \xi_1\ge\lambda\xi_2,\ \xi_2\ge\lambda\xi_1,\ \xi_0=\beta_0\xi_1-\gamma\bigr\},
+\]
+$P_k:=\{x\mapsto w^\ast(x)+\langle\theta_x,\xi\rangle:\xi\in\Xi_k\}$, and let
+$K$ be the largest $k$ with $\lambda M_k\ge\ell$. Then $(P_k)_{k\le K}$
+satisfies the hypotheses of \Cref{thm:hybrid-convex-barrier}, so
+$\Delta_k\ge\Lambda(P_k)$ for $k\le K$, and
+\[
+  \Delta_k(d_1,v_0)\;\ge\;0,\qquad \Delta_k(v_0,H)\;\ge\;\beta_0M_k-\gamma>0 ,
+\]
+while $\Delta_k(v_0,d_1)\ge\gamma>0$ and $\Delta_k(H,v_0)\ge0$ by
+\Cref{thm:hybrid-sound}. Hence \emph{neither} clause of
+\Cref{rem:own-successor} fires at $v_0$ at any round $k\le K$, and
+\[
+  K+1\;=\;\Bigl\lfloor\frac{\ln\bigl(\beta_0/2\gamma\bigr)}{\ln(1/\lambda)}
+  \Bigr\rfloor
+  \;\ge\;\Bigl\lfloor(2^{e}-1)\bigl[(s-1)\ln2+\ln(1-2^{1-s})\bigr]\Bigr\rfloor .
+\]
+With $s$ fixed and $e=(N-s-5)/6$ this is $2^{\Omega(N)}$ rounds at
+$D(G)=2^{s}$ fixed.
+\end{theorem}
+
+\begin{proof}
+Write $h_k(c):=\max_{\xi\in\Xi_k}\langle c,\xi\rangle$, so
+$\Lambda(P_k)(x,y)=w^\ast(x)-w^\ast(y)+h_k(\theta_x-\theta_y)$. Note
+$\Xi_{k+1}\subseteq\Xi_k$, hence $h_{k+1}\le h_k$ and
+$\Lambda(P_{k+1})\le\Lambda(P_k)$; $\Xi_k\ne\emptyset$ because
+$(\xi_1,\xi_2)=(M_k,M_k)$ is admissible, and $\ell\le\lambda M_k$ makes
+$(M_k,\lambda M_k)$ and $(\lambda M_k,M_k)$ admissible too. On $\Xi_k$,
+$\xi_1,\xi_2\ge\ell>0$ and $\xi_0=\beta_0\xi_1-\gamma\ge0$, so $\xi\ge0$ and
+$0\le\langle\theta_x,\xi\rangle\le M_k\le\tfrac12$ for every $x$.
+
+\emph{(a) $P_k\subseteq Q(G)$.} Average rows: \Cref{lem:fd-cv-lift}. Box rows:
+$0\le w^\ast(x)\le\tfrac12$ and $0\le\langle\theta_x,\xi\rangle\le\tfrac12$.
+Max rows: at $v_1$, $\xi_1\ge\lambda\xi_2$ and $\xi_1\ge\beta\xi_1$; at $v_2$
+symmetrically; at $v_0$, $\xi_0\ge0$ and $\xi_0\ge\beta_0\xi_1-\gamma$, the
+last with equality.
+
+\emph{(b) Average clauses.} If $x$ is average then $\theta_x$ and $w^\ast(x)$
+are the means of those of its successors, so by sublinearity of $h_{k+1}$,
+$\Lambda(P_{k+1})(x,y)\le\tfrac12\sum_i\Lambda(P_{k+1})(x^{(i)},y)
+\le\tfrac12\sum_i\Lambda(P_k)(x^{(i)},y)$; the $(\mathrm{down})$ clause at an
+average $y$ and both average--average composites are the same computation,
+using $\theta_x-\theta_y=\tfrac12\sum_i(\theta_{x^{(i)}}-\theta_{y^{(\pi(i))}})$.
+There are no Min vertices.
+
+\emph{(c) Base clauses.} $\Lambda(P_{k+1})\le1$;
+$\Lambda(P_{k+1})(x,x)=0$;
+$\Lambda(P_{k+1})(t_0,y)=-w^\ast(y)-\min\langle\theta_y,\xi\rangle\le0$ as
+$\theta_y\ge0$, $\xi\ge0$; $\Lambda(P_{k+1})(x,t_1)\le\tfrac12-1+\tfrac12=0$;
+$\Lambda(P_{k+1})(t_0,t_1)=-1$.
+
+\emph{(d) $(\mathrm{down})$ at a Max vertex.} At $y=v_1$ the three values
+$w^\ast(v_1),w^\ast(A^{1}_1),w^\ast(B^{1}_1)$ are $\tfrac12$, so it suffices
+that $h_{k+1}(\theta_x-e_1)\le\min(h_k(\theta_x-\lambda e_2),
+h_k(\theta_x-\beta e_1))$, and pointwise on $\Xi_{k+1}\subseteq\Xi_k$,
+$\langle\theta_x,\xi\rangle-\xi_1\le\langle\theta_x,\xi\rangle-\lambda\xi_2$
+and $\le\langle\theta_x,\xi\rangle-\beta\xi_1$; $y=v_2$ is symmetric. At
+$y=v_0$, $\langle\theta_x,\xi\rangle-\xi_0=\gamma+\langle\theta_x,\xi\rangle
+-\beta_0\xi_1$, so $\Lambda(P_{k+1})(x,v_0)\le\Lambda(P_k)(x,d_1)$, and it is
+$\le\Lambda(P_k)(x,H)$ because $\gamma-\beta_0\xi_1\le0$ for $\xi_1\ge\ell$.
+
+\emph{(e) $(\mathrm{up})$ at $v_0$.} $\Lambda(P_{k+1})(v_0,y)
+=\tfrac12-w^\ast(y)-\gamma+h_{k+1}(\beta_0e_1-\theta_y)\le\Lambda(P_k)(d_1,y)$,
+one of the two terms of the clause.
+
+\emph{(f) $(\mathrm{up})$ at $v_1$ and $v_2$}: the only non-automatic
+condition. At $v_1$ it reduces to
+$h_{k+1}(e_1-\theta_y)\le\max\bigl(h_k(\lambda e_2-\theta_y),
+h_k(\beta e_1-\theta_y)\bigr)$, and by \Cref{lem:fd-cv-lift} there are four
+cases. $\theta_y=0$: both sides $\lambda M_k$. $\theta_y=c\,e_1$: left
+$(1-c)\lambda M_k$, and $(\xi_1,\xi_2)=(\lambda M_k,M_k)$ gives
+$h_k(\lambda e_2-c\,e_1)\ge(1-c)\lambda M_k$. $\theta_y=c\,e_2$: since
+$\xi_2\ge\lambda\xi_1$, the left side is at most $(1-c\lambda)\lambda M_k$,
+while $(\xi_1,\xi_2)=(M_k,\lambda M_k)$ gives
+$h_k(\beta e_1-c\,e_2)\ge(\beta-c\lambda)M_k$, and
+$(\beta-c\lambda)-(1-c\lambda)\lambda=u\lambda(1-c)\ge0$. $\theta_y=e_0$:
+$h_{k+1}(e_1-e_0)=\gamma+(1-\beta_0)M_{k+1}=\gamma+2\gamma\lambda M_k$ and
+$(\xi_1,\xi_2)=(\lambda M_k,M_k)$ gives $h_k(\lambda e_2-e_0)\ge
+\gamma+\lambda M_k(1-\beta_0)$. At $v_2$ three cases are verbatim with
+$e_1,e_2$ exchanged, and $\theta_y=e_0$ reads
+$h_{k+1}(e_2-e_0)=\gamma+\lambda M_k(1-\beta_0\lambda)$ against
+$h_k(\beta e_2-e_0)\ge\gamma+M_k(\beta-\beta_0\lambda)$, with
+$(\beta-\beta_0\lambda)-\lambda(1-\beta_0\lambda)=u\lambda(1-\beta_0)\ge0$.
+
+\emph{(g) Max--Max composites.} $\Lambda(P_{k+1})(x,y)\le
+\max_i\Lambda(P_k)(x^{(i)},y)$ by (e)/(f), and
+$\Lambda(P_k)(x^{(i)},y)\le\min_j\Lambda(P_k)(x^{(i)},y^{(j)})$ by (d) at level
+$k$, giving $\max_i\min_j$; and $\Lambda(P_{k+1})(x,y)\le
+\min_j\Lambda(P_{k+1})(x,y^{(j)})\le\min_j\max_i\Lambda(P_k)(x^{(i)},y^{(j)})$
+by (d) at level $k+1$ then (e)/(f).
+
+So \Cref{thm:hybrid-convex-barrier} applies. Finally
+$\Lambda(P_k)(d_1,v_0)=-\gamma+h_k(\beta_0e_1-e_0)=-\gamma+\gamma=0$ since
+$\beta_0\xi_1-\xi_0\equiv\gamma$ on $\Xi_k$, and
+$\Lambda(P_k)(v_0,H)=h_k(e_0)=\beta_0M_k-\gamma>0$ exactly when $M_k>\ell$.
+By \Cref{rem:own-successor} clause~(i) at $v_0$ needs $\Delta_k(v_0,H)\le0$ or
+$\Delta_k(v_0,d_1)\le0$ and clause~(ii) needs $\Delta_k(d_1,v_0)<0$ or
+$\Delta_k(H,v_0)<0$; all four are excluded. And $\lambda M_k\ge\ell$ reads
+$(k+1)\ln(1/\lambda)\le\ln(\beta_0/2\gamma)$, with
+$\ln(1/\lambda)=-\ln(1-2^{-e})\le 1/(2^{e}-1)$.
+\end{proof}
+
+\begin{corollary}[The class contains a hybrid stall]\label{cor:fd-cv-class}
+For every fixed $s\ge3$ the family $\{\mathrm{CV}(e,s)\}_{e\ge1}$ consists of
+stopping SSGs with $D(G)=2^{s}=O(1)$ --- so \Cref{thm:few-denominator} solves
+every member in $O(N^{2})$ integer operations --- carrying a
+value-distinguishing Max vertex of gap $1/D(G)$ at which the Z-seeded
+own-successor hybrid of \Cref{def:hybrid} is silent for $2^{\Omega(N)}$ rounds.
+This answers the question left open after \Cref{prop:fv-stall} in the
+affirmative, for M2, M2T, M4, M5 and M6 simultaneously, and strictly
+strengthens \Cref{prop:fv-stall}, whose stalls are vacuous.
+\end{corollary}
+
+\begin{lemma}[The hybrid fires as soon as the polytope is narrow]\label{lem:fd-narrow}
+Let $G$ be a stopping SSG with $\Vmin=\emptyset$, $C:=\Vmax$, and put
+$M_k:=\max\{z(x)-w^\ast(x):z\in K(\Delta_k),\ x\in V\}$. Then $M_k\ge0$, the
+maximum is attained on $C$, and for every $v\in\Vmax$ with non-optimal
+successor $b$ and gap $\gamma_v>0$: if $M_k<\gamma_v$ then
+$\Delta_{k+1}(b,v)<0$, so clause~(ii) of \Cref{rem:own-successor} fires at $v$
+at round $k+1$.
+\end{lemma}
+
+\begin{proof}
+Every $z\in Q(G)$ satisfies $z\ge Tz$, so $z\ge w^\ast$ by the minimality
+clause of \Cref{thm:lfp-general}(b); with $\xi:=z-w^\ast\ge0$, a non-controlled
+$u$ has $\xi_u=\sum_{w\in C}P^{u}_w\xi_w\le\max_C\xi$
+(\Cref{lem:transport-dim}). Since $K(\Delta'_k)\subseteq K(\Delta_k)$ and
+$\Delta_{k+1}\le\mathcal P(\Delta'_k)=\Lambda(K(\Delta'_k))$,
+$\Delta_{k+1}(b,v)\le\max_{K(\Delta_k)}(z(b)-z(v))=-\gamma_v+\max(\xi_b-\xi_v)
+\le-\gamma_v+M_k<0$.
+\end{proof}
+
+\begin{remark}\label{rem:fd-narrow}
+\Cref{lem:fd-narrow} says what a one-player stall must do: keep $K(\Delta_k)$
+wider than the gap. It also explains why the natural $\mathrm{poly}(N,D)$
+upper bound fails. On the self-reading families of \Cref{thm:fd-selfread} the
+recursion is $M_{k+1}\le(\rho_bM_k-\gamma)^{+}$, an \emph{additive} decrement
+of at least $\gamma\ge1/D$ per round, whence $O(D)$ rounds. It is false in
+general: on $\mathrm{CV}(e,s)$ the decrement is $M_k-M_{k+1}=2^{-e}M_k$, which
+drops below $\gamma$ as soon as $M_k<2^{\,e-s}$, and the last $\Theta(2^{e})$
+rounds each move $M_k$ by far less than $\gamma$. The vertices that carry the
+width need not be the vertices that must decide: in $\mathrm{CV}(e,s)$ the
+width lives on the vacuous pair $(v_1,v_2)$, where there is no gap to subtract.
+\end{remark}
+
+\begin{remark}[What the family separates]\label{rem:fd-cv}
+The pair $(v_1,v_2)$ is a \emph{flat} core --- both successors of each have
+value $\tfrac12$, so both vertices are vacuous in the sense of
+\Cref{prop:fv-stall} and the core alone has $D=2$ --- and $v_0$ is a
+\emph{reader} whose non-optimal successor reads $v_1$ with weight
+$\beta_0=1-2\gamma$. The core is exactly $CC(L,m)$ of \Cref{thm:hybrid-lower}
+with its leak deleted: there $B^{i}$ ends at $d_1$ of value
+$\tfrac12-2^{-2L-m}$, which makes $v_1,v_2$ value-distinguishing with an
+exponentially small gap, puts $CC$ outside the class, and makes the
+own-successor entry $\Delta_1(B_1,v_1)=-\gamma$ negative at once
+(\Cref{rem:hybrid-lower-not-a-refutation}). Ending $B^{i}$ at $H$ instead makes
+that gap $0$, so the negative entry disappears and the core becomes
+uninformative rather than decided; the decision is then moved to a vertex whose
+gap is coarse. Separating \emph{who is slow} from \emph{who must decide} is
+what turns \Cref{thm:hybrid-lower} into a genuine stall. Two readings should be
+resisted. First, this says nothing about \Cref{prob:main}:
+$\mathrm{CV}(e,s)$ is solved in $O(N^{2})$ by \Cref{cor:grid-iteration} on the
+grid $\tfrac1{16}\mathbb Z$ and its all-switches runs have length $\le1$. What
+it shows is that the hybrid is blind to precision structure the rounded
+iteration sees. Second, $\mathrm{CV}$ does not defeat $M1$ or $M3$:
+$v_0\preceq H$ holds in \Cref{def:simorder}, and all-switches halts within one
+productive round, so $M(1,0)$ of \Cref{def:seeded} decides at once --- and by
+\Cref{thm:seed-dichotomy} the latter is unavoidable short of a superpolynomial
+all-switches family.
+\end{remark}
+
+\begin{proposition}[Measured]\label{prop:fd-cv-measured}
+In exact rational arithmetic, with the free $Z$-seed and both directions of
+\Cref{rem:own-successor} at $v_0$ --- the only value-distinguishing vertex ---
+the first firing round on $\mathrm{CV}(e,s)$ is
+\[
+ \begin{array}{l|ccccc}
+   e\qquad (s=4,\ D=16,\ N=6e+9) & 1&2&3&4&5\\\hline
+   N                             & 15&21&27&33&39\\
+   \text{hybrid }M5              & 4&8&16&32&63\\
+   \Cref{thm:fd-cv-lower}\ \text{(proved)} & 2&6&14&30&61\\
+   \Cref{def:slack}\ M2          & 12&24&47&185&744\\
+   \Cref{def:trans-slack}\ M2T   & 11&23&47&95&189\\
+   \text{first }k\text{ with }u_k(v_0)-l_k(v_0)<\gamma & 16&60&240&961&3847
+ \end{array}
+\]
+and at $s=3$ ($D=8$, $N=6e+8$) the hybrid takes $3,5,10,19,36$ at
+$e=1,\dots,5$ against the proved $1,3,8,17,34$, while $M2$ takes
+$10,16,56,214,846$ and $M2T$ takes $8,16,31,60,114$. So at a \emph{fixed}
+denominator the hybrid and $M2T$ double with every six extra vertices and $M2$
+and the value-iteration bracket quadruple. The one-shot transport test of
+\Cref{def:transport} is \emph{permanently} silent:
+$\operatorname{Sep}(v_0,H)=\operatorname{Sep}(v_0,d_1)=0$ at every $e$ and $s$
+tested. The multiplicative calculus of \Cref{def:ratio} did not fire within
+$80$ rounds at any size tested, and the hybrid never fired at $v_1$ or $v_2$
+within $200$ rounds --- vacuously, by \Cref{prop:fv-stall}. Against this, the
+grid-rounded calculus $M7$ fires at $v_0$ at round $9$ at $s=4$; the simulation
+preorder of \Cref{def:simorder} fires at round zero; and all-switches takes $0$
+or $1$ productive rounds and \Cref{def:bsi} likewise, from each of the eight
+starts. The certificate of \Cref{thm:fd-cv-lower} was verified entrywise ---
+$P_k\subseteq Q(G)$, nesting, and all $N^{2}$ clause inequalities at every
+level --- at the $24$ pairs $(e,s)\in\{1,\dots,6\}\times\{3,4,5,6\}$ and, on
+freshly generated larger instances, at $(7,4)$, $(8,3)$ and $(7,6)$, where it
+certifies $248$, $280$ and $437$ silent rounds at $N=51,56,53$ and
+$D=16,8,64$. The clause checker was validated against the harness's independent
+implementation of \Cref{def:slack} on $200$ random games in both directions and
+reproduces the published certificate of \Cref{thm:hybrid-lower} on $CC(1,2)$,
+$CC(2,2)$, $CC(1,4)$ and $CC(2,3)$. The hybrid counts come from a
+vertex-enumeration engine in the three controlled coordinates which reproduces
+$\mathrm{fasthyb}$ on five $CW(e,s)$, and were reproduced by the harness's
+linear-programming hybrid on $\mathrm{CV}(1,3)$ and $\mathrm{CV}(1,4)$.
+\end{proposition}
+
+\begin{remark}[How the family was found]\label{rem:fd-cv-search}
+\Cref{lem:fd-diag} supplies a \emph{sound relaxation} of the hybrid for
+one-player games: carry only $Q(G)$ and the two diagonal cuts per Max vertex.
+The relaxed polytope contains $K(\Delta_k)$, so a round bound for it is one for
+the hybrid. Scanning it exactly over the one-player designs with $|C|=2$ and
+both Max vertices value-distinguishing, the largest silent count found was
+$\tfrac{\ln2}{2}D$, attained by $\mathrm{CW}$; the cyclic $|C|=3$ designs
+scanned gave the same. That is not evidence of a theorem: every design the scan
+enumerated has a gap at every controlled vertex, and by \Cref{rem:fd-narrow}
+$O(D)$ rounds then follow. $\mathrm{CV}(e,s)$ escapes by having no gap where
+the width lives, and $|C|=3$ is minimal for the architecture, since a single
+vacuous Max vertex whose two branches both read it is pinned at round two by
+\Cref{thm:fd-selfread}(c).
+\end{remark}
