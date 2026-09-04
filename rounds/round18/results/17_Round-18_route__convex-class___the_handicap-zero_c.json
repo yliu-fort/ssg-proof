@@ -1,0 +1,98 @@
+{
+ "target": "Round-18 route \"convex-class\": the handicap-zero class R = {B \u2ab0 0}, the tangent-cut mechanism M7 (hz:m7, hz:m7-wedge), its escape from the convex-certificate method (hz:escape), the two-player torus family HZ(n) (hz:ring, hz:ring-out), the bisector reading of the cut (hz:bisector), the location of the paper's stalls relative to R (hz:stalls, hz:cond), and the singular member (hz:singular).",
+ "sound": false,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "hz:stalls / hz:cond",
+   "defect": "The paste-ready proposition hz:stalls asserts \"M_7 decides ... BC(2,s), s=5,6,7, at round one\". It does not. M7, implemented literally from hz:m7 (free Z-seed, all three readings of rem:own-successor, the 8|C| lexicographic optima with both signs, cuts at every point with q(x)>0), is SILENT at all three controlled vertices at round 0 AND round 1, and first fires at ROUND TWO, at v_0, by clause (ii) and the pair test.",
+   "evidence": "Three independent reconstructions, all exact rational: (1) 3-D vertex enumeration of the reduced polytope of the root agent's /data/ssg-proof/scripts/round17-verify/BC_2_5.json (t_bc.py, t_bc2.py): round 0 fired={0:[],1:[],2:[]}, 4 cuts; round 1 fired={0:[],1:[],2:[]}, 5 cuts; round 2 fired={0:[('ii',0),('iii',1)],...}. (2) The PAPER'S driver \u2014 mycore.transport_rows/LP over Q(G;L_Z,U_Z) in the full variable space with the M7 cut rows appended, Sep read exactly as def:transport (t_bc3.py): rounds 0,1 silent, round 2 decides. (3) BC(e,s) rebuilt by me from def:bc + lem:dyadic-row (bc.py, N=45,47,49 = 12e+2s+11, Tw=w certified, B \u227b 0), giving rounds 0,1 silent and round 2 deciding for s=5,6,7 alike (t_bc4.py). Consistency check: my BC(2,5) matches the stored file's size and B status. Note the paper's own chain gives K+1 = floor(ln(c/4\u03b3)/ln(1/a)) = 2 at (e,s)=(2,5), i.e. certified silence for rounds 0 and 1 \u2014 exactly what I measure."
+  },
+  {
+   "severity": "major",
+   "result_name": "hz:stalls (and the route headline)",
+   "defect": "The headline claim \"The paper's hardest propagation stalls all lie in R\" is false, and is contradicted by the route's own hz:stalls. BC(e,s) for e >= 3 and CV(e,s) for e >= 2 are outside R \u2014 and those are exactly the regimes in which thm:bc-lower and thm:cv-lower give 2^{Omega(N)} (both read \"with s fixed and e = (N-2s-11)/12 that is 2^{Omega(N)}\", resp. K+1 = floor(ln(beta_0/2gamma)/ln(1/lambda)) with lambda = 1-2^{-e}). At e = 2 the proved BC silence is K+1 = floor((2^{e+1}-3)(s-4)ln2/3), LINEAR in N; at CV(1,3) it is a constant. So on every family whose exponential silence is PROVED, M7 is not even defined (B is not PSD). The families that are in R \u2014 WD, CC, H_m, G_8, S, S_r \u2014 are the ones rem:wedge and sec:bc already record as decided at round zero by M1 (def:simorder) and by M3 as M(1,0); M7 needs round one on WD and round two on BC(2,s).",
+   "evidence": "Exact recomputation of B = sym(R_0^T R_1), R_a = I-P_a with P_a the first-passage rows over C (my own bmat.py, written from rem:handicap-base): BC_2_5 psd(B)=PD, BC_3_5 psd(B)=INDEF, BC_4_5 psd(B)=INDEF; CV(1,3) PD, CV(1,4) INDEF, CV(2,3) INDEF, CV(2,4) INDEF, CV(3,4) INDEF, CV(4,4) INDEF (CV built by me from def:cv, N = 6e+s+5 confirmed, stopping confirmed). Cross-calibration: CVX4 and CVX6 PD, NCX INDEF, B1_game.json (58 vtx) INDEF, B2_small_GAME.json (138) INDEF, B2_pin137 (137) INDEF \u2014 all matching prop:handicap-zero-ceiling and the surrounding text, so the code agrees with the paper on every case the paper fixes."
+  },
+  {
+   "severity": "minor",
+   "result_name": "hz:escape",
+   "defect": "The last sentence of the statement \u2014 \"no chain of nested convex subsets of Q(G;L_Z,U_Z) bounds M7 from below\" \u2014 is a universal over all games and all chains and is not proved. What the argument establishes is (i) the specific WD chain of def:wedge-chain fails the (D3)-style containment at every level, and (ii) adjoining the tangent cut to (D1)-(D7) would falsify thm:convex-barrier-both, since its hypotheses hold for that chain while a run using the new operator decides at round one. Neither excludes a different chain bounding M7 on a different game. (The LaTeX corollary hz:escape is correctly scoped; the structured statement is not.)",
+   "evidence": "thm:convex-barrier-both's proof (frontier.tex l.16469-16553) is an induction whose (D3) step needs P_{k+1} subset K(Delta); the route's argument shows only that the analogous step for the tangent cut fails on this chain. I confirmed the computational content: for j = 2..9, e = 2j, m = j+4, K = max{k: M_k >= mu_dagger} = 1,6,15,33,68,138,279,560 and A_4^{(k)} = (M_{k+1}, M_k) lies in P_k and violates -gamma xi_1 + (gamma+mu) xi_2 <= mu^2/2 for every k <= K (t_chain.py, all exact)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "hz:m7",
+   "defect": "The mechanism is not fully determined, so \"M7\" is not yet a function of the game: (a) \"the lexicographic optimum of (s_1 g_{v,i}, s_2 x(v))\" does not say minimum or maximum (immaterial, since both signs are taken) but (b) no tie-break is given for the second-level objective, so when the face {s_1 g_{v,i} = min} contains several points minimising s_2 x(v), the cut point x^{s_1 s_2}_{v,i} is not determined by P_k. A theorem about a new object needs the object pinned down.",
+   "evidence": "hz:m7 as quoted. On WD the lexicographic optimum is unique (I recomputed the four cut points: (0,mu),(mu,0),(M_1,1/2),(1/2,M_1) in xi-coordinates, with mu = 1/16, 1/48, 1/112 at j = 2,3,4 \u2014 matching the route), so hz:m7-wedge is unaffected; on a game with a tie the operator is ambiguous."
+  },
+  {
+   "severity": "minor",
+   "result_name": "hz:m7 (and the route headline)",
+   "defect": "\"Polynomial-per-round\" is asserted, not proved. hz:m7 bounds only the NUMBER of linear programmes (O(|C|)) and the number of rows (O(N + k|C|)); it bounds no bit-size. Each round's cut coefficients are grad q(x) at a VERTEX of the previous round's system, so by Cramer the encoding length can grow multiplicatively from round to round, the standard failure mode of cutting-plane methods over accumulated cuts.",
+   "evidence": "hz:m7's cost sentence: \"One round is O(|C|) linear programmes with N variables and O(N+k|C|) rows.\" No statement about coefficient size appears anywhere in the route. Only round one is used in hz:m7-wedge, so no proved statement depends on it; the headline's \"polynomial-per-round mechanism M7\" does."
+  },
+  {
+   "severity": "minor",
+   "result_name": "hz:stalls / hz:cond",
+   "defect": "\"The exactness threshold is eps < lambda_min 2^{-4a}\" is not sufficient. With lem:round-recover's Q = 2*Delta*2^a and Delta = 1 for an SSG, exact recovery of w* needs an approximation within 1/(2Q^2) = 2^{-2a-3}; q(x) <= eps gives only ||x-w*||_2 <= sqrt(eps/lambda_min) by hz:bisector(b), so the correct sufficient threshold is eps < lambda_min * 2^{-4a-6}, a factor 64 smaller.",
+   "evidence": "lem:round-recover and the proof of thm:modulator (frontier.tex l.3100-3116, 'Put Q := 2 Delta 2^a'). Arithmetic: sqrt(eps/lambda_min) < 2^{-2a-3} iff eps < lambda_min 2^{-4a-6}."
+  },
+  {
+   "severity": "minor",
+   "result_name": "hz:ring / hz:ring-out",
+   "defect": "In the escape-certificate argument (vi) the inference \"g(u) := u^{s-1}(2-u) < 1 forces u > 2-2^{2-s}\" is asserted without the step that 2-2^{2-s} lies in the DECREASING branch of g, i.e. 2-2^{2-s} > 2-2/s, i.e. 2s < 2^s. Without it, g(2-2^{2-s}) > 1 does not give g >= 1 on the whole of (1, 2-2^{2-s}] and the inference does not close.",
+   "evidence": "g'(u) = u^{s-2}[2(s-1) - s u], so the maximum is at u = 2-2/s; the omitted inequality 2^{2-s} < 2/s holds for s >= 4 (s=4: 1/4 < 1/2). The statement is true: I recomputed a_s = (u^{s-1}(u-2)+1)/(u-1) at u = 2-2^{2-s} exactly for s = 4,5,6,8,10,12 (all < 0) and 2(1-2^{1-s})^{s-1} > 1 for the same s (t_esc1.py), and checked by exact LP that the SL block alone is infeasible at lambda = 1-2^{1-s} for s = 4,6,8."
+  },
+  {
+   "severity": "minor",
+   "result_name": "hz:bisector",
+   "defect": "Part (c)'s closing sentence reverses the inclusion it proves: \"each cut contains the halfspace <y, x-w*>_B <= <(x+w*)/2, x-w*>_B\". That displayed halfspace IS {y : ||y-w*||_B <= ||y-x||_B}, the side containing w*, and (c) proves the cut halfspace is CONTAINED IN it (the cut is at least as strong). Read with \"cut\" meaning the region removed, the inequality sign is also the wrong way round.",
+   "evidence": "Expanding ||y-w*||_B^2 <= ||y-x||_B^2 gives exactly <y,x-w*>_B <= <(x+w*)/2, x-w*>_B; the proof of (c) derives 'if ||y-x||_B < ||y-w*||_B then y is removed', i.e. H_x subset of that halfspace. The preceding display in hz:bisector(c) is correct; only the prose sentence is wrong."
+  },
+  {
+   "severity": "note",
+   "result_name": "hz:ring / hz:ring-out",
+   "defect": "\"log_2(1/lambda) < 2^{1-n}\" does not follow from lambda > 1-2^{1-n}; the true bound is log_2(1/lambda) < -log_2(1-2^{1-n}) ~ 1.44 * 2^{1-n}. The conclusion (2^{-Theta(sqrt N)}, hence outside the escape class of thm:escape-class) is unaffected.",
+   "evidence": "-log_2(1-x) = -ln(1-x)/ln 2 >= x/ln 2 > x for x in (0,1)."
+  },
+  {
+   "severity": "note",
+   "result_name": "hz:singular",
+   "defect": "On the exhibited eight-vertex game the transport polytope Q(G;L_Z,U_Z) is the SINGLE POINT w*: every controlled coordinate is pinned (ranges 1,0,1,1 over C = (0,1,2,3)). The statement 'B can be singular on a stopping game in R' is true and reproduces exactly, but the consequence drawn \u2014 'the bound q(x) >= ||x-w*||_B^2 does not localise w* in the kernel directions, and any first-order method must handle a singular Hessian' \u2014 cannot be illustrated here, since the feasible set already localises w* completely and M7's round zero decides both value-distinguishing vertices.",
+   "evidence": "Rebuilt from the statement (t_sing.py): stopping, w* = (1,0,1,1,1/2,0), value-distinguishing = [2,3], P_0/P_1/B exactly as displayed, psd(B) = PSD (not PD), Bd = 0 for d = (0,1,-1,0). Coordinate ranges over Q(G;L_Z,U_Z) computed by exact LP: (1,1),(0,0),(1,1),(1,1)."
+  },
+  {
+   "severity": "note",
+   "result_name": "hz:stalls",
+   "defect": "The list of non-members is incomplete in a way that misleads: CV(1,4) is also outside R (I checked), so among CV(e,s) only CV(1,3) of those tested lies in R. Writing 'CV(e,s) for e >= 2 ... do not' invites the reading that CV(1,s) is in R for every s.",
+   "evidence": "psd(B) = INDEF for CV(1,4) (t_cv.py), CV built by me from def:cv with N = 6e+s+5 and stopping confirmed."
+  },
+  {
+   "severity": "note",
+   "result_name": "hz:escape",
+   "defect": "The route reports chain lengths K = 2,7,16,34 for j = 2,3,4,5 and explains the mismatch with cor:wedge-count's 1,6,15,33 as 'the off-by-one in the loop bound'. Recomputing K = max{k : M_k >= mu_dagger} directly from def:wedge-chain reproduces the paper's numbers exactly, so the route's reported K is simply not K. The extra level is harmless (M_k > mu still holds there, so A_4^{(k)} is still on the face F), but the reported numbers should be corrected before integration.",
+   "evidence": "t_chain.py: K = 1,6,15,33,68,138,279,560 for j = 2..9, identical to cor:wedge-count."
+  },
+  {
+   "severity": "note",
+   "result_name": "hz:m7 (definition of R)",
+   "defect": "The route's framing defines R as '{stopping SSGs whose complementarity sum q is convex on the affine hull of Q(G), i.e. B = sym(R_0^T R_1) >= 0}'. The two are not equivalent: aff Q(G) can be a proper subspace of Psi(R^C) (hz:singular's own instance has aff Q(G) a single point while B >= 0 is a 4x4 condition), so B >= 0 is strictly stronger. Every proof uses B >= 0, so nothing breaks, but the 'i.e.' is false and rem:handicap-base states the Hessian identity on Psi(R^C), not on aff Q(G).",
+   "evidence": "rem:handicap-base: 'its Hessian on the affine space Psi(R^C) \u2287 Q(G) of lem:transport-dim is 2B'. hz:singular's polytope is a point (see above)."
+  },
+  {
+   "severity": "note",
+   "result_name": "hz:ring / hz:ring-out",
+   "defect": "(vii) bounds mu_{K_k} only for k < n/2 and says nothing about k >= n/2; the range is in fact covered because thm:modulator's cost p(n,beta) for the class K_k already carries 2^k = 2^{Omega(sqrt N)} there, but the write-up should say so rather than leaving a gap in the enumeration of the freezing-closed classes.",
+   "evidence": "thm:bounded-components: 'decidable in time poly(N) 2^k'. HZ(n) has one H(G)-component of size n^2/2 (verified exactly for n = 4, 6), so K_k membership forces k >= n^2/2 with mu = 0."
+  },
+  {
+   "severity": "note",
+   "result_name": "gap (B) / next_steps 4",
+   "defect": "The route frames a damping counterexample as showing 'R is a property of the presentation in a second, sharper way than prop:a-presentation'. rem:handicap-base already states presentation-dependence of R outright ('membership is moreover a property of the presentation, like a in prop:a-presentation: the subdivision below carries members out of it, 16 of 181'), so only the sharper form would be new; the phrasing understates what the paper has.",
+   "evidence": "rem:handicap-base, frontier.tex l.8929ff."
+  }
+ ],
+ "verdict": "NOT SOUND \u2014 two major defects survive; the mathematical core, however, reproduces exactly.\n\nWHAT I REBUILT AND CONFIRMED (all in exact rational arithmetic, in /tmp/claude-1000/-data-ssg-proof/296b18c1-9dc5-4a0b-94cf-9bde3946ecfe/scratchpad/r18-audit-convex-class-correctness/, written from the statements and from frontier.tex, not from the route's code):\n\n1. hz:m7-wedge (PROVED, fully reproduced). For (e,j,m) in eight admissible triples: WD's values, Z_0 = {t_0}, Z_1 = {t_1}; the reduced polytope Q(WD;L_Z,U_Z) has exactly the six vertices A_0..A_5 of lem:wedge-verts with M_0 = 1/2 (t_wedge2.py); the Hessian of q in the reduced coordinates is exactly 2B, confirming rem:handicap-base's identity; B = 2^{-(e+1)}[[1,-lambda],[-lambda,1]] and lambda_min(B) = 2^{-(e+j)} exactly (B - lambda_min I is PSD singular, B - (lambda_min+eps) I indefinite). M7 with the free Z-seed and ALL THREE readings of rem:own-successor is silent at both Max vertices at round 0 and decides both at round 1, with exactly 4 cuts, for j = 2,3,4,5,6 (N = 21..45); the two deciding cut points are (0,mu) and (mu,0) with mu = 1/48 at j=3 and 1/112 at j=4 (t_m7wedge.py, t_cuts.py). Every cut generated in every run I made was asserted against the exact w* and none removed it.\n\n2. hz:escape (computational content reproduced). K reproduces cor:wedge-count exactly (1,6,15,33,68,138,279,560, j = 2..9), A_4^{(k)} = (M_{k+1},M_k) is in P_k and violates the tangent cut at A_5 for every k <= K.\n\n3. hz:ring / hz:ring-out (PROVED, fully reproduced). HZ(n) rebuilt from the definition text alone matches the route's HZ_4_GAME.json exactly in kinds and successors. For n = 4,6,8: N = 6n^2+2, a = 5n^2, |Vmax| = |Vmin| = n^2/2, stopping by lem:trapchar, every non-sink reachable from c_{0,0}; P_0 and P_1 are (1/2) times the two commuting torus shifts (verified as permutations and as shifts on the (i,j) labels); B equals the claimed circulant I - (1/4)(Pi_0+Pi_0^T+Pi_1+Pi_1^T) + (1/8)(Pi_0^T Pi_1 + Pi_1^T Pi_0) and lambda_min(B) = 1/4 exactly; w*(d_1) = 2^{-n^2}, certified by Tw = w on a stopping game (D(G) has 20 and 44 bits at n = 4,6, and 2^{n^2} | D(G)); the SCC kind-sets are {avg} and {avg,max,min} with one component of size 3n^2/... carrying all controlled vertices, and H(G) is a single component of size n^2/2. The escape bound lambda > 1-2^{1-n} is confirmed both algebraically (a_s < 0 at u = 2-2^{2-s} for s = 4..12) and by exact LP on the slow block. The separator counting bound 5n(n-t) is a valid lower bound and no balanced separator of size <= 2 exists at n = 4,6. HZ(n) is non-degenerate: 15 of 16 controlled vertices are value-distinguishing at n = 4. lem:descent-refined applies (d_1 is in C_infty since w*(d_1) > 0), thm:qp's proof does contain the bag-selection step the route invokes, and thm:kacyclic's k-acyclicity is 'no cycle through a kind-k vertex', which every row of HZ(n) violates for all three colours. This result stands.\n\n4. hz:bisector: (a),(b),(c) are correct as proved (the Taylor identity, first-order optimality of w* over the convex Q(G), and the algebra); only the closing prose sentence reverses the inclusion.\n\n5. hz:stalls / hz:cond: |C| = 1 gives B = (1-p_0)(1-p_1) > 0 (correct, and G_8, S, S_r, H_m do have |C| = 1); the CC(L,m) closed form B = 4^{-L}I - ((2^L-1)/2^{3L})(J-I) with lambda_min = 2^{-3L} matches exactly for L = 1..5; the WD form matches for eight triples. Round-zero firings on H_m (m=3,5,7), G_8, S, S_r(6), CC(1,4), CC(3,4) and the ten-vertex R of prop:own-stall all reproduce, as does the round-one decision of vertex 4 of rem:own-stall's seven-vertex game (which is in R). A 4000-game random sweep found 848 members of R, 8 of them with singular B, and NOT ONE unsound cut.\n\n6. hz:singular: reproduces exactly, including B, its kernel and its PSD-but-not-PD status.\n\nWHY NOT SOUND. (i) The stated measurement 'M_7 decides BC(2,s), s = 5,6,7, at round one' is wrong \u2014 it is round two \u2014 and I established this three ways, including with the paper's own transport/Sep driver and with BC rebuilt from def:bc. It is a stated fact inside a paste-ready proposition. (ii) The route's headline, 'The paper's hardest propagation stalls all lie in R', is contradicted by the route's own hz:stalls and by my recomputation: BC(e,s) for e >= 3 and CV(e,s) for e >= 2 are outside R, and those are precisely the regimes in which the paper's proved silence is 2^{Omega(N)}. The stalls that ARE in R (WD, CC, H_m, G_8, S, S_r) are the ones already decided at round zero by M1 and by M(1,0). So M7's demonstrated escape from thm:convex-barrier-both is real but is exhibited only where two existing mechanisms already win faster, and M7 is not even defined (B not PSD) on the hard members of the two strongest families.\n\nThe two blocked gaps ((A) the diameter-halving rule, (B) damping closure) are stated exactly and honestly, and the forbidden import (Kozlov-Tarasov-Khachiyan) is correctly flagged rather than used. No step assumes a target-equivalent oracle: M7 uses only LPs over rows read off the game, and hz:gap correctly identifies that exact convex QP would settle R at once. I started no background jobs and wrote nothing into /data/ssg-proof."
+}

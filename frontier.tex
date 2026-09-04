@@ -8953,7 +8953,18 @@ nonnegative there and vanishes only at $w^\ast$, by
 programme --- the handicap-zero slice of the route \Cref{rem:lcp} surveys
 and sets aside; the round-$17$ variational route found no member of it
 outside the tractable classes of this document (every member it named has
-$|C|\le2$ or one player), and none is claimed; membership is moreover a
+$|C|\le2$ or one player), and none is claimed --- the round-$18$
+convex-class route found $\mathrm{WD}(e,j,m)$ and $\mathrm{CC}(L,m)$ in it
+for every parameter, with
+$B=2^{-(e+1)}\bigl(\begin{smallmatrix}1&-\lambda\\-\lambda&1\end{smallmatrix}\bigr)$
+and $B=4^{-L}I-\tfrac{2^{L}-1}{2^{3L}}(J-I)$, $\lambda_{\min}=2^{-(e+j)}$
+and $2^{-3L}$, while $\mathrm{BC}(e,s)$ for $e\ge3$ and $\mathrm{CV}(e,s)$
+for every tested pair but $(1,3)$ lie outside, so inside it every family
+with proved exponential propagation silence has $|C|=2$; that its boundary
+is attained
+(\Cref{prop:handicap-singular}); and a two-player family in it outside
+every named bound that is polynomial all the same (\Cref{prop:hz}) ---;
+membership is moreover a
 property of the presentation, like $a$ in \Cref{prop:a-presentation}: the
 subdivision below carries members out of it (the route's correctness
 auditor, $16$ of $181$). Strict reversibility, the
@@ -8969,6 +8980,73 @@ equal successors into every edge out of an average vertex makes $\Vavg$
 independent without changing stopping, values or the all-switches run
 (\Cref{lem:splice}(a) run backwards).
 \end{remark}
+
+\begin{proposition}[$B$ can be singular on a stopping game in $\mathcal R$]\label{prop:handicap-singular}
+On the stopping SSG with $\Vmin=\{0,1\}$, $\Vmax=\{2,3\}$, $\Vavg=\{4,5\}$,
+$t_0=6$, $t_1=7$ and $0\to(t_1,3)$, $1\to(t_0,5)$, $2\to(t_1,4)$,
+$3\to(1,2)$, $4\to(t_0,2)$, $5\to(1,t_0)$ --- every vertex reachable from
+$0$, $w^\ast=(1,0,1,1,\tfrac12,0)$, the vertices $2$ and $3$
+value-distinguishing --- the matrix $B$ over $C=(0,1,2,3)$ is
+\[
+  B=\begin{psmallmatrix}1&0&0&-\frac12\\0&\frac12&\frac12&-\frac12\\
+  0&\frac12&\frac12&-\frac12\\-\frac12&-\frac12&-\frac12&1\end{psmallmatrix},
+\]
+positive semidefinite with $B(\epsilon_1-\epsilon_2)=0$. So the class
+$\mathcal R=\{B\succeq0\}$ is not the open set $\{B\succ0\}$, and on its
+boundary the bound $q(x)\ge\|x-w^\ast\|_B^{2}$ says nothing in a kernel
+direction --- though on this instance the seeded transport polytope is
+already the single point $w^\ast$ (the round-$18$ convex-class route, found
+among $30\,000$ random small stopping games; recomputed here,
+\texttt{scripts/round18-verify/hz\_ring.py}).
+\end{proposition}
+
+\begin{proposition}[A family in $\mathcal R$ outside every named bound, and polynomial nonetheless]\label{prop:hz}
+For even $n\ge4$ let $\mathrm{HZ}(n)$ have controlled vertices $c_{i,j}$,
+$i,j\in\mathbb Z_n$, Max when $i+j$ is even and Min when it is odd; average
+bridges $b^{0}_{i,j}\to(c_{i+1,j},h^{0}_{i,j})$, $b^{1}_{i,j}\to(c_{i,j+1},h^{1}_{i,j})$
+with $c_{i,j}\to(b^{0}_{i,j},b^{1}_{i,j})$; $n$ disjoint copies
+$\mathrm{SL}_i$ of the player-free family $G_n$ of \Cref{thm:vi-lower}, with
+$h^{1}_{i,0}$ the head of $\mathrm{SL}_i$; one depth chain $d_1,\dots,d_{n^{2}}$,
+$d_q\to(d_{q+1},t_0)$, $d_{n^{2}}\to(t_1,t_0)$, with $h^{0}_{0,0}=d_1$; and
+every other $h$ a sink, $h^{0}_{i,j}=t_1$ iff $i+2j\equiv0\ (3)$ and
+$h^{1}_{i,j}=t_1$ iff $i+2j+1\equiv0\ (3)$; start $c_{0,0}$. Then
+$N=6n^{2}+2$, $a=5n^{2}$, $|\Vmax|=|\Vmin|=n^{2}/2$, the game is stopping
+and every vertex is reachable from the start. Its first-passage matrices
+over $C$ are $P_a=\tfrac12\Pi_a$ for the two commuting shifts of the torus,
+so $B$ is the circulant with eigenvalues
+$1-\tfrac12(\cos\theta_p+\cos\theta_q)+\tfrac14\cos(\theta_p-\theta_q)$, at
+least $\tfrac14$: $\mathrm{HZ}(n)\in\mathcal R$ with $\lambda_{\min}(B)=\tfrac14$
+for every $n$. As presented, every bound of this document is
+superpolynomial on it: $a=\tfrac56(N-2)$; $w^\ast(d_1)=2^{-n^{2}}$, so the
+escape exponent is at least $n^{2}$ (\Cref{lem:descent-refined}) and
+$2^{n^{2}}$ divides the common denominator; every row
+$\{c_{i,j},b^{1}_{i,j}\}_j$ is a directed cycle through $n/2$ Max, $n/2$ Min
+and $n$ average vertices, so no colour is acyclic and the Max-reachability
+digraph is one component of size $n^{2}/2$; every escape certificate has
+$\lambda>1-2^{1-n}$ (inside $\mathrm{SL}_i$ the certificate rows read
+$\lambda x_r\ge\tfrac12(x_1+x_{r+1})$, and $x\ge\bbone$ forces
+$2\lambda>2-2^{2-n}$, using $2n<2^{n}$ for $n\ge4$); the $n$ rows and the $n$ slow blocks are pairwise
+disjoint, so every freezing modulator of \Cref{thm:modulator} into any of
+its classes has size at least $n$; and no set of fewer than $2n/5$ vertices
+is a balanced separator, so the treewidth is at least $2n/5-1$ and
+\Cref{thm:qp} gives $N^{\Theta(\sqrt N\log N)}$. And yet $\mathrm{HZ}(n)$ is
+solved in polynomial time: eliminating the average vertices by one linear
+solve (\Cref{lem:readout} with $C$ as the pinned set) leaves a reduced
+system every one of whose rows has mass exactly $\tfrac12$ over $C$, so the
+reduced Shapley operator is a $\tfrac12$-contraction in the sup norm,
+$2a+O(1)$ iterations reach precision $2^{-2a-O(1)}$, and
+\Cref{lem:round-recover} returns $w^\ast$ exactly. The family is therefore
+what \Cref{prop:a-presentation} says $a$ is, for all eight bounds at once
+--- a property of the presentation, the slow blocks and the depth chain
+serving only to spoil the escape certificate and inflate the denominator
+--- and it is not the member of $\mathcal R$ outside the tractable classes
+that \Cref{rem:handicap-base} asks for (the round-$18$ convex-class route,
+which framed it as that member; its novelty auditor supplied the
+algorithm; the structure, $B$, its least eigenvalue, the reachability, the
+value $2^{-n^{2}}$, the strongly connected component and the row masses
+recomputed here from the game files at $n=4,6$,
+\texttt{scripts/round18-verify/hz\_ring.py}, \texttt{hz\_w7.py}).
+\end{proposition}
 
 \subsection{Lemke's algorithm as a bias homotopy}\label{sec:bias}
 
@@ -16669,9 +16747,11 @@ free seed, the ratio calculus and every combination of the mechanisms
 adjoined (the round-$17$ oracle-barrier route); its additive half restricted
 to \Cref{def:hybrid} is that theorem verbatim. What it does not cover is
 any operator that evaluates a strategy --- $M(p,k)$ of \Cref{def:seeded},
-all-switches, \Cref{def:bsi} --- and any coinductive reading over a grid
+all-switches, \Cref{def:bsi} --- any coinductive reading over a grid
 (\Cref{def:simorder} is one, see the remark after \Cref{def:slack}), whose
-iteration starts unsound. Two consequences. A stationary certificate ---
+iteration starts unsound, and any operator adjoining an affine cut that is
+not a pairwise difference bound, such as the tangent cut of
+\Cref{rem:tangent-cut}. Two consequences. A stationary certificate ---
 $P$ with $\mathcal L\Lambda(P)\ge\Lambda(P)$ --- bounds nothing for ever:
 taking the constant chain gives $\Delta_k\ge\Lambda(P)$ for the slack
 calculus at every $k$, while \Cref{thm:slack-vi-upper} and
@@ -16684,6 +16764,56 @@ so that maximum sits at a vertex for every $t$. The min-times closure of
 \Cref{prop:ratio-closure} is not among the operators above; on the family
 of \Cref{sec:bc} it was measured silent as well (the route's auditor,
 $16$ rounds on $\mathrm{BC}(2,5)$).
+\end{remark}
+
+\begin{remark}[The tangent cut of the complementarity sum]\label{rem:tangent-cut}
+On a game of the class $\mathcal R$ of \Cref{rem:handicap-base} there is a
+seventh sound mechanism, and it lies outside the language of
+\Cref{thm:convex-barrier-both}. With $q(x):=\sum_{v\in C}(x(v)-x(v^{(0)}))(x(v)-x(v^{(1)}))$
+and $B\succeq0$, Taylor's formula on the affine hull of $Q(G)$ reads
+$q(y)=q(x)+\nabla q(x)\cdot(y-x)+\|y-x\|_B^{2}$, and $q\ge0$ on $Q(G)$ with
+$q(w^\ast)=0$ (\Cref{thm:transport-objective}) gives
+$\nabla q(x)\cdot(w^\ast-x)\le-q(x)$ for every $x\in Q(G)$: the
+\emph{tangent cut} at $x$ is satisfied by $w^\ast$ and excludes $x$ itself
+unless $x=w^\ast$ (Kelley's cutting plane for the convex programme
+$\min q$ over $Q(G)$, from memory, unchecked). The mechanism keeps the
+$Z$-seeded transport polytope, tests the three readings of
+\Cref{rem:own-successor} over it each round, and otherwise adjoins the
+tangent cuts at the $8|C|$ lexicographic optima of $(\pm g_{v,i},\pm x(v))$
+(a fixed tie-break among optima is part of the definition) --- $O(|C|)$
+linear programmes per round, the bit size of the accumulated cuts not
+bounded here. It is sound by the display, but
+it is not a pairwise difference bound: a tangent cut is an affine
+inequality in all of $x$, and the invariant $\Delta_k\ge\Lambda(P_k)$ of
+\Cref{thm:convex-barrier-both} is a statement about pairwise differences,
+so the method of that theorem cannot bound it. It is not bounded on the
+paper's own certified family either: $\mathrm{WD}(e,j,m)$ lies in
+$\mathcal R$ with $B=2^{-(e+1)}\bigl(\begin{smallmatrix}1&-\lambda\\-\lambda&1\end{smallmatrix}\bigr)$
+in the coordinates $\xi_i=x(v_i)-\tfrac12$ of \Cref{rem:wedge}, the
+lexicographic minimiser of $(g_{v_1,1},x(v_1))$ over $Q(\mathrm{WD})$ is the
+vertex $(0,\mu)$, $\mu=2\gamma/\lambda$, of \Cref{lem:wedge-verts}, its
+tangent cut $-\gamma\xi_1+(\gamma+\mu)\xi_2\le\tfrac12\mu^{2}$ removes the
+whole face on which $g_{v_1,1}$ vanishes, and clause (ii) fires at round
+one at both Max vertices --- while the chain of \Cref{def:wedge-chain}
+certifies $2^{\Omega(N)}$ silence of every operator (D1)--(D7) there, its
+vertices $(M_{k+1},M_k)$ all violating the cut. That is no separation from
+the paper's other mechanisms: on $\mathrm{WD}$ the simulation preorder and
+the one-round seeded calculus decide at round zero (\Cref{rem:wedge}) and
+the degree-two lift is exact at $|C|=2$ (\Cref{rem:lasserre}); on
+$\mathrm{BC}(2,s)$, which lies in $\mathcal R$ and which the cut decides at
+round one or two according to the tie-break (round one here, round two in
+the route's correctness audit), the seeded calculus decides at once; and
+the families built to be hard, $\mathrm{BC}(e,s)$ for $e\ge3$ and
+$\mathrm{CV}(e,s)$ for every tested $(e,s)$ but $(1,3)$, lie outside
+$\mathcal R$, so inside $\mathcal R$ every family with proved exponential
+propagation silence has $|C|=2$. Its one decision beyond the
+others is vertex $4$ of the seven-vertex game of \Cref{rem:own-stall},
+silent under all three readings at round zero: the cut at the lexicographic
+optimum $x=(\tfrac23,\tfrac13,\tfrac13,\tfrac23,\tfrac13)$ removes every
+point with $x(4)=\tfrac13$, and $\operatorname{Sep}(4,2)<0$ at round one.
+No family designed against the cut exists yet (the round-$18$ convex-class
+route; the wedge and the seven-vertex game recomputed here,
+\texttt{scripts/round18-verify/hz\_wedge.py}, \texttt{hz\_w7.py}).
 \end{remark}
 
 \begin{remark}\label{rem:hybrid-barrier-lift}
@@ -18419,7 +18549,12 @@ controlled vertex with its \emph{own} successor rather than its two
 successors with each other, and on that family the useful entry is
 negative at round one. The same correction applies to
 \Cref{prop:transport-stalls} and \Cref{thm:transport-barrier}, which order
-successors and do not stall as decision rules.
+successors and do not stall as decision rules. A seventh mechanism, the
+tangent cut of the convex complementarity sum on the handicap-zero class,
+decides the wedge at round one and lies outside the certificate method's
+language, but decides nothing the others do not except one vertex of a
+seven-vertex game, and the families built to be hard lie outside that
+class (\Cref{rem:tangent-cut}).
 
 \paragraph{The gap.} \Cref{def:missing} states it at full strength and
 \Cref{thm:gap-equivalence} proves it equivalent to a polynomial-time
