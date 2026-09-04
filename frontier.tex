@@ -204,7 +204,8 @@ actions per state, and it is not the bias homotopy
 (\Cref{prop:discount-fold,prop:one-player-fold,cor:two-homotopies}); and
 every such bound is a bound on the rounds of a rule, not on information,
 since an optimal strategy is found from $|C|+2$ adaptively chosen
-evaluations (\Cref{thm:eval-queries}). For the all-switches rule
+evaluations (\Cref{thm:eval-queries}), and the bit alone still needs
+$|C|+1$ of them at $|C|\in\{2,3\}$ (\Cref{prop:eval-decide-lower}). For the all-switches rule
 itself we prove three monotonicity laws
 (\Cref{cor:no-return,cor:law-b,cor:law-u}, the first from
 \Cref{lem:monotone-law}, the second from \Cref{thm:peak-law}, the third
@@ -1107,6 +1108,72 @@ $t_0$ below it, so by \Cref{lem:trapchar} no gadget vertex lies in a trap
 and then no controlled vertex does either, since both of its successors
 are gadget entries; the only trap is empty.
 \end{proof}
+
+\begin{lemma}[Rational first-passage rows are cheap]\label{lem:rational-row}
+Let $r_1,\dots,r_\ell\ge0$ be rationals with common denominator $D\ge1$
+and $\sum_jr_j\le1$, and put $d:=\lceil\log_2D\rceil$. There is a gadget
+of at most $(\ell+2)d$ fresh average vertices with a designated entry
+such that a token entering it reaches the target $w_j$ with probability
+exactly $r_j$ for each $j$, reaches $t_0$ with the remaining probability,
+meets no other vertex on the way, and leaves the gadget with probability
+one. Consequently a harmonic normal form on $C$ whose rows are rational
+with common denominator $D$ is the normal form of an SSG on
+$|C|+2+O(|C|^{2}\log D)$ vertices, which is stopping exactly when no
+nonempty $U\subseteq C$ has at every $v\in U$ an action whose row puts
+mass one inside $U$.
+\end{lemma}
+
+\begin{proof}
+Put $K_0:=0$ and $K_j:=D(r_1+\dots+r_j)$, integers with
+$K_\ell\le D\le2^{d}$, and assign the leaf $i\in\{0,\dots,2^{d}-1\}$ of
+the complete binary tree of depth $d$ to $w_j$ when $K_{j-1}\le i<K_j$, to
+$t_0$ when $K_\ell\le i<D$, and \emph{back to the entry} when $i\ge D$.
+With a fair coin at every internal node one pass reaches a uniform leaf,
+so it rejects with probability $(2^{d}-D)/2^{d}<\tfrac12$; the passes are
+independent, so the gadget is left with probability one, and the exit is
+$w_j$ with probability $(K_j-K_{j-1})/D=r_j$ and $t_0$ with probability
+$(D-K_\ell)/D$. As in \Cref{lem:dyadic-row} a node whose whole leaf
+interval carries one assignment is deleted and its incoming edge
+redirected, so a node survives only if its interval straddles one of the
+$\ell+1$ boundaries $K_1,\dots,K_\ell,D$, at most $\ell+1$ per depth. For
+the consequence replace each action of each controlled vertex by such a
+gadget. A trap (\Cref{lem:trapchar}) containing a gadget vertex contains
+every leaf below it, and from every surviving node some leaf below is a
+target or $t_0$; as $t_0$ is a sink the leaf is a target, and then, the
+rejecting leaves returning to the entry, the trap contains the entry and
+with it every leaf of the tree, so the row puts mass one on targets in
+the trap. Hence the traps are exactly the closed full-mass action sets of
+the normal form. (The gadget was built and its exit probabilities solved
+exactly for nine rows, among them $(\tfrac13,\tfrac13)$ in $3$ vertices,
+$(\tfrac27,\tfrac37)$ in $5$, $(\tfrac4{15},\tfrac13,\tfrac25)$ in $7$
+and $(\tfrac7{37},\tfrac9{37},\tfrac{20}{37})$ in $11$,
+\texttt{scripts/round18-verify/ed\_ratrow.py}.)
+\end{proof}
+
+\begin{remark}\label{rem:rational-row}
+\Cref{lem:dyadic-row} is the case $D=2^{d}$, where no leaf rejects. When
+a row is a unit vector the gadget is empty and the successor name is the
+target itself, which a controlled skeleton would reveal; prefixing every
+incidence with one fresh average vertex both of whose successors are the
+gadget's entry (or the target) changes no first-passage law --- an
+average vertex both of whose successors are $y$ has the value of $y$ ---
+and no trap, so a family of normal forms can always be presented on one
+skeleton whose $2|C|$ successor names are distinct fresh average
+vertices, carrying no information beyond $C$ and its owners. Both points
+are used in \Cref{prop:eval-decide-lower}, whose witnesses are rational
+and almost never dyadic. The lemma also relaxes \Cref{thm:readout-realise}(b):
+its proof goes through verbatim for a \emph{rational} readout system of
+common denominator $D'$ whose pieces need not leak, on at most
+$2mr(m+3)\lceil\log_2D'\rceil$ average vertices, provided no nonempty
+$U\subseteq\Vmax$ has at each of its vertices an action one of whose
+pieces puts mass one inside $U$ --- a trap of the constructed game
+contains, through the Min chain, some gadget entry, hence every leaf of
+that gadget's tree, hence the full mass of that piece inside the trap,
+and conversely. Whether the rational system delivered by
+\Cref{thm:readout-realise}(a) satisfies this hypothesis, which would
+make the dyadic question at the end of that theorem moot, is not settled
+here.
+\end{remark}
 
 
 \begin{lemma}[Denominator bound]\label{lem:denominator}
@@ -3745,7 +3812,8 @@ evaluation algorithm needs $m=|\Vmax|$ queries on the family, $m$ suffice,
 and a zero-error randomised one needs $m/\log_2(m+1)$ in expectation on a
 uniform member. Two caveats belong to the statement: the members are
 pairwise isomorphic, so \Cref{prob:main} is constant on the family and
-the bound concerns naming an optimal strategy only; and for $j>i$ the two
+the bound concerns naming an optimal strategy only (for the bit see
+\Cref{prop:eval-decide-lower}); and for $j>i$ the two
 successors of $v_j$ tie, so the family is degenerate, and nothing is
 claimed for the nondegenerate class of \Cref{def:improvement-uso}.
 \end{proposition}
@@ -3795,6 +3863,242 @@ informational obstacle. The round-$17$ query-model route proved this,
 and its auditors reproduced Algorithm E on every family named, on the
 $136$-, $194$- and $344$-vertex games of the repository ($5$, $5$ and $4$
 queries) and on $300$ random two-player games, always within $|C|+2$.
+\end{remark}
+
+The decision version of the model is settled at small sizes, in the
+same direction. \Cref{thm:eval-queries} names an optimal strategy from
+$|C|+2$ evaluations and \Cref{prop:hdp-eval} bounds naming from below
+along a family on which \Cref{prob:main} is constant; the cost of the
+bit itself is a different quantity, carried by the set of harmonic
+systems consistent with the answers, which the proof of
+\Cref{thm:eval-queries} already uses row by row.
+
+\begin{definition}[Data, and the consistency fibres]\label{def:eval-data}
+Fix a controlled skeleton as in \Cref{thm:eval-queries}, with controlled
+set $C$, $m:=|C|$, and a start $v_0\in C$. Let
+$\Delta:=\{z=(q,p)\in\mathbb R^{1+C}_{\ge0}:q+\sum_up_u\le1\}$ and, for
+$x\in[0,1]^{C}$, $\langle x\rangle:=(1,x)$, so that
+$\langle x\rangle\cdot z=q+p\cdot x$ is the \emph{reading} of the row $z$
+at $x$. A \emph{harmonic system} on the skeleton is a family
+$M=(z_{v,a})$ of rows of $\Delta$, one per incidence $(v,a)$; it is
+\emph{stopping} if no nonempty $U\subseteq C$ has at every $v\in U$ an
+action $a$ with $q_{v,a}=0$ and $p_{v,a}$ of mass one inside $U$
+(\Cref{lem:trapchar} transcribed). By \Cref{lem:readout} with $C$
+pinned, a stopping SSG is such a system, with
+$\val_\sigma(v^{(a)})=\langle\val_\sigma|_C\rangle\cdot z_{v,a}$ at the
+successor $v^{(a)}$ of $v$ under action $a$. The \emph{data} of $t$
+queries is $D=((\sigma_r,x_r,A_r))_{r\le t}$ with $x_r:=\val_{\sigma_r}|_C$
+and $A_r(v,a):=\val_{\sigma_r}(v^{(a)})$; the \emph{consistency fibre} of
+$(v,a)$ is
+$K_{v,a}(D):=\{z\in\Delta:\langle x_r\rangle\cdot z=A_r(v,a),\ r\le t\}$,
+$K(D)$ is the set of stopping systems in $\prod_{(v,a)}K_{v,a}(D)$, and
+$\rho(D):=\dim\operatorname{span}\{\langle x_r\rangle:r\le t\}\le\min(t,m+1)$.
+For a one-player system $\val_{M,\sigma}$ is the least fixed point of
+$x\mapsto q_\sigma+P_\sigma x$ on $[0,1]^{C}$, namely
+$\sum_kP_\sigma^{k}q_\sigma$, and $\val^{\ast}_M:=\max_\sigma\val_{M,\sigma}$.
+\end{definition}
+
+\begin{remark}[Three facts about the fibres]\label{rem:eval-fibre}
+Every $M\in K(D)$ reproduces the data --- $\val_{M,\sigma_r}|_C=x_r$ and
+the appeals of $M$ at $\sigma_r$ are $A_r$ --- because $x_r$ is a fixed
+point of the Shapley operator of $M$ with Max frozen at $\sigma_r$
+(at a Max vertex $x_r(v)=A_r(v,\sigma_r(v))$ is the reading of the row
+used, at a Min vertex $x_r(u)=\min_aA_r(u,a)$), and for a stopping
+system that fixed point is unique (\Cref{lem:survival-contract}, which
+applies to any finite family of substochastic rows over $C$); this is
+the reproduction clause of \Cref{rem:run-informs}. Hence an evaluation
+algorithm, whose output is a function of the data, may output
+$\val(v_0)\ge\tfrac12$ only if every member of $K(D)$ that is an SSG of
+the class considered --- every rational member, by
+\Cref{lem:rational-row} --- has $\val^{\ast}(v_0)\ge\tfrac12$, and
+$\val(v_0)<\tfrac12$ only if every such member has
+$\val^{\ast}(v_0)<\tfrac12$; a closed queried strategy forces
+the bit, being optimal in every member by \Cref{lem:local-global}, which
+is \Cref{thm:eval-queries}'s halting test. Three facts about the fibres:
+with $X_u:=(x_r(u))_{r\le t}$, the image of $\Delta$ under the readings
+is $\operatorname{conv}\{0,\mathbf 1_t,X_u\ (u\in C)\}$, so $K_{v,a}(D)$
+is nonempty exactly when $(A_r(v,a))_r$ lies in it; a nonempty fibre is
+a polytope of dimension at most $m+1-\rho(D)$ (a proper face of
+$\Delta$ can be all the cutting subspace meets), each of whose vertices
+has at most $\rho(D)+1$ nonzero entries, since at a vertex at least
+$m+1-\rho$ of the $m+2$ constraints $z_i\ge0$, $\sum z\le1$ are tight;
+and at $\rho(D)=m+1$ each fibre is at most a point, which is the
+full-rank clause of \Cref{rem:eval-queries}.
+\end{remark}
+
+\begin{lemma}[A strictly switchable start below $\tfrac12$ is not decided by one evaluation]\label{lem:eval-one-query}
+(One player.) Let $M$ be a stopping harmonic system, $\sigma_1$ a Max
+strategy, $x_1:=\val_{M,\sigma_1}|_C$, $D$ the data of the single query
+$\sigma_1$, and let $v\in C$ be strictly switchable at $\sigma_1$:
+$A:=A_1(v,\overline{\sigma_1}(v))>\xi:=x_1(v)$. Then $\xi<1$, and the
+system $M'$ obtained from $M$ by replacing the single row
+$z_{v,\overline{\sigma_1}(v)}$ by
+\[
+ z':=\Bigl(\tfrac{A-\xi}{1-\xi}\,;\ \tfrac{1-A}{1-\xi}\,e_v\Bigr)
+\]
+lies in $K(D)$ and has $\val_{M',\sigma_1[v]}(v)=1$. In particular, if
+$v_0$ is strictly switchable at $\sigma_1$ and $\val^{\ast}_M(v_0)<\tfrac12$,
+both bits occur in $K(D)$ and no evaluation algorithm decides
+$\val(v_0)\ge\tfrac12$ from that query.
+\end{lemma}
+
+\begin{proof}
+$A\le1$ is a value, so $\xi<A\le1$. Put $q':=(A-\xi)/(1-\xi)>0$ and
+$s':=(1-A)/(1-\xi)\ge0$; then $q'+s'=1$, so $z'\in\Delta$, and its reading
+at $x_1$ is $q'+s'\xi=A$, the recorded appeal, so $M'$ lies in the product
+of the fibres; the row changed is not one $\sigma_1$ uses, so
+$\val_{\sigma_1}$ is unchanged and $M'$ reproduces $D$. A full-mass action
+of $M'$ is one of $M$ since $q'>0$, so $M'$ is stopping. At
+$\sigma:=\sigma_1[v]$ the row of $v$ is $z'$, supported on $v$ itself, so
+$\val_\sigma(v)=q'+s'\val_\sigma(v)$, i.e.\ $\val_\sigma(v)=q'/(1-s')=1$.
+(Checked on $300$ random dyadic systems with $|C|\in\{3,4\}$, exact,
+\texttt{scripts/round18-verify/ed\_onequery.py}; the novelty auditor on
+$8100$ more.)
+\end{proof}
+
+\begin{proposition}[The level lift]\label{prop:eval-lift}
+(One player.) Let $D$ be data of $t$ queries, $c\in(0,1]$, $\sigma^{\ast}$
+a Max strategy, and for $v\in C$ let
+$S^{c}_v:=\{z\in\mathbb R^{1+C}_{\ge0}:q+c\sum_up_u=c,\
+\langle x_r\rangle\cdot z=A_r(v,\sigma^{\ast}(v))\ (r\le t)\}$. Then
+$S^{c}_v\ne\emptyset$ exactly when $(A_r(v,\sigma^{\ast}(v)))_{r\le t}\in
+\operatorname{conv}\{c\mathbf 1_t,X_u\ (u\in C)\}$. If every $S^{c}_v$ is
+nonempty and rows $z'_v\in S^{c}_v$ are chosen so that the system $M'$
+with the rows $(v,\sigma^{\ast}(v))$ replaced by $z'_v$ is stopping ---
+as it is whenever every $q'_v>0$ --- then $M'$ lies in $K(D)$ and has
+$\val_{M',\sigma^{\ast}}\equiv c$ on $C$;
+for $c\ge\tfrac12$ the data then does not decide the bit unless every
+member of $K(D)$ already has $\val^{\ast}(v_0)\ge\tfrac12$. Such rows exist
+along a common direction whenever
+$\langle c\mathbf 1\rangle\notin\operatorname{span}\{\langle x_r\rangle\}$,
+so only while $\rho(D)\le m$: with $d$ satisfying
+$\langle x_r\rangle\cdot d=0$ and $\langle c\mathbf 1\rangle\cdot d=1$,
+$z'_v:=z_{v,\sigma^{\ast}(v)}+\lambda_vd$,
+$\lambda_v:=c-\langle c\mathbf 1\rangle\cdot z_{v,\sigma^{\ast}(v)}$, has both
+readings and lies in $S^{c}_v$ as soon as it is nonnegative.
+\end{proposition}
+
+\begin{proof}
+$\{z\in\Delta:q+c\sum p=c\}$ is the convex hull of $ce_q$ and the
+$e_{p_u}$, so its image under the readings is
+$\operatorname{conv}\{c\mathbf 1_t,X_u\}$ and $S^{c}_v$ is the fibre of the
+image point. Each $z'_v$ has the recorded readings, so $M'$ lies in the
+product of the fibres; a strategy $\sigma_r$ uses a changed row only
+where $\sigma_r(v)=\sigma^{\ast}(v)$, where the recorded appeal is
+$x_r(v)$, so $x_r$ is still a fixed point at $\sigma_r$, and $M'$ being
+stopping it reproduces $D$. If every $q'_v>0$ a full-mass action of $M'$
+is one of $M$, so a trap of $M'$ would be one of $M$. At $\sigma^{\ast}$
+the frozen matrix has row sums $(c-q'_v)/c$, so $(I-P')(c\mathbf 1)=q'$,
+and $I-P'$ is invertible because $M'$ is stopping; hence
+$\val_{\sigma^{\ast}}=c\mathbf 1$. The last sentence is a direct check of
+the two readings. Stopping must be tested on $M'$ itself: the route's
+hypothesis, that in the digraph $v\to\operatorname{supp}(p'_v)$ of the
+replaced rows every vertex reaches one with $q'_v>0$, gives the
+invertibility but not the absence of a trap mixing a replaced row with
+an untouched one, as the correctness auditor's two-vertex example shows.
+(On $200$ random dense systems with $|C|=3$ and two queries the hull
+criterion agreed with vertex enumeration in all $600$ fibres, and the
+$19$ lifts built with $M'$ stopping reproduced both queries with value
+$c$ throughout, \texttt{scripts/round18-verify/ed\_lift.py}.)
+\end{proof}
+
+\Cref{lem:eval-one-query} is the case $t=1$, $c=1$,
+$\sigma^{\ast}=\sigma_1[v]$ of the common direction, with $d$ chosen so
+that $z'$ is supported on $v$ alone. A nonnegative direction exists only
+if some controlled vertex has value $0$ in every recorded query, which in
+a nondegenerate one-player game \Cref{lem:switch} forbids once the
+algorithm has flipped that vertex; past the first query the lift has
+mixed signs and is paid for out of the escape masses of the rows. Whether
+it survives $m$ queries on some system is known at $m\le3$ only, by
+certificate.
+
+\begin{proposition}[$|C|+1$ evaluations are necessary to decide the bit at $|C|\in\{2,3\}$]\label{prop:eval-decide-lower}
+For $m\in\{2,3\}$ there is a family $\mathcal F_m$ of nondegenerate
+stopping one-player SSGs on one controlled skeleton --- $m$ Max
+vertices, their $2m$ successors distinct fresh average vertices --- with
+a start $v_0$, containing members with $\val(v_0)\ge\tfrac12$ and members
+with $\val(v_0)<\tfrac12$, on which every deterministic evaluation
+algorithm needs at least $m+1=|C|+1$ evaluations to decide
+$\val(v_0)\ge\tfrac12$; \Cref{thm:eval-queries} decides it with $|C|+2$.
+The members have at most $191$ vertices at $m=2$ and $3863$ at $m=3$.
+\end{proposition}
+
+\begin{proof}
+An adversary holds a datum $D$ and, for \emph{every} strategy $\sigma$
+the algorithm may ask next, a member $W\in K(D)$ that is stopping,
+nondegenerate, has $\val^{\ast}_W(v_0)<\tfrac12$, leaves $\sigma$ strictly
+switchable somewhere and records $\val_{W,\sigma}(v_0)<\tfrac12$; it
+answers $\sigma$ from $W$. For the extended datum it also holds a
+second member $Y\in K(D\cup\{\sigma\})$, stopping and nondegenerate, with
+$\val^{\ast}_Y(v_0)\ge\tfrac12$. Against it, after $m$ answers the datum of
+any deterministic algorithm is that of a node of depth $m$ of the
+adversary tree, whose $W$ and $Y$ both reproduce it
+(\Cref{rem:eval-fibre}), so the output is wrong on one of them. The trees
+are explicit, one node per sequence of at most $m$ distinct strategies
+--- $16=4+4\cdot3$ nodes at $m=2$ and $400=8+8\cdot7+8\cdot7\cdot6$ at
+$m=3$ --- each with its $W$ and $Y$ as rows over $C\cup\{t_1\}$
+(\texttt{scripts/round18-verify/cert\_m2\_d2.json},
+\texttt{cert\_m3\_d3.json}), and were rechecked from the rows alone,
+independently of the search that produced them, in exact rational
+arithmetic (\texttt{ed\_cert.py}): every node of depth below $m$ has a
+child for every strategy not yet queried; every $W$ is stopping,
+nondegenerate, has $\val^{\ast}(v_0)<\tfrac12$, leaves its last query
+strictly switchable and answers every query on its path exactly as the
+ancestor at that depth does, so that the datum of a path is well
+defined; every $Y$ is stopping, nondegenerate, has
+$\val^{\ast}(v_0)\ge\tfrac12$ and answers every query on its path in the
+same way. The rows are rational and not dyadic (the largest denominator
+at $m=3$ has $291$ bits), so each $W$ and $Y$ was assembled as an SSG by
+the gadget of \Cref{lem:rational-row} behind a private entry
+(\Cref{rem:rational-row}) and checked from the game with the harness
+(\texttt{ed\_games.py}): stopping by the trap test, every row realised
+exactly, value at $C$ equal to the system's, nondegenerate at every
+strategy, the bit at $v_0$ on the certified side --- all $32$ worlds at
+$m=2$, and at $m=3$ every one of the $4800$ gadgets from its built tree
+together with the $205$ smallest worlds ($41$ to $191$ vertices) in
+full.
+\end{proof}
+
+\begin{remark}[What is proved, and what it is worth]\label{rem:eval-decide-gap}
+At $|C|\in\{2,3\}$ the decision problem needs $|C|+1$ evaluations and
+$|C|+2$ suffice; on the family itself $d(G)=m$ for every NO world (the
+correctness auditor's computation), so the naming bound of
+\Cref{thm:eval-queries} there is exactly $|C|+2$, and
+$|C|+1\le\text{decision}\le\text{naming}\le|C|+2$: the two complexities
+agree up to one query at those sizes, which is what the first caveat of
+\Cref{prop:hdp-eval} left open there. Whether $|C|+1$ or $|C|+2$ is exact
+is open even at $|C|=3$, a depth-$4$ search having been cut short after ten
+minutes with no root query resolved. The mechanism is
+\Cref{prop:eval-lift}: a lift to level $c\ge\tfrac12$ exists while
+$\langle c\mathbf 1\rangle$ lies outside the span of the recorded
+$\langle x_r\rangle$, which can persist for $|C|$ queries and never for
+$|C|+1$. The general statement is \textbf{not} proved, and under this
+document's rule that a family certified at fewer than five sizes with
+no growth law claims nothing beyond those sizes, nothing is claimed
+beyond $|C|=3$. The missing sentence is exactly this: for every $m$
+there is a nondegenerate stopping one-player harmonic system $W_0$ on
+$m$ controlled vertices with $\val^{\ast}(v_0)<\tfrac12$ such that, for
+every datum $D$ of at most $m$ queries generated by the adversary from
+$W_0$, some member of $K(D)$ is stopping and nondegenerate with
+$\val^{\ast}(v_0)<\tfrac12$ and leaves the next query strictly
+switchable, and some member is stopping and nondegenerate with
+$\val^{\ast}(v_0)\ge\tfrac12$. No mechanism by which a NO world survives
+a query it leaves switchable is exhibited beyond the certificates: the
+worlds were found by search over the vertices of the fibres, the
+route's measurements (reproduced by the correctness auditor) show random
+systems at $m=3$ with their bit forced after three or four queries, and
+the common direction of \Cref{prop:eval-lift} is only a sufficient
+condition that \Cref{lem:switch} obstructs. Two further items are open:
+the two-player version of the lemma and the proposition (the
+definition, \Cref{rem:eval-fibre} and \Cref{lem:rational-row} are
+player-neutral), and the zero-error randomised decision complexity, for
+which \Cref{prop:hdp-eval} has $m/\log_2(m+1)$ in the naming version.
+And none of it bears on \Cref{prob:main}: \Cref{thm:eval-queries} caps
+every quantity of the model at $|C|+2$, no mechanism of
+\Cref{sec:refutations} is an evaluation algorithm, and the reading of
+\Cref{rem:eval-queries} stands --- the exponential lower bounds of this
+document are bounds on rounds, and the information, for the bit as for
+the strategy, costs about $|C|$ evaluations.
 \end{remark}
 
 \Cref{thm:short-path} guarantees that a short improving path exists; it
@@ -6484,7 +6788,7 @@ its level theorem is the extension of \Cref{prop:pinned-level} in which
 the layer-$(0,0)$ drive moves with the inner strategy, and its first
 consequence closes two of the four doubling corners for every block.
 
-\begin{definition}[Escape extension]\label{def:escape}
+\begin{definition}[Escape extension]\label{def:escape-ext}
 An \emph{escape extension} of a driven block $\mathfrak B$ with drive
 $\beta$ is the game on $C\cup\{\alpha,\beta\}$, $\alpha,\beta\in\Vmax$, with
 \[
@@ -6570,7 +6874,7 @@ Let $G$ be a nondegenerate stopping SSG with two Max vertices $\alpha,\beta$
 outside a block $\mathfrak B$ such that no block row reads $\alpha$,
 $\beta$'s action $1$ reads only the block and constants, and $\beta$'s
 action $0$ reads $\alpha$ with positive weight (the escape extensions of
-\Cref{def:escape} and the pinned extensions of \Cref{def:pinned} among
+\Cref{def:escape-ext} and the pinned extensions of \Cref{def:pinned} among
 them; $\alpha$'s rows are arbitrary). Let $\varphi$ take the value $0$
 somewhere --- as the parity of the bottom-antipodal height does, at the
 sink --- and let $\zeta=(w,\zeta_\alpha,\zeta_\beta)$ with $\zeta_\beta=1$.
@@ -18665,7 +18969,9 @@ itself runs superpolynomially long, which no construction here achieves.
 And every exponential lower bound above is a bound on the rounds of a
 rule, never on information: an optimal strategy is found from $|C|+2$
 adaptively chosen evaluations, at the price of solving the hypothesis
-between them (\Cref{thm:eval-queries}); the order of the average values
+between them (\Cref{thm:eval-queries}), and the bit itself needs $|C|+1$
+of them at $|C|\in\{2,3\}$ (\Cref{prop:eval-decide-lower}); the order of
+the average values
 is a unique certificate (\Cref{rem:order-unique}), and no certificate
 format closes the gap (\Cref{prop:bracket}).
 

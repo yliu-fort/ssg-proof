@@ -1,0 +1,107 @@
+{
+ "target": "Round-18 route \"eval-decision\": the decision version of the evaluation-query model — K(D) as a product of consistency fibres, Phi/phi, and the |C|+1 adversary lower bound.",
+ "sound": false,
+ "confidence": "high",
+ "verdict": "NEW-THEOREM BY THE LETTER, FOOTNOTE BY THE MEANING — and the route's own ranking of its results is upside down. Three things are true. (1) The object is NOT new: thm:eval-queries' proof already constructs \"each row's consistency polytope\" and takes its barycentre, rem:run-informs already states the reproduction clause (\"every harmonic system consistent with the earlier answers predicting them exactly\"), and the interpolation-LP paragraph after thm:readout-realise (l.8555) already sets up the same per-incidence polytope of substochastic rows fitting prescribed value data. K(D) is the paper's own object, renamed and given three elementary LP facts, one of which is false as stated; only Phi/phi are new, and the clause that makes them usable (attainment at a sparse CONSISTENT system) is not proved. The route's \"new-object\" for ed:fibre is an overclaim, and no collapse was noticed, let alone proved. (2) The genuinely new, genuinely proved content is ed:one-query (an explicit second consistent game raising the value at a switchable start to 1 — I re-verified it on 8100 fresh triples at m=3,4,5, zero failures), ed:amplify (its level-c generalisation with the exact hull criterion), and ed:lower at m=2 and m=3 (I re-verified both certificates from the rows with my own solver, checked tree completeness, and went further than the route did: I ASSEMBLED actual SSGs from the m=2 worlds through ed:rational-row's gadget and confirmed from the game — 31 to 128 vertices, stopping by the trap test, val* equal to the system's, nondegenerate, val*(v0) on both sides of 1/2. The route submitted this family as \"SSGs\" without ever building one). That is enough for new-theorem under rule 3. (3) It means very little. thm:eval-queries caps every quantity in this model at |C|+2 and rem:eval-queries has already ruled the model informational, \"no step towards (Poly-Rule)\"; the route closes an additive gap of one, at two sizes, in a model that contains none of M1-M6, all-switches, def:bsi or R_BR, and whose lower bounds cannot ever bear on prob:main. The headline \"in this model deciding is not cheaper than naming\" is certified at query counts 3 and 4 and is otherwise the route's own GAP. THE REAL REMAINING GAP, more precisely than the route states it: not merely \"the general adversary is unproved\", but that no mechanism is exhibited by which a NO world survives a query it leaves switchable — the m=2,3 worlds were found by exhaustive fibre-vertex search, the measured tables show random systems have their bit forced at t=3 or 4 already at m=3, and ed:amplify(b) supplies only a sufficient condition (a nonnegative-payable direction d) that lem:switch is shown to obstruct, so the route ends with no candidate W_0 and no growth law. INTEGRATION: mildly WORSE as submitted, better if pruned hard. Worth integrating: ed:rational-row with its skeleton note (the one reusable item, and the route badly undersells it — \"dyadic\" is a load-bearing hypothesis 73 times in the paper, and realising arbitrary rational non-leaky rows plausibly moots the open question stated at the end of thm:readout-realise, \"whether every rational readout system realising a nondegenerate s can be replaced by a dyadic delta-leaky one\", modulo a trap hypothesis on the Min chain — the route does not notice this and it should be checked before the paper claims it); and ed:one-query plus ed:lower(m=2,3) as two short propositions appended to prop:hdp-eval / rem:eval-queries, stated as the finite certificates they are. NOT worth integrating as results: ed:fibre (fold clauses (1) and (2, corrected to an inequality) into a remark under thm:eval-queries, crediting that theorem's proof for the object and rem:eval-queries for clause (3)), ed:decide-criterion (one line: the output is a function of the data — textbook, and the route says so in its prior art), ed:mobius (the paper already uses the same quasi-convex/quasi-concave linear-fractional fact verbatim in thm:bc-cert's proof, l.17833), and ed:vertex's Phi corollary until the stopping restriction is dealt with. A new section on this model would advertise as settled a question the paper deliberately left as an aside.",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "ed:vertex (and the route's headline \"the extremal consistent games are (rank+1)-sparse\")",
+   "defect": "The vertex/sparsity theorem is proved over the PRODUCT of the fibres, but Phi(D) is defined as the supremum over K(D), which by def:ed-data is the set of STOPPING members of that product. The \"Consequently Phi(D) = max_sigma sup_M val_{M,sigma}(v0) is attained at a (rho+1)-sparse consistent system\" therefore does not follow: the product maximiser can be a system with a full-mass trap, which is not in K(D) and does not reproduce the data (the reproduction clause of ed:fibre uses thm:contraction, hence stopping). The exclusion is not vacuous, and consequently ed:gap's \"the same quantity computed exactly by ed:vertex\" is unjustified — exact_sup.py returns a certified LOWER bound on Phi, not Phi.",
+   "evidence": "I enumerated the fibre-vertex systems at m=3, t=1 on the route's own eight seeds (my /tmp/claude-1000/-data-ssg-proof/296b18c1-9dc5-4a0b-94cf-9bde3946ecfe/scratchpad/r18-audit-eval-decision-novelty/stopgap.py): 6776 vertex systems enumerated, 1988 of them NOT stopping — e.g. seed 0, sigma = (0,0,0), row (0,0) = e_{p_0} (a full-mass self-loop at vertex 0), which is a trap by lem:trapchar. The route's own ascent.py/val_of correctly discards these, so the code is right and the theorem statement is wrong: what the code computes is max over stopping vertex systems, which is <= Phi(D) with no proof of equality, while what ed:vertex proves is attainment over the larger product."
+  },
+  {
+   "severity": "major",
+   "result_name": "ed:fibre(2)",
+   "defect": "The dimension clause is FALSE as an equality. K_{v,a}(D) is the simplex Delta cut by rho independent equations, so its dimension is AT MOST m+1-rho; the affine subspace can meet Delta only in a proper face. (fibre.py's own docstring asserts the opposite inequality, \"dim K >= m+1-rank\", which is false on the same instance.) The sparsity clause (at most rho+1 nonzeros per vertex) and clause (3) are unaffected — the standard basic-solution argument with a slack for sum z <= 1 gives them regardless.",
+   "evidence": "Counterexample built and run against the route's own fibre.py: m=1, rows (0,0) = (q=0, p=0) and (0,1) = (q=1, p=0); the system is stopping and nondegenerate (edcore confirms). At sigma = (0), x = (0) and A(0,1) = 1, so rho = 1 and m+1-rho = 1, but the fibre {z in Delta : q + 0.p = 1} = {(q,p) = (1,0)} is a single point, dimension 0. fibre_vertices returns exactly [(1,0)]."
+  },
+  {
+   "severity": "major",
+   "result_name": "ed:lower (and the route's headline and verdict)",
+   "defect": "Certified at exactly TWO sizes, m = 2 and m = 3 — i.e. lower bounds of 3 and 4 queries against an upper bound of |C|+2 — with no growth law and no candidate W_0 for general m; the route's own gap sentence concedes this, but the JSON headline (\"a certified adversary shows |C|+1 evaluations are necessary ... so in this model deciding is not cheaper than naming\") and the section title state the general conclusion. Under this round's vacuity rule (families at fewer than five sizes or with no proved growth law) the general claim must not be carried. Separately, the theorem asserts a family of SSGs, but no member was ever assembled as a game by the route: only nine isolated rows of the gadget were verified.",
+   "evidence": "cert_m2_d2.json (16 nodes) and cert_m3_d3.json (400 = 8+56+336 nodes) verify, including under my own independent re-implementation (own Gaussian solver with an (I-P)x = q re-check, own trap computation, componentwise-max val* with a greatest-element check, own nondegeneracy sweep): all 336 depth-3 leaves pass and the tree is complete over every sequence of distinct queries. But the family stops there: a depth-4 search at m=3 was cut short, and the measured tables show random systems have the bit forced at t = 3 or 4 already at m = 3 (measured_phi_m3.txt), so nothing extrapolates. I closed the missing game-construction myself for m = 2 (my build_game.py: three certificate nodes, six worlds, N = 31 to 128 vertices, mycore.is_stopping true, mycore.wstar equal on C to the system's val*, nondegenerate at all four strategies, val*(v0) < 1/2 for the NO worlds and >= 1/2 for the YES witnesses) — so the claim survives, but it was unverified as submitted."
+  },
+  {
+   "severity": "minor",
+   "result_name": "ed:fibre (novelty class)",
+   "defect": "Reported as new-object; the object is the paper's. thm:eval-queries' proof already constructs the per-row consistency polytope and argues about its relative interior; rem:run-informs already states that every harmonic system consistent with the earlier answers predicts the value vector and all its appeals exactly (the reproduction clause); the paragraph after thm:readout-realise already writes down the same per-incidence LP over substochastic rows fitting prescribed value data. Clause (3) is rem:eval-queries verbatim — the route admits this in its restatements field but states it in the paste-ready lemma with no attribution.",
+   "evidence": "frontier.tex l.3691 \"the barycentre of each row's consistency polytope, since a full-mass set tight at a relative interior point would be tight on the whole polytope\"; l.9712-9715 \"every harmonic system consistent with the earlier answers predicting them exactly\"; l.8555-8564 the interpolation LP; l.3783 \"target-equivalent once the data has full rank, since then the only consistent system is the game's own\"."
+  },
+  {
+   "severity": "note",
+   "result_name": "ed:decide-criterion, ed:mobius",
+   "defect": "Neither is new mathematics. ed:decide-criterion is the textbook decision-tree adversary criterion with a one-line proof (the output is a function of the data), which the route itself lists as prior art (d) but then presents as a theorem and folds into a numbered result. ed:mobius is the quasi-convexity/quasi-concavity of a linear-fractional function with a denominator of constant sign, which the paper already uses verbatim elsewhere; the only new work is the epsilon-scaling that handles a singular I-P, and even there the proof's \"monotone along the segment to a maximising vertex\" needs quasi-convexity on the whole fibre, not monotonicity on one segment.",
+   "evidence": "frontier.tex l.17833 (inside thm:bc-cert's proof): \"all three maxima are attained at vertices of the hexagons, a linear-fractional function with positive denominator being both quasi-convex and quasi-concave\". The route attributes the fact to Charnes-Cooper in its prior-art field, which is the right thing to have done."
+  },
+  {
+   "severity": "note",
+   "result_name": "the model itself (significance)",
+   "defect": "Nothing proved here can bear on prob:main or on any mechanism the paper studies: thm:eval-queries caps every quantity in the model at |C|+2, so no superpolynomial statement is possible in it, and rem:eval-queries has already ruled it \"a statement about information ... and is no step towards (Poly-Rule)\". The model contains none of M1-M6, all-switches, def:bsi or R_BR, and an evaluation algorithm is not a switching rule. The route does not say this; it should, under rule 7.",
+   "evidence": "frontier.tex l.3774-3790 (rem:eval-queries) and l.3669-3700 (thm:eval-queries). The round-17 realisation-space route proposed a close cousin object (the set of harmonic normal forms with prescribed improvement data, R(s;S)) and the root agent integrated only its consequences for the pivot (def:pinned, prop:pinned-level, lem:pinned-upclosed, thm:pinned-no-translate, cor:pinned-no-doubling) and not the object: \"semialgebraic\" and \"inradius\" appear nowhere in frontier.tex."
+  },
+  {
+   "severity": "note",
+   "result_name": "ed:rational-row (under-sold)",
+   "defect": "The route ranks this last and classifies it as a mere strengthening of lem:dyadic-row, but it is the only item with downstream use, and its likely largest consequence is unnoticed: realising ARBITRARY rational, non-leaking rows appears to upgrade thm:readout-realise(b) from \"dyadic delta-leaky\" to \"rational with no full-mass closed set\", which would moot the open question stated at the end of that theorem (whether every rational readout system realising a nondegenerate s can be replaced by a dyadic delta-leaky one — proved by an earlier route for one player, open for two). The upgrade is NOT free: (b)'s construction chains r-1 Min vertices per incidence, so the trap hypothesis has to be checked on the chain, and the route neither states nor checks this.",
+   "evidence": "I re-ran ratrow.py: nine rational rows realised exactly (1/3,1/3 at D=3 in 3 nodes; 7/37,9/37,20/37 at D=37 in 11 nodes; the stochastic row 4/15,1/3,2/5 at D=15 in 7), all within the (l+2)d bound, and I used the same gadget to build the m=2 certificate games above, which verified from the game. \"dyadic\" is a hypothesis in 73 places in frontier.tex; thm:readout-realise's closing paragraph is at l.8548-8554."
+  }
+ ],
+ "novelty_table": [
+  {
+   "result_name": "ed:fibre (the consistency fibre; product structure, reproduction, hull criterion, dimension, vertex sparsity, uniqueness at full rank)",
+   "closest_label": "thm:eval-queries",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "ed:decide-criterion (what an evaluation algorithm may output)",
+   "closest_label": "thm:eval-queries",
+   "class": "restatement"
+  },
+  {
+   "result_name": "ed:mobius (val_sigma is Moebius in one row)",
+   "closest_label": "thm:bc-cert",
+   "class": "restatement"
+  },
+  {
+   "result_name": "ed:vertex (extremisers over the product of fibres are vertex systems, hence (rho+1)-sparse)",
+   "closest_label": "thm:transport-objective",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "ed:vertex, corollary clause (Phi(D) attained at a sparse CONSISTENT system)",
+   "closest_label": "def:ed-data",
+   "class": "unproved"
+  },
+  {
+   "result_name": "ed:one-query (one evaluation never decides at a strictly switchable start; the value-1 lift)",
+   "closest_label": "prop:hdp-eval",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "ed:amplify (the level-c lift, its hull criterion, and the common-direction form)",
+   "closest_label": "thm:eval-queries",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "ed:lower (|C|+1 evaluations necessary to decide, certified at |C| = 2 and 3)",
+   "closest_label": "prop:hdp-eval",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "ed:rational-row (rational first-passage rows by a rejection gadget; skeleton-hiding note)",
+   "closest_label": "lem:dyadic-row",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "restatement claimed by the route: a closed queried strategy settles the bit",
+   "closest_label": "thm:eval-queries",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement claimed by the route: at full rank the consistent system is unique, so computing Phi is prob:main",
+   "closest_label": "rem:eval-queries",
+   "class": "restatement"
+  }
+ ]
+}
