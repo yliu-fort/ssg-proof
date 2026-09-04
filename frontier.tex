@@ -138,8 +138,11 @@ instances on which the other mechanisms provably fail, while failing in turn,
 for a complementary reason, to order the two successors on a seven-vertex game
 (\Cref{prop:transport-stalls}) and on the family behind it
 (\Cref{thm:transport-barrier}) --- though \Cref{rem:own-successor} shows that
-ordering the two successors is the wrong test, and that on that game and on
-the whole family behind it the certificate decides the vertex at once. Because those two failures are
+ordering the two successors is a different test from deciding the vertex,
+the two readings being incomparable, and that on that game and on the
+whole family behind it the certificate decides the vertex at once, while
+on the ten-vertex $R$ only the pair reading does and a seven-vertex game
+stalls both (\Cref{rem:own-stall}). Because those two failures are
 complementary, we couple the slack calculus and the transport programme into a feedback loop
 (\Cref{sec:hybrid}): the non-convex halves of the controlled rows, which
 a linear programme must drop, are exactly what the slack clauses supply,
@@ -168,7 +171,13 @@ wedge of \Cref{sec:wedge}, on which the entries a decision rule does read
 stay uninformative for a proved $2^{\Omega(N)}$ rounds
 (\Cref{thm:wedge-proved,cor:wedge-count}) --- for the slack, transitive,
 transport and hybrid mechanisms, though not for the simulation preorder
-or the seeded calculus (\Cref{rem:wedge}).
+or the seeded calculus (\Cref{rem:wedge}). A one-player family on which
+the preorder and every propagation mechanism --- slack, closure,
+transport, hybrid and ratio, in any combination --- are silent for a
+proved $2^{\Omega(N)}$ rounds at its one value-distinguishing vertex,
+while one policy evaluation decides it, closes the propagation side
+(\Cref{sec:bc}); the certificate method now covers the multiplicative
+register (\Cref{thm:convex-barrier-both}).
 
 \emph{Barriers.} No potential of polynomial range (\Cref{rem:impedance},
 from the classical transfer-impedance identity of \Cref{thm:impedance}); no progress measure of polynomial height
@@ -185,7 +194,13 @@ rule that solves exactly $O(N^{\alpha})$ average vertices for a fixed
 $\alpha<1$, since a longer padding of the same kind blinds every such
 rule at once (\Cref{thm:window-barrier}); and no submodular
 minimisation argument, in any orientation of either strategy cube
-(\Cref{prop:no-submodular}). For the all-switches rule
+(\Cref{prop:no-submodular}); Condon's damping read as a homotopy in
+the survival probability has $2^{\Omega(N)}$ breakpoints, so no
+continuation method following its optimal pair is polynomial, and it is
+not the bias homotopy (\Cref{prop:discount-fold,cor:two-homotopies}); and
+every such bound is a bound on the rounds of a rule, not on information,
+since an optimal strategy is found from $|C|+2$ adaptively chosen
+evaluations (\Cref{thm:eval-queries}). For the all-switches rule
 itself we prove three monotonicity laws
 (\Cref{cor:no-return,cor:law-b,cor:law-u}, the first from
 \Cref{lem:monotone-law}, the second from \Cref{thm:peak-law}, the third
@@ -217,7 +232,9 @@ one Min vertex (\Cref{rem:blowup-measured,prop:b2-realised}), whose
 walk no one-player game has (\Cref{thm:b2-walk}), so the smallest open
 instance of the pivot is the third level, of which the outer half is
 realised on $194$ vertices while the translated layer remains unrealised
-(\Cref{prop:b3-outer}); the height of every blow-up is exactly $2h+2$
+(\Cref{prop:b3-outer}) and out of reach of the pinned shape that realised
+the outer half, which provably cannot double (\Cref{cor:pinned-no-doubling});
+the height of every blow-up is exactly $2h+2$
 (\Cref{prop:blowup-height}). The one-player ceiling is
 $1,2,4,6$ for $m\le4$ and at least $10,12,13$ at $m=5,6,7$, the Holt--Klee
 ceiling $1,2,4,6,11$ and at least $14,20$ at $m=6,7$, both rows growing by
@@ -17551,7 +17568,9 @@ translated by a single coordinate are realised by one-player games and the
 second level by a two-player game on $138$ vertices
 (\Cref{rem:blowup-measured,prop:b2-realised}), so the third level is the
 smallest open instance --- its outer half is realised on $194$ vertices,
-its translated layer remains unrealised (\Cref{prop:b3-outer}) --- and
+its translated layer remains unrealised (\Cref{prop:b3-outer}) and out
+of reach of the pinned shape, which cannot double
+(\Cref{cor:pinned-no-doubling}) --- and
 \Cref{rem:blowup-realise} states the question
 that remains: whether each further level costs only a constant number of
 controlled vertices and of bits; the height of a blow-up is exactly
@@ -17580,7 +17599,10 @@ barrier here covers and on two players a directed path of the profile
 cube; no hard family of this document costs it more than about $2|C|$
 switches, while four explicit one-player witnesses exceed $|C|$, with
 $7$ breakpoints at $|C|=3$ and $22$ at $|C|=6$
-(\Cref{sec:bias,prop:bias-witnesses}). Bidirectional improvement and its
+(\Cref{sec:bias,prop:bias-witnesses}); Condon's damping read as a homotopy
+in the survival probability is a different path, exponentially long on
+$\mathrm{BP}(D)$ and on \Cref{thm:fold}'s $P_D$ with a two-vertex seed
+(\Cref{prop:discount-fold,cor:two-homotopies}). Bidirectional improvement and its
 one-sided form, best-response restart, are covered by no barrier here and
 have no known superpolynomial family
 (\Cref{def:bsi,thm:bsi-nostall,prop:bsi-br}); the restart rule beats the
@@ -17592,11 +17614,21 @@ long run must be long (\Cref{thm:readout,thm:bsi-tracks}); the
 window barrier covers rules solving $O(N^{\alpha})$ average vertices for
 $\alpha<1$ and no more (\Cref{thm:window-barrier}); the degree-two
 Lasserre lift and the interior-point route are closed
-(\Cref{thm:lasserre-vacuous}, \Cref{rem:lcp}); and the wedge of
+(\Cref{thm:lasserre-vacuous}, \Cref{rem:lcp}), the choice-variable
+Sherali--Adams lift fails one level later (\Cref{rem:choice-lift}), and
+handicap zero neither depends on the base profile nor bounds the run,
+attaining the one-player ceiling at $m\le4$
+(\Cref{rem:handicap-base,prop:handicap-zero-ceiling}); and the wedge of
 \Cref{sec:wedge} is the state of the art on the negative side, defeating
 the slack, transitive, transport and hybrid mechanisms for a proved
 $2^{\Omega(N)}$ rounds while the seeded calculus and the simulation
-preorder decide it at once (\Cref{thm:wedge-proved,rem:wedge}).
+preorder decide it at once (\Cref{thm:wedge-proved,rem:wedge}); beyond it,
+$\mathrm{BC}(e,s)$ of \Cref{sec:bc} keeps the simulation preorder and every
+propagation mechanism, in both registers and in any combination, silent
+for a proved $2^{\Omega(N)}$ operator applications at its one
+value-distinguishing vertex while one policy evaluation decides it
+(\Cref{thm:bc-lower}), so what is exponentially separated there is the
+propagation side from one linear solve.
 
 \paragraph{Mechanisms, and where they stop.} Six sound polynomial-time
 comparison mechanisms are developed and measured against one yardstick:
@@ -17717,5 +17749,11 @@ it is the whole of the problem. \Cref{thm:seed-dichotomy} locates it once
 more: any instance defeating the seeded rule with polynomially many
 improvement rounds is a stopping SSG on which switch-all improvement
 itself runs superpolynomially long, which no construction here achieves.
+And every exponential lower bound above is a bound on the rounds of a
+rule, never on information: an optimal strategy is found from $|C|+2$
+adaptively chosen evaluations, at the price of solving the hypothesis
+between them (\Cref{thm:eval-queries}); the order of the average values
+is a unique certificate (\Cref{rem:order-unique}), and no certificate
+format closes the gap (\Cref{prop:bracket}).
 
 \end{document}
