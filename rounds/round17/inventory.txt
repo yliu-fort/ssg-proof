@@ -1,0 +1,513 @@
+## L251 Introduction
+## L253 The problem
+L255 definition def:ssg :: Simple stochastic game
+L275 definition def:strategies :: Strategies and values
+L306 problem prob:main :: \textsc{SSG-Value}
+L318 theorem thm:determinacy :: Positional determinacy; Shapley, Condon
+## L331 What is proved here, and what is not
+## L418 The Shapley operator
+L426 definition def:shapley :: 
+L444 lemma lem:monotone :: Monotone, nonexpansive
+L461 lemma lem:lfp :: Profile values are least fixed points
+L481 remark rem:no-postfixed :: 
+L491 lemma lem:excursion :: First-passage decomposition
+L521 theorem thm:lfp-general :: Values are least fixed points, with no stopping hypothesis
+L611 definition def:trap :: Trapping set
+L621 lemma lem:trap :: The trapping set is the zero set
+L640 lemma lem:trapped-comparison :: Trapped-class comparison
+L664 theorem thm:eval-stopfree :: Stopping-free evaluation
+L699 remark rem:lp-needs-zeros :: 
+L719 remark rem:lfp-scope :: 
+## L732 Stopping games
+L734 definition def:stopping :: 
+L746 definition def:attractor :: Sink attractor
+L756 lemma lem:absorption :: Uniform absorption
+L805 remark - :: 
+L816 theorem thm:contraction :: Contraction and uniqueness
+L883 theorem thm:stopping-determinacy :: Determinacy for stopping games
+L930 corollary cor:comparison :: Two-sided comparison
+L951 remark rem:terminals :: More than two terminals
+## L968 The quantitative stopping transformation
+L977 definition def:damping :: Damping gadget
+L990 lemma lem:gadget :: The gadget is a damped edge
+L1006 lemma lem:dyadic-row :: Dyadic first-passage rows are cheap
+L1041 lemma lem:denominator :: Denominator bound
+L1091 lemma lem:watched :: Watched-chain factorisation
+L1119 lemma lem:denominator-sharp :: Denominator bound, sharp form
+L1138 remark - :: 
+L1149 theorem thm:stopping-transform :: Exact reduction to a stopping game
+L1210 remark - :: 
+L1224 corollary cor:stopping-reduction :: The reduction, with the threshold restored
+## L1250 A polynomial special case
+L1259 lemma lem:descent :: Forced descent
+L1304 theorem thm:few-avg :: 
+L1374 remark rem:few-avg-tight :: The rate is attained
+L1403 remark - :: 
+L1431 definition def:escape :: Escape exponent
+L1446 lemma lem:descent-refined :: Refined forced descent
+L1471 lemma lem:certificate :: A sound and complete polynomial certificate
+L1506 theorem thm:few-escape :: 
+L1533 proposition prop:fk-family :: 
+L1572 remark rem:escape :: 
+L1592 definition def:survival :: Survival operator, escape certificate
+L1609 lemma lem:survival :: 
+L1644 theorem thm:escape-class :: The escape class
+L1690 definition def:survival-rate :: Selections and the survival rate
+L1706 lemma lem:escape-rate :: Every certificate is bounded by every selection
+L1738 remark rem:escape-rate :: 
+L1774 proposition prop:escape-family :: 
+L1869 remark rem:escape-class :: 
+L1946 definition def:jump :: Average-jump digraph
+L1952 lemma lem:jump-acyclic :: 
+L1965 lemma lem:det-game :: Deterministic games with terminal payoffs
+L1991 theorem thm:avg-acyclic :: Average-acyclic games are easy
+L2032 theorem thm:player-free :: Player-free cycles
+L2070 remark rem:two-regimes :: The two tractable cycle regimes
+L2095 remark - :: 
+L2110 theorem thm:one-player :: One-player games are easy
+L2155 definition def:payoff :: Payoff game
+L2169 lemma lem:successor-closed :: Successor-closed parts
+L2182 lemma lem:cut :: Cut lemma
+L2225 lemma lem:residual :: Residual games in two colours
+L2282 theorem thm:kacyclic :: One colour off the cycles suffices
+L2319 proposition prop:kacyclic-strict :: 
+L2348 remark rem:kacyclic :: 
+L2368 remark rem:owner-blind :: What one-player tractability does and does not rule out
+## L2394 The value alphabet
+L2404 definition def:alphabet :: Value alphabet
+L2423 theorem thm:alphabet-iteration :: Alphabet iteration is exact
+L2464 remark rem:alphabet-down :: Rounding downward is false
+L2485 corollary cor:grid-iteration :: Grid iteration
+L2501 remark - :: 
+L2524 lemma lem:alphabet-cover :: Covering lemma
+L2546 theorem thm:alphabet-rigid :: Rigidity of the alphabet
+L2604 corollary cor:alphabet-chain :: The alphabet is a small game's value vector
+L2619 theorem thm:alphabet-denominator :: Denominator against the alphabet
+L2644 theorem thm:few-denominator :: A polynomial class from the denominator
+L2666 remark rem:alphabet-compare :: Against $a$, and against the other four
+L2717 proposition prop:alphabet-four :: Alphabets with at most four letters
+L2742 proposition prop:fv-family :: Four values, $a=\Theta(N)$, outside all five classes
+L2825 proposition prop:fv-stall :: Three calculi are silent on the few-denominator families
+L2880 remark rem:alphabet-equivalence :: The alphabet as a reformulation, and its strength
+## L2909 Width: the search is quasipolynomial, the tables are not
+L2925 definition def:width :: Width
+L2934 lemma lem:payoff-transfer :: Transfer to payoff games
+L2975 lemma lem:cut-sign :: The cut map is sign-definite
+L2990 theorem thm:tarski :: Divide-and-conquer search for a fixed point
+L3022 lemma lem:round-recover :: Rounding onto a grid, and exact recovery
+L3049 theorem thm:modulator :: The modulator class
+L3114 theorem thm:qp :: Bounded treewidth is quasipolynomial
+L3183 remark rem:fold-width :: The tables explode at pathwidth four
+L3223 proposition prop:forest-k1 :: Treewidth one is inside $\mathcal K_1$
+L3243 proposition prop:modulator-family :: A family in the modulator class and outside five of the six earlier classes
+## L3299 The structure of the optimal set
+L3311 definition def:switchable :: Switchable vertices
+L3317 lemma lem:local-global :: Local optimality equals global optimality
+L3338 theorem thm:opt-subcube :: The optimal set is a subcube
+L3370 example ex:nonstopping-nonsubcube :: $\Opt$ need not be a subcube without stopping
+L3405 example ex:pi-fails :: Greedy policy iteration for Min is unsound without stopping
+L3434 lemma lem:switch :: Improvement, one switch or many
+L3455 remark - :: 
+L3467 theorem thm:short-path :: Short improving paths
+L3512 lemma lem:max-deficit :: Maximum-deficit localisation
+L3554 remark - :: 
+L3569 corollary cor:selection :: The difficulty is selection, not distance
+L3596 proposition prop:allswitch-overshoot :: All-switches overshoots
+L3639 remark - :: 
+## L3652 Exactly how much a single switch gains
+L3667 theorem thm:impedance :: Transfer-impedance formula
+L3714 corollary cor:selfread :: A self-reading vertex switches exactly at its loop value
+L3732 remark rem:impedance :: 
+## L3787 Composition, and an energy identity
+L3797 definition def:gate :: Contexts, and the $(p,q)$-gate
+L3819 lemma lem:gate :: A plugged-in game is a gate
+L3853 theorem thm:two-exit :: Two exits, two numbers
+L3881 theorem thm:energy :: Energy and crossings
+L3916 remark rem:no-amplification :: What composition cannot do
+## L3955 Refutations and barriers
+## L3961 The all-switches rule does not dominate
+L3968 theorem thm:all-switches-refuted :: All-switches dominance fails
+L4021 corollary - :: 
+L4042 lemma lem:monotone-law :: Monotonicity law
+L4062 remark rem:monotone-law-general :: The stopping hypothesis is not needed
+L4093 proposition prop:closed-now-or-never :: 
+L4130 remark rem:closed-now-or-never :: 
+L4163 lemma lem:max-tree :: A tree of Max vertices is an argmax with logarithmic lag
+L4210 theorem thm:peak-law :: Peak law
+L4253 corollary cor:peak-sharp :: The peak sits on a switch that is made
+L4279 lemma lem:rise-bound :: Rise bound
+L4321 corollary cor:no-return :: Backward law
+L4335 corollary cor:isolated :: No return to an isolated configuration
+L4350 corollary cor:law-b :: Forward law
+L4361 corollary cor:antichain :: Antichain law
+L4376 definition def:maxreach :: Max-reachability digraph
+L4386 theorem thm:component-bound :: Component bound
+L4422 theorem thm:bounded-components :: Bounded Max-components
+L4444 proposition prop:k1-family :: 
+L4487 proposition prop:overshoot-small :: 
+L4515 proposition prop:zero-ties :: Damping cannot remove a tie at value zero
+L4553 remark rem:allsw-laws :: 
+L4585 definition def:improvement-uso :: The improvement orientation
+L4612 lemma lem:sw :: Face sinks and the outmap condition
+L4637 proposition prop:allsw-auso :: All-switches is a bottom-antipodal walk on an AUSO
+L4663 lemma lem:auso-laws :: Every bottom-antipodal trace obeys the two laws
+L4703 definition def:flat :: Flat coordinates and flat classes
+L4714 lemma lem:trichotomy :: Trichotomy: no edge points out at both ends
+L4746 lemma lem:flat-class :: The flat classes are the level sets
+L4783 lemma lem:face-sink :: Every face has a sink subcube
+L4802 theorem thm:flat-resolution :: Resolution
+L4840 corollary cor:ceiling-general :: The ceiling holds for degenerate games too
+L4859 corollary cor:law-u :: A third law
+L4878 remark rem:flat :: 
+L4908 corollary cor:f-auso :: The programme of \Cref{rem:allsw-laws} is capped
+L4916 remark rem:f-auso :: 
+L4969 proposition prop:auso-size :: The converse needs a size clause
+L4986 remark rem:auso-size :: 
+L5003 proposition prop:auso-seven :: 
+L5052 remark rem:auso-seven :: 
+L5067 proposition prop:oneplayer-lp :: One-player improvement orientations are LP orientations
+L5122 corollary cor:seven-two-player :: The height-seven orbit needs two players
+L5143 proposition prop:gsharp-bigcube :: The two-player cube of $G^{\sharp}$
+L5170 remark rem:gsharp-bigcube :: 
+L5189 remark rem:oneplayer-lp :: 
+L5208 proposition prop:auso-census :: The census of the $m$-cube for $m\le4$
+L5249 remark rem:auso-census :: 
+L5271 proposition prop:hstar-five :: $h^{\ast}(5)=12<f(5)=13$
+L5319 remark rem:hstar-five :: 
+L5349 lemma lem:hstar-super :: Superadditivity of $h^{\ast}$
+L5394 proposition prop:D-quadratic :: A dimension-raising operation of quadratic height
+L5428 remark rem:D-quadratic :: 
+L5442 theorem thm:blowup :: A height-doubling blow-up
+L5531 proposition prop:blowup-height :: The height of a blow-up, exactly
+L5574 lemma lem:layer-order :: The layers are ordered
+L5585 remark rem:blowup-measured :: 
+L5663 proposition prop:b2-realised :: The second level is realised, by two players
+L5708 remark rem:b2-anatomy :: How the level-two game pins its outer pair
+L5744 definition def:reduced-rows :: Reduced rows
+L5764 proposition prop:rows-turn :: Comparable rows cannot turn
+L5780 corollary cor:b2-rows :: Every vertex of a level-two realisation must turn
+L5795 lemma lem:crossing :: The crossing lemma
+L5830 corollary cor:b2-min :: Where the Min vertex of a level-two realisation must act
+L5862 corollary cor:parity-unreadable :: The parity is not readable from the Max rows
+L5876 remark rem:parity-b2 :: 
+L5904 proposition prop:xor :: How the one-player game realises a translated layer
+L5942 theorem thm:alternation-bits :: Alternation costs bits
+L5971 proposition prop:parity-readable :: A valid parity is affinely readable; the true one is not
+L5993 proposition prop:b3-outer :: The outer half of the third level is realised
+L6023 remark rem:blowup-realise :: What a game would have to read
+L6090 remark rem:hk-survey :: One-player realisability at $m=4$, measured
+## L6110 Ties in one-player games
+L6139 lemma lem:tie-perturb :: Generic tie-breaking
+L6178 corollary cor:one-tie :: One tied vertex on the run is free
+L6191 lemma lem:seven-flat :: The height-seven orbit admits one tie
+L6222 theorem thm:no-seven :: One player cannot reach seven, with or without ties
+L6255 corollary cor:hstar-one :: The one-player ceiling up to $m=4$
+L6275 proposition prop:hkfive :: $h^{\ast}_{\mathrm{HK}}(5)=11$
+L6322 lemma lem:tie-partner :: Where a tie on a run can sit
+L6341 lemma lem:two-ties :: Two ties are separable unless they sit at one vertex with opposite actions
+L6364 theorem thm:b2-walk :: The walk of the second level needs the Min vertex
+L6407 proposition prop:no-linear-tiebreak :: A run whose ties admit no linear tie-breaker
+L6455 theorem thm:zero-timer :: Every zero-tie timer is linear
+L6505 corollary cor:gate :: Gating is linear
+## L6546 Deformed cubes, and why the blow-up leaves the Holt--Klee class
+L6555 definition def:deformed :: Deformed products
+L6571 lemma lem:deformed-rigid :: The last factor is rigid (the defining property of Amenta and Ziegler's construction, from memory)
+L6593 theorem thm:deformed-flat :: Deformed products are bottom-antipodally flat
+L6630 proposition prop:km-measured :: The classical cubes, measured
+L6663 lemma lem:stack :: Two stacking rules
+L6678 lemma lem:blowup-faces :: The $3$-faces of the blow-up
+L6713 corollary cor:blowup-parity :: The parity obstruction is intrinsic to the seed
+L6723 corollary cor:blowup-transl :: The translation obstruction
+L6775 proposition prop:oneplayer-runs :: Explicit one-player runs at five and six Max vertices
+L6818 remark rem:four-ceilings :: The four ceilings, as far as they are known
+## L6861 Gluing facets, the sink lift, and the Holt--Klee ceiling at $m=6,7$
+L6871 lemma lem:facet-gluing :: The facet decomposition of a cube orientation
+L6913 theorem prop:sink-lift :: The sink lift: $h^{\ast}_{\mathrm{HK}}(m+1)\ge h^{\ast}_{\mathrm{HK}}(m)+1$
+L6984 proposition prop:hk-records :: $h^{\ast}_{\mathrm{HK}}(6)\ge14$ and $h^{\ast}_{\mathrm{HK}}(7)\ge20$
+L7058 proposition prop:blowup-readout :: The generalised blow-up: an arbitrary readout
+L7107 proposition prop:tstar :: The readout-free obstruction $(T^{\ast})$
+L7143 proposition prop:hk-doubling-measured :: The blow-up doubles once, with a non-parity readout
+L7219 theorem prop:oneplayer-plus-one :: One player: $h^{\ast}_{1}(m+1)\ge h^{\ast}_{1}(m)+1$
+## L7271 One player: Howard's rule with two actions, sign-definite games, and stacking
+L7280 remark rem:oneplayer-dictionary :: The one-player dictionary
+L7297 definition def:signdef :: Sign-definite games
+L7304 theorem thm:signdef :: All-switches is linear on sign-definite games
+L7335 remark rem:signdef :: 
+L7352 definition def:balanced :: Balanced normal form
+L7358 lemma lem:balance :: Balancing costs one state
+L7390 theorem thm:stack :: Stacking: the run adds up
+L7474 corollary cor:stack-family :: A one-player family with slope $12/7$
+L7523 remark rem:stack-measured :: What was computed
+L7540 proposition prop:hstar-one-five :: $h^{\ast}_{1}(5)\ge10$
+L7565 proposition prop:hstar-one-eight :: $h^{\ast}_{1}(8)\ge13$
+L7583 proposition prop:oneplayer-census-small :: Exhaustive census at $N\le8$
+## L7599 Readouts: what a game presents to its Max vertices
+L7608 definition def:readout :: Pinning, and the readouts
+L7624 lemma lem:readout :: The readout theorem
+L7674 lemma lem:readout-reduce :: Eliminating a vertex's own value
+L7696 definition def:readout-system :: Readout system
+L7708 theorem thm:readout-realise :: Realisability is a concave interpolation problem
+L7756 theorem thm:min-count :: Min vertices are needed in proportion to the Holt--Klee defect
+L7793 proposition prop:m3-realised :: Every class at $m=3$ is realised
+L7814 proposition prop:pieces-measured :: Best-response pieces of the two realisations
+L7844 remark rem:hk-defect :: The Holt--Klee defect, as far as it can be computed
+L7884 proposition prop:m3-one-min :: The Min-count bound is attained at $m=3$
+## L7920 The profile cube and its sink projection
+L7931 definition def:profile-orientation :: The profile orientation
+L7949 lemma lem:profile-trichotomy :: One profile coordinate at a time
+L7968 lemma lem:profile-faces :: Flat classes and face sinks on the profile cube
+L7995 theorem thm:profile-uso :: The profile cube is a unique sink orientation
+L8012 lemma lem:survival-contract :: Unique fixed points for arbitrary rewards
+L8035 proposition prop:lcp :: The complementarity form
+L8074 proposition prop:projection :: The Max cube is the sink projection
+L8107 proposition prop:seven-k1 :: The height-seven orbit needs only one extra coordinate
+## L8148 Lemke's algorithm as a bias homotopy
+L8158 definition def:bias :: The biased system
+L8179 theorem thm:lemke-homotopy :: Lemke's algorithm is the bias homotopy
+L8246 corollary cor:bias-algorithm :: The homotopy is an exact algorithm
+L8262 remark rem:bias-attribution :: 
+L8279 proposition prop:bias-one-improving :: One player: an improving single-switch rule
+L8321 proposition prop:bias-shadow :: One player: the path is a shadow-vertex path
+L8345 proposition prop:bias-two-nonmono :: Two players: a directed path of the profile cube, not a value-monotone one
+L8368 lemma lem:bias-path-lp :: Realising a prescribed path is one linear programme
+L8404 remark rem:bias-families :: The named families do not defeat the homotopy
+L8423 proposition prop:bias-witnesses :: The path exceeds $|C|$; four exact witnesses
+L8475 remark rem:bias-gap :: Exactly what is missing
+## L8521 A rule that needs exponentially many switches
+L8528 definition def:ladder :: The ladder $L_n$
+L8541 theorem thm:ladder :: The least-index rule needs $2^{n}-1$ switches
+L8596 remark rem:ladder :: 
+L8638 theorem thm:switch-count :: Every single-switch improving rule stops within $N2^{a}$ switches, every multi-switch one within $N4^{a}$
+L8675 remark rem:grid-per-vertex :: The grid bound, vertex by vertex
+L8697 remark - :: 
+L8715 corollary cor:no-height :: No progress measure has polynomial height
+L8735 remark - :: 
+L8758 proposition prop:serialiser :: No serialisation
+L8784 remark rem:serialiser :: 
+L8821 lemma lem:trapchar :: Traps characterise stopping
+L8850 definition def:residue :: Deterministic residue
+L8872 definition def:residue-rule :: Residue improvement
+L8886 theorem thm:residue-correct :: The residue rule is correct
+L8943 proposition prop:residue-ladder :: 
+L8972 lemma lem:normalform :: Bipartite normal form
+L9041 definition def:residue-blind :: Residue-blind rule
+L9048 theorem thm:normalform-barrier :: Normalisation barrier
+L9077 remark rem:normalform :: 
+L9107 lemma lem:splice :: Two reductions of the average set
+L9144 proposition prop:a-presentation :: $a$ is a parameter of the presentation
+L9169 remark rem:parameter-presentation :: 
+L9186 remark rem:barrier-scope :: Exact scope of the barrier
+L9208 definition def:freeze :: Freezing rule
+L9218 proposition prop:freeze-sound :: Freezing rules are sound
+L9275 proposition prop:freeze-escapes :: 
+L9318 remark rem:freeze :: 
+L9353 definition def:kblind :: The $k$-blinding normalisation
+L9372 lemma lem:kblind :: 
+L9447 definition def:window :: $k$-window rule
+L9459 theorem thm:window-barrier :: The freezing hierarchy is blinded
+L9547 remark rem:window-barrier :: 
+L9591 definition def:bsi :: Bidirectional improvement
+L9613 theorem thm:bsi-nostall :: BSI never stalls
+L9649 lemma lem:bsi-pairloc :: Pair localisation
+L9667 corollary cor:bsi-levels :: A lexicographic potential, and the round count
+L9706 proposition prop:bsi-twice :: A vertex can be switched twice
+L9740 remark rem:bsi-gap :: The exact gap for BSI
+L9769 proposition prop:bsi-oneplayer :: BSI is trivial with one player
+L9793 corollary cor:bsi-correct :: BSI is a correct algorithm
+L9815 proposition prop:bsi-br :: Best-response restart never stalls
+L9867 remark rem:bsi-br :: 
+L9927 proposition prop:selfdual-bsi :: Self-dual games: BSI is a one-sided rule
+L9964 theorem thm:bsi-tracks :: Both tracks must be long
+L10011 definition def:readout-cascade :: The readout cascade $\mathrm{RD}(n)$
+L10026 theorem thm:readout :: All-switches one round, best-response restart $n$, BSI $2n$
+L10066 proposition prop:leapfrog :: One vertex switched $K$ times, with one player
+L10116 remark rem:readout :: What the two families settle
+L10147 lemma lem:same-successor :: Same-successor bias
+L10169 proposition prop:bsi-normal :: Normalisation preserves BSI
+L10195 proposition prop:q16 :: A Min vertex switched four times
+L10242 lemma lem:double-br :: $R_{\mathrm{BR}}$ moves towards the double best response
+L10284 lemma lem:clamp-reverses-once :: Min's preference at a clamp reverses once
+L10299 theorem thm:reorder :: Blocks, and the reordering bound
+L10344 corollary cor:clamp :: Clamped games are easy for $R_{\mathrm{BR}}$
+L10358 remark rem:clamp :: 
+L10372 proposition prop:w2 :: $W_2$: three rounds with two Max vertices
+L10430 remark rem:rbr-programme :: What a superpolynomial family must contain
+L10469 proposition prop:bsi-nonstopping :: Stopping is necessary
+L10482 remark rem:bsi :: 
+## L10517 The induced orientation of the two-player cube can be cyclic
+L10535 theorem thm:cyclic-uso :: The combined-cube orientation can be cyclic
+L10600 corollary cor:no-potential :: 
+L10613 remark - :: 
+## L10621 Value iteration is exponential already without players
+L10629 theorem thm:vi-lower :: Exponential lower bound for value iteration
+L10695 remark - :: 
+## L10719 Improving switches need not point toward the optimal set
+L10736 theorem thm:hamming-refuted :: No naive Hamming potential
+L10764 corollary cor:hamming :: 
+L10784 proposition prop:rules-fail :: 
+L10850 proposition prop:needle :: Wrong vertices can be as rare as possible
+L10884 remark - :: 
+L10897 remark - :: 
+L10923 lemma lem:readonce :: Read-once realisation
+L10951 proposition prop:no-submodular :: 
+L10991 remark rem:no-submodular :: 
+## L11043 The selection problem is the whole problem
+L11051 definition - :: 
+L11056 lemma lem:duality :: Duality
+L11089 theorem thm:compare-equivalence :: Equivalence
+L11187 theorem thm:order-determines :: The order of the average values determines the game
+L11237 remark - :: 
+L11270 proposition prop:no-halving :: 
+L11304 remark rem:no-halving :: 
+L11318 remark rem:no-halving-controlled :: The same question for $|C|$
+L11357 corollary cor:wrong-equivalence :: Deciding wrongness is the whole problem
+L11382 remark - :: 
+L11393 theorem thm:top :: Naming the top average vertex is the whole problem
+## L11445 What a certificate would look like
+L11451 definition def:bracket :: Bracket
+L11457 proposition prop:bracket :: Brackets are sound, complete, and as hard as the problem
+L11490 remark - :: 
+## L11501 A subexponential upper bound
+## L11520 Subcubes, subgames and dead coordinates
+L11522 definition def:subcube :: 
+L11535 lemma lem:subgame :: Subgame basics
+L11567 definition def:dead :: Facet potentials and dead coordinates
+L11575 lemma lem:facet-exclusion :: Facet exclusion
+## L11585 The algorithm and its correctness
+L11587 definition def:rf :: Random facet
+L11606 theorem thm:rf-correct :: Correctness
+## L11646 The expected number of switches
+L11648 definition def:frec :: 
+L11656 theorem thm:rf-bound :: Switch bound
+L11776 lemma lem:fbound :: 
+L11806 theorem thm:subexp :: Subexponential decision procedure
+L11835 remark - :: 
+## L11857 The remaining gap
+L11862 definition def:rule :: Switching rule
+L11870 definition def:missing :: The missing statement
+L11877 theorem thm:gap-equivalence :: The gap is exactly the problem
+L11938 definition def:decision-rule :: Decision rule
+L11948 theorem thm:decide-one-bit :: One bit per round is already the whole problem
+L12013 remark - :: 
+L12031 proposition prop:locality :: No bounded-radius decision rule is sound
+L12088 remark - :: 
+L12111 proposition prop:pdc-separation :: A switching stall that is not a decision stall
+L12166 remark - :: 
+## L12180 A global mechanism that beats locality
+L12188 proposition prop:qualitative :: The two qualitative sets, inside the model
+L12247 definition def:simorder :: Value-simulation preorder
+L12286 theorem thm:simorder-sound :: Soundness
+L12347 proposition prop:simorder-stalls :: The mechanism beats locality, and still stalls
+L12405 remark - :: 
+## L12419 Adding arithmetic: the slack calculus
+L12428 definition def:slack :: Slack calculus
+L12448 theorem thm:slack-sound :: Soundness and cost
+L12476 proposition prop:slack-repairs :: The repair works
+L12495 theorem thm:slack-barrier :: The slack calculus is dominated by value iteration
+L12523 corollary cor:slack-stalls :: An exponential stall
+L12555 theorem thm:slack-vi-upper :: The slack calculus is dominated by two-sided value iteration
+L12604 remark rem:slack-sandwich :: 
+L12631 definition def:trans-slack :: Transitive slack calculus
+L12652 theorem thm:trans-sound :: Soundness and cost
+L12673 proposition prop:trans-Hm :: 
+L12710 theorem thm:trans-complete :: Exact limit on stopping games
+L12768 lemma lem:phi-certificate :: Fixed points certify stalls
+L12792 proposition prop:trans-stall :: 
+L12822 definition def:separable :: Separable schedule
+L12837 lemma lem:separable-lower :: 
+L12859 theorem thm:separable :: 
+L12918 corollary cor:separable :: 
+L12977 corollary cor:set-certificate :: 
+L12994 remark rem:set-certificate :: 
+L13008 remark rem:trans :: 
+L13042 remark - :: 
+## L13061 A multiplicative calculus, and why it stops in the same place
+L13077 definition def:homog :: Homogenisation
+L13095 proposition prop:cw :: 
+L13135 definition def:ratio :: Ratio calculus
+L13158 theorem thm:ratio-sound :: Soundness
+L13197 theorem thm:ratio-sandwich :: 
+L13252 corollary cor:ratio-complete :: Exact in the limit
+L13265 corollary cor:ratio-stall :: The same exponential stall
+L13285 proposition prop:ratio-incomparable :: 
+L13318 remark rem:ratio :: 
+L13351 definition def:mobius :: The M\"obius family
+L13369 proposition prop:mobius :: 
+L13410 remark rem:mobius :: 
+L13455 proposition prop:ratio-closure :: The multiplicative closure escapes, too
+L13490 remark rem:ratio-closure :: 
+## L13504 The branch-compensation barrier
+L13512 definition def:lmc :: Local matching calculus
+L13531 lemma lem:fooling-partner :: Fooling partner
+L13565 theorem thm:matching-barrier :: Branch-compensation barrier
+L13622 remark rem:magnitude :: 
+## L13642 Seeding from policy evaluation
+L13649 definition def:seeded :: Seeded slack calculus
+L13659 theorem thm:seeded-sound :: Soundness, domination, cost
+L13688 theorem thm:seeded-barrier :: The barrier lifts to every seed
+L13707 theorem thm:seed-dichotomy :: Exactness dichotomy
+L13746 proposition prop:seeded-decides :: Behaviour on the stalling instances of this paper
+L13773 remark rem:frontier-moved :: 
+L13805 remark - :: 
+L13814 remark - :: Why the results above do not supply \textsc{(Poly-Rule)}
+L13842 definition def:transport :: Transport polytope and separator
+L13860 theorem thm:transport-sound :: Soundness
+L13881 lemma lem:transport-exact :: Elimination
+L13897 proposition prop:transport-decides :: It decides both published stalls
+L13928 lemma lem:transport-dim :: Reduction to the controlled coordinates
+L13948 theorem thm:transport-objective :: The objective, not the polytope
+L13999 definition def:lasserre-two :: The degree-two relaxation
+L14016 theorem thm:lasserre-vacuous :: Degree two is not merely inexact but vacuous
+L14084 remark rem:lasserre :: 
+L14128 remark rem:lcp :: The complementarity route, and why we do not pursue it
+L14147 remark rem:transport-objective :: 
+L14174 proposition prop:transport-stalls :: A seven-vertex stall
+L14205 remark rem:own-successor :: Compare a controlled vertex with its own successor
+L14261 proposition prop:own-stall :: The own-successor test does stall
+L14307 remark rem:own-stall :: 
+L14330 theorem thm:transport-barrier :: The stall survives every polynomial seed
+L14371 remark rem:transport :: 
+## L14404 Freezing one vertex: the response map folds
+L14428 theorem thm:fold :: The response map has exponentially many pieces
+L14485 remark rem:fold :: 
+## L14502 Coupling the two: the transport--slack hybrid
+L14522 definition def:hybrid :: The hybrid
+L14551 theorem thm:hybrid-sound :: Soundness
+L14571 lemma lem:hybrid-fix :: Rows and columns
+L14600 lemma lem:gen-comparison :: Comparison with general sink payoffs
+L14634 theorem thm:hybrid-complete :: Completeness: the polytope collapses
+L14713 corollary cor:hybrid-sink :: Only the sink rows are used
+L14726 remark rem:hybrid-box :: 
+L14743 proposition prop:hybrid-decides :: It disposes of every stall recorded above
+L14780 proposition prop:hybrid-onectrl :: One controlled vertex is always exact at round two
+L14811 remark rem:hybrid-sink-slower :: 
+L14842 remark rem:hybrid-where :: 
+L14863 proposition prop:hybrid-rate :: The rate is a contraction question
+L14914 lemma lem:hybrid-cutting :: The hybrid is a cutting-plane iteration
+L14936 theorem thm:hybrid-convex-barrier :: Convex certificates bound the hybrid from below
+L14962 remark rem:hybrid-barrier-lift :: 
+L14979 theorem thm:hybrid-lower :: The hybrid needs exponentially many rounds
+L15020 remark rem:hybrid-lower-not-a-refutation :: What \Cref{thm:hybrid-lower} does not say
+## L15045 A hybrid stall inside the few-denominator class
+L15059 definition def:cv :: The coarse core
+L15076 proposition prop:cv-values :: Basic data
+L15109 lemma lem:cv-lift :: The lift
+L15129 theorem thm:cv-lower :: The hybrid is silent for $2^{\Omega(N)}$ rounds
+L15247 corollary cor:cv-class :: The class contains a hybrid stall
+L15264 lemma lem:hybrid-narrow :: The hybrid fires as soon as the polytope is narrow
+L15283 remark rem:hybrid-narrow :: 
+L15301 remark rem:cv :: What the family separates
+L15342 proposition prop:cv-measured :: Measured
+L15441 remark rem:hybrid-lower-verified :: 
+L15462 remark rem:hybrid-rate :: 
+## L15517 The own-successor rule, and a wedge that defeats it
+L15526 lemma lem:wedge-face :: The own-successor entries are support values
+L15555 corollary cor:wedge-cert :: What a certificate must do
+L15579 definition def:wedge :: The wedge family
+L15604 proposition prop:wedge :: The wedge defeats the own-successor rule
+L15623 definition def:wedge-chain :: The wedge certificate chain
+L15637 lemma lem:wedge-verts :: Vertices
+L15669 theorem thm:wedge-proved :: The wedge, proved
+L15745 corollary cor:wedge-count :: The count
+L15765 remark rem:wedge :: 
+## L15837 Summary
