@@ -1,0 +1,155 @@
+{
+ "target": "route \"realisation-space\": R(s;S) as a semialgebraic realisation space, the inradius/window widths, the pinned shape and the level theorem, and the claim that the pinned tower cannot double (B^3 out of reach of the doubly pinned shape)",
+ "sound": false,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "rs:metric (corollary \"The open question of rem:blowup-realise is a metric one\")",
+   "defect": "The first \"if and only if\" is false in the reverse direction. rs:inradius gives c <= ceil(log2(1/rho))+1 and log2(1/rho) <= (n+2)c + log2(6(n+1)); with n = O(k) these pin c and log2(1/rho) to each other only up to a factor Theta(k). So log2(1/rho(B^k;S_k)) = O(k^2) yields only c = O(k^2), i.e. denominators 2^{O(k^2)}, NOT the additive regime's 2^{O(k)}. Only the poly(k) half of the corollary is a genuine equivalence.",
+   "evidence": "rs_results.tex ll.192-200: \"realisable in the additive regime ... O(k) controlled vertices and denominators 2^{O(k)} ... if and only if log_2(1/rho(B^k;S_k))=O(k^2)\". Compose the theorem's two displayed inequalities: c <= log2(1/rho)+1 <= (n+2)c + O(log n). The forward implication (additive => O(k^2)) is fine; the converse gives c = O(k^2). This is the route's headline corollary and it is in the paste-ready LaTeX."
+  },
+  {
+   "severity": "major",
+   "result_name": "rs:no-doubling",
+   "defect": "The step from rs:no-outer-translate to the corollary silently identifies the block's PIN PAIR with S's outer pair (alpha_2,beta_2). Nothing in the route forbids a block pinned on a different pair of Max coordinates, and the up-closedness obstruction genuinely fails to fire for some other pairs. The conclusion survives, but only via an argument the route does not give: the same block must ALSO realise the untranslated B^2 at the off-layer drives, and for B^2 the only (pin pair, pin layer) surviving up-closedness at the (0,0) labelling is ((alpha_2,beta_2),(0,0)).",
+   "evidence": "Exhaustive test of the necessary condition of rs:upclosed (E_p, E_q up-closed under improving single switches on the inner coordinates, which increase val componentwise by lem:switch) over all 10 coordinate pairs and all 4 layers, /tmp/claude-1000/-data-ssg-proof/5cc7fb9d-035b-424b-bca6-ec769216aeb1/scratchpad/audit-rs/a2.py, a3.py. For z = 26 (a doubling translation: h_{B^2}(4^26)=h(30)=10) the pair (alpha_1,beta_2) at layer (0,0) has ZERO violations, so rs:upclosed does not fire there. It is only the extra requirement (untranslated B^2 at the other drives, where ((alpha_1,beta_2),(0,0)) fails) that closes the case."
+  },
+  {
+   "severity": "major",
+   "result_name": "rs:no-doubling (scope parenthetical)",
+   "defect": "The corollary asserts that the doubly pinned shape is \"the shape of prop:b2-realised (with z != 0) and of prop:b3-outer (with z = 0)\". This is false for prop:b2-realised, whose inner block {c1,c2,c3,c6} is not a pinned extension. Taken literally the parenthetical makes the corollary self-contradictory: prop:b2-realised DOES double (height 10 = 2*4+2) with z = e_{beta_1}, a coordinate of the block's own would-be outer pair. Consequence for scope: the only doubling ever realised lies OUTSIDE the barrier's model, which covers exactly one published game, prop:b3-outer.",
+   "evidence": "Row scan of the printed normal form of prop:b2-realised (/tmp/claude-1000/-data-ssg-proof/5cc7fb9d-035b-424b-bca6-ec769216aeb1/scratchpad/audit-rs, last command): the ONLY closed two-cycle among Max vertices is (c4,c5) on actions (0,0). c2's action-0 row reads c3 alone, but c3's action-0 row reads the Min vertex c6 and t1, not c2; c1 and c3 have no single-target row. Hence the block has no pin pair and the game is singly pinned."
+  },
+  {
+   "severity": "major",
+   "result_name": "rs:drive",
+   "defect": "Restatement of lem:readout(a), not a new relation, and the route's closest_label (rem:b2-anatomy) is not the closest statement in the paper. Retype the drive vertex beta as a terminal of payoff t (def:payoff/rem:terminals, exactly the pinning device of def:readout); lem:readout(a)'s proof then gives val_sigma(t) = min_tau (q^tau + r^tau t) with each piece affine and nondecreasing, whence: <=2^k pieces (b), tau-optimality regions are intersections of half-lines hence intervals (b), margins are differences of functions affine on the same cells so <=2^k sign changes (c), and for k=0 every sign set is a half-line (d). Three lines.",
+   "evidence": "frontier.tex l.7624 lem:readout(a): \"F_{v,a}(y)=min_tau(q^{v,a,tau}+p^{v,a,tau}.y) over the positional Min strategies tau ... Each piece is substochastic, so every F_{v,a} is nondecreasing, concave and 1-Lipschitz ... and a single substochastic affine map when Vmin is empty.\" The only difference is which vertex is frozen."
+  },
+  {
+   "severity": "major",
+   "result_name": "rs:where(ii), rs:where(iii)",
+   "defect": "Vacuous given the route's own rs:no-doubling. Both live in the doubly pinned setting and both assume z = e_alpha, i.e. a translation with a nonzero component on the block's outer pair — precisely what rs:no-doubling proves cannot occur. So the \"at least two Min vertices\" bound and the drive-plane reversal constrain an empty set of games. The route's gap statement then treats (ii) as an open direction (\"no example of a block whose drive line carries s, s(.xor z'), s, s(.xor z') is exhibited\"), and rs:localised's most laborious computation (rs_joint2.py, rs_witness2.py, reversal_witness.json) is a witness for that same closed branch.",
+   "evidence": "rs_results.tex, prop rs:where preamble: \"Let G be a pinned extension whose block B is itself a pinned extension of a block B_0\"; (ii) \"Suppose z = e_alpha, the old outer coordinate\". rs:no-doubling: \"no doubly pinned game has improvement outmap B_varphi(S,z) for a z whose component on S's outer pair is nonzero.\""
+  },
+  {
+   "severity": "minor",
+   "result_name": "rs:level (the \"quantitative form of lem:layer-order\" clause)",
+   "defect": "The displayed proof establishes the strict domination of the pinned drive only at L=(1,0) (from C1) and L=(0,1) (from C2); at L=(1,1) neither condition is asserted and R_beta is not bounded by Theta_w by the given argument. The statement is true, but by lem:layer-order, which already gives componentwise domination of the (0,0)-layer value vector at EVERY other layer — so this clause is a restatement of lem:layer-order plus strictness, not a new quantitative fact.",
+   "evidence": "rs_results.tex, proof of rs:level: \"Finally (C1) gives A'a+q_B < A'Theta_u+q_B = Theta_w and (C2) gives b<Theta_w\" — (C1) is asserted only at L in {(0,0),(1,0)} and (C2) only at L in {(0,0),(0,1)}. frontier.tex l.5574 lem:layer-order supplies the missing layer."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rs:cost",
+   "defect": "One-sided, and non-iterable. The converse (\"D'' >= (1/2)log2(1/|W|) - O(1)\") is proved only \"for a worst-case window position\" (the interval (1/2, 1/2+|W|), where p/q in it forces q > 1/(2|W|)); it is not a lower bound on the cost of any actual level. Moreover the cost recursion cannot be composed: a pinned extension of a pinned extension is doubly pinned, which the route's own rs:no-doubling proves cannot double, so \"the width of the block's translation window is the price of the level\" can be charged at most once, on top of a block that is not pinned.",
+   "evidence": "rs_results.tex cor rs:cost and its proof; rs:no-doubling in the same file. On the measured instance the two sides are D''=9 actual against max(D,D')+ceil(log2(1/0.0420))+O(1) = 9+5+O(1): consistent, not tight."
+  },
+  {
+   "severity": "note",
+   "result_name": "rs:semialg(c)",
+   "defect": "The openness/perturbation argument is the one the paper already records, and it does not touch the open item it appears to approach. frontier.tex after thm:readout-realise leaves open \"whether every rational readout system realising a nondegenerate s can be replaced by a dyadic delta-leaky one\", noting it \"was shown by the route for one player only, by perturbation\"; the difficulty is exactly that lem:readout(a) delivers pieces that NEED NOT LEAK. rs:semialg works inside P_S^{>0}, i.e. assumes leaking, where the argument is the same one-line continuity argument for any k.",
+   "evidence": "frontier.tex l.7708ff, closing paragraph of thm:readout-realise: \"(a) delivers rational pieces that need not leak, while (b) needs dyadic leaking ones\"."
+  },
+  {
+   "severity": "note",
+   "result_name": "rs:verified (three fresh games), rs:no-doubling (cube arithmetic)",
+   "defect": "No defect — reproduced independently. Recorded so the route is not penalised for unbuilt witnesses.",
+   "evidence": "/tmp/claude-1000/-data-ssg-proof/5cc7fb9d-035b-424b-bca6-ec769216aeb1/scratchpad/audit-rs/verify_game.py rebuilt all three B2_pin_*.json from the game with an independent exact evaluator (average part resolved in topological order, values as componentwise minima over both Min strategies): N = 137/138/139, greatest trap empty, no tied incidence, outmap exactly B^2. a1.py: B^2 is a USO with sink 4, height 10, maximal vertices {12,14,28,30}, every 4^v carrying the alpha_2 bit, and max over purely inner z of h(4^z) = 4, so the cap 10+2+4 = 16 is right. The up-closure violation counts for the three outer translates (4, 3, 7) reproduce exactly."
+  },
+  {
+   "severity": "note",
+   "result_name": "verdict label \"new-barrier\"",
+   "defect": "Mis-labelled by the paper's own convention. This closes a construction avenue; it covers none of M1-M6, all-switches, def:bsi or R_BR. The paper states the convention explicitly for the two nearest results.",
+   "evidence": "frontier.tex prop:tstar (l.7107): \"Like thm:deformed-flat, this closes a construction avenue and is not a barrier in the sense of sec:gap: it constrains one rule for building orientations and covers none of the mechanisms M1--M6 or def:bsi.\""
+  }
+ ],
+ "novelty_table": [
+  {
+   "result_name": "rs:semialg (realisation space semialgebraic of degree n+1, open, full-dimensional)",
+   "closest_label": "thm:readout-realise (with the LP paragraph that follows it)",
+   "class": "new-object"
+  },
+  {
+   "result_name": "rs:inradius (bit cost = log of an inradius, up to n+2)",
+   "closest_label": "rem:blowup-realise",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "rs:metric (additive regime iff log2(1/rho)=O(k^2))",
+   "closest_label": "rs:inradius",
+   "class": "unproved"
+  },
+  {
+   "result_name": "rs:drive (drive line: affine pieces, 2^k sign changes, computable windows)",
+   "closest_label": "lem:readout",
+   "class": "restatement"
+  },
+  {
+   "result_name": "rs:def-pinned + rs:level (the pinned shape and the (C1)-(C5) iff)",
+   "closest_label": "rem:b2-anatomy / prop:b3-outer",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "rs:level, strict-domination clause (\"quantitative form of lem:layer-order\")",
+   "closest_label": "lem:layer-order",
+   "class": "restatement"
+  },
+  {
+   "result_name": "rs:cost (one level costs the window width)",
+   "closest_label": "rem:blowup-realise",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "rs:upclosed (outer switchable set up-closed on the pinned layer)",
+   "closest_label": "prop:rows-turn",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "rs:no-outer-translate / rs:no-doubling (the pinned tower cannot double; B^3 out of reach)",
+   "closest_label": "prop:b3-outer / rem:blowup-realise (genre: prop:tstar, thm:deformed-flat)",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "rs:where(i) (no block row reads the new pair implies z = 0)",
+   "closest_label": "prop:b3-outer",
+   "class": "restatement"
+  },
+  {
+   "result_name": "rs:where(ii),(iii) (two Min vertices in the pin-drive branch; the drive must reverse)",
+   "closest_label": "rs:no-doubling",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "rs:b2-window (exact fences of the level-two drive line)",
+   "closest_label": "rem:b2-anatomy",
+   "class": "measurement-only"
+  },
+  {
+   "result_name": "rs:verified (23-pin cell; three fresh B^2 games on 137/138/139 vertices)",
+   "closest_label": "prop:b2-realised",
+   "class": "measurement-only"
+  },
+  {
+   "result_name": "rs:swap (row exchange translates the orientation; cost is a class invariant)",
+   "closest_label": "prop:auso-census",
+   "class": "restatement"
+  },
+  {
+   "result_name": "rs:semialg(d) (the fibre over a value configuration is a polyhedron)",
+   "closest_label": "thm:readout-realise (the paragraph after it)",
+   "class": "restatement"
+  },
+  {
+   "result_name": "B_p(B^2,8) is an AUSO of the 7-cube of height 22 (B3_readable.json)",
+   "closest_label": "prop:blowup-readout",
+   "class": "measurement-only"
+  },
+  {
+   "result_name": "rs:localised (three-point drive-plane witness, dyadic at 2^10)",
+   "closest_label": "rem:b2-anatomy / rs:where(ii)",
+   "class": "measurement-only"
+  }
+ ],
+ "verdict": "VERDICT: new-theorem, not new-barrier. Downgraded from the route's own claim, and stripped to about a fifth of what it submits.\n\n1. DID THE OBJECT CHANGE? Only cosmetically. R(s;S) is the paper's own search space given a name: thm:readout-realise already turns realisability into an interpolation problem and the paragraph after it already says that for a fixed value configuration the existence of the rows is a linear programme; rs:semialg(d) is that paragraph read as a fibration, and the route files it as a restatement itself. What is genuinely added on top is (a) that the defining polynomials have degree <= n+1 (Cramer, routine) and (b) two derived widths. Of the two widths, the inradius is a change of variables and nothing else: rs:inradius is the standard round-to-the-grid argument (the route attributes it, correctly, to the oriented-matroid/LP-feasibility literature), it is used nowhere in the route's own conclusions, and its one measured instance brackets rho over ten bits (2^-22.7 to 2^-12.3) against a known bit cost of 9, i.e. both directions of the theorem are vacuous on the only datum. rs:metric, which is supposed to convert rem:blowup-realise into a metric question, states an iff whose converse does not follow (Finding 1). So the headline object does no work. The width that does work — the translation window of a driven block — is a property of rem:b2-anatomy's construction, which the paper already owns and already measures.\n\n2. WHAT SURVIVES. Exactly one line of results: def rs:def-pinned + rs:level (the pinned shape, written down in general for the first time, with the eight outer demands reduced to (C1)-(C4) and the single frozen condition (C5)), and on top of it rs:upclosed -> rs:no-outer-translate -> rs:no-doubling. That chain is a genuine, proved no-go: on the pinned layer the outer pair is a closed two-cycle, so its two values are constants, so each outer vertex compares one monotone readout of the block against a number, so its switchable set is up-closed for the block's value order; a translate by an outer coordinate demands instead a parity class, which alternates along any bottom-antipodal walk. It is prop:rows-turn's one-line proof localised to a layer where the incomparable coordinates are frozen — the route's why_not_implied is fair against prop:rows-turn's statement and evasive about its proof — but the CONCLUSION is new and is exactly on the paper's smallest open instance: it explains why prop:b3-outer reaches only 10+2 = 12 and it closes the obvious repair (pin once more on top of it). I verified the combinatorics it rests on (B^2's sink 4, height 10, maximal vertices {12,14,28,30}, every doubling z carrying the alpha_2 bit, cap 10+2+4 = 16, and the 4/3/7 up-closure violations of the three outer translates) and the three fresh 137/138/139-vertex games, from the game.\n\n3. HOW MUCH DOES IT MEAN? Less than the route says, for three reasons. (i) The proof of the headline corollary has a hole: it assumes the block's pin pair is B^2's outer pair, and for z = 26 the pair (alpha_1,beta_2) at layer (0,0) passes the up-closedness test outright; the corollary is rescued only by a second observation the route never makes (Finding 2). (ii) The barrier's model contains exactly one published game. The route claims it is \"the shape of prop:b2-realised and prop:b3-outer\"; prop:b2-realised is singly pinned — its block has no closed two-cycle at all — and if it were doubly pinned the corollary would contradict it, since it doubles with z = e_{beta_1} (Finding 3). So the only doubling ever realised sits outside the model, and the paper already records, in rem:b2-anatomy, that \"pinning is not the only way to translate a layer\", pointing at prop:xor's 100-vertex game whose outer values on the translated layer are not constant. (iii) A no-go against one gadget shape covers no mechanism (M1-M6, all-switches, def:bsi, R_BR) and therefore does not move the target at all; by the paper's own convention (prop:tstar, thm:deformed-flat) it is a closed construction avenue, not a barrier.\n\n4. THE REAL REMAINING GAP, stated more precisely than the route states it. The route names as its gap the shape in which beta's rest action reads the block. That is one of at least two escapes at the outer pair (alpha's rest action reading the block is the other, equally excluded by def rs:def-pinned), and it is not the binding one. The binding gap is one level down: whether a driven block that is NOT a pinned extension can present B^2 at one drive and B^2(.xor z) at another for one of the four doubling z in {8,10,24,26} — the operation prop:xor already performs at inner dimension two with non-constant outer values. Every route to the height-22 third level now runs through that question, and nothing in this route touches it; rs:localised's three-point drive witness answers a different, and (Finding 5) empty, question.\n\n5. INTEGRATION. Better, if cut to: def rs:def-pinned; rs:level with the (C1)-(C5) iff (delete the \"quantitative form of lem:layer-order\" clause and cite lem:layer-order); rs:upclosed, rs:no-outer-translate, rs:no-doubling — with the pin-pair step supplied, the prop:b2-realised parenthetical deleted, and the whole placed immediately after prop:b3-outer and labelled, like prop:tstar, as a closed construction avenue that covers no mechanism. Add, as one sentence each, rs:b2-window's exact fences (they upgrade rem:b2-anatomy's admitted grid measurement 0.5802/0.6222 to 1175936917/2026652880 and 10168377/16341335, verified consistent here) and the 137-vertex realisation of B^2 (one vertex below prop:b2-realised).\n\nWorse, if integrated: rs:def-space/rs:semialg/rs:inradius/rs:metric (a subsection of routine, self-attributed-standard apparatus that does no work and contains one false corollary); rs:drive (a restatement of lem:readout(a) mis-attributed to rem:b2-anatomy); rs:where(i) (a three-line restatement of a sentence inside prop:b3-outer); rs:where(ii),(iii) and rs:localised's reversal witness (a bound and a computation about a set of games the route itself proves empty); rs:cost as stated (converse only for an adversarially placed window, and non-iterable inside the shape it is proved for). The route's next_steps items 1-3 are all inside the shape its own corollary kills or inside the vacuous branch; only item 4 (read prop:m3-one-min's and prop:xor's games in the pinned language, i.e. find out how a non-pinned translation works) points at the gap that matters."
+}

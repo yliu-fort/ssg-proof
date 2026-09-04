@@ -1,0 +1,125 @@
+{
+ "target": "Route \"convex-lift\": the choice lift L(G) (Q(G) plus one bilinear row x(v)=y_v x(v^0)+(1-y_v)x(v^1) per controlled vertex) and the RLT / Sherali-Adams hierarchy R_j over the choice variables y, with R_0 = Q(G).",
+ "sound": false,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "fatal",
+   "result_name": "cl:barrier — what an instance defeating the hierarchy must contain",
+   "defect": "FALSE AS STATED, and refuted by the route's own instances. cl:barrier concludes \"more than j reversing Max vertices\"; cl:collapse only yields j < min(m, rho_max+1), i.e. rho_max >= j, not rho_max > j. The route's own derivation is circular where it tries to gain the extra one (\"since rho_max is an integer with rho_max >= j it is in fact > j once the same argument is applied to the exact bound min(m,rho_max+1) > j\").",
+   "evidence": "Take j = 0, where R_0 = Q(G) by cl:sound. G8: I recomputed Rev(G8) = {} (rho_max = 0) and max over Q(G8) of x(5) = 1 > 1/2 = w*(5), so the hypothesis of cl:barrier holds and its conclusion rho_max > 0 fails. G* is worse: Rev(G*) = {3,5,6}, all in Vmin, so rho_max = 0, while max over Q(G*) of x(v_0) = 1 > 24/31 = w*(v_0) AND min over Q(G*) of x(v_0) = 3/5 < 24/31 — both directions fail at level 0 with rho_max = 0, which cl:barrier's second clause also forbids. Exact two-phase simplex over transport_rows, /tmp/claude-1000/-data-ssg-proof/5cc7fb9d-035b-424b-bca6-ec769216aeb1/scratchpad/audit/chk.py. The repaired statement (m > j, k > j, rho_max >= j, rho_min >= j) is true but weaker, and it changes the route's own search guidance in next_steps from 'three reversing vertices per side' to 'two'."
+  },
+  {
+   "severity": "major",
+   "result_name": "cl:collapse — the level at which the hierarchy collapses",
+   "defect": "The clause \"in particular the first exact level is at most min(m,k)\" is false under the theorem's own definition of exactness (R_j(G) = {w*}). Only max(min(k,rho_min+1), min(m,rho_max+1)) is proved, and that quantity is bounded by max(m,k), not min(m,k). The route conflates 'R_j is a singleton' with 'one of the two bounds over R_j equals w*'; the latter does hold at level min(m,k), the former does not.",
+   "evidence": "W_14: m = 3, k = 0, so min(m,k) = 0, but R_0 = Q(W_14) is not a point — the route's own log records the level-0 interval [1/2,1] at v_1, and I reconfirmed max over Q(W_14) of x(v_1) = 1 while w* = 1/2 (audit/dw.py). The same error propagates into cl:collapse's verification paragraph (\"settles without computation that R_2 = {w*} on G-sharp (m,k)=(4,2) and R_1 = {w*} on the level-two realisation (m,k)=(5,1)\"): neither follows; only min over R_2 (resp. R_1) = w* does."
+  },
+  {
+   "severity": "major",
+   "result_name": "cl:collapse — the level at which the hierarchy collapses",
+   "defect": "SIGNIFICANCE: the hierarchy yields no tractable instance that is not already tractable, and its bound is strictly worse than a three-line enumeration. cl:collapse gives cost N^{O(min(m,k,rho_max+1,rho_min+1))}; the elementary algorithm costs 2^{min(m,k,rho_max,rho_min)}·poly(N).",
+   "evidence": "Three lines. (1) w* in Q(G) (thm:transport-sound), so a rigid v — constant weak sign of x(v^0)-x(v^1) on Q(G) — has the sign of w*(v^0)-w*(v^1) known, which names an optimal action at v (thm:opt-subcube); rigidity is 2 LPs. (2) Enumerate the 2^{rho_min} actions at the reversing Min vertices, freeze Min there and at the rigid Min vertices, solve each resulting one-player Max game by thm:one-player, and take the pointwise minimum: tau* is among them and val^tau >= w* for every tau. (3) Dually 2^{rho_max}·poly(N); and min(m,k) enumeration is already in the paper at l.10040 (\"min(m,k)=O(log N) is trivially in P — enumerate the smaller player's strategies\"). Every instance the route reports as 'decided by one LP at level one' (G8, S, S_r, H_3, H_5, WD, CC, CV, W_14, W_14-bar — all one-player) is decided by thm:one-player alone, which the route itself lists as a restatement; the only two-player ones, R (m=1) and G* (rho_max=0), fall to (1)-(3)."
+  },
+  {
+   "severity": "major",
+   "result_name": "cl:exact-lift — the choice lift is exact and already convex",
+   "defect": "RESTATEMENT of thm:transport-objective, misclassified by the route as new-object. Part (a)'s argument is verbatim the second paragraph of thm:transport-objective's proof with 'x(v)=x(v^{sigma(v)})' replaced by 'x(v) is a convex combination of the two successor values'; parts (b) and (c) are then read off thm:opt-subcube.",
+   "evidence": "Three lines. (i) At v in Vmax the order rows give x(v) >= max_i x(v^{(i)}) and the bilinear row makes x(v) a convex combination of the two, so x(v) = max_i x(v^{(i)}); dually at Vmin; hence Tx = x and x = w* by thm:contraction — which is exactly what thm:transport-objective's proof establishes from obj_sigma(x)=0. (ii) With x = w*, the bilinear row says w*(v) = y_v w*(v^0) + (1-y_v) w*(v^1) with w*(v) the extremum, so y_v is supported on the argmax/argmin: that is thm:opt-subcube (plus lem:duality for the Min half). (iii) (c) is immediate from (b). Note also that the conclusion is algorithmically inert: L(G) is convex but is not given by any convex description one can write down without w*, so 'there is no 2^k-piece disjunctive hull to describe' is a statement that nothing is gained, not that something is."
+  },
+  {
+   "severity": "major",
+   "result_name": "cl:rigid — rigid games are one linear programme",
+   "defect": "The result's algorithmic headline — the only part carrying significance, and the part next_steps proposes to promote to a 'ninth polynomial class' — is three lines from thm:transport-sound. 'v is rigid' is literally 'the pair test Sep(v^{(0)},v^{(1)}) <= 0 or Sep(v^{(1)},v^{(0)}) <= 0', which rem:own-successor explicitly sanctions as deciding v ('note that (i) is non-strict, and so is the pair test's Sep(v^{(0)},v^{(1)}) <= 0; both decide'). So the 'rigid class' is by definition the class on which the paper's own transport pair test decides every controlled vertex.",
+   "evidence": "Three lines: w* in Q(G) (thm:transport-sound); so Sep(v^{(0)},v^{(1)}) <= 0 gives w*(v^{(1)}) <= w*(v^{(0)}), naming an optimal action at v (thm:opt-subcube); if every v is rigid an optimal profile sigma is known and w* = val_sigma by eq:(lp) in thm:compare-equivalence's proof. Empirically the class is also generic rather than structural: on 1424 random stopping games (5-10 non-sinks, 1-3 controlled, Z-seeded) with at least one value-distinguishing controlled vertex, the pair test decided every such vertex in 1386 of them (97 per cent). Code /tmp/claude-1000/-data-ssg-proof/5cc7fb9d-035b-424b-bca6-ec769216aeb1/scratchpad/audit/rnd2.py."
+  },
+  {
+   "severity": "minor",
+   "result_name": "cl:dw — the level-one relaxation does not decide the threshold",
+   "defect": "Misclassified as new-object. DW is not a new construction: it is thm:compare-equivalence's own gadget — 'the disjoint union of G and its dual G-bar, sharing the two sinks, and a fresh average start s -> (a, b-bar)' — instantiated at a = b = v_1 of W_14. The 'straddle' upgrade is therefore generic: any relaxation with a one-sided gap on a one-player game acquires a two-sided one by this gadget, so cl:dw is a corollary of cl:gap-one + cl:union + lem:duality, not an independent object. Its significance is further limited exactly as rem:lasserre limits thm:lasserre-vacuous: DW is two disjoint one-player games, solved outright by two d'Epenoux LPs.",
+   "evidence": "frontier.tex l.11200-11212 (the gadget). I rebuilt DW_GAME.json independently: 25 non-sinks + 2 sinks, stopping, m = k = 3, w*(s) = 1/2, R_0 at s = [1/4,3/4]; matches. audit/dw.py."
+  },
+  {
+   "severity": "minor",
+   "result_name": "cl:exact-lift — the choice lift is exact and already convex",
+   "defect": "Part (b) cites thm:opt-subcube for a subcube of {0,1}^C, but the paper's Opt is a subcube of {0,1}^{Vmax} only. The Min half needs lem:duality (or a two-line repetition of the proof); as written the citation is inaccurate.",
+   "evidence": "frontier.tex l.3338-3350: 'Opt is a nonempty subcube of {0,1}^{Vmax}'."
+  },
+  {
+   "severity": "minor",
+   "result_name": "cl:cut — the gate cut, a valid inequality outside the difference calculus",
+   "defect": "Proved and correct (I checked the derivation and the S computation by hand), but it decides nothing anywhere, is exhibited on exactly one 7-vertex instance, and the route itself records that whether Q(G) plus the gate cuts decides any of the paper's instances 'was not tested'. As presented it is a valid inequality with no theorem behind it.",
+   "evidence": "On S: h_0 = 1/2 - t, h_1 = 1/8 - t/2, M_0 = 1/2, M_1 = 3/8, cut reads t <= 7/10, cutting [1/2,1] to [1/2,7/10] and leaving v undecided by the pair test (w*(v) = 1/2 is interior). No second instance is reported."
+  },
+  {
+   "severity": "note",
+   "result_name": "cl:rigid — rigid games are one linear programme",
+   "defect": "The route's most valuable datum is buried in a why_not_implied line and is not stated as a result: Rev(R) = empty for the ten-vertex R of prop:own-stall. That fact CORRECTS THE PAPER. rem:own-successor asserts 'The pair test Sep(v^{(0)},v^{(1)}) is strictly weaker' and rem:own-stall asserts that on R 'the transport certificate alone, even read in the strongest way and seeded with everything that is free, is not a decision rule'. Both are false: on R the (non-strict) pair test decides every value-distinguishing controlled vertex while the own-successor test returns 0 at all six separators. The two tests are INCOMPARABLE — S and S_r witness one direction, R the other — and this round's standing rule ('THE PAIR TEST IS STRICTLY WEAKER AND IS THE WRONG TEST') is inaccurate as written.",
+   "evidence": "Recomputed exactly, with and without the Z-seed (audit/chkR.py): on R, ranges of x(v^0)-x(v^1) over Q(R;L,U) are v=1 (Min): (-1/4, 0); v=4 (Max): (0, 1/2); v=6 (Min): (0, 1/2) — none strictly straddles 0, so Sep(3,5)=0, Sep(t0-side)=0 decide actions 0, 0, 1 respectively, all correct against w* = (1/2,1/2,1/2,3/4,1/2,1/2,0,1/2); the six own-successor separators are all exactly 0, reproducing prop:own-stall. A CORRECT replacement witness, which I verified: the 7-vertex stopping SSG with Vavg = {0,2}, Vmin = {1}, Vmax = {3,4}, 0 -> (2,t1), 1 -> (3,t1), 2 -> (t0,0), 3 -> (0,t0), 4 -> (1,2); w* = (2/3, 2/3, 1/3, 2/3, 2/3), Z_0 = {t0}, Z_1 = {t1}; at the value-distinguishing Max vertex 4 the pair range is (-1/3, 2/3) (strictly straddling, so the pair test is silent) and both own-successor separators are 0 (so that test is silent too), while vertices 1 and 3 are decided. That is a genuine Z-seeded stall of the transport certificate read in BOTH ways, on three fewer vertices than R. audit/wit.py, audit/rnd2.py (18 such witnesses in 1424 seeded random games)."
+  },
+  {
+   "severity": "note",
+   "result_name": "cl:rlt + cl:sound + cl:faces",
+   "defect": "Correct, and correctly attributed to Sherali-Adams / Balas / McCormick from memory. But the object is textbook: R_1 = intersection over v of conv(F_v^0 ∪ F_v^1) is the first Balas disjunctive / Lovasz-Schrijver closure of the complementarity conditions of the P-matrix LCP the paper already owns (prop:lcp), so the route is applying a standard hierarchy to an object the paper has had since sec:projection. The route says this; a reader of the LaTeX would not, since cl:rlt's statement carries no attribution line.",
+   "evidence": "prop:lcp / thm:profile-uso (l.7995-8074) already put the fixed point in complementarity form; the route's cl:rlt is that system's SA lift. I verified cl:faces by hand (the lambda = 0 branch is handled correctly by the box rows, and Q(G) is bounded so there is no recession-cone gap) and verified cl:gap-one's certificate entry by entry: pi = (8/13,8/13,7/13) in F_{v1}^0, kappa = (4/7,1/2,4/7) in F_{v1}^1, (13/20)pi + (7/20)kappa = (3/5,23/40,11/20); pi' = w*, kappa' = (1,7/8,7/8), (4/5)pi' + (1/5)kappa' the same point; all five in Q(W_14). So max over R_1 of x(v_1) >= 3/5 > 1/2 holds."
+  }
+ ],
+ "novelty_table": [
+  {
+   "result_name": "cl:exact-lift — the choice lift is exact and already convex",
+   "closest_label": "thm:transport-objective",
+   "class": "restatement"
+  },
+  {
+   "result_name": "cl:rlt + cl:sound + cl:faces — the hierarchy, its base, and the geometry of level one",
+   "closest_label": "def:lasserre-two",
+   "class": "new-object"
+  },
+  {
+   "result_name": "cl:rigid — rigid games are one linear programme",
+   "closest_label": "rem:own-successor (with thm:transport-sound)",
+   "class": "restatement"
+  },
+  {
+   "result_name": "cl:collapse — the level at which the hierarchy collapses",
+   "closest_label": "thm:bsi-tracks (l.10040, the min(m,k) enumeration)",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "cl:gap-one — level one is not exact",
+   "closest_label": "thm:lasserre-vacuous",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "cl:dw — the level-one relaxation does not decide the threshold",
+   "closest_label": "thm:compare-equivalence",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "cl:barrier — what an instance defeating the hierarchy must contain",
+   "closest_label": "rem:lasserre",
+   "class": "unproved"
+  },
+  {
+   "result_name": "cl:cut — the gate cut, a valid inequality outside the difference calculus",
+   "closest_label": "lem:hybrid-cutting",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "restatement declared: thm:one-player (min over Q(G) is exact with Vmin empty)",
+   "closest_label": "thm:one-player",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement declared: thm:opt-subcube (the y-part is a face of the cube)",
+   "closest_label": "thm:opt-subcube",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement declared: rem:own-successor (decide the vertex, do not order the successors)",
+   "closest_label": "rem:own-successor",
+   "class": "restatement"
+  }
+ ],
+ "verdict": "DID THE ROUTE CHANGE THE OBJECT? Yes, once: R_j is the Sherali-Adams/RLT lift of the complementarity choices, which the paper does not own (def:lasserre-two is a moment lift in the value variables, not a linear lift in the choice variables). It does not collapse into an old object except at level 0, where R_0 = Q(G) is proved. But the object the lift is applied to — the complementarity system — is the paper's own P-matrix LCP (prop:lcp), so what is new is the hierarchy, not the attachment.\n\nTHE RUBRIC. The route clears the formal bar: cl:gap-one is a proved new-relation about a new object, and I verified its certificate by hand in exact arithmetic. So the verdict is new-theorem — but a weak one, and only after two deletions. cl:barrier, the route's headline barrier, is FALSE and is refuted by two of the route's own instances at j = 0 (G8 and G*, both with rho_max = 0); cl:collapse's clause \"the first exact level is at most min(m,k)\" is false under the theorem's own definition of exactness and is refuted by W_14. Neither is repairable into anything of consequence: the repaired cl:barrier constrains only the route's own search for a level-two gap, and contains no mechanism of the paper (M1-M6, all-switches, def:bsi, R_BR), so it is a barrier against nothing the project is trying to beat.\n\nIS IT CIRCULAR OR VACUOUS? Not circular — the route correctly refuses to conjecture exactness at a fixed level, noting it is target-equivalent. But it is close to vacuous in significance. Every instance R_1 is reported to decide is already decided: the one-player families (G8, S, S_r, H_m, WD, CC, CV, W_14, W_14-bar) by thm:one-player, which the route itself lists as a restatement; R and G* by the three-line rigidity-plus-enumeration argument of my second finding. The hierarchy's own tractability statement, cl:collapse, is dominated by 2^{min(m,k,rho_max,rho_min)}·poly(N) — strictly cheaper than its own N^{O(...)} — so it produces no polynomial class, new or old, and \"the rigid class\" proposed in next_steps as a ninth class is by definition the class on which the paper's transport pair test already decides everything (97 per cent of random small stopping games, measured here). And the one substantive negative, cl:gap-one, exhibits the failure on a one-player game in P by thm:one-player — precisely the criticism rem:lasserre already levels at thm:lasserre-vacuous (\"it is evidence that it is weak already where the problem is easy\"), now repeated one lift later.\n\nTHE REAL REMAINING GAP, more precisely than the route states it: the route's gap is not \"there is a stopping G with max over R_2 of x(v) > w*(v)\" — that is a question about the route's own object whose affirmative answer is a second negative result and whose negative answer is target-equivalent and therefore unprovable here. The real gap is that the route has proved no statement about SSG-Value at all: the missing statement is \"there is a family of stopping SSGs with rho_max and rho_min both unbounded on which some fixed level j >= 1 of R_j is exact\", which is the only shape in which R_j could decide an instance that thm:transport-sound plus thm:one-player plus 2^{rho} enumeration does not.\n\nWOULD INTEGRATING MAKE THE PAPER BETTER OR WORSE? Worse if integrated as offered; marginally better if cut to one remark plus one correction.\n\nINTEGRATE (two items, both short):\n(1) A single remark after rem:lasserre, of at most one paragraph: the linear (Sherali-Adams) lift in the choice variables, whose level zero is Q(G) itself, is also inexact at level one, and W_14 is again the witness — max over R_1 of x(v_1) = 3/5, strictly between the transport bound 1 and the value 1/2, with the five-point certificate of cl:gap-one, which is cheap to print and which I verified entry by entry. Sentence two: joining W_14 to its dual under thm:compare-equivalence's own gadget makes the level-one interval [9/20, 11/20] straddle the threshold (cl:dw), which is the form of failure rem:lasserre's second paragraph asks for. Attribute Sherali-Adams and Balas as the route does. This strengthens rem:lasserre's \"nor is the failure an argument against convex lifts in general\" by showing the next lift fails too, and it costs the paper half a page.\n(2) THE CORRECTION, which is the route's most valuable output and which it did not state: rem:own-successor's \"the pair test Sep(v^{(0)},v^{(1)}) is strictly weaker\" and rem:own-stall's \"even read in the strongest way ... not a decision rule\" are both false. On R of prop:own-stall the non-strict pair test decides all three value-distinguishing controlled vertices while the own-successor test returns 0 at all six separators — the two readings are INCOMPARABLE, not ordered. prop:own-stall survives verbatim as a statement about the own-successor reading; rem:own-stall's last sentence and the standing rule of this round both need amending. I supply a correct replacement witness, verified in exact arithmetic with the Z-seed: the 7-vertex stopping SSG Vavg={0,2}, Vmin={1}, Vmax={3,4}, 0->(2,t1), 1->(3,t1), 2->(t0,0), 3->(0,t0), 4->(1,2), w* = (2/3,2/3,1/3,2/3,2/3), on which at the value-distinguishing Max vertex 4 the pair range is (-1/3,2/3) and both own-successor separators are 0. That is three vertices smaller than R and is the instance rem:own-stall was reaching for.\n\nDO NOT INTEGRATE: cl:exact-lift (a restatement of thm:transport-objective's proof, and its convexity conclusion is algorithmically inert); cl:rigid (three lines from thm:transport-sound, and its class is not a class); cl:collapse (a false clause, and its algorithmic content is dominated by enumeration — if kept at all, only as a remark inside the item (1) paragraph, stating the two directional halves and nothing else); cl:barrier (false); cl:cut (a valid inequality that decides nothing and was tested on one instance — hold until the route's own next_steps item 4 is done); cl:dw as a standalone theorem (fold into item (1); do not name a 27-vertex game after a gadget the paper already has).\n\nVerified files: /tmp/claude-1000/-data-ssg-proof/5cc7fb9d-035b-424b-bca6-ec769216aeb1/scratchpad/audit/{chk.py, chkR.py, wit.py, rnd2.py, dw.py, bar.py}. All arithmetic exact (fractions.Fraction, two-phase simplex with Bland's rule). No background jobs were started; nothing was written into /data/ssg-proof or into another route's directory."
+}
