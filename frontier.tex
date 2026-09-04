@@ -1004,6 +1004,49 @@ because every chain leads to $t_0$ with positive probability at its last
 vertex, so from every vertex, under every strategy pair, a sink is
 reachable.
 \end{proof}
+
+\begin{definition}[The damped family as a path]\label{def:discount-path}
+For an SSG $G$ with non-sink set $V^{\circ}$, $n:=|V^{\circ}|$, and
+$\varrho\in[0,1]$ let $G_{\varrho}$ be the game in which every step out of
+a non-sink survives with probability $\varrho$ and is diverted to $t_0$
+otherwise; its operator is $T_{\varrho}x:=\varrho\,Tx$, a
+$\varrho$-contraction for $\varrho<1$ with fixed point $w_{\varrho}$, and a
+positional pair $\pi$ with substochastic transition matrix $Q_\pi$ on
+$V^{\circ}$ and one-step vector $b_\pi$ into $t_1$ has value
+$y^{\pi}_{\varrho}=\varrho(I-\varrho Q_\pi)^{-1}b_\pi$. Put
+$\Opt(\varrho):=\{\pi:T_{\varrho}y^{\pi}_{\varrho}=y^{\pi}_{\varrho}\}$. The
+\emph{stopping-probability path} of $G$ is $\varrho\mapsto\Opt(\varrho)$ on
+$(0,1)$; a \emph{breakpoint} is a $\varrho$ at which $\Opt$ is constant on
+no neighbourhood, and $B(G)$ is the number of breakpoints.
+\end{definition}
+
+\begin{remark}\label{rem:discount-path}
+Nothing new is built: at $\varrho=1-2^{-m}$ the values of $G_m$ on $V(G)$
+are $w_{\varrho}$, every vertex of $G$ acquiring the factor $1-2^{-m}$ by
+\Cref{lem:gadget} (the round-$17$ parametric-path route, checked exactly on
+$120$ random games). What is new is to read $\varrho$ as a parameter. The
+structure is \Cref{thm:opt-subcube}'s, transported: for $\varrho<1$ one has
+$\det(I-\varrho Q_\pi)>0$, so
+$N^{\pi}_v:=\det(I-\varrho Q_\pi)\,y^{\pi}_{\varrho}(v)$ is a polynomial in
+$\varrho$ of degree at most $n$; $\pi\in\Opt(\varrho)$ iff
+$N^{\pi}_v\ge\varrho N^{\pi}_{v^{\bar\pi(v)}}$ at every $v\in\Vmax$ and
+$\le$ at every $v\in\Vmin$; for $0<\varrho<1$, $\Opt(\varrho)$ is the
+nonempty subcube of the pairs greedy for $w_{\varrho}$ (at $\varrho=0$ every
+pair is optimal, $w_0=0$); and, a nonzero polynomial of degree at most
+$n+1$ having at most $n+1$ roots, $B(G)\le(n+1)|C|2^{|C|}$, a bound nowhere
+near attained below. Moreover $\varrho\mapsto w_{\varrho}$ is nondecreasing
+with $w_{\varrho}\uparrow\val$ as $\varrho\uparrow1$, $\val$ the least fixed
+point of \Cref{thm:lfp-general} ($T$ preserves nonnegativity, so
+$T_{\varrho'}w_{\varrho}\ge w_{\varrho}$ for $\varrho'\ge\varrho$, and
+$T_{\varrho}\val\le\val$); hence a pair optimal for every $\varrho$ near $1$
+is an optimal pair of $G$ itself, stopping or not --- finding it is
+target-equivalent and is no algorithm. The path is not the bias homotopy of
+\Cref{sec:bias} in another parametrisation, since there the parameter moves
+the right-hand side of the complementarity problem and here the matrix
+(\Cref{cor:two-homotopies}); and it is exponentially long
+(\Cref{prop:discount-fold}).
+\end{remark}
+
 \begin{lemma}[Dyadic first-passage rows are cheap]\label{lem:dyadic-row}
 Let $r_1,\dots,r_\ell\ge0$ be dyadic rationals of denominator $2^{d}$ with
 $\sum_jr_j\le1$. There is a gadget of at most $\ell d$ fresh average
@@ -8481,7 +8524,11 @@ $13$ exceeds $|C|=12$ by one --- the convention matters because $P_D$ is
 profile-degenerate, its $F_d$ and $G_d$ sharing a successor pair. So no
 hard family of this document costs the homotopy more than about $2|C|$
 switches; in particular the ladder, on which least-index and
-smallest-gap need $2^{n}-1$, costs it $n$.
+smallest-gap need $2^{n}-1$, costs it $n$, and $\mathrm{BP}(D)$ of
+\Cref{prop:discount-fold}, whose stopping-probability path has $2^{D}-1$
+breakpoints, costs it $1,2,3,4,5$ at $D\le5$ under the single-switch
+tie-breaking and $1,2,3,6,7$ when every vanishing regret is switched
+(measured, $|C|=2D$; the round-$17$ parametric-path route).
 \end{remark}
 
 \begin{proposition}[The path exceeds $|C|$; four exact witnesses]\label{prop:bias-witnesses}
@@ -8535,6 +8582,70 @@ game-side homotopy and a lexicographic Lemke tableau on $(M,q)$, whose pivot
 count is one more than the number of breakpoints. In particular no bound
 $\mathrm{LP}\le|C|$ and no bound $\mathrm{LP}\le2|C|$ holds.
 \end{proposition}
+
+\begin{proposition}[One Max vertex, any dyadic breakpoint set of the stopping-probability path]\label{prop:one-vertex-path}
+Let $R=\{r_1<\dots<r_k\}\subset(0,1)$ be dyadic rationals,
+$P(\varrho):=\prod_i(\varrho-r_i)=2^{-K_0}\sum_dA_d\varrho^{d}$ with
+$A_d\in\mathbb Z$, and $K$ such that $2^{K}\ge\sum_d|A_d|$. There is a
+one-player stopping SSG $\mathrm{OS}(R)$ with a single Max vertex $u$ whose
+two actions lead to gadgets realising the laws $(A_d)_{+}2^{-K}$ and
+$(A_d)_{-}2^{-K}$ on a shared deterministic chain into $t_1$, shifted by
+$K$, so that in $\mathrm{OS}(R)_{\varrho}$ (\Cref{def:discount-path})
+\[
+  \val(u^{(0)})-\val(u^{(1)})=2^{K_0-K}\varrho^{K}P(\varrho).
+\]
+Hence the stopping-probability path has breakpoint set exactly $R$, each
+breakpoint a reversal of $u$, and for $k\ge2$ it returns to a pair it has
+left. With $R=\{i2^{-t}:1\le i\le k\}$, $t=\lceil\log_2(k+1)\rceil$, one has
+$K=O(k\log k)$ and $|V|=O(k^{2}\log k)$, so a single controlled vertex
+reverses $\Omega(\sqrt{N/\log N})$ times and $B(G)$ is bounded by no
+function of $|C|$.
+\end{proposition}
+
+\begin{proof}
+By \Cref{lem:dyadic-row} a dyadic sub-probability row of denominator
+$2^{K}$ over $\ell$ targets is a pruned binary tree of at most $\ell K$
+average vertices whose surviving edge to the $d$-th target is entered after
+exactly $j\le K$ steps; redirecting that edge into position $d+K-j$ of one
+shared chain $q_L\to\dots\to q_1\to t_1$ ($q_i$ average with both successors
+$q_{i-1}$, $\val(q_i)=\varrho^{i}$) makes the token reach $t_1$ after exactly
+$d+K$ steps. Every vertex is average and every path reaches a sink, so the
+game is acyclic and stopping (\Cref{lem:trapchar}), and the two readouts are
+$2^{-K}\sum_d(A_d)_{\pm}\varrho^{K+d}$, whose difference is the display. Its
+zeros in $(0,1)$ are $r_1,\dots,r_k$, all simple, and with $|C|=1$ the sign
+of the difference decides $u$ (\Cref{rem:discount-path}), so $u$ reverses
+exactly $k$ times. As for the size, $\sum_d|A_d|=2^{K_0}\prod_i(1+r_i)\le2^{K_0+k}$,
+so $K\le K_0+k\le tk+k$; the two trees cost at most $2(k+1)K$ vertices and
+the chain $K+k$. (Built and verified from the game by the round-$17$
+parametric-path route for $k\le8$, $|V|=8,17,32,61,94,129,169,250$; the
+instances with $R=\{\tfrac14,\tfrac12\}$, $17$ vertices, difference
+$\tfrac12\varrho^{4}(\varrho-\tfrac14)(\varrho-\tfrac12)$, and
+$R=\{\tfrac18,\dots,\tfrac58\}$, $94$ vertices, difference
+$\tfrac18\varrho^{15}\prod(\varrho-r_i)$, were recomputed here from their
+successor lists, \texttt{scripts/round17-verify/bp\_verify.py}.)
+\end{proof}
+
+\begin{corollary}[The two homotopies differ]\label{cor:two-homotopies}
+The stopping-probability path is not the bias homotopy of \Cref{def:bias}
+in another parametrisation: on $\mathrm{OS}(\{\tfrac14,\tfrac12\})$ the path
+is $0,1,0$, whereas with $|C|=1$ the bias homotopy has at most $2^{1}-1=1$
+breakpoint and pairwise distinct profiles (\Cref{thm:lemke-homotopy}(c)).
+More generally the bias path cannot return to a support it has left, each
+$I_S$ being an interval (\Cref{thm:lemke-homotopy}(c), with no
+nondegeneracy hypothesis), and neither can the shadow-vertex path of
+\Cref{prop:bias-shadow}, since for a parametric linear programme
+$\max\,(c+\lambda e)\cdot f$ over a fixed polytope the set of $\lambda$ at
+which a given vertex is optimal is an interval, its defining inequalities
+being affine in $\lambda$; a parameter in the transition matrix can return,
+and the fold of \Cref{prop:discount-fold} needs exactly that. On
+$\mathrm{BP}(D)$ the bias homotopy was measured at $1,2,3,4,5$ breakpoints
+for $D\le5$ against the discount path's $2^{D}-1$ (\Cref{rem:bias-families});
+whether that separation is exponential is not proved, the only proved
+ceiling for the bias path there being $2^{|C|}-1=4^{D}-1$.
+\Cref{prop:leapfrog} is the
+neighbouring construction on the all-switches side, one Max vertex
+switched $K$ times on $O(K^{2})$ vertices.
+\end{corollary}
 
 \begin{remark}[Exactly what is missing]\label{rem:bias-gap}
 One statement: \emph{there are $c>0$ and stopping SSGs $G_n$ with
@@ -14562,6 +14673,124 @@ backward induction in exact rational arithmetic at every dyadic grid point,
 every midpoint and five off-grid rationals for $D=1,\dots,12$, with no mismatch
 and the slope set exactly $\{0,2^{-D}\}$; $P_{12}$ has $74$ vertices and
 $4096$ pieces.
+\end{remark}
+
+\begin{proposition}[The stopping-probability path is exponentially long]\label{prop:discount-fold}
+For $D\ge1$ let $\mathrm{BP}(D)$ be the SSG with non-sink vertices
+$F_0,f_0$, $c_1$, $w^{d}_1,w^{d}_2,w^{d}_3$ for $2\le d\le D$ and
+$P_d,Q_d,B_d,X_d,Y_d,F_d,G_d$ for $1\le d\le D$, all average except
+$F_d\in\Vmax$ and $G_d\in\Vmin$, with $G_0:=t_0$, $c_d:=w^{d}_1$ and
+\[
+ \begin{aligned}
+  &F_0\to(f_0,f_0),\quad f_0\to(t_1,t_1),\quad c_1\to(t_0,t_1),\quad
+   w^{d}_1\to(t_0,w^{d}_2),\ \ w^{d}_2\to(t_0,w^{d}_3),\ \ w^{d}_3\to(c_{d-1},c_{d-1}),\\
+  &P_d\to(F_{d-1},F_{d-1}),\quad Q_d\to(G_{d-1},G_{d-1}),\quad B_d\to(c_d,c_d),\\
+  &X_d\to(P_d,t_0),\quad Y_d\to(Q_d,B_d),\quad F_d\to(X_d,Y_d),\quad G_d\to(X_d,Y_d).
+ \end{aligned}
+\]
+It is acyclic, hence stopping, on $N=10D+2$ vertices with $D$ Max and $D$
+Min vertices ($G_D$ is not reachable from $F_D$, so the game rooted at
+$F_D$ has $D-1$ Min vertices), and in $\mathrm{BP}(D)_{\varrho}$
+(\Cref{def:discount-path}),
+with $\kappa_d:=\val(c_d)$, $\varphi_d:=\val(F_d)-\val(G_d)$ and
+$e_d:=\varrho(\varrho^{3}/4)^{d}$,
+\[
+  \kappa_d=\tfrac{\varrho}2\bigl(\tfrac{\varrho^{3}}4\bigr)^{d-1}=\tfrac12e_{d-1},\qquad
+  \varphi_d=\tfrac{\varrho^{3}}2\,\bigl|\varphi_{d-1}-\kappa_d\bigr|,\qquad
+  \frac{\varphi_d}{e_d}=T^{d}(\varrho)\qquad(0<\varrho<1),
+\]
+$T(z)=|2z-1|$ the tent map of \Cref{thm:fold}. Consequently $F_d$ and $G_d$
+reverse exactly at the $\varrho$ with $T^{d-1}(\varrho)=\tfrac12$, the odd
+multiples of $2^{-d}$; these sets are disjoint across $d$; the breakpoint
+set of the path is exactly $\{k2^{-D}:1\le k\le2^{D}-1\}$, so that
+$B(\mathrm{BP}(D))=2^{D}-1=2^{(N-2)/10}-1$; the path meets $2^{D}$ pairwise
+distinct optimal pairs, its itinerary being the symbolic dynamics of $T$;
+the single vertex $F_D$ reverses $2^{D-1}$ times; and exactly two vertices
+tie at every breakpoint.
+\end{proposition}
+
+\begin{proof}
+Every edge goes to a sink, to a lower level or down the $c$-chain, so the
+game is acyclic and stopping (\Cref{lem:trapchar}), and the values of
+$\mathrm{BP}(D)_{\varrho}$ are a backward induction in which every non-sink
+contributes a factor $\varrho$: with $f_d:=\val(F_d)$, $g_d:=\val(G_d)$,
+$f_0=\varrho^{2}$, $g_0=0$, one has $\val(P_d)=\varrho f_{d-1}$,
+$\val(Q_d)=\varrho g_{d-1}$, $\val(B_d)=\varrho\kappa_d$,
+$\val(X_d)=\tfrac{\varrho^{2}}2f_{d-1}$,
+$\val(Y_d)=\tfrac{\varrho^{2}}2(g_{d-1}+\kappa_d)$, and
+$\val(w^{d}_3)=\varrho\kappa_{d-1}$,
+$\val(w^{d}_2)=\tfrac{\varrho^{2}}2\kappa_{d-1}$,
+$\kappa_d=\tfrac{\varrho^{3}}4\kappa_{d-1}$, $\kappa_1=\tfrac{\varrho}2$. As in
+\Cref{thm:fold}, $F_d$ and $G_d$ read the same pair, so
+$f_d=\varrho\max(\val X_d,\val Y_d)$, $g_d=\varrho\min(\val X_d,\val Y_d)$
+and $\varphi_d=\varrho\,|\val X_d-\val Y_d|=\tfrac{\varrho^{3}}2|\varphi_{d-1}-\kappa_d|$.
+With $e_{d-1}/e_d=4/\varrho^{3}$ and $\kappa_d=e_{d-1}/2$,
+\[
+  \frac{\varphi_d}{e_d}=\frac{\varrho^{3}}2\cdot\frac{e_{d-1}}{e_d}
+  \Bigl|\frac{\varphi_{d-1}}{e_{d-1}}-\frac12\Bigr|
+  =2\Bigl|\frac{\varphi_{d-1}}{e_{d-1}}-\frac12\Bigr|
+  =T\Bigl(\frac{\varphi_{d-1}}{e_{d-1}}\Bigr),
+\]
+and $\varphi_0/e_0=\varrho^{2}/\varrho=\varrho$. The multiplier $2$ is
+independent of $\varrho$ because the fold's contraction $\varrho^{3}/2$ and
+the constants' ratio $\varrho^{3}/4$ have been matched; that is the whole
+design. $T^{d-1}$ maps each dyadic interval of length $2^{-(d-1)}$ affinely
+onto $[0,1]$ with slope $\pm2^{d-1}$, so $T^{d-1}(\varrho)=\tfrac12$ has
+exactly the odd multiples of $2^{-d}$ as solutions, each crossed
+transversally, and
+$\val X_d-\val Y_d=\tfrac{\varrho^{2}}2e_{d-1}\bigl(T^{d-1}(\varrho)-\tfrac12\bigr)$
+changes sign exactly there. If $T^{d-1}(\varrho)=\tfrac12$ then
+$T^{d}(\varrho)=0$ and $T^{j}(\varrho)=1$ for all $j>d$, so no other level
+ties at that $\varrho$; the union of the reversal sets over $d\le D$ is
+$\{k2^{-D}:1\le k\le2^{D}-1\}$; and on each of the $2^{D}$ intervals between
+consecutive breakpoints the optimal pair is the sign vector
+$(\operatorname{sign}(T^{d-1}(\varrho)-\tfrac12))_{d\le D}$, the length-$D$
+itinerary of $\varrho$ under $T$, which is injective on those intervals.
+\end{proof}
+
+\begin{remark}\label{rem:discount-fold}
+Three readings. First, this is the fold of \Cref{thm:fold} driven by the
+survival probability instead of a frozen payoff, and what the transplant
+needs is the right seed, not a new fold: $P_D$ itself, read as a discount
+game with $u\to(t_0,t_1)$ unfrozen, already has tent slope exactly $2$
+(fold multiplier $\varrho^{2}/2$ against the chain's ratio $\varrho^{2}/4$),
+but its seed is $\varphi_0/e_0=\tfrac12$ for every $\varrho$, whose orbit
+$\tfrac12,0,1,1,\dots$ ties $F_1,G_1$ identically ($\val X_1=\val Y_1=
+\varrho^{2}/4$) and never reverses a level (checked exactly for $D\le7$);
+replacing $u$ by the two-vertex chain $u\to(u_2,u_2)$, $u_2\to(t_1,t_1)$
+of value $\varrho^{2}$ gives $\varphi_d/e_d=T^{d}(\varrho)$ with
+$e_d=\varrho(\varrho^{2}/4)^{d}$ and the same breakpoint set $\{k2^{-D}\}$
+on $6D+3$ vertices, i.e.\ $2^{(N-3)/6}-1$ breakpoints (the route's
+correctness auditor, correcting the route's account of the transplant;
+verified here for $D\le8$, \texttt{scripts/round17-verify/pd\_discount.py}),
+so $\mathrm{BP}(D)$'s extra blocks are not needed. Second, the length is
+robust: damping the average vertices only, with a two-vertex block in the
+$c$-chain ($9D+3$ vertices), gives the same tent identity, and perturbing
+the stop payoff to $\varepsilon(v+1)$ makes the start $\varrho=0$ --- where
+$w_0=0$ and every controlled vertex is tied --- tie-free and read off in
+$O(N)$ while keeping at least $2^{D}-1$ breakpoints (the route's exact
+verification at $D\le8$ and $D\le7$). Third, what follows and what does not.
+No continuation method that follows the optimal pair of $G_{\varrho}$ from
+$\varrho=0$ to $1$ is polynomial; at a breakpoint $\varrho^{\ast}$ the pair
+optimal just above it is \emph{an} optimal pair of a derived discounted game
+on the tied set $J$ (reward $w_{\varrho^{\ast}}$ read at the chosen
+successors, discount $\varrho^{\ast}$, controlled exactly at $J$; the
+right derivative of $w_{\varrho}$ is that game's value) --- the standard
+sensitive-discount step of Blackwell, Veinott and Miller--Veinott (from
+memory, unchecked) --- which names the next pair only when the derived
+optimum is unique: it is unique at every breakpoint of $\mathrm{BP}(D)$ and
+of the one-Max games below, but the route's auditor built a $14$-vertex
+one-player game with $\val(u^{(0)})-\val(u^{(1)})=\tfrac14\varrho^{4}(\varrho-\tfrac12)^{2}$,
+at whose breakpoint $\tfrac12$ both actions are optimal in the derived
+game. Like $P_D$, $\mathrm{BP}(D)$ is acyclic, hence in
+\Cref{thm:avg-acyclic}'s class and solved by backward induction; the
+statement constrains one algorithm schema and none of the mechanisms
+M1--M6, the improvement rules or the bias homotopy, to which the fold does
+not transfer (\Cref{cor:two-homotopies}). Verified from the game in exact arithmetic for
+$D\le11$ by the route and for $D\le8$ here
+(\texttt{scripts/round17-verify/bp\_verify.py}): the tent identity at every
+level, the tied set $\{F_d,G_d\}$ at every $k2^{-D}$, and $2^{D}$ pairwise
+distinct pairs, constant inside each interval.
 \end{remark}
 
 
