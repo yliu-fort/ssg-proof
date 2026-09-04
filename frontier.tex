@@ -215,12 +215,24 @@ a single coordinate, are realised by one-player games on $58$ and $100$
 vertices, and the second level by a two-player game on $138$ vertices with
 one Min vertex (\Cref{rem:blowup-measured,prop:b2-realised}), whose
 walk no one-player game has (\Cref{thm:b2-walk}), so the smallest open
-instance of the pivot is the third level. The one-player ceiling is
-$1,2,4,6$ for $m\le4$ and at least $9,12$ at $m=5,6$, the Holt--Klee
-ceiling $1,2,4,6,11$ and at least $12,13$ at $m=6,7$
-(\Cref{cor:hstar-one,prop:oneplayer-runs,prop:hkfive,rem:four-ceilings});
-at $m=3$ every class is realised, the sixteen Holt--Klee ones by
-one-player games (\Cref{prop:m3-realised}). The profile cube of every
+instance of the pivot is the third level, of which the outer half is
+realised on $194$ vertices and the translated layer is not
+(\Cref{prop:b3-outer}); the height of every blow-up is exactly $2h+2$
+(\Cref{prop:blowup-height}). The one-player ceiling is
+$1,2,4,6$ for $m\le4$ and at least $10,12,13$ at $m=5,6,7$, the Holt--Klee
+ceiling $1,2,4,6,11$ and at least $14,20$ at $m=6,7$, both rows growing by
+at least one per dimension
+(\Cref{cor:hstar-one,prop:hstar-one-five,prop:hk-records,prop:sink-lift,rem:four-ceilings}),
+and the one-player row is unbounded in ratio to the trivial one: stacking
+copies of a block behind a freezing bias gives one-player games with $7k$
+Max vertices and runs of length $12k$, a construction that Fekete's lemma
+caps at its best block (\Cref{thm:stack,cor:stack-family}); the blow-up
+itself doubles while staying Holt--Klee once its outer pair reads a
+signal other than the parity, at $m=4$ and $m=5$, and a readout-free
+condition stops the iteration on every tall seed examined
+(\Cref{prop:blowup-readout,prop:tstar}). At $m=3$ every class is realised,
+the sixteen Holt--Klee ones by one-player games and the two others with a
+single Min vertex (\Cref{prop:m3-realised,prop:m3-one-min}). The profile cube of every
 stopping game is a unique sink orientation, proved here from scratch,
 with the Max cube as its sink projection
 (\Cref{thm:profile-uso,prop:projection}); it can be cyclic while the
@@ -15529,7 +15541,12 @@ values, $n$ non-adaptive comparisons determine an optimal strategy
 (\Cref{thm:compare-equivalence}), and deciding whether one given vertex
 is badly chosen is again equivalent to the whole problem
 (\Cref{cor:wrong-equivalence}), as is naming the average vertex of
-largest value (\Cref{thm:top}). The information content is smaller than the
+largest value (\Cref{thm:top}). Seen from outside, a game plugged into a
+larger one is a controlled vertex with two chance actions, one for each
+player's value, and the visits of an optimal pair are tied to the value
+gaps at the average vertices by an exact energy identity, which bounds
+what any composition can amplify (\Cref{sec:composition}); the two
+qualitative sets are computed inside the model (\Cref{prop:qualitative}). The information content is smaller than the
 first count suggests --- the order of the average values already determines
 everything (\Cref{thm:order-determines}) --- but not the difficulty, since
 each comparison is again an instance of the problem.
@@ -15600,22 +15617,41 @@ obeys $L\le h^{\ast}_{\mathrm{HK}}$ is open); the first blow-up level and a laye
 translated by a single coordinate are realised by one-player games and the
 second level by a two-player game on $138$ vertices
 (\Cref{rem:blowup-measured,prop:b2-realised}), so the third level is the
-smallest open instance, and \Cref{rem:blowup-realise} states the question
+smallest open instance --- its outer half is realised on $194$ vertices,
+its translated layer is not (\Cref{prop:b3-outer}) --- and
+\Cref{rem:blowup-realise} states the question
 that remains: whether each further level costs only a constant number of
-controlled vertices and of bits; and its walk needs the Min vertex
-(\Cref{thm:b2-walk}). The one-player ceiling reads $1,2,4,6,\ge9,\ge12$
-and the Holt--Klee ceiling $1,2,4,6,11,\ge12,\ge13$
-(\Cref{rem:four-ceilings}); at $m=3$ every class is realised
-(\Cref{prop:m3-realised}); readouts make the search practice a theorem,
+controlled vertices and of bits; the height of a blow-up is exactly
+$2h+2$ (\Cref{prop:blowup-height}); and its walk needs the Min vertex
+(\Cref{thm:b2-walk}). The one-player ceiling reads $1,2,4,6,\ge10,\ge12,\ge13$
+and the Holt--Klee ceiling $1,2,4,6,11,\ge14,\ge20$
+(\Cref{rem:four-ceilings}), both growing by at least one per dimension
+(\Cref{prop:sink-lift,prop:oneplayer-plus-one}); stacking copies of a
+block behind a freezing bias gives one-player games with $7k$ Max
+vertices and runs of length $12k$, so the one-player ceiling exceeds
+$|\Vmax|$ by a constant factor, though Fekete's lemma caps every such
+stack at its best block (\Cref{thm:stack,cor:stack-family}); the blow-up
+doubles and stays Holt--Klee at $m=4,5$ when its outer pair reads a
+non-parity signal, and a readout-free condition stops the iteration on
+every tall seed examined (\Cref{prop:blowup-readout,prop:hk-doubling-measured,prop:tstar});
+at $m=3$ every class is realised, the two non-Holt--Klee ones with one
+Min vertex (\Cref{prop:m3-realised,prop:m3-one-min}); readouts make the search practice a theorem,
 one player buying affine readouts and the second concavity
 (\Cref{thm:readout-realise,thm:min-count}); and the profile cube is a
 unique sink orientation with the Max cube as its sink projection
 (\Cref{thm:profile-uso,prop:projection}), Holt--Klee constraining that
 projection not at all wherever checked ($m\le3$, the height-$7$ orbit,
-$B^{2}$). Bidirectional improvement and its
+$B^{2}$); Lemke's algorithm on the profile complementarity problem is a
+bias homotopy, on one player an improving single-switch rule that no
+barrier here covers and on two players a directed path of the profile
+cube, and no named family of this document costs it more than $2|C|$
+switches (\Cref{sec:bias}). Bidirectional improvement and its
 one-sided form, best-response restart, are covered by no barrier here and
 have no known superpolynomial family
-(\Cref{def:bsi,thm:bsi-nostall,prop:bsi-br}), though both take
+(\Cref{def:bsi,thm:bsi-nostall,prop:bsi-br}); the restart rule beats the
+all-switches ceiling already at two Max vertices (\Cref{prop:w2}) and is
+polynomial whenever every Min vertex has a constant option
+(\Cref{cor:clamp}), though both rules take
 $\Theta(N)$ rounds where all-switches takes one, and both tracks of a
 long run must be long (\Cref{thm:readout,thm:bsi-tracks}); the
 window barrier covers rules solving $O(N^{\alpha})$ average vertices for
