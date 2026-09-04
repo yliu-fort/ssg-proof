@@ -1,0 +1,102 @@
+{
+ "target": "route \"beyond-holt-klee\": The LP orientations of occupancy polytopes: a necessary condition for one-player realisability beyond Holt-Klee, and h*_1(5) in {10, 11}",
+ "sound": true,
+ "confidence": "high",
+ "novelty_table": [
+  {
+   "result_name": "h*_1^nd(5) = h*_LP(5) = h*_HK(5) = 11 (oc:hstar-one-five-eleven)",
+   "closest_label": "prop:hstar-one-five",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "The stacking slope rises from 12/7 to 11/6 (oc:slope)",
+   "closest_label": "cor:stack-family",
+   "class": "restatement"
+  },
+  {
+   "result_name": "The diagonal labelling: the value-level all-switches laws impose nothing on the orientation (oc:diagonal)",
+   "closest_label": "lem:auso-laws",
+   "class": "restatement"
+  },
+  {
+   "result_name": "The one-player records are strict local maxima in the edge-reversal graph (oc:local-max)",
+   "closest_label": "rem:pinned-escape",
+   "class": "measurement-only"
+  },
+  {
+   "result_name": "restatement: height-10 five-state witness reproduced by freezing coordinate 4",
+   "closest_label": "prop:hstar-one-five",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement: 5951 of 6113 Holt-Klee 4-cube classes realised, 162 resist",
+   "closest_label": "rem:hk-survey",
+   "class": "measurement-only"
+  },
+  {
+   "result_name": "restatement: the +1 lift rebuilt on readout systems",
+   "closest_label": "prop:oneplayer-plus-one",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement: B_phi(s,13) height 14 Holt-Klee, B_phi(s^(5),7) height 20 Holt-Klee rebuilt",
+   "closest_label": "prop:hk-doubling-measured",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement: cor:no-return re-derived in face-sink form",
+   "closest_label": "cor:no-return",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement: the face-sink relation is contained in reachability",
+   "closest_label": "lem:monotone-law",
+   "class": "restatement"
+  }
+ ],
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "h*_1^nd(5) = h*_LP(5) = h*_HK(5) = 11 (oc:hstar-one-five-eleven)",
+   "defect": "The reported headline and the result's `statement` field assert \"h*_1(5) = 11\" and \"the m = 5 column of rem:four-ceilings closes\". Both are false. h*_1 is defined in cor:hstar-one over one-player stopping games WITH TIES ALLOWED, and rem:four-ceilings says in terms that \"whether it obeys h*_1 <= h*_HK is the question left open after thm:no-seven, settled there for m <= 4 only\". prop:oneplayer-lp needs nondegeneracy, so the new witness raises the h*_1 row only to >= 11; the column does not close. The LaTeX theorem is correctly stated (h*_1^nd, with \"In particular h*_1(5) >= 11\"), so the defect is in what gets copied into a README, not in the mathematics.",
+   "evidence": "frontier.tex l.6941 (cor:hstar-one: \"ties allowed\"); l.7506ff (rem:four-ceilings: \"h*_1 itself allows ties, and whether it obeys h*_1 <= h*_HK is the question left open after thm:no-seven, settled there for m<=4 only\"). The route's own LaTeX heads the theorem $h^{\\ast,\\mathrm{nd}}_{1}(5)=...$, contradicting its headline."
+  },
+  {
+   "severity": "major",
+   "result_name": "the route's object OCC_m",
+   "defect": "The route did not change the mathematical object, and its own text concedes it: \"OCC_m ... equivalently, by prop:oneplayer-lp, the LP orientations of occupancy polytopes ... parametrised by the reduced readout system of lem:readout-reduce\". Every piece of that is the paper's: thm:readout-realise(b) at r=1, k=0 is exactly \"2m substochastic dyadic leaky affine rows realise a nondegenerate one-player game with m Max vertices\", lem:readout-reduce is exactly the p^{v,a}_v = 0 reduction, and prop:oneplayer-lp is the Holt-Klee ceiling. What is new is a search heuristic (a warm-started plateau walk), not an object. Round 18 rule 0 excludes \"another realisation search\" as the deliverable, and the route's headline is a realisation search result.",
+   "evidence": "frontier.tex l.8399 (lem:readout-reduce), l.8433 (thm:readout-realise(b): \"at most 2m(r-1) Min vertices and at most 2mr(m+1)D average vertices\", r=1 giving zero Min vertices), l.5296 (prop:oneplayer-lp). The route's `object` field cites all three itself."
+  },
+  {
+   "severity": "major",
+   "result_name": "The diagonal labelling (oc:diagonal)",
+   "defect": "Restatement, and its sweeping conclusion is an artefact of an abstraction that deletes the two hypotheses giving the value laws their content. (a) The derivation is three lines from lem:auso-laws: take r a linear extension of reachability and V = r*1; every clause comparing coordinates of V(sigma')-V(sigma) holds with equality because all coordinates are equal, and every clause asserting a maximum is attained on a set reduces to that set being nonempty; those nonemptiness assertions are cor:no-return and cor:law-b, proved for every AUSO trace by lem:auso-laws. (b) thm:peak-law takes M = max over ALL vertices, and its proof turns entirely on phi = 0 at the sinks together with stopping; lem:rise-bound's bound is over the read-set W of the later action, which may be EMPTY, in which case the bound reads val_{sigma'}(u) <= val_sigma(u) and is a real constraint. The route's labelling has phi constant and strictly positive at every coordinate, which no difference of value vectors can be, and has no read-set at all. So what is proved is that the laws are vacuous once the sink pinning and the graph datum are removed - which the round's own trap list warns about (\"any bound ... needs y, z to AGREE WITH THE SINK PAYOFFS\").",
+   "evidence": "frontier.tex l.4439-4477 (thm:peak-law: \"A is closed under P, and it contains no sink because phi = 0 there and M > 0. But G is stopping...\"); l.4508-4540 (lem:rise-bound: \"the maximum over the empty set being 0\"); l.4892 (lem:auso-laws) and the prose at l.4886: \"the laws already capture exactly one thing: the axioms of an acyclic unique sink orientation\"."
+  },
+  {
+   "severity": "major",
+   "result_name": "The one-player records are strict local maxima (oc:local-max)",
+   "defect": "Measurement-only, and its first half is already in frontier.tex. The paper records (rem:pinned-escape) that \"a single-edge reversal of a unique sink orientation stays one exactly when the two endpoints have the same bottom-antipodal successor\". I checked that this criterion predicts the route's counts exactly: at m=5, #{edges with u^s(u) = v^s(v)} = 17 = 80-63; at m=6, 57 = 192-135. So the \"63 of 80 / 135 of 192 / 272 of 448\" half follows in three lines from a statement the paper owns. What remains is a height table for three specific orientations with no law attached - precisely what rule 3 excludes (\"A new row of measurements is NEVER a result\"). The label \"strict local maxima\" also overstates: at m=6, 45 of the 57 surviving reversals hold height 12, so the plateau, not the peak, is what the counts show.",
+   "evidence": "frontier.tex l.6464-6467, inside rem:pinned-escape (l.6434). Verified by me: /tmp/claude-1000/-data-ssg-proof/296b18c1-9dc5-4a0b-94cf-9bde3946ecfe/scratchpad/r18-audit-novelty/rev.py reproduces 63/80 with heights {7:1,8:2,9:5,10:9}, 135/192 with {9:1,10:4,11:7,12:45}, 272/448 with {10:1,11:4,12:8,13:163}, and the criterion test gives 17 and 57."
+  },
+  {
+   "severity": "minor",
+   "result_name": "The stacking slope rises from 12/7 to 11/6 (oc:slope)",
+   "defect": "Restatement of cor:stack-family, which already prints the general inequality with h*_1^nd(m_2) in it, anticipating exactly this substitution: \"h*_1(m_1+m_2+1) >= h*_1(m_1) + h*_1^nd(m_2)\" and \"liminf_m h*_1(m)/m >= sup_{m_0} h*_1^nd(m_0)/(m_0+1)\". The three lines: the new block is nondegenerate with rho < 1 and g_min > 0, so lem:balance and thm:stack apply; evaluate the displayed supremum at m_0 = 5; 11/6 > 12/7. It should be printed as a sentence inside the new theorem, not as a separate result. Significance is also capped by the paper itself: cor:stack-family already records that \"the run of a stack is the sum of its blocks' runs, so ... stacking can never by itself make h*_1 superlinear\".",
+   "evidence": "frontier.tex l.8187ff (cor:stack-family), penultimate sentences of the corollary."
+  },
+  {
+   "severity": "note",
+   "result_name": "The stacking slope rises from 12/7 to 11/6 (oc:slope)",
+   "defect": "Wrong quantity cited for rho. lem:balance defines rho := max_{b,c} sum_{b'} p^{b,c}_{b'}, the row mass over STATES only; for the new block that is 8188/8192. The route reports 8189/8192, which is max(sum p + q) over rows. Both are < 1 so nothing breaks, but the LaTeX proof of oc:slope cites the wrong number.",
+   "evidence": "frontier.tex l.8071 (lem:balance). Row sums computed by me: sum p = 5503, 7879, 8186, 8188, 7470, 8184, 2923, 8183, 8120, 8078 (max 8188); sum p + q = 7716, 7942, 8189, 8188, 7757, 8188, 6741, 8188, 8120, 8189 (max 8189). Leaks 476, 250, 3, 4, 435, 4, 1451, 4, 72, 3 match the route's list."
+  },
+  {
+   "severity": "note",
+   "result_name": "h*_1^nd(5) = h*_LP(5) = h*_HK(5) = 11 (oc:hstar-one-five-eleven)",
+   "defect": "No defect: I reproduced every number in the theorem from the game file with my own exact code, so this entry records the verification rather than a fault. 258 non-sinks + 2 sinks, 5 Max and 253 average; greatest trap empty; all 32 val_sigma by exact Gaussian elimination on the 258x258 system; outmap equals the printed s; least margin 580908876268806955/409811754332034205696 > 0; run from sigma = 10 is 10,17,6,21,22,24,4,8,12,28,30,31 (length 11, and 11 is the maximum over all 32 starts); unique sink sigma = 31 with w* the componentwise max, val(x_0) = 43268990393782259/48907301256112636; USO, acyclic, Holt-Klee by unit-vertex-capacity max flow on every face of every dimension >= 2; not in the orbit of prop:hkfive's witness under the 3840 automorphisms; facet heights sorted (5,5,5,5,5,5,6,6,6,6); the printed normal form's own outmap and least margin agree with the game's.",
+   "evidence": "/tmp/claude-1000/-data-ssg-proof/296b18c1-9dc5-4a0b-94cf-9bde3946ecfe/scratchpad/r18-audit-novelty/ver.py, uso.py, nf.py, run against /tmp/claude-1000/-data-ssg-proof/296b18c1-9dc5-4a0b-94cf-9bde3946ecfe/scratchpad/r18-beyond-holt-klee/H11_m5_GAME.json. Six of the 5951 m=4 exact readout systems were also spot-checked (spot.py): all nondegenerate USOs with the recorded mingap."
+  }
+ ],
+ "verdict": "DEAD-END under this round's rubric, with one strengthening that should nevertheless be integrated.\n\nDID IT CHANGE THE OBJECT? No. OCC_m is the paper's own object under the paper's own names: thm:readout-realise(b) at r = 1, k = 0 with lem:readout-reduce is the readout parametrisation, prop:oneplayer-lp is the Holt-Klee ceiling on it, rem:hk-survey is the m = 4 census. The route says all of this itself, so the collapse was not proved (there was nothing to prove, only a citation) and not merely noticed either - it was declared. What is new is a search heuristic: a warm-started plateau walk that only ever visits realised orientations. Rule 0 excludes exactly this deliverable.\n\nCIRCULAR OR VACUOUS? Not circular: no oracle, no target-equivalent hypothesis, no new \"polynomial class\". The realisation is BUILT AS A GAME and verified from the graph, which clears the bar that has sunk several earlier routes. One vacuity: oc:diagonal proves the value laws contentless only after deleting the sink pinning (phi = 0 at t0, t1 - the contradiction that drives thm:peak-law's proof) and lem:rise-bound's read-set W (which may be empty, and then the bound bites); a labelling whose difference is constant and positive at every coordinate is not a difference of value vectors, as the route concedes.\n\nRUBRIC. No result is new-object or new-relation. Result 1 is a STRENGTHENING: prop:hstar-one-five's \">= 10\" becomes \"= 11\" by a better witness found by search, and the equalities with h*_LP(5) and h*_HK(5) then follow in three lines from prop:oneplayer-lp and prop:hkfive - the chain h*_1^nd <= h*_LP <= h*_HK is already the paper's, so a numeric coincidence at one point is established, not a relation discovered. Results 2 and 3 are restatements (cor:stack-family's own displayed inequality; lem:auso-laws plus the one-line observation that a constant labelling satisfies every coordinate comparison with equality). Result 4 is measurement-only, its first half derivable from rem:pinned-escape's reversal criterion, which I checked predicts its counts exactly. Hence: not new-theorem.\n\nTHE REAL REMAINING GAP, more precisely than the route states it: not one Holt-Klee AUSO in any dimension is proved unrealisable by a nondegenerate one-player stopping SSG, so the necessary condition beyond Holt-Klee that names the route is entirely absent; 162 failed optimisations at m = 4 are, by the project's own standing rule, worth nothing, and the route is right to claim nothing for them. The paper's question survives untouched in the sharper form the new witness leaves: does h*_1 (ties allowed) obey h*_1 <= h*_HK at m >= 5, i.e. can a DEGENERATE one-player game with five Max vertices beat 11, thm:no-seven having settled only m = 4.\n\nWOULD INTEGRATION MAKE THE PAPER BETTER? Better, if pruned to one theorem and one sentence.\n\nINTEGRATE. (i) oc:hstar-one-five-eleven, as a strengthening replacing or following prop:hstar-one-five, with the game file into scripts/round18-verify. It is fully verified, it makes rem:four-ceilings exact at m = 5 in two rows (h*_LP(5) = 11 and h*_1^nd(5) = 11, the h*_1 row moving only to >= 11), and its real interest is structural rather than numeric: h*_1^nd = h*_HK now holds at m = 1..5, so the one-player half of the pivot is pinned to the growth of h*_HK for one more dimension, and the coincidence persists even though the m = 4 survey suggests OCC_4 is a proper subset of the Holt-Klee classes. The remark that the realised class is NOT the orbit of prop:hkfive's witness is worth keeping - the paper's only named height-11 class is not the realisable one. (ii) oc:slope, as one sentence inside cor:stack-family raising 12/7 to 11/6 (fixing rho to 8188/8192), not as a numbered corollary; the corollary's own cap sentence already says this cannot reach the pivot. (iii) Optionally one measured sentence in rem:hk-survey: the survey now covers all 6113 Holt-Klee classes of the 4-cube, 5951 realised (5794 at denominator 1024), 162 resisting, of heights 2:12, 3:56, 4:69, 5:25, 6:0 - flagged as a failed search. That sharpens the remark's current \"the five unresolved classes are the place to look\", and the pattern (failures only below the maximum height) is the one genuinely suggestive thing the route found.\n\nDO NOT INTEGRATE. oc:diagonal: a restatement whose printed conclusion - that thm:peak-law, cor:peak-sharp, lem:rise-bound and thm:impedance \"impose nothing\" - would actively mislead, since those laws carry the sink pinning and the read-set and are load-bearing for cor:peak-sharp, prop:closed-now-or-never and thm:component-bound. oc:local-max: a height table for three orientations whose first half is already rem:pinned-escape. And do not carry the route's headline into README: h*_1(5) = 11 is not proved and the m = 5 column does not close."
+}
