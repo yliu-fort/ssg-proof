@@ -31,7 +31,7 @@ not treated as cached); it was killed after two minutes and replaced by
 | --- | --- | --- |
 | `fresh-16` | strict-progress | the two qualitative sets proved inside the model (`prop:qualitative`); a plugged-in stopping game is exactly a $(p,q)$-gate with $q$ the value of the role-reversed game (`lem:gate`, verified on 49 compositions); two-exit contraction (`thm:two-exit`); the energy identity $\sum N_v\Delta_v^2=4w(1-w)$ and the Doob crossing bound (`thm:energy`); a black-box no-amplification remark. Dropped: the top-controlled-vertex equivalence (fails ties), the polynomial-class claim, the finite-automaton consequence (outside its own hypothesis). |
 | `level-lemma` | strict-progress | the height of $B(s)$ is exactly $2h+2$ with a closed form per layer (`prop:blowup-height`, verified on six seeds); `lem:layer-order`; the anatomy of the level-two game — its outer pair pinned to $2048/3313, 2036/3313$ driving one frozen inner block (`rem:b2-anatomy`, verified); $\chi_{\mathrm{HK}}\le 2^m$. Dropped: the "finite order" equivalence (overclaims thm:readout-realise's open half), the driven-liftability gap (not satisfied by the level-two game). |
-| `hk-doubling` | strict-progress | $h^*_{\mathrm{HK}}(6)\ge14$, $h^*_{\mathrm{HK}}(7)\ge20$ with explicit orientations (verified), the sink lift $+1$ per dimension (verified), the blow-up with a free readout doubling while Holt–Klee at $m=4,5$, the readout-free condition (T*); audits pending in `round16b`. |
+| `hk-doubling` | strict-progress | $h^*_{\mathrm{HK}}(6)\ge14$, $h^*_{\mathrm{HK}}(7)\ge20$ with explicit orientations (verified), the sink lift $+1$ per dimension (verified; it is `lem:hstar-super`'s product with the 1-cube, new only in preserving Holt–Klee both ways), the blow-up with a free readout doubling while Holt–Klee at $m=4,5$, the readout-free condition (T*). Dropped: the "first unbounded bounds" claim (stacking already gives one), the LP plus-one law (open), the provenance remark, the cross-tabulation. |
 | `width-amortise` | strict-progress | $\mathrm{FL}(D)$: $2^D$ response pieces at treewidth = pathwidth 3 (`rem:fold-width`; piece count verified); treewidth one lies in $\mathcal K_1$ (`prop:forest-k1`). The "PI_k" reformulation is equivalent to the goal (both audits) and the amortisation paragraph was corrected accordingly. |
 | `few-denominator-stall` | — | hit the session limit; re-run in `round16b`. |
 | `bsi-counter` | strict-progress | $W_2$: best-response restart takes $2^m-1=3$ rounds at $m=2$ where all-switches takes 2 (`prop:w2`, verified); the reordering bound; clamped games are easy for the rule (a bound, not a class); the double-best-response form of the rule. Dropped: the constant-option lemma (already in the paper), the piercing asymptotics (unproved). |
@@ -57,7 +57,12 @@ not treated as cached); it was killed after two minutes and replaced by
 `e40b995` batch A (83 repairs, six line-range audits); `b286c5f` batch B
 (front matter and summary); `d02f5dc` batch C part 1 (exact blow-up
 height, level-two anatomy, FL(D), treewidth one); `6570930` batch D (the
-route integrations above); batch E (hk-doubling) pending its audits.
+route integrations above); `170a4ce` batch E (the Holt–Klee ceiling:
+facet gluing, the sink lift, $h^*_{\mathrm{HK}}(6)\ge14$,
+$h^*_{\mathrm{HK}}(7)\ge20$, the blow-up with a free readout, (T*), the
+one-player plus-one gadget); `53824d6` the stacking proof repaired per its
+correctness audit. The paper stands at 204 pages with no undefined
+references.
 The verification scripts behind every "verified" above are in
 `scripts/round16-verify/`.
 

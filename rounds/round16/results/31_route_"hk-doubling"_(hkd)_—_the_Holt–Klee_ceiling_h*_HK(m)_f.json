@@ -1,0 +1,56 @@
+{
+ "target": "route \"hk-doubling\" (hkd) \u2014 the Holt\u2013Klee ceiling h*_HK(m) for bottom-antipodal walks; significance and novelty audit against /data/ssg-proof/frontier.tex at HEAD 6a052d3 (round-16 batches A\u2013D already integrated)",
+ "sound": true,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "headline / closing sentence of hkd.tex (\"the first unbounded lower bounds in the last three rows\")",
+   "defect": "False for the h*_1 row as the paper now stands. cor:stack-family (frontier.tex l.7042, committed in round-16 batch D, 6570930) already gives h*_1(7k) >= 12k for EVERY k \u2014 slope 12/7, unbounded and asymptotically stronger than hkd's m+6 \u2014 plus superadditivity up to one state, h*_1(m1+m2+1) >= h*_1(m1)+h*_1(m2). The claim survives only for h*_HK (where the paper had instance computations 12, 13 at m=6,7 and no law) and, after the repair in finding 2, for h*_LP.",
+   "evidence": "frontier.tex l.7042 cor:stack-family (\"h*_1(m) >= (12/7)m for m == 0 mod 7\"; \"h*_1 is superadditive up to one state\"); l.7126 prop:hstar-one-eight restates \"cor:stack-family adds h*_1(7k) >= 12k for every k\". Working out the arithmetic: with the paper's h*_1(4)=6, h*_1(5)>=10, h*_1(6)>=12, h*_1(8)>=13, superadditivity alone gives h*_1(11) >= h*_1(5)+h*_1(5) = 20 > 17, the route's iterated value at m=11; hkd's +1 law improves the row only at m=7,8,9 (13,14,15), ties at m=10 (16), and is dominated from m=11 on."
+  },
+  {
+   "severity": "major",
+   "result_name": "hkd:one-plus-one",
+   "defect": "The theorem asserts h*_LP(m+1) >= h*_LP(m)+1 as a law, while the route's own hkd:rem-plus-one(3) admits it is open whether L(s) is an LP orientation when s is. The game-side gadget proves only that the particular NONDEGENERATE one-player witnesses lift, i.e. the numerical bounds h*_LP(m) >= m+6 for m >= 6; an LP orientation attaining h*_LP(m) need not be one-player realisable, so no law about the LP ceiling follows. Unproved statement presented as proved; repairable by deleting the law and keeping the numbers.",
+   "evidence": "hkd.tex l.436-450 (\"by \\Cref{prop:oneplayer-lp}, h*_LP(m+1) >= h*_LP(m)+1 along the same witnesses\") against hkd.tex l.146-150 (\"Whether L(s) is an LP orientation whenever s is, is left open\"); prop:oneplayer-lp (frontier.tex l.5052) runs one-player game -> LP orientation, never back."
+  },
+  {
+   "severity": "major",
+   "result_name": "the ceilings table pasted at the end of hkd.tex",
+   "defect": "Stale relative to the current frontier.tex and would REGRESS the paper if pasted: it prints h*_LP(5), h*_1(5) as >=9 where prop:hstar-one-five (l.7101) now proves >=10, and it omits h*_1(8) >= 13 (prop:hstar-one-eight) and the 7k/12k law. Only the h*_HK row (>=14, >=20) is an improvement. The integrator must edit the two existing rows rather than replace the table.",
+   "evidence": "frontier.tex l.6800 rem:four-ceilings currently reads h*_LP = 1,2,4,6,>=10,>=12,>=12 and h*_1 = 1,2,4,6,>=10,>=12,>=12 with \"beyond the table, h*_1(8)>=13 and h*_1(7k)>=12k\"; hkd.tex's table prints >=9 in both rows at m=5."
+  },
+  {
+   "severity": "minor",
+   "result_name": "hkd:doubling(a)",
+   "defect": "\"the doubled value 2h*(3)+2 = 10 is not attained, nor is 9\" is wrong as written: height 10 IS attained among the 1490944 blow-ups; what is true is that no blow-up of height >= 9 is Holt\u2013Klee. Wording only \u2014 the substance survives.",
+   "evidence": "My independent exhaustive rerun (audit-hkd-sig/scan3.py, all 728 3-cube AUSOs x 8 translations x 256 readouts): max BA height 10; 9216 configurations of height >= 9, of which 0 are Holt\u2013Klee \u2014 so the greatest Holt\u2013Klee height is <= 8, exactly as the route's substantive claim says."
+  },
+  {
+   "severity": "minor",
+   "result_name": "hkd:tstar (and the route as a whole)",
+   "defect": "(T*) is not a barrier in the sense of sec:gap and covers none of M1, M2, M2T, M3, M4, M5, M6, def:bsi, R_BR or all-switches; it obstructs ONE construction (thm:blowup's rule with a free readout) on explicitly scoped pools. The integration must carry the disclaimer the paper already attaches to thm:deformed-flat, otherwise \"obstruction\" will be read as a barrier.",
+   "evidence": "frontier.tex l.6640-6647 attaches exactly that disclaimer to thm:deformed-flat (\"a closed construction avenue and not a barrier in the sense of sec:gap: it covers none of the mechanisms M1--M6 or def:bsi\"); hkd.tex carries no equivalent sentence."
+  },
+  {
+   "severity": "note",
+   "result_name": "hkd:plus-one",
+   "defect": "Not a new construction: L(s) = s*s*1_{o} is lem:hstar-super's block product with the 1-cube as second block and z=1, after relabelling the new coordinate (b -> 1-b). What is new is (i) Holt\u2013Klee preservation for EVERY seed, where the paper verified it on two witnesses, and (ii) the height being exactly h+1. The route's LaTeX says this (hkd:rem-plus-one(2)); the JSON result statement does not. Not a defect provided the acknowledgement is kept on integration. The proof is correct: I checked both path constructions and reverified the lemma computationally.",
+   "evidence": "frontier.tex l.6294-6300 (the paragraph after prop:hkfive) already computes this lift twice: \"the product of lem:hstar-super with the witness as its first block, the 1-cube as its second and z=1 is Holt-Klee of height 12, and once more of height 13\". My checks: all 656 Holt\u2013Klee AUSOs of the 3-cube lift to acyclic HK USOs of height exactly h+1 (0 failures) and all 72 non-HK ones lift to non-HK; the height-11 witness lifts to 12, 13, 14 at m=6,7,8; s_6 (h=14) lifts to an HK 7-cube of height 15 and s_7 (h=20) to an HK 8-cube of height 21."
+  },
+  {
+   "severity": "note",
+   "result_name": "hkd:crosstab",
+   "defect": "30000 random pairs drawn from ONE automorphism orbit; by this project's standing rule (\"random sampling has never found a hard instance here\") the cross-tabulation is not evidence for anything, and the route says so. Its only durable content is the methodological caution, which I verified. Recommend dropping the counts and keeping one sentence.",
+   "evidence": "I recomputed the facet heights: the twelve facets of s_6 have heights 6,6,7,7,7,7,7,7,7,7,7,8 (all Holt\u2013Klee) against h*_HK(5)=11, and the fourteen facets of s_7 have heights 8..12 against h*_HK(6) >= 14 \u2014 so a facet search restricted to maximal-height facets provably misses both records."
+  },
+  {
+   "severity": "note",
+   "result_name": "hkd:records / the route's real significance ceiling and its untried decisive computation",
+   "defect": "The route moves a lower bound on an UPPER bound: h*_HK bounds h*_1 from above (prop:oneplayer-lp), so a taller Holt\u2013Klee orientation yields no game, no run, no algorithmic consequence and no barrier \u2014 it only keeps the one-player half of the pivot alive. After this route the m=6 Holt\u2013Klee lower bound (14) EXCEEDS the best realised one-player height at m=6 (12), so Holt\u2013Klee has stopped being the binding constraint at the sizes the paper can compute, and the entire burden is realisability. The one computation that would have converted the record into SSG progress \u2014 whether s_6 itself is a readout system of order (6,1), i.e. realised by a one-player game \u2014 was not attempted, although the pipeline exists.",
+   "evidence": "prop:oneplayer-runs (l.6757) gives h*_1(6) >= 12; hkd:records gives h*_HK(6) >= 14. rem:hk-survey (l.6075) describes the working realisation pipeline (evolution strategy over the average part, exact LP over the controlled rows, dyadic rounding) which realised all 56 Holt\u2013Klee height-6 classes at m=4; thm:readout-realise gives the exact one-player condition (r = 1, affine readouts). A yes on s_6 gives h*_1(6) >= 14 at once; a no is the first measured separation of one-player realisability from Holt\u2013Klee above m=3 (prop:m3-realised)."
+  }
+ ],
+ "verdict": "Integrating this makes the paper BETTER, provided the three major items are repaired first. The mathematics is sound: I re-verified everything load-bearing from scratch with my own USO / acyclicity / BA-height / Holt\u2013Klee (unit-vertex-capacity max-flow on all 3^m faces) engine, validated on the 3-cube census (744 USOs, 728 acyclic, 656 HK, h*=4). Confirmed: s_6 is an acyclic HK USO of the 6-cube of BA height 14 and s_7 one of the 7-cube of height 20; both are exactly B_phi of the stated seeds with the stated readouts and translations (byte-for-byte); the same seeds with the PARITY readout give heights 14 and 20 but fail Holt\u2013Klee \u2014 which is the route's real point; the sink lift adds exactly 1 and preserves HK in both directions; the facet criterion is exhaustively correct at m=2 and matched on 3000 random m=3 triples; the m=3 scan of all 1490944 blow-ups gives no Holt\u2013Klee height above 8; and the five one-player normal forms at m=7..11 are dyadic, leaking, tie-free over all 2^m strategies, with runs of exactly 13,14,15,16,17.\n\nWORTH INTEGRATING: hkd:records (the strongest item \u2014 it settles at m=4 the exact inequality h*_HK(m+2) >= 2h*_HK(m)+2 that frontier.tex itself poses after cor:blowup-transl as \"the exact one an LP-realisable exponential family would need first\", and lifts the second row of rem:four-ceilings from >=12,>=13 to >=14,>=20, m+13 for m>=7); hkd:readout with hkd:doubling(b),(c) (cor:blowup-parity obstructs the parity readout only \u2014 this corrects the impression left by the paragraph after cor:blowup-transl); hkd:plus-one WITH its lem:hstar-super acknowledgement; hkd:tstar and hkd:doubling(a),(d),(e) compressed to a proposition plus two scoped sentences; hkd:facet as a lemma with its standard-attribution remark. NOT worth integrating: hkd:crosstab (keep only the one-sentence facet caution); the pasted ceilings table; the \"first unbounded lower bounds\" sentence; the h*_LP law.\n\nThe route's own gap statement is close but too narrow. The true gap: even a full doubling law would produce no SSG \u2014 Holt\u2013Klee is necessary and not known sufficient for one-player realisability above m=3, and both proved growth laws for the game side (cor:stack-family's slope 12/7, capped by Fekete at sup_m h*_1(m)/(m+1), and this route's +1 per dimension) are linear; so the two missing statements are (i) a construction supplying its own (T*)-clean translation with h(u) proportional to the ceiling at every level, and (ii) a realisation theorem turning a height-h Holt\u2013Klee AUSO of the m-cube into a one-player stopping SSG on poly(m) vertices, of which s_6 is now the smallest concrete untested instance."
+}
