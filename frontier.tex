@@ -10774,6 +10774,37 @@ each of the six listed transitions flips a coordinate lying in the
 out-set of its tail, so the displayed closed walk is a directed cycle.
 \end{proof}
 
+\begin{remark}[Simultaneous switching on this instance]\label{rem:cyclic-antipodal}
+The \emph{antipodal} walk $\pi\mapsto\pi\oplus s_C(\pi)$ of the profile
+orientation (\Cref{def:profile-orientation}) --- both players switching at
+once every vertex whose owner strictly prefers its other action, the
+two-player form of all-switches --- cycles on the instance above: flipping
+the printed out-sets gives $(0,0,1)\to(1,0,0)\to(0,1,0)\to(0,0,1)$, a
+directed triangle, while the other two profiles converge to the sink. So
+the attribution to Condon above is now an owned instance (the round-$17$
+order-lattice route, recomputed here from a $23$-vertex game realising the
+normal form, \texttt{scripts/round17-verify/OL3\_GAME.json}). With at most
+two controlled vertices the antipodal walk cannot cycle: a cycle through
+all four profiles of the square would flip one coordinate per step, leaving
+every profile with an outgoing edge and the square without a sink, against
+\Cref{thm:profile-uso}; a cycle of length two or three would make some
+coordinate strictly switchable at both ends of one edge, or leave the
+square with two sinks, against \Cref{lem:profile-trichotomy} and
+\Cref{thm:profile-uso}. On a profile-nondegenerate game in which every
+successor of a controlled vertex is an average vertex or a sink, the walk
+is exactly what the iteration ``decode a preorder, re-sort the decoded
+values'' of \Cref{rem:order-unique} becomes after one step (the decode
+then compares the ranks of the two successors, which are ordered as their
+values are), so that iteration cycles too. Without that separation the
+iteration can cycle even with two controlled vertices, since the decode
+then looks one controlled step ahead: on the eight-vertex stopping game
+$v\to(u,p_4)$, $u\to(p_2,p_7)$, $p_2\to(t_0,p_5)$, $p_3\to(p_5,p_4)$,
+$p_4\to(v,p_6)$, $p_5\to(t_1,t_0)$, $p_6\to(v,t_0)$, $p_7\to(p_3,v)$ with
+$v\in\Vmax$, $u\in\Vmin$, it alternates between the profiles $(1,0)$ and
+$(0,1)$ while the antipodal walk converges (the route's correctness
+auditor; recomputed, \texttt{scripts/round17-verify/ol\_gc.py}).
+\end{remark}
+
 \begin{corollary}\label{cor:no-potential}
 There is no real-valued potential on the profiles of a general SSG that
 strictly increases along every improving edge of the two-player strategy
@@ -11432,6 +11463,46 @@ half of Gimbert and Horn's algorithm for games with few random vertices,
 which enumerates the orderings of the random vertices and rebuilds the
 value vector from each; what is added here is only the statement that the
 order is a certificate and the count of comparisons it costs.
+\end{remark}
+
+\begin{remark}[The consistent order is unique, and only the read letters count]\label{rem:order-unique}
+Three additions from the round-$17$ order-lattice route, each a few lines
+from \Cref{thm:order-determines,def:residue,lem:trapchar,thm:contraction}.
+Call a total preorder $\preceq$ on $A:=\Vavg\cup\{t_0,t_1\}$
+\emph{consistent} if some pair $(\sigma,\tau)$ selected from it as in the
+proof above --- equivalently by the backward induction of \Cref{def:residue}
+run with the ranks of $\preceq$ as ordinal payoffs --- has $v_{\sigma,\tau}$
+inducing $\preceq$ again on $A$.
+(i) \emph{On a stopping game the true preorder is the only consistent one.}
+If $x:=v_{\sigma,\tau}$ induces $\preceq$, a strictly increasing map carries
+the ranks to the values $x|_A$ and commutes with $\max$ and $\min$, so the
+residue $D$ of \Cref{def:residue} run with the payoffs $x|_A$ has
+$\sigma,\tau$ attaining its extrema; along a topological order of the
+acyclic controlled subgraph (\Cref{lem:trapchar}) one gets
+$x(v)=x(\text{chosen successor})=D(v)$, hence $x(v)=\max_ix(v^{(i)})$ at
+$\Vmax$ and $\min_i$ at $\Vmin$, so $Tx=x$ and $x=w^\ast$
+(\Cref{thm:contraction}). The certificate of \Cref{thm:order-determines}
+is therefore unique --- \textsc{SSG-Value} lies in $\mathrm{UP}\cap\mathrm{coUP}$
+with a witness of $O(a\log a)$ bits --- which changes nothing
+algorithmically (the remark after \Cref{prop:bracket}); iterating
+``decode, then re-sort'' from an arbitrary preorder is not an algorithm
+either (\Cref{rem:cyclic-antipodal}).
+(ii) The decoder reads $\preceq$ only on
+$B:=\{t_0,t_1\}\cup\{p\in\Vavg:\ p\text{ a successor of a controlled vertex}\}$,
+every play of the residue stopping at such a $p$, so the witness has
+$O(b\log b)$ bits with $b:=|B|\le\min(a+2,\,2|C|+2)$; but $b$ is not a
+new parameter: a directed cycle through a controlled vertex leaves $C$
+into $B$, so $\mu_k\le b-2$ and bounded $b$ lies inside \Cref{thm:modulator}.
+(iii) Stopping is necessary: on the non-stopping game $v\in\Vmax$,
+$v\to(v,p)$, $p\to(t_1,q)$, $q\to(v,t_0)$, with
+$\val=(\tfrac23,\tfrac23,\tfrac13)$ (\Cref{thm:lfp-general}), both
+$t_0\prec q\prec p\prec t_1$ and $t_0\sim q\prec p\prec t_1$ are consistent
+under the attractor decoder of the proof, the second through the
+selection $\sigma(v)=v$, whose trap gives $v_\sigma=(0,\tfrac12,0)$ by
+\Cref{thm:eval-stopfree}. Checked exhaustively over every total preorder
+on the letters of $76$ random stopping games with up to four controlled
+vertices and every tie-breaking of the decode
+(\texttt{scripts/round17-verify/ol\_verify.py}).
 \end{remark}
 
 The atomic step of the selection problem is itself exactly as hard.

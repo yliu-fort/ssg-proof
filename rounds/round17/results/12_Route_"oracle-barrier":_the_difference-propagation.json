@@ -1,0 +1,108 @@
+{
+ "target": "Route \"oracle-barrier\": the difference-propagation model D (eight monotone operators on a pair (Delta,R)) and the one-player family BC(e,s), N = 12e+2s+11, claimed to defeat every algorithm of D for 2^{Omega(N)} operator applications.",
+ "sound": false,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "The value-simulation preorder is the slack calculus over the two-element grade set (ob:m1-grade, last sentence) + ob:mem(f)",
+   "defect": "The identity itself is correct, but the use made of it is false: def:simorder is NOT a member of the model as ob:model defines it. Every operator (D1)-(D4),(D6) is a running minimum with the current state and (D5) only rounds up, so no composite Theta of (D1)-(D7) can increase Delta; iterating any such Theta from 'the constant least state' therefore stabilises at the first step, at Delta == 0, i.e. the ALL-PAIRS-RELATED state, which is unsound, not at the preorder. Iterating from the current state Delta_0 instead computes the INDUCTIVE reading lfp(F), which on the route's own family is strictly smaller than the coinductive gfp(F) that def:simorder is. So the headline 'M1, M2, M2T, M4, M5, M6 in one model' is not established for M1, and the repertoire is not soundness-preserving as advertised (the (D7) assignment 'Delta(x,y) <- 0' can also erase an already-negative, i.e. already-decided, entry). The repair is one word - make (D1) the bare clause map L, or let (D8) iterate the clause set without the running minimum - but as written the lemma is wrong.",
+   "evidence": "My own implementation, from def:slack and def:simorder, exact rationals. On G_8: iterating rho_{0,1}(min(Delta,L Delta)) from Delta == 0 halts at round 0 with all 64 pairs related; iterating the bare rho_{0,1} L from the same start halts at round 8 with exactly the 36 pairs of gfp(F) (so ob:m1-grade's entrywise identity is confirmed). On BC(2,5) and BC(3,5): from the least state the model's iteration again halts at round 0 with all 2025 resp. 3249 pairs related; from Delta_0 it halts at the inductive reading with 496 resp. 627 pairs, against |gfp(F)| = 571 resp. 832 - the two readings genuinely differ on the route's own family."
+  },
+  {
+   "severity": "major",
+   "result_name": "Every algorithm of the model needs 2^{Omega(N)} cost on BC(e,s)",
+   "defect": "A load-bearing clause of a result marked 'proved' is a measurement. The statement asserts 'Adjoining def:simorder changes nothing: every point of every P_k satisfies every cut derived by the preorder, so the composite that runs M1 first and seeds the rest with its verdicts obeys the same bound.' The argument field contains no proof of this; the verification field reports it as a ten-size check. Since the invariance theorem's induction starts from Delta_0 and the preorder is produced outside that induction, this clause is exactly what makes the barrier cover the M1-seeded composite - the route's stated advance over thm:cv-lower and thm:wedge-proved - and it is unproved. The route's gap list names other grade sets (gap 1) and transitive-closure LMCs (gap 2) but does not name this one.",
+   "evidence": "Independently reproduced, and true as far as it is checked: on BC(2,5),(3,5),(2,6),(4,5) every vertex of every P_k, k <= K, satisfies z(x) <= z(y) at every one of the 571/832/628/1138 preorder pairs (6852 to 75108 point-pair tests, 0 violations). Also independently confirmed: the preorder is transitive on BC at those sizes (0 violations), so for M1 itself the transitive closure of gap (2) is vacuous - again by measurement, not proof."
+  },
+  {
+   "severity": "minor",
+   "result_name": "Every barrier for the model is a rate barrier (ob:no-permanent)",
+   "defect": "Classified new-relation; it is a restatement. Three lines from the paper: (1) thm:hybrid-convex-barrier with the constant chain P_k := P gives Delta_k >= Lambda(P) for the hybrid, and the hybrid dominates def:slack entrywise (stated in the proof of thm:wedge-proved); (2) thm:slack-vi-upper gives Delta_{2k}(x,y) <= u_k(x) - l_k(y) unconditionally, all pairs, sinks included; (3) u_k,l_k -> w* by thm:contraction, so Lambda(P) <= w*(x)-w*(y). Its moral is already rem:frontier-moved's 'what is at stake is a rate and never an expressive power', which the paper derives from thm:trans-complete.",
+   "evidence": "thm:slack-vi-upper (frontier.tex l.12625ff) is stated for arbitrary SSGs and all x,y; thm:hybrid-convex-barrier (l.14936ff) explicitly allows K <= infinity and hence a constant chain; rem:frontier-moved (l.13950ff)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "The value-simulation preorder is the slack calculus over the two-element grade set",
+   "defect": "Classified new-relation; it is a restatement (a definitional unfolding). def:slack is introduced in the paper immediately after def:simorder, in the SAME notation (ag^-_y, ag^+_x, the same-type composite, the bijection at Vavg), with the connecting sentence 'let the two branches of an average vertex share a numerical budget instead of being matched one to one'. Three lines: (1) in {0,1} a min is 0 iff some argument is, a max or a mean iff both, so ag^-_y reproduces clause (i), ag^+_x clause (ii), and the composites (both orders, both bijections) clause (iii); (2) the constants 0 (x in Z_0, y in Z_1, x=y) and -1 reproduce F's base with the diagonal; (3) gfp(F')=gfp(F) because the diagonal is a post-fixed point of F, which is the second sentence of thm:simorder-sound's proof. The paper already owns the up-rounding operator rho_Lambda as an abstract-interpretation device (the remark after cor:grid-iteration, which states the lfp(rho.T)=lfp(T) criterion) and already owns the inductive/coinductive distinction (def:lmc: 'may be read inductively (least fixed point) or coinductively (greatest)').",
+   "evidence": "frontier.tex l.12247 (def:simorder), l.12428 (def:slack) and the prose between them; l.2546 (abstract interpretation and rho); l.13703 (def:lmc's two readings)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "The edge: one exact policy evaluation separates D from D+ exponentially on BC(e,s)",
+   "defect": "Not an independent result: the positive half is thm:seed-dichotomy (the route concedes this in its restatements field), the negative half is result 5, and the 'separation' is their conjunction. The paper already records exactly this shape for WD in rem:wedge ('M(1,0) decides both Max vertices at slack round zero') and for CV in the round-16 summary. Should be a sentence in the BC subsection, not a numbered theorem.",
+   "evidence": "Independently confirmed: on BC(2,5),(3,5),(2,6),(4,5),(2,7) all-switches takes at most one productive round from each of the 8 starting profiles, and from each of the 4 profiles with sigma(v_0)=P the strictly switchable set is empty and val_sigma = w* exactly (val_sigma by the first-passage linear solve, never by greedy iteration)."
+  },
+  {
+   "severity": "note",
+   "result_name": "The model D and its cost measure (ob:model, ob:scope)",
+   "defect": "Scope and calibration. D excludes every operator that evaluates a strategy - M3/M(p,k), all-switches, def:bsi, R_BR - i.e. exactly the mechanisms that decide BC in one step; the route says so honestly in ob:scope, but the headline 'One model containing every mechanism of the paper' does not. The cost measure charges 1 for (D3), a full re-optimisation of the transport polytope, and 1 for (D8), an entire fixed-point limit, so 'number of operator applications' is a round count, not a complexity measure. Finally BC(e,s) is one-player with 3 Max vertices, hence in P by thm:one-player and inside thm:bounded-components (2^3-1 = 7 all-switches rounds): the family is a mechanism refutation, not a hard instance, exactly like H_m, CC, WD and CV.",
+   "evidence": "ob:model (D3),(D8); ob:mem's last sentence; thm:one-player (l.2110), thm:bounded-components (l.4422); my all-switches run above."
+  },
+  {
+   "severity": "note",
+   "result_name": "Convex certificates bound every algorithm of the model / What a lifted certificate has to check",
+   "defect": "Rule-4 import: the multiplicative half uses, as a proof step, that a linear-fractional function with positive denominator attains its extrema at the vertices of a polytope. This is elementary and the route flags it in prior_art as unchecked, but it is not proved and it is not one of the paper's four permitted imports. It should be a two-line lemma or a flagged GAP.",
+   "evidence": "The route's own prior_art field; the arguments for ob:reduction's multiplicative cases and for the (beta) verification at v_1 in ob:bc-cert both invoke it."
+  },
+  {
+   "severity": "note",
+   "result_name": "BC(e,s): a family at whose value-distinguishing vertex no sound local matching calculus fires",
+   "defect": "Presentational, not an error: BC's denominator is 2^{Theta(e)} = 2^{Theta(N)}, so unlike CV(e,s) it is NOT inside the few-denominator class of thm:few-denominator; the constant-gap property it inherits from CV is the gap gamma = 2^{-s}, not the denominator. The route records this correctly only in next_steps item 5, not in the statement, where a reader comparing with cor:cv-class could be misled.",
+   "evidence": "w*(alpha^1_q) = 1/2 + 2^{-(e-q+1)}/2 and w*(B^i_q) = 1/2 - 2^{-(2e-q+1)}zeta_i give denominators up to 2^{2e+2}, confirmed on the built instances."
+  }
+ ],
+ "novelty_table": [
+  {
+   "result_name": "The value-simulation preorder is the slack calculus over the two-element grade set, read coinductively",
+   "closest_label": "def:slack (with def:simorder and the prose between them; def:lmc for the two readings; the remark after cor:grid-iteration for rho)",
+   "class": "restatement"
+  },
+  {
+   "result_name": "Convex certificates bound every algorithm of the model, additively and multiplicatively (ob:invariance, ob:sign)",
+   "closest_label": "thm:hybrid-convex-barrier",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "What a lifted certificate has to check (ob:reduction)",
+   "closest_label": "thm:cv-lower (its proof, parts (b)-(g)) and thm:wedge-proved (its proof)",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "Every barrier for the model is a rate barrier (ob:no-permanent)",
+   "closest_label": "thm:slack-vi-upper (with thm:hybrid-convex-barrier and rem:frontier-moved / thm:trans-complete)",
+   "class": "restatement"
+  },
+  {
+   "result_name": "BC(e,s): a family at whose value-distinguishing vertex no sound local matching calculus fires, and the 2^{Omega(N)} lower bound for D_0",
+   "closest_label": "def:cv / thm:cv-lower (the engine, the d-chain and the certificate method) and thm:matching-barrier / lem:fooling-partner (the block at v_0)",
+   "class": "new-object"
+  },
+  {
+   "result_name": "The edge: one exact policy evaluation separates D from D+ exponentially on BC(e,s)",
+   "closest_label": "thm:seed-dichotomy (with rem:wedge's identical statement for WD)",
+   "class": "restatement"
+  },
+  {
+   "result_name": "[route's own restatement] thm:seed-dichotomy predicts the positive half of the edge",
+   "closest_label": "thm:seed-dichotomy",
+   "class": "restatement"
+  },
+  {
+   "result_name": "[route's own restatement] the additive register of ob:invariance restricted to def:hybrid IS thm:hybrid-convex-barrier",
+   "closest_label": "thm:hybrid-convex-barrier",
+   "class": "restatement"
+  },
+  {
+   "result_name": "[route's own restatement] Lambda(P) satisfies the triangle inequality",
+   "closest_label": "lem:hybrid-cutting",
+   "class": "restatement"
+  },
+  {
+   "result_name": "[route's own restatement] the four constant sink chains of BC are instances of the dyadic row lemma",
+   "closest_label": "lem:dyadic-row",
+   "class": "restatement"
+  }
+ ],
+ "verdict": "VERDICT: new-barrier, earned but by one result out of six, and with a false lemma carrying the headline. Downgrade the framing, keep the family.\n\n1. THE OBJECT. The claimed new object is \"the difference-propagation model D\": the union of def:slack, def:trans-slack, def:transport, def:hybrid and def:ratio, closed under composition, rounding, combination and mutual seeding, with a round count as cost. The paper already owns both halves of this genus: def:lmc is a class of mechanisms closed under a syntactic scheme with a fooling barrier (thm:matching-barrier), and thm:hybrid-convex-barrier is the convex-certificate lower-bound method for the arithmetic ones. D is those two put in one box plus a second (multiplicative) register. The route did not attach the problem to an object the paper does not own; it re-packaged two it does. The one genuinely new piece of mathematics inside the packaging is the multiplicative half of the invariance theorem (harmonic mean, mediant, and the sign lemma Lambda_x <= 1 iff Lambda <= 0), which upgrades the paper's coverage of M6 from measurement (rem:wedge on WD, prop:cv-measured on CV) to proof.\n\n2. WHAT IS ACTUALLY THERE, AND IT IS REAL. BC(e,s) is correct and I reproduced it from scratch. Independent build from the LaTeX, exact rationals, eight sizes (N = 45,47,49,57,59,63,69,81): the game is stopping, N = 12e+2s+11, w*(Q) = 1/2 - 2^{-s} with P optimal at v_0, Z_0 = {t_0}, Z_1 = {g,t_1}, v_0 the unique value-distinguishing controlled vertex. My own implementation of def:simorder's greatest fixed point relates neither (v_0,Q), (v_0,P), (Q,P) nor (P,Q) - so none of the four order tests fires - and is transitive, while the same code on the paper's CV(e,s) DOES derive (v_0,H) and fires clause (i) at round zero at every size I tried. That is the route's central claim and it holds: BC is the first family in this document on which the simulation preorder does not decide the deciding vertex immediately. My own implementation of the def:slack and def:ratio clause sets, written from the paper, confirms the certificate chain at eight sizes: P_k inside Q(G;L_Z,U_Z) with the Z pins (0 violations), every def:slack clause at Lambda(P_k) >= Lambda(P_{k+1}) at all N^2 entries (0 failures), every def:ratio clause at Lambda_x(P_k) >= Lambda_x(P_{k+1}) (0 failures), all seven named entries equal to their closed forms (cM_K - gamma, (1-a^2)M_K, (1-b)M_K, a(1-b)M_K, (b-a^2)M_K, and Lambda(Q,v_0) = 0 exactly), none of the twelve tests firing, and K+1 equal to floor(ln(c/4gamma)/ln(1/a)) at every size, doubling with each increment of e (2,5,11,22 at s=5). The LMC block is a correct re-use of thm:matching-barrier's machinery: I checked both frame identities by hand - frame(Q,P) = frame(4,1) = frame(a_0,d) with true-atom set exactly Pi, and frame(v_0,P) = frame(5,1) = frame(m,k) with Pi u {(x^0,y)} - so the fooling-partner and K_sharp arguments transfer verbatim.\n\n3. THE HEADLINE IS BROKEN. \"M1 is not a different mechanism from M2 ... that identification puts M1, M2, M2T, M4, M5, M6 and all their combinations into one model\" is the sentence the route leads with, and the second half of it is false. Every operator of the repertoire is a running minimum except the up-rounding, so nothing in D can increase Delta; (D8) from the constant least state stabilises at once at Delta == 0, the unsound all-related state, and (D8) from the current state yields the inductive reading lfp(F), which on BC itself has 496 and 627 pairs against the preorder's 571 and 832. The coinductive preorder that def:simorder IS cannot be produced inside D. The barrier survives this (lfp is contained in gfp, and I checked the certificate against the full gfp), but the framing does not.\n\n4. THE REAL REMAINING GAP, more precisely than the route states it. Not gap (1) (other grade sets) and not gap (2) (transitive-closure LMCs). It is this: the only clause of the lower-bound theorem that reaches beyond D_0 - \"every point of every P_k satisfies every cut derived by the preorder\", which is what makes the barrier cover the M1-seeded composite and therefore what makes it an advance on thm:cv-lower and thm:wedge-proved at all - is a ten-size measurement inside a result marked proved. And beyond that, the barrier's scope stops exactly at the single operator (E) that decides BC in one linear solve, so by thm:seed-dichotomy nothing here touches the pivot; the sentence in rem:wedge that BC half-answers (\"a family defeating M1 AND M3\") is answered on its M1 half only, and the M3 half is the superpolynomial all-switches family the document does not have.\n\n5. INTEGRATE OR NOT. Better, if trimmed hard; worse if taken as offered.\n\nWORTH INTEGRATING, as a subsection after sec:cv: def:bc, ob:bc-values, ob:bc-lmc, ob:bc-cert and ob:bc-lower. This is a genuine new row in the barrier table - the first family that is silent 2^{Omega(N)} rounds for the additive mechanisms AND for the multiplicative one BY PROOF (WD's M6 coverage is measured, CV's M6 is not stalled at all) AND at whose deciding vertex no sound local matching calculus fires (CC, WD, CV and H_m are all decided by def:simorder at round zero). It must be integrated with the M1-seeding clause demoted from the statement to a \"measured, at ten sizes\" line, or proved.\n\nALSO WORTH INTEGRATING, small: the multiplicative half of ob:invariance with ob:sign, as a companion theorem to thm:hybrid-convex-barrier; and ob:reduction as a lemma used to shorten it and thm:cv-lower.\n\nNOT WORTH INTEGRATING: ob:model, ob:mem and the \"one model\" framing - the model is bookkeeping, (D1) makes its M1 membership lemma false, (D7) as written erases decided entries, (D8) is not soundness-preserving, and the cost measure charges one unit for an LP re-solve and one for a fixed-point limit. ob:m1-grade should survive only as a one-sentence remark after def:slack, correctly stated (the BARE clause map, iterated coinductively over {0,1}, is def:simorder), and flagged as an unfolding of the two definitions rather than a discovery. ob:no-permanent should be at most a remark, since it is three lines from thm:slack-vi-upper plus thm:hybrid-convex-barrier and its moral is already rem:frontier-moved's. ob:edge should be a sentence, not a theorem.\n\nPrior art: the route's own attributions (Cousot and Cousot for abstract interpretation over a lattice of abstract values, Jonsson-Larsen / Segala-Lynch for the probabilistic lifting, invariant-set lower bounds for cutting-plane methods, the Hilbert-projective analogue) are honest and adequately flagged as unchecked. One omission: the \"grade set\" device is not only standard, it is already in this paper - the remark after cor:grid-iteration states the lfp(rho.T) = lfp(T) exactness criterion of abstract interpretation and names rho as the up-rounding onto a finite grid. That should be cited rather than re-introduced."
+}
