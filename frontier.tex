@@ -10900,7 +10900,11 @@ union of birth--death chains with one choice each; while reversibility of
 the chance part alone is vacuous, since inserting a Max vertex with two
 equal successors into every edge out of an average vertex makes $\Vavg$
 independent without changing stopping, values or the all-switches run
-(\Cref{lem:splice}(a) run backwards).
+(\Cref{lem:splice}(a) run backwards). The strongly convex slice
+$B\succeq\lambda I$ with $\lambda\ge1/\mathrm{poly}(N)$ is a polynomial
+class by a first-principles argument through the visit number
+(\Cref{cor:handicap-slice} below), which leaves the question of this
+remark to the boundary $\lambda\to0$.
 \end{remark}
 
 \begin{proposition}[$B$ can be singular on a stopping game in $\mathcal R$]\label{prop:handicap-singular}
@@ -10962,7 +10966,10 @@ solve (\Cref{lem:readout} with $C$ as the pinned set) leaves a reduced
 system every one of whose rows has mass exactly $\tfrac12$ over $C$, so the
 reduced Shapley operator is a $\tfrac12$-contraction in the sup norm,
 $2a+O(1)$ iterations reach precision $2^{-2a-O(1)}$, and
-\Cref{lem:round-recover} returns $w^\ast$ exactly. The family is therefore
+\Cref{lem:round-recover} returns $w^\ast$ exactly --- the special case, at
+rate $\tfrac12$ per application, of the contraction that
+\Cref{cor:handicap-slice} provides on the whole slice $B\succeq\lambda I$.
+The family is therefore
 what \Cref{prop:a-presentation} says $a$ is, for all eight bounds at once
 --- a property of the presentation, the slow blocks and the depth chain
 serving only to spoil the escape certificate and inflate the denominator
@@ -10974,6 +10981,215 @@ value $2^{-n^{2}}$, the strongly connected component and the row masses
 recomputed here from the game files at $n=4,6$,
 \texttt{scripts/round18-verify/hz\_ring.py}, \texttt{hz\_w7.py}).
 \end{proposition}
+
+The round-$19$ handicap-tangent route set out to build a family in
+$\mathcal R$ against the tangent cut of \Cref{rem:tangent-cut} and proved
+instead a theorem in the opposite direction, through an object round $13$
+had named without proving anything about it --- the largest expected number
+of visits to the controlled set --- which the item (v11) of the standing
+list of unverified claims recorded as ``bounded $\kappa$ gives a polynomial
+algorithm unconditionally''. That claim is proved below, with constants,
+and the handicap is shown to bound $\kappa$.
+
+\begin{definition}[Visit number]\label{def:visit-number}
+Let $G$ be stopping with controlled set $C$, $k:=|C|\ge1$, and $P_0,P_1$ the
+first-passage matrices of the harmonic normal form over $C$
+(\Cref{rem:handicap-base}): $P_a(v,u)$ is the probability that the walk
+from $v^{(a)}$ first meets $C$ at $u$. For a \emph{selection}
+$\alpha\in\{0,1\}^{C}$ let $Q_\alpha$ have $v$-th row $P_{\alpha(v)}(v,\cdot)$,
+and put
+\[
+ \kappa(G):=\max_{\alpha\in\{0,1\}^{C}}\bigl\|(I-Q_\alpha)^{-1}\bigr\|_\infty ,
+\]
+the largest expected number of visits to $C$ under a positional pair,
+the start counted; each $I-Q_\alpha$ is invertible with
+$(I-Q_\alpha)^{-1}=\sum_jQ_\alpha^{j}\ge0$ because $G$ is stopping
+(\Cref{lem:survival-contract}).
+\end{definition}
+
+\begin{lemma}[The handicap bounds every selection from below]\label{lem:handicap-visits}
+Let $G$ be stopping with $B\succeq\lambda I$, $\lambda>0$. Then for every
+selection $\alpha$ and every $d\in\mathbb R^{C}$,
+$\|(I-Q_\alpha)d\|_2\ge\lambda\|d\|_2/(3\sqrt k)$; hence
+$\|(I-Q_\alpha)^{-1}\|_2\le3\sqrt k/\lambda$ and $\kappa(G)\le3k/\lambda$.
+\end{lemma}
+
+\begin{proof}
+With $\bar P:=\tfrac12(P_0+P_1)$, $\Delta:=\tfrac12(P_1-P_0)$ and
+$\bar R:=I-\bar P$ one has $R_0d=\bar Rd+\Delta d$, $R_1d=\bar Rd-\Delta d$
+and $d^{\mathsf T}Bd=(R_0d)\cdot(R_1d)=\|\bar Rd\|^{2}-\|\Delta d\|^{2}$,
+the identity of \Cref{rem:handicap-base}. Put $A:=\|\bar Rd\|$,
+$c:=\|\Delta d\|$; the hypothesis gives $A^{2}-c^{2}\ge\lambda\|d\|^{2}>0$.
+Every $Q_\alpha$ is $\bar P+S\Delta$ with $S=\operatorname{diag}(\pm1)$
+orthogonal, so $\|(I-Q_\alpha)d\|=\|\bar Rd-S\Delta d\|\ge A-c
+=(A^{2}-c^{2})/(A+c)\ge\lambda\|d\|^{2}/(A+c)$. Each $P_a$ is
+substochastic, so $\|P_ad\|_2^{2}\le\sum_v\sum_uP_a(v,u)d_u^{2}\le k\|d\|_2^{2}$
+by Cauchy--Schwarz in each row and column sums at most $k$; hence
+$A\le(1+\sqrt k)\|d\|$, $c\le\sqrt k\|d\|$ and $A+c\le3\sqrt k\|d\|$,
+which is the display. Then $\|(I-Q_\alpha)^{-1}\|_2\le3\sqrt k/\lambda$,
+and $\|Mx\|_\infty\le\|Mx\|_2\le\|M\|_2\|x\|_2\le\sqrt k\|M\|_2\|x\|_\infty$
+gives the $\infty$-norm bound. (Checked on $380$ and $3294$ random
+stopping members of $\mathcal R$ by the route, $250$ by each auditor, and
+here, worst ratio $\kappa\lambda/(3k)=\tfrac13$; on $\mathrm{WD}(e,j,m)$ at
+four sizes $\kappa=16,64,256,1024$ against $\lambda_{\min}=2^{-6},\dots,2^{-15}$,
+on $\mathrm{CC}(L,2)$ for $L\le4$, $\kappa=4^{L}$ against $2^{-3L}$, and
+on $\mathrm{HZ}(4),\mathrm{HZ}(6)$, $\kappa=2$ with $\lambda=\tfrac14$;
+\texttt{scripts/round19-verify/ht\_root.py}.)
+\end{proof}
+
+\begin{lemma}[Non-stationary play does not visit more]\label{lem:visits-nonstationary}
+Let $G$ be stopping, $(\mathcal Sy)_v:=\max_a(P_ay)_v$, $h_0:=0$ and
+$h_n:=\bbone+\mathcal Sh_{n-1}$. For every sequence of selections
+$\beta_1,\dots,\beta_n$ the expected number of visits to $C$ within $n$
+steps under the time-dependent behaviour that uses $\beta_j$ at step $j$
+is at most $h_n$ coordinatewise, and $h_n\le\kappa(G)\bbone$.
+\end{lemma}
+
+\begin{proof}
+By induction, $\bbone+Q_{\beta_n}h_{n-1}\le\bbone+\mathcal Sh_{n-1}=h_n$,
+the visits within $n$ steps under $(\beta_n,\dots,\beta_1)$ being one plus
+$Q_{\beta_n}$ applied to the visits within $n-1$ steps under the rest.
+$\mathcal S$ is monotone, so $h_n$ is nondecreasing in $n$, whence
+$h_n\le\bbone+\mathcal Sh_n=\bbone+Q_\alpha h_n$ for a selection $\alpha$
+attaining the maxima at $h_n$; thus $(I-Q_\alpha)h_n\le\bbone$, and
+multiplying by the nonnegative $(I-Q_\alpha)^{-1}$ gives
+$h_n\le(I-Q_\alpha)^{-1}\bbone\le\kappa(G)\bbone$.
+\end{proof}
+
+\begin{lemma}[Survival decays at rate $\kappa$]\label{lem:visits-decay}
+With $\sigma_n:=\|\mathcal S^{n}\bbone\|_\infty$, the largest probability
+of $n$ further visits to $C$, one has $\sigma_n\le\kappa(G)/n$; in
+particular $\sigma_{n_0}\le\tfrac12$ for $n_0:=\lceil2\kappa(G)\rceil$, and
+$\sigma_{tn_0}\le2^{-t}$.
+\end{lemma}
+
+\begin{proof}
+Let $\beta_j$ attain the maxima at $\mathcal S^{j-1}\bbone$, so
+$\mathcal S^{n}\bbone=Q_{\beta_n}\cdots Q_{\beta_1}\bbone$. For $1\le i\le n$
+the partial product $Q_{\beta_n}\cdots Q_{\beta_{n-i+1}}\bbone$ is at least
+$Q_{\beta_n}\cdots Q_{\beta_{n-i+1}}(\mathcal S^{n-i}\bbone)=\mathcal S^{n}\bbone$
+pointwise, $\bbone\ge\mathcal S^{n-i}\bbone$ and the matrices being
+nonnegative; the partial products are the probabilities of $i$ further
+visits under the behaviour $(\beta_n,\dots,\beta_1)$, so their sum over
+$i=0,\dots,n-1$ is at most $h_n\le\kappa\bbone$
+(\Cref{lem:visits-nonstationary}), whence $n\mathcal S^{n}\bbone\le\kappa\bbone$.
+The last clause is positive homogeneity and monotonicity of $\mathcal S$.
+\end{proof}
+
+\begin{theorem}[Bounded visit number is a polynomial class]\label{thm:visits-class}
+There is an algorithm which, given a stopping SSG $G$ and a bound $K$,
+either reports $\kappa(G)>K$ or outputs $\val$ exactly, in time polynomial
+in $N$ and $K$, sound for every $K$ and complete when $\kappa(G)\le K$.
+Consequently $\{G\ \text{stopping}:\kappa(G)\le N^{O(1)}\}$ is a
+polynomial class.
+\end{theorem}
+
+\begin{proof}
+Compute $P_a$ and the weights $r_a$ of $t_1$ by one exact linear solve on
+$\Vavg$. Let $T_C(y)_v:=\max_a(P_ay+r_a)_v$ at $\Vmax$ and $\min_a$ at
+$\Vmin$; $\val|_C$ is its unique fixed point (\Cref{lem:survival-contract})
+and $|T_Cy-T_Cz|\le\mathcal S|y-z|$ pointwise, so
+$\|T_C^{n}y-T_C^{n}z\|_\infty\le\sigma_n\|y-z\|_\infty$. Set
+$n_0:=\lceil2K\rceil$ and iterate $y_{j+1}:=T_Cy_j$ from $y_0:=0$ for
+$J:=n_0(2a+3)$ steps; if $\kappa(G)\le K$ then by \Cref{lem:visits-decay}
+$\|y_J-\val|_C\|_\infty\le2^{-(2a+3)}$. Every $\val(v)$ has denominator
+dividing an integer $D\le2^{a}$ (\Cref{lem:denominator-sharp}) and
+$2^{-(2a+3)}<1/(2D^{2})$, so \Cref{lem:round-recover} recovers each
+$\val(v)$ from $y_J$. Finally test $T_C(\hat y)=\hat y$ on the recovered
+$\hat y$: if it holds, $\hat y=\val|_C$ by uniqueness and one linear solve
+extends $\val$ off $C$; if not, report $\kappa(G)>K$. Bit sizes grow by at
+most the size of $(P_a,r_a)$ per step. (Run end to end by the route on
+$3589$ random stopping games and on $\mathrm{HZ}(4)$, $\mathrm{HZ}(6)$
+--- $820$ and $1820$ iterations, exact recovery, the fixed point certified
+--- by its auditor on $120$ more and $\mathrm{HZ}(4)$, and here,
+\texttt{ht\_root.py}.)
+\end{proof}
+
+\begin{corollary}[The strongly convex slice of $\mathcal R$ is polynomial]\label{cor:handicap-slice}
+For $\lambda>0$ let $\mathcal R_\lambda:=\{G\ \text{stopping}:B\succeq\lambda I\}$.
+Then $\kappa\le3|C|/\lambda$ on $\mathcal R_\lambda$ and $\val$ is computed
+exactly in time polynomial in $N$ and $1/\lambda$; in particular
+$\mathcal R_{1/p(N)}$ is a polynomial class for every polynomial $p$,
+recognisable by one exact semidefiniteness test after one linear solve,
+and it contains $\mathrm{HZ}(n)$ ($\lambda=\tfrac14$), which
+\Cref{prop:hz} places outside all eight named bounds. So the question of
+\Cref{rem:handicap-base} has no positive answer inside the strongly convex
+slice, and the reduced $\tfrac12$-contraction that \Cref{prop:hz} reads
+off the row masses of $\mathrm{HZ}(n)$ --- rate $\tfrac12$ per application
+--- is the special case of a contraction available on the whole slice, at
+rate $\tfrac12$ per $\lceil6|C|/\lambda\rceil$ applications.
+Contrapositively a family in $\mathcal R$ with superpolynomial visit
+number has $\lambda_{\min}(B)\le3|C|/\kappa$, as $\mathrm{WD}$ and
+$\mathrm{CC}$ do. Three scope notes. All of $\mathcal R$ is decided in
+polynomial time by the interior-point methods \Cref{rem:lcp} records as
+prior art and declines to develop, handicap zero being $M+M^{\mathsf T}\succeq0$;
+what is new is a proof inside the four-import rule, by a mechanism that is
+not interior-point, for the slice $\lambda\ge1/\mathrm{poly}$, and it says
+nothing as $\lambda\to0$ --- the boundary of \Cref{prop:handicap-singular}
+included. Membership in $\{\kappa\le K\}$ is freezing-closed
+(\Cref{def:freeze} turns a vertex into a sink, so first passages stop
+earlier and $\kappa$ cannot grow), so \Cref{thm:modulator} would apply
+once the algorithm is extended to payoff games with rational terminal
+payoffs, a routine step (\Cref{lem:round-recover} with the payoffs'
+denominator) not written out here. And tractability is not
+mechanism-decidability: the ten-vertex game of the route on which the
+tangent cut is silent for two rounds under one implementation lies in
+$\mathcal R_{1/5}$, so the slice constrains no stalling family
+(\Cref{prop:fv-stall} makes the same point inside the few-denominator
+class).
+\end{corollary}
+
+\begin{proof}
+\Cref{lem:handicap-visits} with \Cref{thm:visits-class} at $K:=3|C|/\lambda$;
+$\mathrm{HZ}(n)\in\mathcal R_{1/4}$ is \Cref{prop:hz}. (On
+$\mathrm{WD}(4,2,6),(6,3,7),(8,4,8),(10,5,9)$: $\kappa\lambda=\tfrac14,
+\tfrac18,\tfrac1{16},\tfrac1{32}\le3|C|=6$; on $\mathrm{CC}(L,2)$, $L\le4$,
+likewise; the powers $\kappa(\mathrm{WD})=2^{2j}$, $\kappa(\mathrm{CC})=4^{L}$
+are measured at those sizes, not proved.)
+\end{proof}
+
+\begin{proposition}[$\mathcal R$ is not closed under damping]\label{prop:handicap-damping}
+For $r,L\ge1$ let $\mathrm{DR}(r,L)$ have $\Vmax=\{v_1,v_2\}$, $\Vmin=\emptyset$,
+four chains $a_j\to(v_2,a_{j+1})$, $a_r\to(v_2,t_0)$; $a'_j\to(v_2,a'_{j+1})$,
+$a'_r\to(v_2,t_1)$; $c_j\to(v_1,c_{j+1})$, $c_r\to(v_1,t_0)$;
+$c'_j\to(v_1,c'_{j+1})$, $c'_r\to(v_1,t_1)$; a delay $e_j\to(e_{j+1},e_{j+1})$,
+$e_L\to(c'_1,c'_1)$; and $v_1\to(a_1,a'_1)$, $v_2\to(c_1,e_1)$; $N=4r+L+4$,
+both Max vertices value-distinguishing, stopping. Both actions of each
+$v_i$ have the same first-passage row over $C$, mass $p=1-2^{-r}$ on the
+other Max vertex, so $P_0=P_1$, $B=R_0^{\mathsf T}R_0\succ0$ with
+$\lambda_{\min}(B)=4^{-r}$ and $\mathrm{DR}(r,L)\in\mathcal R$; but in
+$G_\rho$ (\Cref{def:discount-path}) the rows become
+$p=q_0=\rho^{2}(1-(\rho/2)^{r})/(2-\rho)$ and $q_1=\rho^{L}q_0$, with
+$4\det B_\rho=4(1+q_0q_1)(1+p^{2})-(2p+q_0+q_1)^{2}$, which is negative at
+$r=8$, $L=38$, $\rho=1-2^{-7}$: there $N=74$, and $d=(1,\tfrac{15}{16})$ has
+$d^{\mathsf T}B_\rho d<0$. The damped game is an honest SSG on $1082$
+vertices, obtained by \Cref{lem:gadget} with a chain of $7$ average vertices
+on every edge, and $B$ computed from it agrees with the algebraic rows.
+\end{proposition}
+
+\begin{proof}
+If $P_0=P_1=:P$ then $B=R^{\mathsf T}R\succeq0$ with $R=I-P$, here
+$P=p\bigl(\begin{smallmatrix}0&1\\1&0\end{smallmatrix}\bigr)$, so
+$\lambda_{\min}=(1-p)^{2}$. The two actions of $v_1$ enter $a$ and $a'$,
+of the same transition structure and differing only in the sink they leak
+to, so their rows over $C$ agree; those of $v_2$ enter $c$ and, through the
+lossless delay (both successors of $e_j$ are $e_{j+1}$), $c'$, so they
+agree too; every cycle passes through a leaking chain, so the game is
+stopping. Under killing rate $1-\rho$ per step the chain $a$ contributes
+$\sum_{j\le r}(\rho/2)^{j}$ and the row of $v_1$ is $\rho$ times it, the
+stated $p$; the delay multiplies $v_2$'s second row by $\rho^{L}$, and
+$B_\rho=\tfrac12(R_0^{\mathsf T}R_1+R_1^{\mathsf T}R_0)$ for
+$R_a=\bigl(\begin{smallmatrix}1&-p\\-q_a&1\end{smallmatrix}\bigr)$.
+(The determinant $-3.7518\cdot10^{-5}$ and $d^{\mathsf T}B_\rho d=-9.174\cdot10^{-6}$
+in exact arithmetic from the built game, by the route, its correctness
+auditor and here; likewise $\mathrm{DR}(9,60)$, $\mathrm{DR}(10,80)$,
+$\mathrm{DR}(12,120)$. The members are the cheapest of $\mathcal R$ ---
+$P_0=P_1$ makes $B\succeq0$ for a reason unrelated to convexity --- and the
+damping is not the specific one of \Cref{thm:stopping-transform}, whose
+$\rho=1-2^{-m}$ with $m$ growing with $a$ is not covered; the route's
+single-edge witness did not reproduce under \Cref{def:damping}'s
+convention and is not carried.)
+\end{proof}
 
 \subsection{Lemke's algorithm as a bias homotopy}\label{sec:bias}
 
@@ -14565,7 +14781,8 @@ preorder $Z_1\sqsupset\cdot\sqsupset Z_0$ of \Cref{prop:qualitative},
 since a gap that large forces the values $1$ and $0$. Between the two
 ends nothing here decides, and by the interreducibility the question is
 exactly whether \Cref{prob:main} reduces in polynomial time to its own
-promise version with gap $1/\mathrm{poly}(N)$, or $\tfrac14$;
+promise version with gap $1/\mathrm{poly}(N)$, or $\tfrac14$ --- two forms
+of one question, by \Cref{thm:gap-collapse} below;
 \Cref{rem:no-amplification} shows that one black-box composition cannot
 supply the amplification, a context on $s$ vertices reading one plugged-in
 game through its gate multiplying the gap by at most $\tfrac43(s+3)$ at
@@ -14576,6 +14793,376 @@ scope (the round-$18$ weakest-oracle route, its reductions checked
 against adversarial $\varepsilon$-faithful oracles, the padding at
 $\gamma=1,\tfrac12$ in $300$ runs).
 \end{remark}
+
+\subsection{The middle of the $\varepsilon$-ladder is one problem}\label{sec:promise}
+
+\Cref{rem:eps-ladder} ends with a disjunction --- whether \Cref{prob:main}
+reduces to its own promise version with gap $1/\mathrm{poly}(N)$, or
+$\tfrac14$ --- and the round-$19$ promise-gap route showed the two forms
+to be one problem: every $\textsc{Gap}_\varepsilon$ with
+$\varepsilon\ge1/\mathrm{poly}(N)$ is polynomial-time equivalent to
+$\textsc{Gap}_{1/4}$. The amplifier is a black-box composition after all.
+\Cref{rem:no-amplification} forbids only the amplification of an
+\emph{exponentially} small gap, its cost being linear in $1/\delta$; a gap
+$1/\mathrm{poly}$ is the regime in which that cost is affordable, provided
+the context keeps the composite stopping. Two attributions first. The
+collapse itself is, from memory and unchecked against the source, Dai and
+Ge's approximation collapse; a round-$12$ route of this project had
+reported it and its audit struck it, both as published and because its
+reductions handed the oracle a game that need not be stopping while the
+problems are posed on stopping games. What is recorded here repairs
+exactly that: an acyclic context whose composite is stopping, and the
+amplification identity proved. The context is Valiant's majority
+amplification of a bias (from memory, unchecked). Throughout,
+$\varepsilon\colon\mathbb N\to(0,\tfrac14]$ is nonincreasing and
+computable in time $\mathrm{poly}(N)$,
+\[
+ \textsc{Gap}_\varepsilon:\quad
+ \text{YES}=\{(G,v_0):\val(v_0)\ge\tfrac12+\varepsilon(N)\},\qquad
+ \text{NO}=\{(G,v_0):\val(v_0)\le\tfrac12-\varepsilon(N)\}
+\]
+over stopping SSGs, and $\le^{\mathrm m}_{\mathrm p}$ is many-one
+polynomial-time reducibility of promise problems (YES to YES, NO to NO,
+no requirement outside the promise).
+
+\begin{definition}[The majority context]\label{def:majority-context}
+$\mathrm{M}$ is the context (\Cref{def:gate}) on the four call vertices
+$q_0,q_1,q_1',q_2$ with exits, each pair written $(e_1,e_0)$,
+\[
+ q_0\to(q_1,q_1'),\qquad q_1\to(t_1,q_2),\qquad q_1'\to(q_2,t_0),\qquad q_2\to(t_1,t_0),
+\]
+and start $q_0$. For a stopping SSG $G$ with start $v_0$ put $A_0(G):=G$
+and $A_k(G):=\mathrm{M}\langle A_{k-1}(G)\rangle$, with start the entry
+of $q_0$'s copy, and write $g(p):=3p^{2}-2p^{3}$.
+\end{definition}
+
+\begin{lemma}[The majority context reads its call as a coin]\label{lem:majority-context}
+Let $G$ be a stopping SSG with start $v_0$ and $p:=\val_G(v_0)$. Then
+$\mathrm{M}\langle G\rangle$ is a stopping SSG on $4(N-2)+2$ vertices,
+computable from $G$ in linear time, with value $g(p)$ at its start; so
+$A_k(G)$ is stopping, has $4^{k}(N-2)+2$ vertices, and value $g^{(k)}(p)$
+at its start.
+\end{lemma}
+
+\begin{proof}
+$\mathrm{M}$ has no directed cycle, so it is admissible and
+$\mathrm{M}\langle G\rangle$ is stopping: a trap of the composite would
+have to contain a whole copy of $G$, hence a trap of $G$, or a cycle of
+$\mathrm{M}$ (\Cref{lem:trapchar}). By \Cref{lem:gate},
+$\val_{\mathrm{M}\langle G\rangle}=\val_{\mathrm{M}^{p,q}}$ with
+$q=\val_{G^{\mathrm{rev}}}(v_0)$; compute backwards. At $q_2$ the exits
+are worth $1>0$, so the gate takes its $p$-branch and $\val(q_2)=p$; at
+$q_1$ they are worth $1\ge p$ and $\val(q_1)=p+(1-p)p=2p-p^{2}$; at $q_1'$
+they are $p\ge0$ and $\val(q_1')=p^{2}$; at $q_0$ they are
+$2p-p^{2}\ge p^{2}$, since $2p-2p^{2}=2p(1-p)\ge0$, so
+$\val(q_0)=p(2p-p^{2})+(1-p)p^{2}=g(p)$. In every case the first exit
+carries the larger value, so every gate is read on its $p$-branch and $q$
+never enters. (Built as a game and checked from the game --- stopping by
+the trap test, the value by brute force or as the fixed point of $T$ ---
+on eleven plugs by the route and its auditors, and on $40$ random
+stopping games with two-level towers here,
+\texttt{scripts/round19-verify/pg\_root.py}.)
+\end{proof}
+
+\begin{lemma}[Amplification]\label{lem:majority-levels}
+$g$ is nondecreasing on $[0,1]$, $g(1-p)=1-g(p)$, $g(\tfrac12)=\tfrac12$,
+and for $0\le\delta\le\tfrac12$
+\[
+ g(\tfrac12+\delta)-\tfrac12=\tfrac32\delta-2\delta^{3}\ \ge\ \delta,
+ \qquad
+ g(\tfrac12+\delta)-\tfrac12\ \ge\ \tfrac{11}8\,\delta\ \ \text{when }\delta\le\tfrac14 .
+\]
+Hence if $\delta_0\ge\varepsilon$ and $\delta_{j+1}:=g(\tfrac12+\delta_j)-\tfrac12$
+then $\delta_k\ge\tfrac14$ for every
+$k\ge k(\varepsilon):=\lceil\ln(1/(4\varepsilon))/\ln(11/8)\rceil$, and
+$4^{k(\varepsilon)}\le4\,(4\varepsilon)^{-\ln4/\ln(11/8)}\le\varepsilon^{-4.36}$
+for $\varepsilon\le\tfrac14$.
+\end{lemma}
+
+\begin{proof}
+$g'(p)=6p(1-p)\ge0$; $3(1-p)^{2}-2(1-p)^{3}=1-3p^{2}+2p^{3}$ gives the
+symmetry; expanding at $\tfrac12+\delta$ gives
+$g=\tfrac12+\tfrac32\delta-2\delta^{3}$, and $\tfrac32\delta-2\delta^{3}\ge\delta$
+iff $\delta^{2}\le\tfrac14$, while for $\delta\le\tfrac14$,
+$2\delta^{3}\le\tfrac18\delta$. Once some $\delta_j\ge\tfrac14$ all later
+ones are, by the first inequality and monotonicity; otherwise
+$\delta_k\ge(11/8)^{k}\varepsilon\ge\tfrac14$ at $k=k(\varepsilon)$.
+Finally $4^{k}\le4\cdot4^{\ln(1/(4\varepsilon))/\ln(11/8)}=4(4\varepsilon)^{-4.3533\ldots}$
+and $4\cdot4^{-4.3533}<10^{-2}$. (The levels actually needed from
+$\delta=2^{-3},\dots,2^{-16}$ are $2,4,6,8,9,11,13,14,16,18,19,21,23,25$
+against the bound $3,5,\dots,31$, the route and its auditor in certified
+round-down arithmetic.)
+\end{proof}
+
+\begin{theorem}[The middle of the ladder collapses]\label{thm:gap-collapse}
+Let $\varepsilon(N)\in(0,\tfrac14]$ be nonincreasing, polynomial-time
+computable and bounded below by $1/q(N)$ for a polynomial $q$. Then
+$\textsc{Gap}_\varepsilon\le^{\mathrm m}_{\mathrm p}\textsc{Gap}_{1/4}$ by
+$(G,v_0)\mapsto A_{k(\varepsilon(N))}(G)$, whose image has at most
+$\varepsilon(N)^{-4.36}N$ vertices; and $\textsc{Gap}_{1/4}\le^{\mathrm m}_{\mathrm p}\textsc{Gap}_\varepsilon$
+by the identity. So all $\textsc{Gap}_\varepsilon$ with
+$\varepsilon\ge1/\mathrm{poly}$ are one problem, and with
+\Cref{rem:eps-ladder}'s reductions so are $\textsc{App}_\varepsilon$ and
+$\textsc{Ord}_\varepsilon$ for $\varepsilon\ge1/\mathrm{poly}$ (Turing
+equivalence there, the ladder's reductions being adaptive). Between
+$2^{-N^{\gamma}}$ and $1/\mathrm{poly}$ the ladder is untouched: at
+$\varepsilon=N^{-\log N}$ the tower has $N^{\Theta(\log N)}$ calls.
+\end{theorem}
+
+\begin{proof}
+$A_k(G)$ is a stopping SSG of the stated size by \Cref{lem:majority-context},
+and $k(\varepsilon)=O(\log N)$, so the map is polynomial. If
+$\val_G(v_0)\ge\tfrac12+\varepsilon$ then, $g$ being nondecreasing,
+$\val_{A_k(G)}=g^{(k)}(\val_G(v_0))\ge g^{(k)}(\tfrac12+\varepsilon)\ge\tfrac34$
+by \Cref{lem:majority-levels}; if $\val_G(v_0)\le\tfrac12-\varepsilon$ the
+symmetry gives $\le\tfrac14$. An instance with $|\val(v_0)-\tfrac12|\ge\tfrac14$
+satisfies the promise of $\textsc{Gap}_\varepsilon$ with the same answer.
+(The towers $A_k$, $k\le5$, on two-player plugs of up to $6144$ non-sinks
+were built as games and their values matched $g^{(k)}(p)$ exactly; the
+$16$-non-sink two-player composite by brute force over all $2^{4}\times2^{4}$
+pairs, $\tfrac{27}{32}=g(\tfrac34)$; the route and its auditors.)
+\end{proof}
+
+\begin{remark}[What the collapse does and does not buy]\label{rem:gap-collapse}
+Read as a statement about the total problem, \Cref{thm:gap-collapse}
+says that \textsc{SSG-Value} restricted to instances with
+$|\val(v_0)-\tfrac12|\ge\tfrac14$ and restricted to instances with
+$|\val(v_0)-\tfrac12|\ge N^{-c}$ are polynomial-time equivalent for every
+constant $c$: a constant promise is exactly as strong as an
+inverse-polynomial one. It does not touch the exact problem, and it does
+not decide \Cref{rem:eps-ladder}'s question, which is now the single
+question whether \Cref{prob:main} reduces to $\textsc{Gap}_{1/4}$. The
+same construction with $\varepsilon=4^{-a}$ (\Cref{lem:denominator-sharp})
+is such a reduction, of size $N\cdot4^{4.36a}$ --- dominated by the
+direct $\mathrm{poly}(N)2^{a}$ of \Cref{thm:few-avg}; amplification never
+overtakes what the document already computes, and by
+\Cref{rem:no-amplification} no black-box context does better than
+linearly in $1/\delta$, which for $\delta=4^{-a}$ is what
+\Cref{thm:few-avg} pays. A reduction that reads the edges is the only
+opening, and none is known.
+\end{remark}
+
+\begin{definition}[Acyclic context]\label{def:acyclic-context}
+A context $H$ (\Cref{def:gate}) is \emph{acyclic} if no directed cycle of
+$H$ passes through a call, so that in $H\langle G\rangle$ every play
+enters each copy of $G$ at most once. The context of
+\Cref{def:majority-context} is acyclic; the gambler's-ruin context of
+\Cref{rem:no-amplification}, the one amplifier there of optimal size, is
+not. Acyclicity is stronger than admissibility, which permits a call on a
+cycle through an average vertex with a sink successor.
+\end{definition}
+
+\begin{theorem}[The influence bound]\label{thm:influence}
+Let $H$ be an acyclic context with $s$ calls and $v$ a vertex of $H$, and
+$V(p):=\val_{H^{p,p}}(v)$ for $p\in[0,1]$; for a player-free stopping $G$
+of value $p$ this is $\val_{H\langle G\rangle}(v)$, each copy exiting
+through $e_1$ with probability $p$ independently of the past whatever
+$H$'s players do, so the composite's chain on $V_H$ is that of $H^{p,p}$.
+Then $V$ is continuous and piecewise polynomial, and at every $p$ where it
+is differentiable
+\[
+ |V'(p)|\ \le\ \frac{\sqrt s}{2\sqrt{p(1-p)}} .
+\]
+\end{theorem}
+
+\begin{proof}
+Fix a positional pair $(\sigma,\tau)$ at the controlled vertices of $H$
+(the gates are chance vertices). A play enters each call at most once, so
+the process is realised by drawing one independent $X_c$ per call with
+$\Pr[X_c=1]=p$, the call being left through $e_1$ when $X_c=1$, the
+average vertices of $H$ independent of $X$. Put
+$h(x):=\Pr[\text{the play reaches }t_1\mid X=x]\in[0,1]$, so
+$V_{\sigma,\tau}(p)=\mathbb E_p\,h(X)$. Differentiating the product
+measure one coordinate at a time,
+$V'_{\sigma,\tau}(p)=\sum_c\mathbb E_p[\partial_ch]$ with
+$\partial_ch(x):=h(x^{c\to1})-h(x^{c\to0})$, which does not depend on
+$x_c$. With $\chi_c(x):=(x_c-p)/\sqrt{p(1-p)}$ one has $\mathbb E\chi_c=0$,
+$\mathbb E[\chi_c\chi_{c'}]=\delta_{cc'}$, and conditioning on $x$ off $c$
+gives $\mathbb E[h\chi_c]=\sqrt{p(1-p)}\,\mathbb E[\partial_ch]$. The
+functions $1,\chi_c$ are orthonormal in $L^{2}$ of the product measure, so
+the squared coefficients of $h$ along them are bounded by $\|h\|^{2}_2$:
+$\mathbb E[h]^{2}+\sum_c\mathbb E[h\chi_c]^{2}\le\mathbb E[h^{2}]$, i.e.\
+$\sum_c\mathbb E[h\chi_c]^{2}\le\operatorname{Var}(h)\le\tfrac14$, the last
+because $h\in[0,1]$. Cauchy--Schwarz then gives
+$|\sum_c\mathbb E[\partial_ch]|\le\sqrt s\,(\sum_c\mathbb E[\partial_ch]^{2})^{1/2}
+=\sqrt s\,(\sum_c\mathbb E[h\chi_c]^{2})^{1/2}/\sqrt{p(1-p)}\le\sqrt s/(2\sqrt{p(1-p)})$.
+Finally $V=\max_\sigma\min_\tau V_{\sigma,\tau}$ (\Cref{thm:determinacy}),
+a finite family of polynomials whose pairwise order is constant off
+finitely many points, so $V$ coincides locally with one member. (The
+bound was checked on $12774$ (pair, $p$) polynomials of random acyclic
+contexts by the route's auditor, with maximum ratio exactly $1$, attained
+by the one-call context $V(p)=p$; here on $400$ contexts,
+\texttt{pg\_root.py}. The derivative identity is Margulis--Russo's and the
+$\sqrt s$ bound the classical total-influence bound, both from memory,
+both derived above.)
+\end{proof}
+
+\begin{theorem}[Acyclic amplification costs a square]\label{thm:acyclic-square}
+Let $0<\delta\le\tfrac14$ and let $H$ be an acyclic context with $s$
+calls such that for every stopping SSG $G$,
+$\val_{H\langle G\rangle}(v)\ge\tfrac34$ whenever
+$\val_G(v_0)\ge\tfrac12+\delta$ and $\le\tfrac14$ whenever
+$\val_G(v_0)\le\tfrac12-\delta$. Then $s\ge3/(64\delta^{2})>1/(22\delta^{2})$.
+So the linear bound of \Cref{rem:no-amplification}, attained by the
+cyclic ruin chain, is attained by no acyclic context: cyclicity of the
+call digraph is necessary for amplification cheaper than $\delta^{-2}$.
+\end{theorem}
+
+\begin{proof}
+Player-free stopping games realise every dyadic value
+(\Cref{lem:dyadic-row}) and $V$ is continuous, so $V(\tfrac12+\delta)\ge\tfrac34$
+and $V(\tfrac12-\delta)\le\tfrac14$; on $[\tfrac12-\delta,\tfrac12+\delta]$,
+$p(1-p)\ge\tfrac14-\delta^{2}\ge\tfrac3{16}$, so by \Cref{thm:influence}
+$\tfrac12\le V(\tfrac12+\delta)-V(\tfrac12-\delta)=\int V'\le2\delta\sqrt s/(2\sqrt{3/16})
+=\tfrac4{\sqrt3}\delta\sqrt s$. The iterated majority context is acyclic
+with $s=4^{k(\delta)}\le\delta^{-4.36}$ calls and measured exponent
+$\log4/\log\tfrac32=3.419\ldots$, so the acyclic optimum lies between
+$\delta^{-2}/22$ and $\delta^{-3.42}$; the ruin chain has $V'(\tfrac12)=(K+1)/2$
+against $\sqrt K$, violating the bound as it must.
+\end{proof}
+
+\begin{definition}[The well]\label{def:well}
+For even $K\ge4$ and $1\le m\le K-1$ let $\mathrm{WELL}(K,m)$ be the
+player-free SSG on the $2(K-1)$ average vertices $A_i,B_i$ ($1\le i\le K-1$),
+with $\mathrm{st}(i):=A_i$, $\mathrm{st}(0):=t_0$, $\mathrm{st}(K):=t_1$,
+\[
+ A_i\to(\mathrm{st}(i{+}1),B_i),\ B_i\to(\mathrm{st}(i{+}1),\mathrm{st}(i{-}1))\ \ (i<m);\qquad
+ A_i\to(\mathrm{st}(i{-}1),B_i),\ B_i\to(\mathrm{st}(i{-}1),\mathrm{st}(i{+}1))\ \ (i\ge m),
+\]
+started at $A_m$: the induced walk on the states moves up with
+probability $\tfrac34$ below $m$ and $\tfrac14$ from $m$ on, a well at
+$m$. Write $\mathrm{WELL}^{+}(K):=\mathrm{WELL}(K,\tfrac K2+1)$ and
+$\mathrm{WELL}^{-}(K):=\mathrm{WELL}(K,\tfrac K2)$; $N=2K$, $a=N-2$.
+\end{definition}
+
+\begin{proposition}[Values, and the escape rate]\label{prop:well}
+Put $\pi_0=1$, $\pi_j=\prod_{l\le j}r_l$ with $r_l=\tfrac13$ for
+$l\le m-1$ and $r_l=3$ for $l\ge m$. Then
+$\val(A_i)=(\sum_{j<i}\pi_j)/(\sum_{j<K}\pi_j)$; in particular
+$\val_{\mathrm{WELL}^{-}(K)}(A_m)=\tfrac14$ exactly and
+$\val_{\mathrm{WELL}^{+}(K)}(A_m)=\tfrac34(1-3^{-m})/(1-3^{1-m})>\tfrac34$,
+decreasing to $\tfrac34$. With $h:=\min(m,K-m)$ the probability $q$ that
+the token started at $A_m$ reaches a sink before returning to $A_m$
+satisfies $q\le2\cdot3^{-(h-1)}$, and
+$\Pr_{A_m}[\text{a sink within }k\text{ steps}]\le(k+1)q$ for every $k$.
+\end{proposition}
+
+\begin{proof}
+The states form a birth-and-death chain with the stated up-probabilities
+(each state's two average vertices realise them exactly,
+$\tfrac12+\tfrac12\cdot\tfrac12=\tfrac34$, resp.\ $\tfrac14$), absorbed at
+$0$ and $K$, and the display is its ruin probability. For $m=K/2$:
+$\sum_{j<m}\pi_j=\tfrac32(1-3^{-m})$ and
+$\sum_{j=m}^{K-1}\pi_j=\tfrac92(1-3^{-m})$, giving exactly $\tfrac14$; for
+$m=K/2+1$: $\sum_{j=m}^{K-1}\pi_j=\tfrac12(1-3^{2-m})$ and the quotient is
+as displayed. From $A_m$ the chain steps to $m-1$ with probability
+$\tfrac34$ and to $m+1$ with $\tfrac14$; on $\{0,\dots,m\}$ every state
+below $m$ has up-probability $\tfrac34$, so with $\rho=\tfrac13$ the ruin
+probability from $m-1$ is $(\rho^{m-1}-\rho^{m})/(1-\rho^{m})\le3^{-(m-1)}$,
+and symmetrically the probability of reaching $K$ from $m+1$ before
+returning to $m$ is at most $3^{-(K-m-1)}$. Every excursion from $A_m$
+takes at least one step, so at most $k+1$ begin within $k$ steps, each
+absorbing with probability $q$ by the strong Markov property. (The values
+at $K=4,\dots,16$: $\tfrac{13}{16},\tfrac{10}{13},\tfrac{121}{160},
+\tfrac{91}{121},\tfrac{1093}{1456},\tfrac{820}{1093},\tfrac{9841}{13120}$
+for $\mathrm{WELL}^{+}$, $\tfrac14$ throughout for $\mathrm{WELL}^{-}$;
+built as games and checked from the games by the route, both auditors and
+here, \texttt{pg\_root.py}.)
+\end{proof}
+
+\begin{theorem}[Three approximation schemes fail at $\varepsilon=\tfrac14$]\label{thm:well-schemes}
+Let $G=\mathrm{WELL}^{\pm}(K)$, $v_0=A_m$, $h:=\min(m,K-m)\ge K/2-1$ and
+$Q:=3^{h-1}/16=2^{\Omega(N)}$. Then
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $(T^{k}0)(v_0)<\tfrac14$ for every $k<Q$ (one-sided value iteration);
+\item $(T^{k}\mathbf 1)(v_0)-(T^{k}0)(v_0)>\tfrac12$ for every $k<Q$
+      (the two-sided bracket);
+\item $\val_\rho(v_0)<\tfrac14$ for every $\rho$ with
+      $1-\rho\ge68\cdot3^{-(h-1)}$, in particular for every
+      $1-\rho\ge1/\mathrm{poly}(N)$ once $K$ is large (the
+      stopping-probability path of \Cref{def:discount-path}).
+\end{enumerate}
+Since $\val_{\mathrm{WELL}^{+}(K)}(v_0)>\tfrac34$ and
+$\val_{\mathrm{WELL}^{-}(K)}(v_0)=\tfrac14$, the lower iterate, the bracket
+and the damped value return the same verdict on a YES- and on a
+NO-instance of $\textsc{Gap}_{1/4}$ for $2^{\Omega(N)}$ iterations, already
+with $\Vmax=\Vmin=\emptyset$. This is a statement about the verdicts read
+from those bounds: the exact iterates themselves do separate the two
+instances --- at $K=14$, $(T^{k}0)(v_0)$ is $2^{-12}$ on $\mathrm{WELL}^{+}$
+and $0$ on $\mathrm{WELL}^{-}$ from $k=12$ on, the shortest path to $t_1$
+having length $2(K-m)$ (the route's correctness auditor) --- and the
+family is player-free, so what is bounded is three schemes and not the
+instances. The bound $Q$ is slack: the first $k$ with
+$(T^{k}0)(v_0)\ge\tfrac14$ is $2,19,68,216,661,1991,5983$ for
+$K=4,\dots,16$, the first with bracket width below $\tfrac12$ is
+$8,34,117,368,1125,3398$ for $K=4,\dots,14$.
+\end{theorem}
+
+\begin{proof}
+$(T^{k}0)(v)=\Pr_v[t_1\text{ within }k\text{ steps}]\le(k+1)q\le(k+1)2\cdot3^{-(h-1)}<\tfrac14$
+for $k+1\le3^{h-1}/8$, which holds for $k<Q$; likewise
+$(T^{k}\mathbf 1)(v)\ge\Pr_v[\text{no sink within }k]\ge1-(k+1)q$, so the
+width exceeds $1-2(k+1)q>\tfrac12$ on the same range. For (c),
+$\val_\rho(v_0)\le\mathbb E[\rho^{\tau}]$ with $\tau$ the absorption time,
+and for any $k$, $\mathbb E[\rho^{\tau}]\le\Pr[\tau\le k]+\rho^{k}\le(k+1)q+e^{-(1-\rho)k}$;
+with $k=\lfloor1/(16q)\rfloor$, $(k+1)q\le\tfrac1{16}+q$ and
+$(1-\rho)k\ge\ln8$ as soon as $1-\rho\ge34q$, so
+$\val_\rho(v_0)\le\tfrac1{16}+q+\tfrac18<\tfrac14$ for $q\le\tfrac1{16}$;
+$q\le2\cdot3^{-(h-1)}$ makes $1-\rho\ge68\cdot3^{-(h-1)}$ sufficient.
+(The tables by the route, its auditors and here at $K\le12$; the
+contrast with \Cref{thm:vi-lower}: its family $G_m$ has
+$\val=\tfrac12+2^{-(m+1)}$ and satisfies no promise, so the constant
+$\tfrac12$ is already an $\textsc{App}_{1/4}$ answer there, while the
+well has a constant gap.)
+\end{proof}
+
+\begin{proposition}[The ruin amplifier is exact for every plug]\label{prop:ruin-exact}
+Let $R_K$ be the context with calls $b_1,\dots,b_K$, $b_i\to(b_{i+1},b_{i-1})$,
+$b_0:=t_0$, $b_{K+1}:=t_1$, and let $G$ be a stopping SSG with start $v_0$
+and $p:=\val_G(v_0)$. Then, whether or not $R_K\langle G\rangle$ is
+stopping,
+\[
+ \val_{R_K\langle G\rangle}(b_i)=\frac{1-r^{i}}{1-r^{K+1}},\qquad
+ r:=\frac{1-p}{p}\ \ (p\ne\tfrac12),\qquad \val=\frac{i}{K+1}\ \ (p=\tfrac12).
+\]
+Consequently $\textsc{Gap}_\varepsilon$ on stopping instances reduces to
+$\textsc{Gap}_{1/4}$ on \emph{arbitrary} instances by a map of size
+$O(N/\varepsilon)$ ($K+1=2h$, $h=\lceil\ln3/(3\varepsilon)\rceil$, start
+$b_h$) --- a reduction between two problem classes, not a collapse within
+one, since the image need not be stopping.
+\end{proposition}
+
+\begin{proof}
+If $p=0$ the claim is trivial, so let $p>0$. Let $\sigma^\ast$ be optimal
+for Max in $G$ and let Max play it in every copy. $G$ being stopping, every
+entry into a copy leaves it almost surely, and by the Markov property the
+successive exits of the copy at $b_i$ are independent with a fixed
+probability $P_i$ of leaving through $e_1$; $\val_{\sigma^\ast}\ge p$
+gives $P_i\ge p$. The state process is a birth-and-death walk on
+$\{0,\dots,K+1\}$ with up-probabilities $P_i\in[p,1]$, and
+$\Pr_i[\text{hit }K+1\text{ before }0]$ is nondecreasing in every $P_l$,
+endpoints included: drive two walks with $P\le P'$ by the same uniform
+variables $U_t$ (a step up at state $l$ iff $U_t<P_l$); started together
+they keep a common parity, so whenever $X_t<X'_t$ one has $X'_t\ge X_t+2$
+and one step cannot reverse the order, while at $X_t=X'_t$ the step
+preserves it because $P\le P'$; and hitting $K+1$ before $0$ is monotone
+in the trajectory. At $P_l\equiv p$ the walk is absorbed almost surely
+($K+1$ consecutive up-steps have probability at least $p^{K+1}$) and its
+ruin probability is the display; so $\val\ge$ the display. Playing
+$\tau^\ast$ optimal for Min in every copy gives $P_i\le p$ and the reverse.
+For the reduction, at $p=\tfrac12\pm\delta$,
+$\ln r=\ln(1-2\delta)-\ln(1+2\delta)\le-3\delta$ for $\delta\le\tfrac12$,
+so $r^{h}\le\tfrac13$ once $3\delta h\ge\ln3$ and the value at $b_h$,
+$1/(1+r^{h})$, is at least $\tfrac34$; at $p=\tfrac12-\delta$ the
+reciprocal gives at most $\tfrac14$. (On the two-player game
+$v_0\to(x,d)$ ($\max$), $x\to(t_1,e)$ ($\min$), $e\to(t_0,t_0)$,
+$d\to(t_1,t_0)$, of value $\tfrac12$, the composite is not stopping for
+any $K\ge2$ --- two adjacent copies driven out through one exit each form a
+trap --- and its value is $i/(K+1)$ all the same, by trap-aware brute force
+over all positional pairs, $K\le6$; $250$ random stopping plugs by the
+auditor, $116$ of them with non-stopping composites, no mismatch;
+\texttt{pg\_root.py}.)
+\end{proof}
 
 \section{A subexponential upper bound}\label{sec:randomfacet}
 
@@ -18750,9 +19337,19 @@ others is vertex $4$ of the seven-vertex game of \Cref{rem:own-stall},
 silent under all three readings at round zero: the cut at the lexicographic
 optimum $x=(\tfrac23,\tfrac13,\tfrac13,\tfrac23,\tfrac13)$ removes every
 point with $x(4)=\tfrac13$, and $\operatorname{Sep}(4,2)<0$ at round one.
-No family designed against the cut exists yet (the round-$18$ convex-class
-route; the wedge and the seven-vertex game recomputed here,
-\texttt{scripts/round18-verify/hz\_wedge.py}, \texttt{hz\_w7.py}).
+The cuts at optima $x$ with $q(x)=0$ are valid as well, reading
+$\nabla q(x)\cdot(y-x)\le0$, and the round-$18$ implementation omitted
+them; adjoining them can only advance a decision. No family designed
+against the cut exists: the round-$19$ handicap-tangent route set out to
+build one and proved instead that the strongly convex slice of
+$\mathcal R$ is polynomial (\Cref{cor:handicap-slice}); its one instance of
+silence, a ten-vertex game of $\mathcal R$ on which that implementation is
+silent at a value-distinguishing vertex for two rounds, is decided at
+round one by the cut as defined here (its correctness auditor), so no game
+is known on which the cut is silent at round one at such a vertex (the
+round-$18$ convex-class route; the wedge and the seven-vertex game
+recomputed here, \texttt{scripts/round18-verify/hz\_wedge.py},
+\texttt{hz\_w7.py}).
 \end{remark}
 
 \begin{remark}\label{rem:hybrid-barrier-lift}
@@ -20222,7 +20819,12 @@ modulator number, solved in $N^{O(\mu)}$ by a fixed-point search over a
 frozen set of $\mu$ vertices, with $M_n$ a family inside that class and
 outside five of the six others (\Cref{thm:modulator,prop:modulator-family}), and the
 stopping games of bounded treewidth, solved in quasipolynomial time
-(\Cref{thm:qp}); and, in general, a
+(\Cref{thm:qp}); the stopping games of polynomially bounded visit number
+$\kappa(G)$ --- the largest expected number of visits to the controlled set
+under a positional pair --- solved exactly by a reduced value iteration
+with continued-fraction recovery (\Cref{thm:visits-class}), a class that
+contains the strongly convex slice of the handicap-zero class and
+\Cref{prop:hz}'s family (\Cref{cor:handicap-slice}); and, in general, a
 Las~Vegas algorithm of expected time $e^{2\sqrt n}\,\mathrm{poly}(N)$
 obtained from a full, tie-robust analysis of Ludwig's random-facet
 strategy improvement, the specialisation of the Kalai and
@@ -20541,6 +21143,9 @@ from $|C|+1$ fixed in advance (\Cref{thm:eval-star}), and the bit itself
 needs $|C|+1$ of them at $|C|\in\{2,3\}$ (\Cref{prop:eval-decide-lower});
 the order of the average values
 is a unique certificate (\Cref{rem:order-unique}), and no certificate
-format closes the gap (\Cref{prop:bracket}).
+format closes the gap (\Cref{prop:bracket}); every promise version with a
+gap between $1/\mathrm{poly}(N)$ and $\tfrac14$ is one problem
+(\Cref{thm:gap-collapse}), and whether the exact problem reduces to it is
+what \Cref{rem:eps-ladder} asks.
 
 \end{document}

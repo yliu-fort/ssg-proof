@@ -54,9 +54,11 @@ games = {
 g2 = G(['max', 'min', 'avg', 'avg'], [(1, 3), (5, 2), (4, 4), (5, 4)]); v2 = full_value(g2)
 g3 = G(['max', 'min', 'avg', 'avg'], [(1, 3), (5, 2), (4, 4), (5, 4)])
 rng = random.Random(1920)
-def random_stopping(rng):
+def random_stopping(rng, max_ctrl=2, player_free=False):
     while True:
         n = rng.randint(2, 5); kinds = [rng.choice(['max', 'min', 'avg', 'avg']) for _ in range(n)]
+        if player_free: kinds = ['avg'] * n
+        if sum(k != 'avg' for k in kinds) > max_ctrl: continue
         succ = [(rng.randrange(n + 2), rng.randrange(n + 2)) for _ in range(n)]
         g = G(kinds, succ)
         if is_stopping(g) and 0 < full_value(g)[0] < 1: return g
@@ -65,18 +67,26 @@ for _ in range(40):
     g = random_stopping(rng); p = full_value(g)[0]
     H, root = compose(MAJ3, g); assert is_stopping(H)
     vH = full_value(H); assert vH[root] == gfun(p), ('majority value', p, vH[root]); cnt += 1
-    if g.n <= 3:
-        H2, root2 = compose(MAJ3, H); assert is_stopping(H2) and full_value(H2)[root2] == gfun(gfun(p)); cnt += 1
+    gp = random_stopping(rng, player_free=True); pp = full_value(gp)[0]
+    H1, r1 = compose(MAJ3, gp); H2, root2 = compose(MAJ3, H1); assert is_stopping(H2) and full_value(H2)[root2] == gfun(gfun(pp)); cnt += 1
 print(f'[1] majority composite built as a game: stopping and value g(p) = 3p^2 - 2p^3 on {cnt} instances (towers of two levels included)')
 # g(1/2 + d) - 1/2 >= 11/8 d for 0 < d <= 1/4: 3d/2 - 2d^3 - 11d/8 = d/8 - 2d^3 = d(1/8 - 2d^2) >= 0 iff d^2 <= 1/16
 for d in [F(k, 400) for k in range(1, 101)]: assert gfun(F(1, 2) + d) - F(1, 2) >= F(11, 8) * d
 assert gfun(F(1, 2) + F(1, 4)) - F(1, 2) == F(11, 8) * F(1, 4)
+# exact iteration explodes the denominators (3^k-fold), so the level count is bracketed by certified rounding:
+# g is nondecreasing, so iterating on a round-down (round-up) of d gives a lower (upper) sequence; grid 2^-400
+def levels_needed(j, rounding):
+    d = F(1, 2 ** j); k = 0; G = 2 ** 400
+    while d < F(1, 4):
+        d = gfun(F(1, 2) + d) - F(1, 2); k += 1
+        d = F(math.floor(d * G), G) if rounding == 'down' else F(math.ceil(d * G), G)
+    return k
 levels = {}
-for j in range(3, 11):
-    d = F(1, 2 ** j); k = 0
-    while d < F(1, 4): d = gfun(F(1, 2) + d) - F(1, 2); k += 1
-    bound = math.ceil(math.log(1 / (4 * 2 ** -j)) / math.log(11 / 8)); assert k <= bound; levels[j] = (k, bound)
-print(f'[1] g(1/2+d) - 1/2 >= (11/8) d for d <= 1/4 (equality at 1/4); levels needed to reach 1/4 from d = 2^-j, j = 3..10: {levels} (measured, proved bound)')
+for j in range(3, 17):
+    kd, ku = levels_needed(j, 'down'), levels_needed(j, 'up'); assert kd == ku, (j, kd, ku)   # the two brackets agree: exact count
+    bound = math.ceil(math.log(1 / (4 * 2 ** -j)) / math.log(11 / 8)); assert kd <= bound; levels[j] = (kd, bound)
+assert [levels[j][0] for j in range(3, 17)] == [2, 4, 6, 8, 9, 11, 13, 14, 16, 18, 19, 21, 23, 25]
+print(f'[1] g(1/2+d) - 1/2 >= (11/8) d for d <= 1/4 (equality at 1/4); levels needed to reach 1/4 from d = 2^-j, j = 3..16 (certified two-sided rounding): {[levels[j][0] for j in range(3,17)]} against the bounds {[levels[j][1] for j in range(3,17)]}')
 
 # [2] influence bound on random acyclic contexts: value polynomial per positional pair
 def poly_mul(a, b):
@@ -174,12 +184,19 @@ for K in (8, 10, 12):
     g, v0 = WELL(K, K // 2); assert is_stopping(g); w = full_value(g); assert w[v0] == F(1, 4) == ruin_value(K, K // 2)
     gp, v0p = WELL(K, K // 2 + 1); wp = full_value(gp); assert wp[v0p] > F(3, 4) and wp[v0p] == ruin_value(K, K // 2 + 1)
     h = K // 2; Q = F(3 ** (h - 1), 16)
-    x = [F(0)] * g.n; y = [F(1)] * g.n; k = 0; first_quarter = None; first_half_width = None
-    while first_quarter is None or first_half_width is None:
-        x = T_op(g, x); y = T_op(g, y); k += 1
-        if first_quarter is None and x[v0] >= F(1, 4): first_quarter = k
-        if first_half_width is None and y[v0] - x[v0] < F(1, 2): first_half_width = k
-        assert k < 20000
-    assert first_quarter > Q and first_half_width > Q
-    print(f'[4] WELL({K}): val(A_m) = 1/4 at m = K/2 and {wp[v0p]} at m = K/2 + 1; first k with (T^k 0)(v0) >= 1/4: {first_quarter}, with bracket width < 1/2: {first_half_width}, proved bound Q = 3^(h-1)/16 = {float(Q):.2f}')
+    # thm:well-schemes (a),(b): on WELL^- the lower iterate never reaches 1/4 (the value is 1/4), on WELL^+ not before Q;
+    # the bracket (T^k 1 - T^k 0)(v0) stays above 1/2 for k < Q on both.  Sinks carried at n, n+1 (T_op pins them).
+    def iterate(game, v, need_quarter):
+        x = [F(0)] * (game.n + 2); y = [F(1)] * (game.n + 2); k = 0; fq = None; fw = None
+        while (need_quarter and fq is None) or fw is None:
+            x = T_op(game, x); y = T_op(game, y); k += 1
+            if fq is None and x[v] >= F(1, 4): fq = k
+            if fw is None and y[v] - x[v] < F(1, 2): fw = k
+            assert k < 5000
+        return fq, fw
+    fq_p, fw_p = iterate(gp, v0p, True); _, fw_m = iterate(g, v0, False)
+    assert fq_p > Q and fw_p > Q and fw_m > Q
+    xm = [F(0)] * (g.n + 2)
+    for k in range(int(4 * Q) + 2): xm = T_op(g, xm); assert xm[v0] < F(1, 4)
+    print(f'[4] WELL({K}): val(A_m) = 1/4 at m = K/2 and {wp[v0p]} at m = K/2 + 1; WELL^+: first k with (T^k 0)(v0) >= 1/4 is {fq_p}, bracket width < 1/2 first at {fw_p}; WELL^-: bracket width < 1/2 first at {fw_m}, lower iterate < 1/4 through 4Q; proved bound Q = 3^(h-1)/16 = {float(Q):.2f}')
 print('PROMISE-GAP ROUTE: every load-bearing computation reproduced')
