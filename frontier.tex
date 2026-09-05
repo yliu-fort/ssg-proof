@@ -7865,20 +7865,305 @@ SSG, $53$ of them exactly at denominator $1024$, while $33$ random
 non-Holt--Klee classes of height $6$ all failed, as
 \Cref{prop:oneplayer-lp} demands; of $60$ random Holt--Klee classes of
 height $5$ and $60$ of heights $3$ and $4$, all but five were realised
-within the same budget. At $m=4$, then, Holt--Klee appears to be the
-whole condition for one-player realisability; this is a measurement. The
+within the same budget. At $m=4$, then, Holt--Klee appeared to be the
+whole condition for one-player realisability; that was a measurement, and
+\Cref{thm:hk-not-sufficient} below refutes it. The
 round-$18$ beyond-Holt--Klee route extended it to all $6113$ Holt--Klee
 classes of the $4$-cube, realising $5951$ by exact dyadic systems ($5794$
 at denominator $1024$) and leaving $162$ unresolved, of heights $2$ to $5$
 --- $12$, $56$, $69$, $25$ --- and none of height $6$; a failed search is
 not a result, and the smallest candidate for a further law is the
-Holt--Klee class $(8,9,10,11,13,12,14,15,7,6,4,5,3,2,1,0)$ of height $2$.
+Holt--Klee class $(8,9,10,11,13,12,14,15,7,6,4,5,3,2,1,0)$ of height $2$
+--- which \Cref{thm:hk-not-sufficient} proves unrealisable.
 The same route found the height-$11$ five-state witness of
 \Cref{prop:hstar-one-eleven} by a walk through realised orientations, and
 its walk towards a Holt--Klee height-$13$ class of the $6$-cube, and towards
 the height-$14$ blow-up of \Cref{prop:hk-doubling-measured}(b), was cut
 short by its budget: $h^{\ast}_{1}(6)\ge13$ and the one-player doubling
 remain open.
+\end{remark}
+
+The reading of \Cref{rem:hk-survey} was refuted by the round-$19$
+hk-law-certificate route: at $m=4$ Holt--Klee is not sufficient for
+one-player realisability, and the smallest unresolved class named there
+is the witness. The obstruction lives one dimension below the cube: a
+facet of the orientation together with the colouring of its vertices by
+the frozen coordinate's preferred action, a pair that every one-player
+realisation must present as an affine separation of the facet's value
+configuration.
+
+\begin{definition}[Preferred actions, facet data, co-realisability]\label{def:facet-datum}
+Let $s$ be an outmap of the $m$-cube and $b(\sigma):=\sigma\oplus s(\sigma)$
+its \emph{preferred-action vector}, so that $v\in s(\sigma)$ iff
+$b_v(\sigma)\ne\sigma_v$. For the improvement outmap of a nondegenerate
+one-player stopping SSG with affine readout system $(\Psi_{v,a})$
+(\Cref{thm:readout-realise}(a), $r=1$) and value configuration $(x_\sigma)$,
+the difference $D_v:=\Psi_{v,1}-\Psi_{v,0}$ is affine with zero coefficient
+at $x_v$, nonzero at every $x_\sigma$ by nondegeneracy, and $b_v(\sigma)=1$
+iff $D_v(x_\sigma)>0$. For a coordinate $u$ and $a\in\{0,1\}$ the
+\emph{facet datum} $\mathcal D_{u,a}(s)$ is the restriction of $s$ to
+$H_{u,a}:=\{\sigma:\sigma_u=a\}$, read as an outmap $t$ of the $(m-1)$-cube
+on the coordinates other than $u$, together with the colouring
+$\chi:=b_u|_{H_{u,a}}$; two data are \emph{isomorphic} when a coordinate
+permutation and a translation of the $(m-1)$-cube carry $t$ to $t'$ and
+$\chi$ to $\chi'$ or to its complement. A pair $(t,\chi)$ is
+\emph{co-realisable} if some affine readout system of order $(m-1,1)$
+realising $t$ (\Cref{def:readout-system}) has a value configuration
+$(y_\sigma)$ and an affine functional $\varphi$ with $\varphi(y_\sigma)>0$
+where $\chi(\sigma)=1$ and $\varphi(y_\sigma)<0$ where $\chi(\sigma)=0$; the
+condition is invariant under isomorphism, $\varphi\mapsto-\varphi$ handling
+the complement.
+\end{definition}
+
+\begin{lemma}[The facet lemma]\label{lem:facet}
+If $s$ is the improvement outmap of a nondegenerate one-player stopping
+SSG with $m$ Max vertices, every facet datum $\mathcal D_{u,a}(s)$ is
+co-realisable, and the realising system is that of a nondegenerate
+one-player stopping SSG with $m-1$ Max vertices.
+\end{lemma}
+
+\begin{proof}
+Let $(\Psi_{v,c})$ be the readout system of \Cref{thm:readout-realise}(a)
+and $(x_\sigma)$ its configuration. Retype $u$ as an average vertex both of
+whose successors are $u^{(a)}$: the game stays stopping (a trap of the new
+game is a trap of the old one, both successors of $u$ lying in it), has
+$m-1$ Max vertices, the same value vector at every $\sigma\in H_{u,a}$, the
+same appeals there, hence the outmap $s|_{H_{u,a}}=t$ on the coordinates
+other than $u$ and no tied incidence. Its readouts are obtained by
+substituting $x_u=\Psi_{u,a}(x_{-u})$ into $\Psi_{v,c}$ and eliminating the
+self-entry by \Cref{lem:readout-reduce}, so they form an affine readout
+system in the free values with configuration
+$y_\sigma=x_\sigma|_{\Vmax\setminus\{u\}}$ (\Cref{lem:subgame}(b)).
+Finally $D_u$ is affine with zero coefficient at $x_u$, hence an affine
+functional $\varphi$ of $y$, and $\varphi(y_\sigma)=D_u(x_\sigma)$ is
+positive exactly where $b_u(\sigma)=1$ and negative elsewhere, by
+nondegeneracy. (The same holds for any subcube with a frozen coordinate,
+the frozen block's values being an affine function of the free ones.)
+\end{proof}
+
+\begin{theorem}[A facet datum that is not co-realisable]\label{thm:facet-obstruction}
+Index $\{0,1\}^{3}$ by $\sigma=\sigma_0+2\sigma_1+4\sigma_2$ and let
+$t:=(4,5,6,7,3,2,1,0)$, $\chi^{-1}(1):=\{2,4,6,7\}$, $\chi^{-1}(0)=\{0,1,3,5\}$.
+Then $t$ is an acyclic Holt--Klee unique sink orientation of the $3$-cube
+of bottom-antipodal height $2$, realised by nondegenerate one-player
+stopping SSGs, and $(t,\chi)$ is \emph{not} co-realisable.
+\end{theorem}
+
+\begin{proof}
+Let $\Psi_{v,c}(y_{-v})=p^{v,c}\cdot y+q^{v,c}$ ($p^{v,c}\ge0$, $p^{v,c}_v=0$)
+be an affine readout system realising $t$, $(y_\sigma)$ its configuration,
+$D_v:=\Psi_{v,1}-\Psi_{v,0}$. Since $b(\sigma)=\sigma\oplus t(\sigma)$ is
+$4=(0,0,1)$ for $\sigma\le3$ and $7=(1,1,1)$ for $\sigma\ge4$,
+\begin{equation}\label{eq:facet-signs}
+ \operatorname{sign}D_0(y_\sigma)=\operatorname{sign}D_1(y_\sigma)=2\sigma_2-1,
+ \qquad \delta_\sigma:=D_2(y_\sigma)>0,
+\end{equation}
+all nonzero, and \Cref{lem:switch} --- a single improving switch raises
+the values, strictly at the switched coordinate --- gives from
+\eqref{eq:facet-signs}
+\begin{equation}\label{eq:facet-order}
+ y_3\le y_1\le y_0,\qquad y_3\le y_2\le y_0,
+\end{equation}
+each a single improving switch, of coordinate $1$ for $y_2\le y_0$ and
+$y_3\le y_1$, of coordinate $0$ for $y_1\le y_0$ and $y_3\le y_2$, strict at
+that coordinate. Nothing else about the system is used: not the values'
+membership of $[0,1]$, not a leak, not $|p|_1+q\le1$.
+
+\emph{A shear.} Put $u_\sigma:=(y_\sigma(0),y_\sigma(1))\in\mathbb R^{2}$
+and $\rho_c(u):=p^{2,c}_0u^{1}+p^{2,c}_1u^{2}+q^{2,c}$, so
+$y_\sigma(2)=\rho_{\sigma_2}(u_\sigma)$. The map
+$(y(0),y(1),y(2))\mapsto(u,h)$, $h:=y(2)-\rho_0(u)$, is affine of
+determinant $1$ with $h_\sigma=\sigma_2\delta_\sigma$. Writing
+$[abc]:=\det(b-a,c-a)$ and
+$D(i,j,k,l):=\det[(y_i,1),(y_j,1),(y_k,1),(y_l,1)]$, expansion along the
+$h$-column gives, for $\sigma_2(i)=\sigma_2(j)=0$ and
+$\sigma_2(k)=\sigma_2(l)=1$,
+\begin{equation}\label{eq:facet-shear}
+ D(i,j,k,l)=\delta_k[u_iu_ju_l]-\delta_l[u_iu_ju_k],
+\end{equation}
+and $D(i,j,k,l)=-\delta_l[u_iu_ju_k]$ when only $l$ has $\sigma_2=1$.
+
+\emph{Line identities.} For $a,c\in\{0,1\}$ put
+$S_{a,c}(u):=p^{0,a}_1u^{2}+p^{0,a}_2\rho_c(u)+q^{0,a}$ and
+$R_{b,c}(u):=p^{1,b}_0u^{1}+p^{1,b}_2\rho_c(u)+q^{1,b}$. Since
+$y_\sigma(0)=\Psi_{0,\sigma_0}(y_\sigma)$ and $y_\sigma(2)=\rho_{\sigma_2}(u_\sigma)$,
+\begin{align}
+ V^{a,c}(\sigma)&:=u^{1}_\sigma-S_{a,c}(u_\sigma)=(\sigma_0-a)D_0(y_\sigma)+p^{0,a}_2(\sigma_2-c)\delta_\sigma,\label{eq:facet-VL}\\
+ W^{b,c}(\sigma)&:=u^{2}_\sigma-R_{b,c}(u_\sigma)=(\sigma_1-b)D_1(y_\sigma)+p^{1,b}_2(\sigma_2-c)\delta_\sigma.\label{eq:facet-VM}
+\end{align}
+The maps $u\mapsto u^{1}-S_{a,c}(u)$ and $u\mapsto u^{2}-R_{b,c}(u)$ are
+affine with gradients
+$g_{a,c}=(1-p^{0,a}_2p^{2,c}_0,\,-(p^{0,a}_1+p^{0,a}_2p^{2,c}_1))$ and
+$h_{b,c}=(-(p^{1,b}_0+p^{1,b}_2p^{2,c}_0),\,1-p^{1,b}_2p^{2,c}_1)$, whose
+first, resp.\ second, component is positive: $p^{0,a}_2p^{2,c}_0=1$ would
+return the token from $x_0$ to $x_0$ almost surely under the pair $(a,c)$,
+a trap against \Cref{lem:trapchar}, and likewise $p^{1,b}_2p^{2,c}_1=1$.
+Put $\lambda_{a,c}:=(1-p^{0,a}_2p^{2,c}_0)^{-1}>0$,
+$\mu_{b,c}:=(1-p^{1,b}_2p^{2,c}_1)^{-1}>0$. If $\sigma_0(i)=\sigma_0(j)=a$
+and $\sigma_2(i)=\sigma_2(j)=c$ then $V^{a,c}(i)=V^{a,c}(j)=0$, so
+$u_j-u_i=\tau g_{a,c}^{\perp}$ with $g^{\perp}:=(-g_2,g_1)$ and
+$\tau=(u^{2}_j-u^{2}_i)\lambda_{a,c}$, and $\det(g^{\perp},z)=-g\cdot z$
+gives, for every $w\in\mathbb R^{2}$,
+\begin{equation}\label{eq:facet-lineL}
+ [u_iu_jw]=-(u^{2}_j-u^{2}_i)\lambda_{a,c}\bigl(w^{1}-S_{a,c}(w)\bigr);
+\end{equation}
+symmetrically, if $\sigma_1(i)=\sigma_1(j)=b$ and $\sigma_2(i)=\sigma_2(j)=c$,
+\begin{equation}\label{eq:facet-lineM}
+ [u_iu_jw]=(u^{1}_j-u^{1}_i)\mu_{b,c}\bigl(w^{2}-R_{b,c}(w)\bigr).
+\end{equation}
+
+\emph{Four scalars.} By \eqref{eq:facet-order} and the strictness at the
+switched coordinate, $s_L:=u^{2}_0-u^{2}_2>0$, $s_M:=u^{1}_2-u^{1}_3>0$,
+$s'_L:=u^{2}_1-u^{2}_3>0$, $s'_M:=u^{1}_0-u^{1}_1>0$; with
+$B:=s_L\lambda_{0,0}$, $A:=s_M\mu_{1,0}$, $B':=s'_L\lambda_{1,0}$,
+$A':=s'_M\mu_{0,0}$, all positive,
+$[u_0u_2w]=B(w^{1}-S_{0,0}(w))$, $[u_2u_3w]=-A(w^{2}-R_{1,0}(w))$,
+$[u_0u_1w]=-A'(w^{2}-R_{0,0}(w))$ and $[u_1u_3w]=B'(w^{1}-S_{1,0}(w))$.
+
+\emph{Five determinants.} Evaluating \eqref{eq:facet-VL},
+\eqref{eq:facet-VM} at $\sigma=3,5,6$ --- $(\sigma_0,\sigma_1,\sigma_2)=(1,1,0),(1,0,1),(0,1,1)$ ---
+gives $V^{0,0}(3)=D_0(y_3)$, $V^{0,0}(5)=D_0(y_5)+p^{0,0}_2\delta_5$,
+$V^{0,0}(6)=p^{0,0}_2\delta_6$; $W^{1,0}(3)=0$,
+$W^{1,0}(5)=-D_1(y_5)+p^{1,1}_2\delta_5$, $W^{1,0}(6)=p^{1,1}_2\delta_6$;
+$W^{0,0}(3)=D_1(y_3)$, $W^{0,0}(5)=p^{1,0}_2\delta_5$,
+$W^{0,0}(6)=D_1(y_6)+p^{1,0}_2\delta_6$; $V^{1,0}(3)=0$,
+$V^{1,0}(5)=p^{0,1}_2\delta_5$, $V^{1,0}(6)=-D_0(y_6)+p^{0,1}_2\delta_6$.
+Substituting into \eqref{eq:facet-shear} the products
+$p_2\delta_5\delta_6$ cancel and
+\begin{align}
+ D(0,2,5,6)&=B\bigl(\delta_5V^{0,0}(6)-\delta_6V^{0,0}(5)\bigr)=-B\delta_6D_0(y_5)<0,\label{eq:facet-d1}\\
+ D(2,3,5,6)&=-A\bigl(\delta_5W^{1,0}(6)-\delta_6W^{1,0}(5)\bigr)=-A\delta_6D_1(y_5)<0,\label{eq:facet-d2}\\
+ D(0,2,3,k)&=-\delta_k[u_0u_2u_3]=-\delta_kBD_0(y_3)>0\qquad(k=5,6),\label{eq:facet-d3}
+\end{align}
+by $D_0(y_5),D_1(y_5)>0$ and $D_0(y_3)<0$. For the fifth, the identity
+$[u_0u_3w]=[u_2u_3w]+[u_0u_2w]-[u_0u_2u_3]$, valid for all $w$ as four
+points of the plane are affinely dependent, and its companion
+$[u_0u_3w]=[u_1u_3w]+[u_0u_1w]-[u_0u_1u_3]$ give
+\begin{align}
+ D(0,3,5,6)&=-A\delta_6D_1(y_5)-B\delta_6D_0(y_5)+B|D_0(y_3)|(\delta_5-\delta_6),\label{eq:facet-E1}\\
+ D(0,3,5,6)&=-B'\delta_5D_0(y_6)-A'\delta_5D_1(y_6)-K(\delta_5-\delta_6),\qquad K:=[u_0u_1u_3]=-A'D_1(y_3)>0.\label{eq:facet-E2}
+\end{align}
+In both the first two terms are negative ($D_0(y_6),D_1(y_6)>0$); if
+$\delta_5\le\delta_6$ the third term of \eqref{eq:facet-E1} is $\le0$, if
+$\delta_5\ge\delta_6$ the third of \eqref{eq:facet-E2} is, so
+\begin{equation}\label{eq:facet-d4}
+ D(0,3,5,6)<0 .
+\end{equation}
+
+\emph{The Radon certificate.} Put $Y_\sigma:=(y_\sigma,1)\in\mathbb R^{4}$
+and, on the support $S=(0,2,3,5,6)$, $\mu_i:=(-1)^{\mathrm{pos}(i)}\det(Y_j)_{j\in S\setminus\{i\}}$.
+Then $\sum_{i\in S}\mu_iY_i=0$: each coordinate of the sum is a $5\times5$
+determinant with a repeated row, expanded along it. Hence $\sum_i\mu_i=0$
+and $\sum_i\mu_i\varphi(y_i)=0$ for every affine $\varphi$. By
+\eqref{eq:facet-d1}--\eqref{eq:facet-d4},
+$\mu_0=D(2,3,5,6)<0$, $\mu_2=-D(0,3,5,6)>0$, $\mu_3=D(0,2,5,6)<0$,
+$\mu_5=-D(0,2,3,6)<0$, $\mu_6=D(0,2,3,5)>0$: positive exactly on
+$\{2,6\}\subseteq\chi^{-1}(1)$ and negative exactly on
+$\{0,3,5\}\subseteq\chi^{-1}(0)$. An affine $\varphi$ positive where
+$\chi=1$ and negative where $\chi=0$ would make every term
+$\mu_i\varphi(y_i)$ positive, against $\sum_i\mu_i\varphi(y_i)=0$; with the
+signs of $\varphi$ reversed every term would be negative. So $(t,\chi)$ is
+not co-realisable, nor is its complement.
+
+\emph{The datum is not empty.} $t$ is an acyclic unique sink orientation
+with sink $7$, walk $0,4,7$, height $2$, Holt--Klee by the max-flow test on
+every face. The route produced $43$ distinct exact dyadic readout systems
+realising it (three at denominator $2^{10}$, forty at $2^{18}$ to $2^{24}$)
+and built them into one-player stopping SSGs on $37$ to $284$ vertices by
+\Cref{lem:dyadic-row}; on every one, from the game, the greatest trap is
+empty, the outmap is $t$, no incidence is tied, the identities
+\eqref{eq:facet-VL}--\eqref{eq:facet-E2} hold exactly, the five
+determinants have the stated signs and the Radon coefficients have the signs
+of $\chi$; seven have $\delta_5>\delta_6$, so both branches are exercised.
+The smallest, on $37$ vertices, has
+$y_0=(\tfrac12,\tfrac12,0)$, $y_1=(0,\tfrac12,0)$, $y_2=(\tfrac12,0,0)$,
+$y_3=(0,0,0)$, $y_4=(\tfrac12,\tfrac12,\tfrac{1023}{1024})$,
+$y_5=(\tfrac{1046529}{1048576},\tfrac12,\tfrac{1023}{1024})$,
+$y_6=(\tfrac12,\tfrac{1046529}{1048576},\tfrac{1023}{1024})$,
+$y_7=(\tfrac{1046529}{1048576},\tfrac{1046529}{1048576},\tfrac{1023}{1024})$
+and $\mu=(-\tfrac{534252543}{2147483648},\tfrac{534252543}{1073741824},
+-\tfrac{534252543}{2147483648},-\tfrac{1023}{4096},\tfrac{1023}{4096})$ on
+$(0,2,3,5,6)$. (The identities were verified symbolically in the eighteen
+row parameters by the route; its correctness auditor re-derived every step
+and rebuilt every computation, including $27$ further realisations of $t$
+among $60\,000$ random systems, all with the same signs; here the $43$
+systems and $300$ random perturbations of them still realising $t$,
+\texttt{scripts/round19-verify/hk\_root.py}.)
+\end{proof}
+
+\begin{theorem}[Holt--Klee is not sufficient at $m=4$]\label{thm:hk-not-sufficient}
+The orientation $s_0=(8,9,10,11,13,12,14,15,7,6,4,5,3,2,1,0)$ of the
+$4$-cube is an acyclic Holt--Klee unique sink orientation of
+bottom-antipodal height $2$, and it is not the improvement orientation of
+any nondegenerate one-player stopping SSG. Of the $12\,640$ classes of
+acyclic unique sink orientations of the $4$-cube exactly $17$ carry a facet
+datum isomorphic to $(t,\chi)$ of \Cref{thm:facet-obstruction}, hence are
+not realisable by a nondegenerate one-player game; $13$ of them are
+Holt--Klee, of heights $2,3,4$ with multiplicities $3,6,4$ --- in the
+convention of \Cref{rem:hk-survey}, at height $2$: $s_0$,
+$(8,9,10,15,13,12,14,11,7,6,4,5,3,2,1,0)$, $(8,9,14,11,13,12,10,15,7,6,4,5,3,2,1,0)$;
+at height $3$: $(8,9,10,11,14,13,12,15,7,4,5,6,2,3,1,0)$,
+$(8,11,10,9,13,12,14,15,7,6,4,5,3,2,1,0)$, $(8,13,10,11,14,9,12,15,7,4,5,6,2,3,1,0)$,
+$(9,8,11,10,13,14,15,12,4,7,6,5,2,3,1,0)$, $(9,8,15,10,13,14,11,12,4,7,6,5,2,3,1,0)$,
+$(10,9,8,11,13,12,14,15,7,6,4,5,3,2,1,0)$; at height $4$:
+$(8,9,10,11,13,12,14,15,3,6,4,5,7,2,1,0)$, $(8,9,11,10,12,13,14,15,7,4,5,6,2,3,1,0)$,
+$(8,13,11,10,12,9,14,15,7,4,5,6,2,3,1,0)$, $(10,9,8,11,13,12,14,15,3,6,4,5,7,2,1,0)$
+--- the other $4$ being excluded already by \Cref{prop:oneplayer-lp}. So
+\Cref{prop:m3-realised} does not extend: at $m=4$ nondegenerate one-player
+realisability is strictly stronger than the Holt--Klee condition.
+\end{theorem}
+
+\begin{proof}
+$s_0$ is an acyclic unique sink orientation with sink $15$, walk $0,8,15$,
+and passes the max-flow test on every face. With
+$b(\sigma)=\sigma\oplus s_0(\sigma)=(8,8,8,8,9,9,8,8,15,15,14,14,15,15,15,15)$
+one has $b_1=b_2=\sigma_3$ and $b_3\equiv1$, so the facet at $u=0$, $a=0$
+read on the coordinates $1,2,3$ is $t$, and $b_0$ takes the value $1$ at
+$\sigma\in\{4,5,8,9,12,13,14,15\}$, which is $\chi^{-1}(1)=\{2,4,6,7\}$ in
+the facet's indexing. \Cref{lem:facet} and \Cref{thm:facet-obstruction}
+exclude $s_0$. The count is the enumeration of the eight facet data of each
+class representative against the $96$-element isomorphism orbit of
+$(t,\chi)$. (The scan was reproduced independently by both auditors and
+here, \texttt{hk\_root.py}; the falsification checks: the $13$ excluded
+Holt--Klee classes all lie among the $162$ the round-$18$ survey left
+unresolved and none of the $5951$ classes it realised is excluded --- its
+correctness auditor recomputed $400$ of those realisations exactly and found
+all $3200$ facet data separable --- and the height-$11$ five-state witness
+of \Cref{prop:hstar-one-eleven} carries no obstructed datum on any
+$3$-subcube.)
+\end{proof}
+
+\begin{remark}[What the law decides, and what it does not]\label{rem:hk-law}
+(a) The law is vacuous below $m=4$, a facet datum of this shape being a
+$3$-cube orientation with a colouring, consistent with
+\Cref{prop:m3-realised}; and it obstructs at every $m\ge4$, since a
+$3$-dimensional subcube with a frozen coordinate carries the same datum
+(\Cref{lem:facet}). (b) It is not Holt--Klee in disguise: $s_0$ and $t$
+are both Holt--Klee, $t$ is realised, and what is excluded is the pair.
+(c) It is the $3$-dimensional form of the local test of \Cref{cor:b2-min},
+whose forbidden pair $(F,c)$ with $c\notin F$ is a $2$-dimensional datum
+coloured by the face's own non-constant coordinate; that test excludes none
+of the $6113$ Holt--Klee classes ($4365$ of the $6527$ others, its counts
+reproduced by the route from its statement) and does not fire on $s_0$,
+while the Radon circuit $\{0,2,3,5,6\}$ meets both facets $\sigma_2=0,1$
+and no four of its points lie in a $2$-face. (d) It moves no ceiling: the
+$13$ excluded classes have heights $2,3,4$, the $162$ unresolved classes
+contain none of height $6$, and every Holt--Klee class of height $6$ is
+realised, so $h^{\ast}_1(4)=6$ and \Cref{rem:four-ceilings} stand; its
+bearing on the lower-bound programme is prospective, a constraint that
+bites only if an obstructed datum is found on a tall orientation at
+$m\ge5$. (e) The $149$ Holt--Klee classes of the $4$-cube neither realised
+nor obstructed stay open; whether co-realisability of every facet datum,
+with Holt--Klee, characterises one-player realisability at $m=4$ is not
+known, and the route's sampled sweep of all $2024$ facet data occurring in
+the census was unsound at its sample size (it excluded two classes round
+$18$ had realised) and is not evidence. (f) Prior art, from memory and
+unchecked: that the LP orientations of cubes form a strict subclass of the
+Holt--Klee orientations is, we believe, known (Develin; G\"artner's survey);
+the SSG-specific statement --- non-realisability by the occupancy polytope
+of a transient two-action Markov decision process, i.e.\ by a nondegenerate
+one-player stopping SSG, with an explicit Holt--Klee witness at $m=4$ and
+the certificate exhibited --- is proved here from first principles.
 \end{remark}
 
 \subsection{Ties in one-player games}\label{sec:ties}
@@ -19676,7 +19961,11 @@ doubles and stays Holt--Klee at $m=4,5$ when its outer pair reads a
 non-parity signal, and a readout-free condition stops the iteration on
 every tall seed examined (\Cref{prop:blowup-readout,prop:hk-doubling-measured,prop:tstar});
 at $m=3$ every class is realised, the two non-Holt--Klee ones with one
-Min vertex (\Cref{prop:m3-realised,prop:m3-one-min}); readouts make the search practice a theorem,
+Min vertex (\Cref{prop:m3-realised,prop:m3-one-min}), while at $m=4$
+Holt--Klee is not sufficient --- thirteen Holt--Klee classes of heights $2$
+to $4$, the smallest candidate of \Cref{rem:hk-survey} among them, carry a
+facet datum that no nondegenerate one-player game presents
+(\Cref{thm:hk-not-sufficient}); readouts make the search practice a theorem,
 one player buying affine readouts and the second concavity
 (\Cref{thm:readout-realise,thm:min-count}); and the profile cube is a
 unique sink orientation with the Max cube as its sink projection
