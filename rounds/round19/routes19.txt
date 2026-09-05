@@ -1,0 +1,712 @@
+
+=====ROUTE escape-certificate|The escape shape as a semialgebraic feasibility set: an exact certificate for the last doubling corner over the level-two block, and the second escape shape
+THE OBJECT: the FEASIBILITY SET of the escape shape. thm:escape-level
+(l.6806; def:escape-ext l.6791) describes every nondegenerate stopping
+escape extension of a driven block B by the parameters A, A' > 0, the
+nonnegative row vectors C_alpha, C_beta, R_alpha, R_beta over the block's
+readable coordinates and the constants q_A, q'_A, q_B, q'_B, and computes
+its improvement outmap from three drives w_00, w_10, w_01 (fixed points
+t = c . y_sigma(t) + d of the block's drive-line value functions y_sigma)
+and one sign rho(sigma, w_01). For a TARGET orientation s* on the
+(m+2)-cube, the set E(B, s*) of parameter vectors whose extension has
+outmap s* is a semialgebraic set: the block's value functions y_sigma(t)
+are concave piecewise-affine in t on the cells of the drive line
+(rem:pinned-escape l.6740 prints the 13 fences of the level-two block
+{c1,c2,c3,c6} driven by y_{c5}; scripts/round18-verify/dl_line.py
+recomputes them and the per-cell affine pieces from
+${REPO}/scripts/blowup/B2_small_nf.json), so once each of the 3 x 2^m
+drives w_L(sigma) is assigned to a cell, every fixed point is a rational
+function of the parameters and every bit P, Q, R, S of the theorem is a
+polynomial inequality of low degree. The paper knows: thm:escape-no-beta
+(l.6872: z = 24, 26 dead for every block; all four doublings dead when the
+drive is alpha_2), thm:escape-mixed (l.6925: R_alpha - C_alpha must have a
+negative component, and if R_alpha >= C_alpha componentwise an
+up-closedness returns), cor:escape-m3 (l.6964: over the level-two block
+z = 10 dead for an inner reason, z = 8 dead when R_alpha >= C_alpha; THE
+ONE SURVIVING CORNER is z = 8 with R_alpha - C_alpha mixed in sign, where
+rho(sigma, .) need not be concave; a floating-point search from several
+thousand starts did not reach feasibility, the residual sitting at the
+inner strategy sigma = 1; "a search is not a proof"). Read also
+def:pinned, prop:pinned-level, lem:pinned-upclosed, thm:pinned-no-translate,
+cor:pinned-no-doubling (l.6571-6740), prop:b2-realised (l.6202, the outmap
+B^2 and the 138-vertex game), rem:b2-anatomy, prop:b3-outer (l.6533),
+thm:blowup (l.5977, the table of outer bits by layer and parity),
+rem:blowup-realise (l.6999), lem:switch, lem:readout (l.8739),
+thm:readout-realise (l.8823). Round-18 drive-line route code (read-only):
+${R18}/r18-drive-line/, its result ${REPO}/rounds/round18/results/ (the
+file whose name starts with the route's title) and audits; the root
+agent's scripts ${REPO}/scripts/round18-verify/dl_*.py.
+
+WHAT TO PROVE:
+ (A) THE CERTIFICATE FOR z = 8, MIXED SIGN, OVER THE LEVEL-TWO BLOCK. Write
+     E := E(B_2, B^2(. xor 8)) with (alpha, beta) = (alpha_2, beta_2) as
+     an explicit system: for each of the 8 inner strategies sigma the four
+     bits (P, Q, R, S)(sigma) prescribed by the table of thm:blowup at the
+     translated layer, the inner condition that s_B(w_L(sigma))(sigma)
+     equals the target's inner part on each layer L, the substochastic and
+     positivity constraints, nondegeneracy as strict inequalities. Then
+     DECIDE E = empty by a certificate: branch on the cell of each drive
+     (the drive line has 14 cells, so finitely many branches, most of them
+     killed at once by the inner condition since each cell presents ONE
+     orientation), and in each surviving branch the system is bilinear in
+     (parameters, drives); linearise it (McCormick envelopes over the boxes
+     [0,1], or eliminate the drives by the closed form of each fixed point
+     and clear denominators) and produce a FARKAS CERTIFICATE of
+     infeasibility of the linear relaxation in exact rational arithmetic
+     (an LP dual vector; the paper has exact simplex in
+     ${SCRATCH}/root16/mylp.py and lp.py). Infeasibility of a relaxation
+     is infeasibility of E; a feasible relaxation is NOT feasibility ---
+     refine (a second McCormick level, a split of the box) or find a
+     genuine point. PROVE the McCormick inequalities you use (they are
+     one-line). The deliverable is either (i) a finite case tree with a
+     verified certificate at every leaf, hence THE THEOREM "no escape
+     extension of the level-two block realises B^2(. xor 8)", completing
+     cor:escape-m3 into a full negative answer for the published block, or
+     (ii) a feasible point, i.e. an escape extension realising a doubling
+     translate of B^2 --- then build the game (lem:dyadic-row after dyadic
+     rounding, or lem:rational-row l.1112 for rational rows), verify the
+     outmap from the game, and go to (C).
+ (B) THE SECOND ESCAPE SHAPE. thm:escape-no-beta needs beta's switch action
+     to read only the block. Drop that: let beta's action 1 read alpha too
+     (weight A'' > 0), so that w_01 and w_11 differ. Write the level
+     theorem for this shape (the analogue of thm:escape-level with four
+     drives), prove it, and redo the tournament argument: which of the
+     four doublings z in {8,10,24,26} survive it, for the drive as beta_2
+     and as alpha_2? If some survive, repeat (A) for them over the
+     level-two block.
+ (C) BEYOND THE PUBLISHED BLOCK. The level-three question is a block with
+     5 Max and 1 Min vertices presenting B^2 at one drive and B^2(. xor z)
+     at another (rem:pinned-escape). State exactly which properties of a
+     block's DRIVE LINE the outer constraints of (A)/(B) force --- the
+     analogue of thm:escape-mixed(b) when R_alpha - C_alpha is mixed: what
+     closure, if any, of {phi~ = 0} in the block's value order survives ---
+     and prove it. If (A) gave a certificate, say which of its Farkas
+     multipliers depend on the block's data and which are universal; a
+     universal part is a theorem about every block.
+ (D) If (A)(ii) happened: the same programme for the level-three shape
+     (block = the whole 138-vertex level-two game minus its outer pair,
+     drive = beta_3), at least the inner condition and the tournament.
+
+KNOWN TRAPS FOR THIS ROUTE: the drive-line cells are open intervals and
+the fixed point of one layer may sit on a fence (a tie), which
+nondegeneracy excludes --- handle the boundary cases explicitly; the
+block's value functions are concave piecewise-affine, so "affine on a
+cell" needs the cell, not the whole line; thm:escape-level's uniqueness of
+the fixed points uses |c|_1 < 1 --- keep it as a constraint; every game
+you claim must be BUILT and its outmap verified from the game
+(games_built field); a floating-point local search is exploration only.
+The deliverable that counts is the certificate or the point; a theorem
+about which bits are forced is a new-relation only if it goes beyond
+thm:escape-mixed.
+
+=====ROUTE fold-feedback|A fold fed back into its own drive: can the affine cascade carry the counter, or is every feedback fold a cascade
+THE OBJECT: a FOLD WHOSE DRIVE IS PRODUCED BY THE FOLD ITSELF.
+prop:one-player-fold (l.16440) is OF(D): one-player, acyclic, N = 9D + 6,
+in which the damping rho (def:discount-path) drives a tent-map cascade
+psi_d = 2|psi_{d-1}| - 1 whose sign vector runs through all 2^{D+1}
+strategies as rho sweeps [0,1]; rem:one-player-fold (l.16526) proves that
+this path is never an all-switches run (the singleton {F_d} would be the
+switched set 2^d times against cor:law-u), that under a FIXED strategy the
+cascade is AFFINE (psi_d = 2 eps_{d-1} psi_{d-1} - 1, the absolute value
+being a property of the greedy choice), and that all-switches halts on
+OF(D) within D + 1 rounds (thm:component-bound, the game being acyclic);
+its last sentence: "what survives is a fold fed back into its own drive".
+The pivot (rem:blowup-realise l.6999, thm:seed-dichotomy l.15263, rem:wedge):
+a stopping SSG family on which the all-switches run is superpolynomial in
+N. Every such run is the bottom-antipodal walk of an AUSO of the Max cube
+(prop:allsw-auso, thm:flat-resolution), so it needs m >= log_2(run) Max
+vertices and, by thm:switch-count, a = omega(log N) average vertices; the
+blow-up B(s) (thm:blowup) achieves 2h + 2 by two OUTER vertices that
+switch in every round while the inner walk is run twice on translated
+copies --- and realising its levels costs what rem:blowup-realise
+describes (the anti-value obstacle). Read also thm:fold and rem:fold
+(l.16175, 16232), prop:one-player-response (l.16251), prop:discount-fold
+and rem:discount-fold (l.16319, 16392), prop:one-vertex-path, cor:law-u,
+cor:no-return, cor:antichain, thm:peak-law, thm:component-bound,
+lem:rise-bound, thm:switch-count, prop:leapfrog (SD(K): one Max vertex
+switched K times on O(K^2) vertices), prop:serialiser, prop:closed-now-or-never
+and rem:closed-now-or-never (a Max vertex over a Max vertex simulates a
+third action with one round of lag), lem:max-tree, thm:stack (l.8422,
+stacking adds runs but never per-state), the flip counts of a Max vertex
+along the ladder run in rem:blowup-realise (3,4,4,4,7,8,8,8), thm:ladder
+and rem:ladder (Melekopoglou-Condon's question: Howard's rule with two
+actions per state --- a one-player superpolynomial all-switches family
+would answer it). Code: ${REPO}/scripts/round18-verify/of_verify.py,
+ofc_verify.py, fold1p_verify.py; ${R18}/r18-one-player-envelope/
+(read-only); the all-switches driver in ${SCRATCH}/root16/mycore.py.
+
+WHAT TO PROVE:
+ (A) THE FEEDBACK MODEL. Define a FEEDBACK FOLD: the fold OF(D) (or the
+     two-player fold P_D of thm:fold) in which the drive u_1 (payoff rho)
+     is replaced by a vertex or gadget whose value is a monotone function
+     of the fold's own values under the current strategy --- so that the
+     strategy determines the drive and the drive determines the switchable
+     set. Prove the basic identity: under strategy sigma the fold's
+     values are affine in the drive t with the cascade slopes
+     (rem:one-player-fold), so the switchable set at sigma is determined
+     by comparing finitely many affine functions of t at t = t(sigma),
+     and t(sigma) itself is the fixed point of a monotone map. Write the
+     all-switches dynamics sigma -> sigma xor S_sigma of a feedback fold
+     as an explicit map on the cube and the drive.
+ (B) THE COUNTER, OR THE BARRIER. Either
+     (i) design a feedback fold family (stopping; the feedback closes a
+     cycle, so stopping must be arranged and PROVED by lem:trapchar) whose
+     all-switches run from a stated start has length superpolynomial in N
+     --- build the games, run the paper's all-switches on them in exact
+     arithmetic at >= 5 sizes, PROVE the growth law (a recursion on the
+     run of D + 1 from the run of D, as thm:blowup does for the height),
+     and check the run against cor:law-u, thm:peak-law, cor:no-return at
+     every size; a one-player such family answers Melekopoglou-Condon; or
+     (ii) prove the BARRIER: for every feedback fold in your model the
+     all-switches run is O(poly(D)), and say exactly which property of
+     the model the proof uses (monotonicity of the drive in the values?
+     the affine cascade? acyclicity of the fold minus the feedback edge?)
+     and which known device escapes the model (the blow-up's outer pair
+     switches every round: is it a feedback fold? show it is or is not).
+     A barrier is a result only if it covers a device someone would try
+     --- name it.
+ (C) THE ROLE OF THE ANTI-VALUE. rem:blowup-realise: the inner game would
+     have to read the anti-value val(j^0) + val(j^1) - val(j), strictly
+     decreasing in val(j), which no vertex has; but the fold computes
+     |a - b| = 2 max(a,b) - (a+b) from a Max and an average vertex, which
+     is what a tent map needs. Prove or refute: a fold can present to a
+     downstream vertex the SIGN of a difference of two of its own values
+     as a value comparison (the readout Psi of thm:readout-realise with
+     r = 1 pieces), and hence the layer parity that the blow-up's outer
+     rule reads (prop:xor, thm:alternation-bits, cor:parity-unreadable ---
+     which says NO AFFINE functional reads the parity; the fold is not
+     affine in the strategy, it is affine in the drive). If the fold reads
+     the parity, say what the blow-up costs per level with a fold as the
+     readout (rem:blowup-realise's additive-cost question).
+ (D) Verify every run on freshly built games (games_built), never from the
+     recursion alone; report the runs at every size in the verification
+     field with the exact strategy sequence for the smallest two.
+
+KNOWN TRAPS FOR THIS ROUTE: a Max vertex whose options are a value and a
+CONSTANT switches at most twice (lem:switch), so the drive must be a value;
+the run is bounded by h*(m) <= 2^m and by N 4^a, so state m and a of every
+instance; a "run" must be the paper's all-switches (sigma -> sigma[S_sigma]
+with S_sigma the STRICTLY switchable set, Min playing a best response), not
+a single-switch rule; feedback creates cycles, so verify stopping by the
+trap test and compute val_sigma by the LP or the least fixed point, never
+by greedy iteration; random search has never found a hard instance here.
+
+=====ROUTE hk-law-certificate|A law beyond Holt-Klee by an exact certificate: the realisation set of an orientation by one-player readout systems, uniform in the value configuration
+THE OBJECT: the REALISATION SET of an orientation by ONE-PLAYER READOUT
+SYSTEMS, as a semialgebraic set, and certificates of its emptiness that
+are UNIFORM in the value configuration. thm:readout-realise (l.8823) with
+lem:readout and lem:readout-reduce (l.8739): a nondegenerate one-player
+stopping SSG with m Max vertices x_0..x_{m-1} presents, for each action
+(v,a), an AFFINE substochastic readout Psi_{v,a}(x_{-v}) = p^{v,a} . x +
+q^{v,a} (p^{v,a} >= 0 with p^{v,a}_v = 0, |p|_1 + q < 1 for leaking rows;
+prop:hstar-one-eleven l.8611 prints such a system on five states with
+denominator 2^13); the value configuration (x_sigma)_sigma satisfies
+x_sigma(v) = Psi_{v,sigma(v)}(x_sigma) and the orientation is s(sigma) =
+{v : Psi_{v,1-sigma(v)}(x_sigma) > x_sigma(v)}. So Real_1(s) = {(p, q, x)
+: those equations and strict inequalities} is a BILINEAR semialgebraic
+set (products p . x); prop:oneplayer-lp proves it lies inside Holt-Klee
+(via the occupancy polytope: an LP orientation), and the paragraph after
+thm:readout-realise says that for FIXED x the readouts are an LP, the
+one-player case tying all gradients. rem:hk-survey (l.7082): at m = 4 all
+6113 Holt-Klee classes were attacked, 5951 realised by exact dyadic
+systems, 162 UNRESOLVED (heights 2 to 5: 12, 56, 69, 25; none of height
+6); the smallest candidate for a further law is the Holt-Klee class
+(8,9,10,11,13,12,14,15,7,6,4,5,3,2,1,0) of height 2 (outmap in the
+paper's convention: s(sigma) as an integer bitmask, sigma = 0..15). At
+m = 3 Holt-Klee IS the condition (prop:m3-realised). Read also
+prop:hkfive (l.7278), rem:four-ceilings (l.7823), sec:deformed (why the
+blow-up leaves Holt-Klee; lem:blowup-faces), thm:min-count (l.8880),
+def:readout-system, the statement of Holt-Klee as the paper imports it
+(grep 'Holt--Klee' near prop:oneplayer-lp l.5602) and the max-flow test
+${SCRATCH}/solo/my_D.py; rem:choice-lift (l.15684) for the paper's use of
+Balas' disjunctive closure. Code: ${SCRATCH}/solo/realiseAP.py (the
+realisation LP at fixed x), census/classes4.txt (the 4-cube classes),
+${REPO}/scripts/round18-verify/oc_verify.py (the 260-vertex check),
+${R18}/r18-beyond-holt-klee/ (read-only: the 6113-class survey, the list
+of 162 unresolved classes --- find and copy it), its result in
+${REPO}/rounds/round18/results/.
+
+WHAT TO PROVE:
+ (A) THE SYSTEM. For the target class s_0 := (8,9,10,11,13,12,14,15,7,6,4,
+     5,3,2,1,0) (check its Holt-Klee status and height yourself), write
+     Real_1(s_0) explicitly: unknowns p^{v,a} in [0,1]^{m-1}, q^{v,a} in
+     [0,1], x_sigma in [0,1]^m for all 16 sigma; equalities x_sigma(v) =
+     p^{v,sigma(v)} . x_sigma + q^{v,sigma(v)}; strict inequalities for
+     the orientation; substochasticity. State precisely which of the
+     paper's realisation notions you decide (nondegenerate one-player
+     stopping games = leaking dyadic systems, thm:readout-realise(b); or
+     rational leaking systems via lem:rational-row l.1112; or systems
+     without leak whose game is stopping --- rem:rational-row's trap
+     hypothesis): the certificate must match the notion.
+ (B) THE CERTIFICATE. Relax the bilinear terms p_u x_sigma(u) by McCormick
+     envelopes over [0,1]^2 (prove the four inequalities) --- or by the
+     level-one RLT products of the linear constraints --- and decide the
+     linear relaxation by exact LP (${SCRATCH}/root16/mylp.py). If it is
+     INFEASIBLE, extract the Farkas vector and READ THE LAW OFF IT: which
+     constraints carry nonzero multipliers, on which faces of the cube;
+     state the law as a combinatorial condition on orientations (a sign
+     pattern on some 2- or 3-faces, a condition relating the sinks of
+     faces sharing an edge, ...), PROVE that every one-player-realisable
+     orientation satisfies it (directly from the readout equations, not
+     from the LP), check it on all 5951 realised classes (they MUST pass)
+     and on the 162 unresolved ones, and exhibit the Holt-Klee orientation
+     that violates it (s_0, if it does). That is the deliverable: a
+     necessary condition strictly beyond Holt-Klee, with a proof and a
+     witness. If the relaxation is FEASIBLE, its x is a candidate
+     configuration: run the exact realisation LP at that x (and at nearby
+     rational x); a realisation reduces the 162; else tighten (a second
+     McCormick level over a split box, or RLT level two) and iterate.
+     Record what each level decides on the 162: how many are certified
+     unrealisable, how many realised, how many left.
+ (C) UNIFORMITY. The certificate of (B) is for one class; the law must be
+     a statement about orientations. Test the law against the census: on
+     the 3-cube every AUSO class is realised (prop:m3-realised), so the
+     law must be VACUOUS at m = 3 --- check it; on the 4-cube count how
+     many Holt-Klee classes it excludes and whether any realised class
+     fails it (a failure refutes the law or the realisation --- rebuild
+     that realisation from its system and check).
+ (D) THE m = 5 COLUMN AS A TEST. prop:hstar-one-eleven realises a
+     height-11 Holt-Klee class at m = 5. Does your law admit every
+     realised m = 5 orientation you can find (the round-18 route's walk
+     material in ${R18}/r18-beyond-holt-klee/) and does it exclude any
+     Holt-Klee class of height 11 there (prop:hkfive: how many are there)?
+
+KNOWN TRAPS FOR THIS ROUTE: infeasibility of a relaxation proves
+unrealisability; feasibility proves nothing --- say which; the class must
+be taken up to the 384 cube automorphisms (the paper's convention for
+outmaps: grep prop:b2-realised and prop:hstar-one-eleven for the bitmask
+convention, and state yours); a "law" that is Holt-Klee in disguise
+(check: does it follow from Holt-Klee's statement in three lines?) is a
+restatement; the McCormick relaxation of a product over [0,1]^2 is exact
+at the box's corners only --- the relaxation can be feasible for every
+unrealisable class, in which case say so and report what the level-two
+relaxation does; verify any realisation you claim by BUILDING the game
+(lem:dyadic-row) and computing its outmap from the game.
+
+=====ROUTE m6-walk|The flip graph of realised one-player orientations of the 6-cube: height 13, the height-14 blow-up made one-player, and whether ties beat 11 at m = 5
+THE OBJECT: the FLIP GRAPH W_m of orientations realised by nondegenerate
+one-player stopping SSGs with m Max vertices, whose edges are the
+single-edge reversals along drive lines --- at a simple fence exactly one
+edge of the cube ties and reverses (rem:pinned-escape l.6740, lem:switch),
+and a single-edge reversal of a unique sink orientation stays one exactly
+when the two endpoints have the same bottom-antipodal successor (checked
+exhaustively at m <= 3 there) --- so that moving one row of a realised
+system through a fence moves the orientation along an edge of W_m. The
+round-18 beyond-Holt-Klee route found the height-11 five-state witness of
+prop:hstar-one-eleven (l.8611: the system, denominator 2^13, the outmap,
+the walk 10,17,6,21,22,24,4,8,12,28,30,31) by a guided walk through
+realised orientations, and its walk at m = 6 towards a Holt-Klee class of
+height 13 and towards the height-14 blow-up was CUT SHORT by its budget
+(rem:hk-survey l.7082). The ceilings (rem:four-ceilings l.7823): h*_HK =
+1,2,4,6,11,>=14,>=20; h*_1^nd = 1,2,4,6,11,>=12,>=13 with h*_1^nd(m) =
+h*_HK(m) for m <= 5; h*(6) >= 16. THE TWO TARGETS AT m = 6: a nondegenerate
+one-player game of height >= 13 (a new ceiling entry), and above all the
+orientation s_6 of prop:hk-doubling-measured(b) (l.8161): the Holt-Klee
+blow-up B_phi(s, 13) of the height-6 seed s = (0,1,3,2,6,13,12,7,14,9,8,11,
+10,5,4,15) with readout phi of support {1,8,9,10,12}, height 14 = 2 h*_HK(4)
++ 2, which is prop:hk-records' s_6 --- a one-player realisation of s_6
+would make the blow-up doubling ONE-PLAYER at the step 4 -> 6, a new
+relation between thm:blowup and prop:oneplayer-lp (the paper's realised
+doublings all need a Min vertex: prop:b2-realised, cor:seven-two-player).
+Read also prop:oneplayer-lp (l.5602), thm:readout-realise (l.8823),
+lem:readout, thm:stack and cor:stack-family (l.8422, 8506: stacking gives
+slope 11/6 but never per-state gain), prop:oneplayer-plus-one,
+prop:sink-lift, thm:no-seven and sec:ties (l.7113: no one-player game with
+m = 4, degenerate or not, runs 7; thm:flat-resolution; def:flat;
+thm:zero-timer), prop:hstar-five (l.5806: h*(5) = 12) and prop:hkfive
+(l.7278: h*_HK(5) = 11). Code: ${R18}/r18-beyond-holt-klee/ (read-only:
+the walk engine and its m = 6 state --- start from where it stopped),
+${REPO}/scripts/round18-verify/H11_m5_GAME.json and oc_verify.py,
+${SCRATCH}/solo/my_D.py (Holt-Klee by max-flow), realiseAP.py,
+${REPO}/scripts/round16-verify/hkd_check.py (the blow-up engine),
+${SCRATCH}/root16/auso.py and census/ (BA heights).
+
+WHAT TO PROVE:
+ (A) THE GRAPH AS AN OBJECT. Prove: (a) along a drive line (one row of a
+     realised system moved continuously in one coordinate, or the whole
+     system moved along a segment), the orientation changes only at
+     fences, and at a simple fence by exactly one edge reversal
+     (lem:switch); (b) the single-edge-reversal criterion for staying a
+     unique sink orientation, in general (the m <= 3 check of
+     rem:pinned-escape is a measurement --- prove the criterion or give the
+     counterexample); (c) hence W_m is a subgraph of the flip graph of
+     AUSOs and every realised orientation reached by a walk comes with a
+     realised system --- the walk is a proof device, not a heuristic.
+     State what is open: is W_m connected? is every Holt-Klee class
+     reachable from the trivial orientation?
+ (B) THE WALK AT m = 6. Resume the guided walk (heights as the guide,
+     Holt-Klee as the filter, the exact LP at each step). Targets in
+     order: any class of height >= 13 realised (build the game by
+     lem:dyadic-row, verify the outmap and the run from the game, print
+     the system as prop:hstar-one-eleven does); then s_6 itself ---
+     compute its Holt-Klee status and height yourself, then walk towards
+     it (the edge-flip distance to s_6 as the guide) and at every visited
+     orientation within distance 3 of s_6 run the exact realisation LP on
+     s_6 directly at that system's value configuration and at the
+     configurations of its neighbours. A realisation of s_6 is the
+     headline; state exactly what it makes one-player.
+ (C) TIES AT m = 5. thm:no-seven closed the degenerate question at m = 4.
+     At m = 5, h*(5) = 12 > 11 = h*_HK(5): can a DEGENERATE one-player
+     stopping game have a run of length 12? Its flat resolution
+     (thm:flat-resolution) would be a height-12 AUSO of the 5-cube (list
+     them: prop:hstar-five), none Holt-Klee. Decide it by the method of
+     thm:no-seven (read its proof at sec:ties) extended to m = 5, or by an
+     exact LP with non-strict inequalities at the tied incidences for
+     each height-12 class and each way of resolving its ties into a run
+     of length 12 --- a certificate per class, or a degenerate game
+     running 12 (build it, verify the run FROM THE GAME with the paper's
+     tie convention). Either outcome is a theorem; a search cut short is
+     not.
+ (D) Report, in the verification field, the heights reached at m = 6 and
+     the systems (denominators, leaks), and put every game in
+     games_built.
+
+KNOWN TRAPS FOR THIS ROUTE: heights are bottom-antipodal heights of the
+improvement outmap, computed by the paper's auso.py convention --- state
+the convention and the start vertex (the ceiling is over all starts); a
+system must LEAK on every row and be dyadic to be a game by lem:dyadic-row
+(or rational via lem:rational-row l.1112 with its stopping hypothesis);
+nondegeneracy means no tied incidence at ANY strategy (check all 2^m x m);
+"the walk found nothing" is not a result --- (A) and (C) are where the
+theorems are; blind search at m >= 5 has failed for hours in this project
+(the DEAD list), so keep the walk GUIDED and report its state so the next
+round can resume it.
+
+=====ROUTE promise-gap|The promise problem: is deciding val(v0) >= 1/2 + eps against <= 1/2 - eps polynomial for eps = 1/poly, target-equivalent, or neither provably
+THE OBJECT: the PROMISE PROBLEM Gap_eps and the eps-ORDER LADDER.
+rem:eps-ladder (l.12995): with eps(N) nonincreasing, log(1/eps) = poly(N),
+Ord_eps (a total preorder on Vavg u {t0,t1} correct on pairs eps apart),
+App_eps (every value to within eps) and Gap_eps (the bit of val(v0) >= 1/2
+with either answer allowed within eps of 1/2) are interreducible up to
+constant factors in eps (for dyadic eps; the four reductions are stated
+there: binary search against spliced dyadic reference chains, sorting, one
+query against m -> (t0,t1), the difference vertex of lem:duality). THE TWO
+KNOWN ENDS: for eps <= 2^{-N^gamma} the fragment is target-equivalent by
+padding (lem:denominator-sharp: the value gap is at least 4^{-a}); for
+eps > 1 - 2^{-(N-2)} it is the qualitative preorder of prop:qualitative.
+THE OPEN MIDDLE: eps = 1/poly(N), or eps = 1/4 --- "exactly whether
+prob:main reduces in polynomial time to its own promise version". What
+constrains a reduction: rem:no-amplification (l.4428) proves that a
+BLACK-BOX context on s vertices reading a plugged-in game through its gate
+multiplies a value gap by at most (4/3)(s+3) (the energy identity
+thm:energy, lem:gate, thm:two-exit), the gambler's-ruin chain attaining
+Theta(s) --- so amplifying 2^{-a} to 1/poly by composition costs 2^{a}
+vertices; nested compositions and outputs read inside the copies are NOT
+covered, and every transformation of the paper (thm:stopping-transform,
+thm:compare-equivalence, lem:normalform, thm:top) reads the edges and is
+outside the bound's scope. On the algorithmic side: thm:vi-lower (value
+iteration needs 2^{Omega(N)} steps with no players --- for the exact value;
+what it needs for App_eps at eps = 1/poly is a question), thm:contraction
+(rate 1 - 2^{-a}), thm:escape-class (an escape certificate (lambda, x)
+gives two-sided value iteration in O((a + log kappa)/log(1/lambda)) rounds
+--- the class where App is cheap), thm:few-denominator and
+thm:alphabet-iteration (exact from a grid), lem:round-recover (Legendre:
+exact values from approximations to within the denominator gap),
+thm:one-player (LP), prop:bracket (l.12951: certificates for the exact
+order are as hard as the problem), rem:order-unique, thm:order-determines,
+prop:no-halving. Prior art from memory, unchecked: Condon 1992 on the
+value gap; Dai-Ge on approximation collapse at exponentially small eps ---
+say what you remember and flag it. Code: ${REPO}/scripts/round18-verify/
+wo_verify.py, wo_lip.py; ${R18}/r18-weakest-oracle/ (read-only).
+
+WHAT TO PROVE (any one of the three, honestly labelled):
+ (A) POSITIVE: a deterministic polynomial-time algorithm for Gap_{1/poly}
+     (or Gap_{1/4}) on stopping SSGs, from first principles. Candidates
+     to test, each of which must be PROVED or REFUTED with an instance:
+     (a) value iteration for poly(N)/eps rounds decides Gap_eps --- refute
+     or prove (the paper's slow blocks G_n of thm:vi-lower have values
+     2^{-n}: what is their App_eps cost?); (b) the stopping-probability
+     path (def:discount-path) at rho = 1 - eps/poly: is w_rho within eps
+     of w* with rho = 1 - 1/poly? (the survival time can be 2^{a}: prove
+     the bound or the counterexample); (c) an LP or convex programme
+     whose optimum is within eps of the value --- the transport programme
+     over Q(G) is exact on successor-closed average parts
+     (lem:transport-exact) and off by 1/2 on W_14: what is its worst
+     error as a function of N? (d) any new idea. A polynomial algorithm
+     for Gap_{1/4} would be the strongest positive result of the project;
+     a proof that each candidate fails at eps = 1/poly, with explicit
+     families and growth laws, is a new barrier IF it covers a natural
+     approximation scheme (name the scheme; measure at >= 5 sizes; prove
+     the law).
+ (B) NEGATIVE: a polynomial-time many-one reduction SSG-Value <= Gap_eps
+     for some eps = 1/poly (target-equivalence of the whole middle). It
+     must read the edges (rem:no-amplification forbids black-box
+     amplification); prove exactly what it does to the value and why the
+     bit is preserved. Two starting ideas to test rigorously: (a)
+     amplification by RESTARTS that read the structure (on reaching t0
+     restart from v0 with probability r: the value becomes p/(1-(1-p)r),
+     a Moebius map of derivative 1/(1-(1-p)r)^2 --- bounded by (4/3)(s+3)
+     if black-box; is there a non-black-box restart scheme, e.g. into
+     intermediate vertices whose values you know relative to v0, whose
+     amplification exceeds the bound?); (b) the denominator: the value
+     lies on a grid of mesh >= 4^{-a} (lem:denominator-sharp); can
+     App_{eps} on POLYNOMIALLY MANY derived games (different sink payoffs
+     or plugged constants, all read from G) pin the grid point? Prove or
+     refute: an eps-approximation of val on G and on the games G_theta
+     with t1 replaced by a dyadic theta (or v0 by a difference vertex)
+     determines val exactly for eps = 1/poly.
+ (C) A THEOREM LOCATING THE MIDDLE: e.g. Gap_{1/poly} in P iff Ord_{1/poly}
+     in P iff App_{1/poly} in P is already in rem:eps-ladder; go beyond
+     it: prove that Gap_eps for eps = 1/poly is equivalent to the exact
+     problem on a NAMED subclass (e.g. games with a = O(log N) are exact
+     by thm:few-avg, so nothing there; games whose value gap at v0 is
+     >= 1/poly are Gap-decidable trivially by an exact algorithm ---
+     which is the point: prove or refute that the value gap
+     |val(v0) - 1/2| is >= 1/poly on some structural class where exact
+     solving is not known polynomial), or prove that the zero-error
+     randomised complexity of Gap_{1/4} is polynomial (random-facet is
+     e^{2 sqrt n} for exact: does the promise help it? PROVE the
+     recurrence you claim).
+
+KNOWN TRAPS FOR THIS ROUTE: Gap is a PROMISE problem --- an algorithm may
+answer anything inside the gap, and a reduction must map instances
+outside the promise to instances outside the promise; eps must be a
+function of N, stated; "approximation within eps" in the additive sense,
+values in [0,1]; any use of an LP solver's polynomiality is an
+assumption to state; a Moebius amplification p -> p/(1 - (1-p) r) is
+black-box and rem:no-amplification bounds it; the paper's transformations
+move the threshold to an explicit dyadic theta (thm:stopping-transform),
+keep that in mind when composing; prior art (Condon's gap, approximation
+results) from memory only, flagged, never a proof.
+
+=====ROUTE extension-complexity|Extended formulations: the value polytope, the exactness level of the choice-variable hierarchy as a growing function, and what no polynomial-size LP can project to
+THE OBJECT: EXTENDED FORMULATIONS. Two polytopes attached to a stopping
+SSG G: (1) the VALUE POLYTOPE V(G) := conv{val_sigma : sigma in {0,1}^m}
+in [0,1]^V (with Min playing optimally against each sigma; its profile
+version V_C(G) := conv{val_{sigma,tau}} over all positional pairs), whose
+coordinatewise maximum is w* = val_{sigma*} (thm:opt-subcube,
+thm:determinacy) so that deciding val(v0) >= 1/2 is deciding max_{V(G)}
+x(v0) >= 1/2; and (2) the CHOICE-VARIABLE HIERARCHY R_j(G) of
+rem:choice-lift (l.15684): each controlled row x(v) = y_v x(v^0) + (1-y_v)
+x(v^1) with y_v in [0,1], level-j Sherali-Adams over the y's, level zero
+= Q(G) (def:transport l.15398, lem:transport-dim, thm:transport-objective:
+w* is a vertex of Q(G) and the unique point of Q(G) with every
+controlled row tight at one action, since the complementarity sum q is
+>= 0 on Q(G) with q = 0 only at w*), level one = Balas' disjunctive
+closure. Known: level one fails on W_14 (a five-point certificate) and is
+asymptotically vacuous on the router tree T_d(e,kappa) (prop:router-tree
+l.15722: max_{R_1} x(root) >= 1 - Theta(1/N) against w* = kappa, with
+ONE player and a = e + D CONSTANT average vertices); rem:merged-matrix
+(l.15790): with one player every x in R_1 has D := x - w* >= 0 and
+D <= M D for the merged matrix M, so R_1 = {w*} whenever M is transient,
+in particular when no Max vertex is a splitter; the route's claim
+"exact at level >= min(|Vmax|, rho + 1)" is UNPROVED and recorded as a
+claim; exactness at any fixed level is target-equivalent and not
+conjectured; thm:lasserre-vacuous (l.15572): the degree-two Lasserre lift
+of Q(G) adds nothing on W_10 and W_14. DEAD in the paper: vertex
+enumeration of Q(G) (exponentially many vertices on linear-time
+instances). What the paper does NOT have: the polytope V(G) at all; any
+level lower bound growing with N; any nonnegative-rank / extension
+complexity statement. Read also thm:one-player (one player: w* is the
+least element of Q(G), an LP), rem:transport-objective (naming an optimal
+profile is target-equivalent), prop:oneplayer-lp (the occupancy polytope
+X(G) of d'Epenoux, whose vertices are the 2^m strategies), sec:projection
+(thm:profile-uso, prop:lcp: the profile cube as a P-matrix LCP),
+rem:lcp. Code: ${REPO}/scripts/round18-verify/rl_verify.py (the level-one
+lift as one exact LP by Balas' homogenisation), ${REPO}/scripts/
+round17-verify/cl_verify.py; ${R18}/r18-rlt-two/ and ${R17}/r17-convex-lift/
+(read-only).
+
+WHAT TO PROVE:
+ (A) THE LEVEL AS A GROWING FUNCTION. Define lev(G) := the least j with
+     R_j(G) = {w*} (state the level-j lift precisely: which products,
+     which linearisation --- the paper defines levels zero and one only;
+     define level j so that level one agrees with Balas' closure and
+     PROVE that agreement). Then PROVE a growth law: a family G_n, built
+     as games and verified, with lev(G_n) >= f(n) -> infinity (f = Omega(n),
+     or Omega(log n), or Omega(sqrt n) --- say which and prove it), by an
+     explicit feasible point of R_{f(n)-1}(G_n) other than w* whose
+     membership is certified level by level (the router tree gives level
+     one; a tree of depth d with d independent splitters is the natural
+     candidate for level d --- prove or refute that the merged-matrix
+     bound and its higher-level form of rem:merged-matrix bound lev from
+     above by the number of splitters, and find a family where the number
+     of splitters and lev both grow). A proved lev(G_n) = Omega(n) on a
+     ONE-PLAYER family is a new barrier: the hierarchy has no fixed exact
+     level even where the problem is an LP.
+ (B) THE VALUE POLYTOPE. Prove from first principles the factorisation
+     theorem you use (an extended formulation of size r exists iff the
+     slack matrix of P has nonnegative rank <= r, both directions --- half
+     a page each; Yannakakis, from memory, flag it) and then: (a) compute
+     V(G) exactly (vertices, facets, slack matrix, nonnegative rank
+     bounds by rectangle covering / fooling sets) on the paper's small
+     instances (the ladder L_n at n <= 5, WD(e,j,m), the seven-vertex game
+     of rem:own-stall, W_14, G8); (b) prove a LOWER BOUND on the
+     extension complexity of V(G_n) for an explicit family (a fooling set
+     of exponential size in the slack matrix is the standard route; the
+     ladder's 2^n distinct value vectors are the candidate) --- and then
+     say honestly what it means: V(G) for a one-player game is
+     computable by LP as far as its coordinatewise maximum goes, so an
+     exponential xc(V) is a statement about a polytope, not about the
+     problem, UNLESS you can prove (c) that some polytope whose
+     polynomial extended formulation would put SSG-Value in P has
+     exponential extension complexity --- state such a polytope (the
+     convex hull of the (sigma, val_sigma) pairs? the profile polytope
+     V_C?) and prove either the equivalence or the bound.
+ (C) THE ONE-PLAYER SIDE, TO CALIBRATE. With Vmin empty, is V(G) the
+     projection of the occupancy polytope X(G) (d'Epenoux) under an
+     affine map --- i.e. does V(G) have a polynomial-size extended
+     formulation for one player? Prove or refute with an instance
+     (the ladder). If yes, the one-player value polytope is small and
+     (B)(b) must use two players; if no, xc(V) is not the obstacle and
+     say so.
+
+KNOWN TRAPS FOR THIS ROUTE: R_j must be defined as a linear programme of
+size N^{O(j)} whose exactness is what you bound --- a hierarchy that is
+exact at level one by definition on one-player games (min over Q) is not
+the question, the MAX side is (prop:router-tree bounds max_{R_1});
+"exponential extension complexity" of a polytope nobody optimises over is
+not a barrier --- (B)(c) is the only form that counts against the
+problem; every feasible point you exhibit in a lift must be certified by
+the lift's own linear constraints in exact arithmetic (the paper's
+five-point certificate style), not by a solver's status; a family must be
+built as games and verified (games_built), with >= 5 sizes and a proved
+growth law.
+
+=====ROUTE handicap-tangent|The handicap-zero class against its own cut: a family silent under the tangent cut, or a proved rate on the strongly convex slice with a member outside the eight classes, and the damping closure of R
+THE OBJECT: the class R := {stopping SSGs whose harmonic normal form over
+C has B := sym(R_0^T R_1) >= 0} of rem:handicap-base (l.9319), on which the
+complementarity sum q(x) = sum_v (x(v) - x(v^0))(x(v) - x(v^1)) is CONVEX
+on Q(G) with unique zero w*, its strongly convex slice R_lambda := {B >=
+lambda I}, and the TANGENT CUT M7 of rem:tangent-cut (l.17159): keep the
+Z-seeded transport polytope, test the three readings of the standing rule
+over it each round, and adjoin the tangent cuts nabla q(x).(y - x) <= -q(x)
+at the 8|C| lexicographic optima of (+-g_{v,i}, +-x(v)) (a fixed tie-break
+is part of the definition; q(y) = q(x) + nabla q(x).(y-x) + |y-x|_B^2 on
+the affine hull of Q(G)). Known: M7 is sound on R, lies outside the
+language of thm:convex-barrier-both (l.17134: its certificate method bounds
+pairwise differences, a tangent cut is an affine inequality in all of x),
+decides WD(e,j,m) at round one and vertex 4 of the seven-vertex game of
+rem:own-stall, and BC(2,s) at round one or two by the tie-break; WD and
+CC(L,m) lie in R with B printed (lambda_min = 2^{-(e+j)} and 2^{-3L}),
+BC(e >= 3, s) and CV(e,s) lie outside; the boundary of R is attained
+(prop:handicap-singular l.9374: B singular on an 8-vertex stopping game);
+HZ(n) (prop:hz l.9393) is in R with lambda_min(B) = 1/4 for every n,
+outside every named bound as presented, yet polynomial by a reduced
+1/2-contraction (lem:readout with C pinned; a companion to
+prop:a-presentation) --- so it is NOT the member of R outside the tractable
+classes that rem:handicap-base asks for; "no family designed against the
+cut exists yet". Membership in R is a property of the presentation (the
+subdivision carries 16 of 181 members out). rem:signdef's damping-closure
+claim was struck in round 17 (a 9-vertex counterexample for
+sign-definite games); whether R is closed under Condon's damping
+(def:damping, def:discount-path: every step survives with probability
+rho) is open. Read also thm:transport-objective, lem:transport-dim,
+def:transport (l.15398), rem:own-successor / prop:own-stall / rem:own-stall
+(sec:wedge l.18298), def:wedge and thm:wedge-proved, lem:wedge-verts,
+def:wedge-chain (the certificate chain), sec:bc (BC(e,s), thm:bc-lower),
+def:cv, thm:hybrid-convex-barrier (the method for lower bounds),
+prop:lcp and rem:lcp (P-matrix LCP, handicap: prior art, closed as not
+ours), lem:round-recover (exact values from approximations). Code:
+${REPO}/scripts/round18-verify/hz_wedge.py, hz_ring.py, hz_w7.py, hz_bc.py,
+hzlib.py (the root agent's implementation of M7 --- READ it for the
+paper's tie-break), ${REPO}/scripts/round17-verify/ (BC_*, CVX4, CVX6 game
+files), ${R18}/r18-convex-class/ (read-only).
+
+WHAT TO PROVE:
+ (A) THE FAMILY AGAINST THE CUT. Design a family in R (B >= 0 VERIFIED from
+     the normal form at every size) with a value-distinguishing controlled
+     vertex at which M7 --- with the three readings, Z-seeded, the paper's
+     tie-break --- is silent for a number of rounds superpolynomial in N,
+     and PROVE it. The certificate method of thm:convex-barrier-both cannot
+     bound an affine cut, so you need a new method: e.g. a nested sequence
+     of convex sets P_k containing w* and the cut points of round k, on
+     which every tangent cut is implied by the constraints of P_{k+1}
+     (Kelley's method has known slow instances --- from memory, flag ---
+     where the cut points stay on a face far from the optimum); design so
+     that the lexicographic optima sit where q is exponentially small
+     (q(x) >= |x - w*|_B^2 with lambda_min(B) exponentially small along a
+     near-kernel direction: the cut's depth is q(x)). Measure at >= 5
+     sizes with the root agent's hzlib.py (state the tie-break), then
+     PROVE the growth law. This is the deliverable that counts on the
+     negative side.
+ (B) THE RATE ON THE STRONGLY CONVEX SLICE. On R_lambda, q is
+     lambda-strongly convex on the affine hull of Q(G) and w* is its
+     minimiser over the polytope Q(G). PROVE a first-principles bound on
+     the number of rounds of a cutting-plane or projection method that
+     reaches q(x_k) <= 2^{-poly} --- polynomial in N and 1/lambda --- and
+     then recover w* exactly by lem:round-recover (values on a grid of
+     mesh >= 4^{-a}). State every assumption (exact LP solving as a
+     primitive? bit sizes of the iterates? --- Kelley's method has no
+     polynomial rate in general; the ellipsoid method or a central-cut
+     scheme does, from memory, flag; prove what you use, or mark the
+     GAP exactly). Result: R_lambda with lambda >= 1/poly(N) is a
+     POLYNOMIAL CLASS (a class defined by a spectral condition on the
+     normal form). Then the question rem:handicap-base asks: EXHIBIT a
+     member of R_{1/poly} outside the eight classes and outside
+     prop:hz's reduced-contraction trick, on the subgame reachable from
+     v0 --- prove membership and non-membership --- or prove that every
+     member of R_lambda is solved by a reduced contraction of rate
+     depending on lambda (which would make (B) a restatement of prop:hz's
+     mechanism: say so).
+ (C) THE DAMPING CLOSURE. Prove or refute: if G is in R then G_rho
+     (def:discount-path) is in R for every rho in (0,1); and the same for
+     the stopping transformation of thm:stopping-transform. A refutation
+     needs an explicit game with B >= 0 and B_rho not >= 0, verified in
+     exact arithmetic with the eigenvalue certificate (a negative
+     Rayleigh quotient), and the smallest such.
+ (D) The 7-vertex game of rem:own-stall is in R; is the class of games at
+     which all three readings are silent at round zero but M7 decides at
+     round one characterisable (a property of the lexicographic optima)?
+     A theorem here is a new-relation; a list of instances is not.
+
+KNOWN TRAPS FOR THIS ROUTE: B is computed in the harmonic normal form
+over C (first-passage rows), not on the raw game; membership is checked on
+the reachable subgame; the cut points are the lexicographic optima of the
+Z-SEEDED polytope --- unseeded runs are a different mechanism; a stall
+needs all three readings AND the cut silent at a value-distinguishing
+vertex; a class must have a member outside thm:few-avg, thm:few-escape,
+thm:kacyclic, thm:bounded-components, thm:escape-class,
+thm:few-denominator, thm:modulator, thm:qp, min(m,k) = O(log N) and
+prop:hz's contraction, all on the reachable subgame; every family built
+as games (games_built), >= 5 sizes, proved growth law.
+
+=====ROUTE fresh-19|A blind route: a formulation of the problem outside every approach family of the inventory
+THE OBJECT: YOURS TO CHOOSE, subject to one rule: it must lie OUTSIDE every
+approach family the inventory already holds. Read ${SCRATCH}/round19/
+inventory.txt in full first. The families already tried, across eighteen
+rounds (each with its results in frontier.tex): monotone fixed-point theory
+of the Shapley operator; stopping transformations and denominators;
+polynomial classes by cycle colours, components, escape certificates,
+denominators, modulators, treewidth; the structure of the optimal set and
+short improving paths; switching rules (all-switches, single-switch,
+least-index, smallest-gap, bidirectional, best-response restart) and their
+laws; the AUSO / bottom-antipodal identification, Holt-Klee, blow-ups,
+readouts, realisation; propagation calculi (simulation preorder, slack,
+min-plus closure, ratio, Moebius continuum), policy-evaluation seeding,
+the transport LP, the transport-slack hybrid, the tangent cut; convex
+lifts (Lasserre degree two, Sherali-Adams over choice variables, Balas);
+LCP / Lemke / handicap / P-matrix and interior point; homotopies (bias,
+stopping probability, damping) and folds; query and evaluation models;
+the order lattice and unique certificates; variational / energy /
+reversibility; oracle hierarchies and partial information; realisation
+spaces as semialgebraic sets; random facet and subexponential bounds;
+Newton-Dinkelbach, nonlinear Perron-Frobenius, Schur elimination, softmax
+regularisation, symmetric improvement, UEOPL, submodularity, deformed
+products, extension complexity and the promise problem (this round's
+other routes). You are NOT told which of these the root agent favours,
+and you should not care.
+
+WHAT TO DO:
+ (A) Choose a formulation the list does not contain --- an algebraic,
+     automata-theoretic, combinatorial, probabilistic, geometric or
+     complexity-theoretic view of the object "value of a stopping SSG"
+     or of the object "the switchable set as a function of the strategy"
+     that no listed family uses --- and say in the object field what it
+     is and why it is not one of the listed families under another name.
+ (B) Prove something about the problem THROUGH it: a theorem, a
+     construction, a refutation, with the same standard as every route
+     (exact arithmetic, first principles, the novelty pre-check per
+     result, games built for every instance). A statement of the same
+     strength as the target (see the REFORMULATIONS list in the digest)
+     is a dead-end unless you supply a genuinely new proof of it.
+ (C) If your formulation collapses onto a listed family, PROVE the
+     collapse (that is a result) or report it as a dead-end; do not
+     dress it up.
+
+KNOWN TRAPS FOR THIS ROUTE: the digest's REFORMULATIONS AND EQUIVALENCES
+are all target-equivalent --- ending at one of them is ending at the
+target; the eight polynomial classes and the trivial min(m,k) = O(log N)
+must be excluded, on the reachable subgame, for any class you claim;
+prior art from memory is flagged and is never a proof; random sampling
+finds nothing here; a barrier must cover a rule someone runs.
