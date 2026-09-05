@@ -241,10 +241,12 @@ instance of the pivot is the third level, of which the outer half is
 realised on $194$ vertices while the translated layer remains unrealised
 (\Cref{prop:b3-outer}) and out of reach of the pinned shape that realised
 the outer half, which provably cannot double (\Cref{cor:pinned-no-doubling}),
-and of the escape shape beyond it for the two doublings carrying its
-$\beta$-coordinate, so that over the published level-two block one
-doubling with a mixed-sign rest readout is all that remains of that route
-(\Cref{thm:escape-no-beta,cor:escape-m3});
+and of the escape shape beyond it, for the two doublings carrying its
+$\beta$-coordinate by a tournament and, over the published level-two block
+and in either escape shape, for every doubling by an exact Farkas
+certificate once the block's drive is the target's $\beta_2$-coordinate
+(\Cref{thm:escape-no-beta,cor:escape-m3,thm:escape-block-closed}), which
+leaves there only the second shape with the outer pair relabelled;
 the height of every blow-up is exactly $2h+2$
 (\Cref{prop:blowup-height}). The one-player ceiling is
 $1,2,4,6$ for $m\le4$, at least $11$ at $m=5$ --- exactly $11$ for
@@ -1389,6 +1391,328 @@ $\val_{G_m}(v_0)>\tfrac12-\tfrac2{8D}>\theta$, and $\val_G(v_0)<\tfrac12$
 gives $\val_{G_m}(v_0)\le\tfrac12-\tfrac4{8D}<\theta$; so the two
 threshold questions agree. The size is that of the theorem plus $k+1=O(a)$.
 \end{proof}
+
+\subsection{Values as counts: routings, and the rotor game}\label{sec:routings}
+
+The round-$19$ blind route replaced the probabilistic semantics by a
+combinatorial one and then by a deterministic one. Throughout this
+subsection $G$ is an SSG, $S$ its set of non-sinks, $a=|\Vavg|$ and
+$(\sigma,\tau)$ a positional pair; nothing below uses the Shapley operator,
+a linear programme or a propagation calculus.
+
+\begin{definition}[Selections and routings]\label{def:routing}
+A \emph{selection} for $(\sigma,\tau)$ is a map $f\colon S\to\{0,1\}$ with
+$f(v)=i$ at $v\in\Vmax$ when $\sigma(v)=v^{(i)}$ and at $v\in\Vmin$ when
+$\tau(v)=v^{(i)}$, free at $v\in\Vavg$ (selections are maps to indices, so a
+vertex whose two out-edges coincide still has two selections through it).
+Its \emph{functional digraph} sends $v\in S$ to $v^{(f(v))}$. A selection is
+a \emph{routing} if its functional digraph has no cycle, equivalently if
+from every vertex the $f$-path reaches a sink, whose name is then
+$\mathrm{end}_f(v)\in\{t_0,t_1\}$. Write $\mathcal R(\sigma,\tau)$ for the
+set of routings; there are $2^{a}$ selections, so
+$|\mathcal R(\sigma,\tau)|\le2^{a}$.
+\end{definition}
+
+\begin{lemma}[When routings exist]\label{lem:routing-nonempty}
+$\mathcal R(\sigma,\tau)\ne\emptyset$ iff the chain $M_{\sigma,\tau}$ is
+absorbing.
+\end{lemma}
+
+\begin{proof}
+Call $w$ an \emph{allowed successor} of $v\in S$ if $w=v^{(i)}$ for an index
+$i$ permitted to $f$ at $v$. Let $A_0:=\{t_0,t_1\}$,
+$A_{k+1}:=A_k\cup\{v:\text{some allowed successor of $v$ lies in }A_k\}$
+and $A_\infty:=\bigcup_kA_k$. If $A_\infty\supseteq S$, choosing at each $v$
+an allowed successor of smaller rank gives a selection without cycles. If
+$U:=S\setminus A_\infty\ne\emptyset$, every allowed successor of a vertex of
+$U$ lies in $U$, so $U$ is closed for $M_{\sigma,\tau}$ and no vertex of $U$
+reaches a sink; and every selection maps the finite nonempty $U$ into
+itself, hence has a cycle.
+\end{proof}
+
+\begin{theorem}[The routing formula]\label{thm:routing}
+Let $(\sigma,\tau)$ be absorbing, $Z:=|\mathcal R(\sigma,\tau)|\ge1$ and
+$c(v):=|\{f\in\mathcal R(\sigma,\tau):\mathrm{end}_f(v)=t_1\}|$ for $v\in S$.
+Then $v_{\sigma,\tau}(v)=c(v)/Z$ for every $v\in S$: the value of a
+positional pair is the fraction of its routings that route the vertex to
+$t_1$.
+\end{theorem}
+
+\begin{proof}
+Put $c(t_1):=Z$, $c(t_0):=0$, $x:=c/Z$. At a controlled vertex $v$ with
+chosen successor $s$, $\mathrm{end}_f(v)=\mathrm{end}_f(s)$ for every
+routing, so $x(v)=x(s)$. Let $u\in\Vavg$, split
+$\mathcal R=\mathcal R^{0}\sqcup\mathcal R^{1}$ by $f(u)$, write $f_{-u}$ for
+the restriction of a selection to $S\setminus\{u\}$ and let $P$ be the set
+of those $f_{-u}$ with no cycle avoiding $u$. For $f_{-u}\in P$ the
+$f_{-u}$-path from $u^{(i)}$ cannot cycle, so it ends at $t_0$, $t_1$ or $u$;
+call that endpoint $d^{i}\in\{t_0,t_1,u\}$, so
+$\mathcal R^{i}=\{f_{-u}\in P:d^{i}\ne u\}$. With
+$A^{i}:=|\{f_{-u}\in P:d^{i}=t_1\}|$ one has $c(u)=A^{0}+A^{1}$ and
+\[
+ c(u^{(0)})=A^{0}+|\{d^{0}=t_1,d^{1}\ne u\}|+|\{d^{0}=u,d^{1}=t_1\}|,
+\]
+the first summand counting the routings of $\mathcal R^{0}$ and the other
+two those of $\mathcal R^{1}$, and symmetrically for $c(u^{(1)})$. Since
+$A^{0}=|\{d^{0}=t_1,d^{1}\ne u\}|+|\{d^{0}=t_1,d^{1}=u\}|$ and likewise
+for $A^{1}$, adding gives $c(u^{(0)})+c(u^{(1)})=2c(u)$ (the degenerate
+cases $u^{(0)}=u$ and $u^{(0)}=u^{(1)}$ included). Hence $x$ solves
+$(I-Q)x_{|S}=b$ for the substochastic matrix $Q$ of $M_{\sigma,\tau}$; the
+pair being absorbing, $\rho(Q)<1$, the solution is unique, and
+$v_{\sigma,\tau}$ is one. (Verified by enumeration against
+\Cref{thm:eval-stopfree}'s values on $7840$ pairs of $600$ random games
+and on $G_8$, $S$, $S_r$, $H_m$, $G_m$, $\mathrm{WD}$, $\mathrm{CC}$ by the
+route, on $14117$ pairs of games with coincident successors and loops by
+its auditor, and here on $400$ absorbing pairs,
+\texttt{scripts/round19-verify/fr\_root.py}.)
+\end{proof}
+
+\begin{corollary}[The routing count is a determinant, and a common denominator]\label{cor:routing-det}
+Let $M$ be the integer matrix indexed by $S$ whose row at $u\in\Vavg$ is
+$2e_u-e_{u^{(0)}}-e_{u^{(1)}}$ and at a controlled $v$ with chosen
+successor $s$ is $e_v-e_s$, sink columns deleted. Then
+$\det M=|\mathcal R(\sigma,\tau)|$, so the whole value vector of an
+absorbing pair is integral over one integer in $[1,2^{a}]$. Moreover
+$\det M=\det A=\det A_U\cdot\det A_{U^{c}}$ for the matrix $A$ on $\Vavg$ of
+\Cref{lem:denominator}'s proof and its principal submatrices on the set
+$U$ of average vertices from which $t_1$ is reachable and on its
+complement; so the integer $\det A_U$ of \Cref{lem:denominator-sharp}
+divides the routing count and is smaller exactly when $U^{c}\ne\emptyset$
+(equal in $192$ of $253$ pairs measured by the route, $334$ of $428$ by
+its auditor).
+\end{corollary}
+
+\begin{proof}
+Induction on $a$. For $a=0$, $M=I-P$ with at most one entry $1$ off the
+diagonal per row: if the functional digraph is acyclic a topological order
+makes $M$ unitriangular, so $\det M=1=|\mathcal R|$; if it has a cycle, the
+rows of the cycle's vertices sum to zero, so $\det M=0=|\mathcal R|$. For
+$a\ge1$ pick $u\in\Vavg$ and write its row as
+$(e_u-e_{u^{(0)}})+(e_u-e_{u^{(1)}})$; the determinant is linear in that
+row, so $\det M=\det M^{0}+\det M^{1}$ with $M^{i}$ the matrix with $u$
+frozen to index $i$, while $|\mathcal R|=|\mathcal R^{0}|+|\mathcal R^{1}|$.
+For the factorisation, the pair-subgraph on $C$ is acyclic for an
+absorbing pair, so the controlled rows of $M$ can be eliminated in
+topological order with unit pivots, which contracts each controlled
+vertex onto the average vertex or sink its deterministic walk reaches;
+what remains is exactly the matrix $A$ of \Cref{lem:denominator}'s proof,
+with $\det M=\det A$. From a vertex of $U^{c}$ no successor reaches $t_1$,
+so the rows of $U^{c}$ have no entry in the columns of $U$, $A$ is block
+triangular for the splitting $U\sqcup U^{c}$, and
+$\det A=\det A_U\det A_{U^{c}}$. (The determinant identity was checked on
+the same $400$ pairs and, without enumeration, on the $138$-, $260$- and
+$58$-vertex games of \Cref{prop:b2-realised}, \Cref{prop:hstar-one-eleven}
+and \Cref{rem:blowup-measured}, every value's denominator dividing
+$\det M$ there; the factorisation on all $400$ pairs, $197$ of them with
+$U^{c}\ne\emptyset$, \texttt{fr\_root.py}.)
+\end{proof}
+
+\begin{remark}[Attribution]\label{rem:routing-attribution}
+The identity of \Cref{thm:routing} and its determinant form are the
+\emph{forest balance} of a round-ten free-search route, confirmed then by
+the root agent on $800$ and on $4401$ (game, pair) instances and kept out
+of this document because the only proof then available went through the
+all-minors matrix-tree theorem, a fifth import; that route's further claim
+that $\det A_U$ \emph{is} the routing count was refuted then, and
+\Cref{cor:routing-det} now says exactly by which factor it differs. What
+is new is the proof --- a term-by-term count and the linearity of a
+determinant in one row --- so that the identity enters without any import.
+From memory and unchecked against any source, it is the absorbing case of
+the Markov-chain tree theorem (Kirchhoff, Tutte, Chaiken--Kleitman).
+\end{remark}
+
+\begin{corollary}[The product case]\label{cor:routing-acyclic}
+$|\mathcal R(\sigma,\tau)|=2^{a}$ iff the digraph in which average vertices
+keep both out-edges and controlled vertices keep the chosen one is
+acyclic, and then the routing measure is the uniform product measure on
+$\{0,1\}^{\Vavg}$; this holds for every pair iff the game digraph is
+acyclic. Bounded routing counts define no new polynomial class: if
+$\nu(G):=\max|\mathcal R(\sigma,\tau)|$ over absorbing pairs is at most
+$q(N)$ then, the values being those of an optimal pair, their common
+denominator divides that pair's routing count and is at most $\nu(G)$, so
+$G$ lies in the class of \Cref{thm:few-denominator} and is solved by it in
+$O(N^{2}\nu(G)^{2})$. (The route stated that every pair's denominator
+divides $\nu(G)$, which its auditor refuted on a six-vertex game with
+routing counts $6$ and $8$ and value $\tfrac23$; only the bound survives.)
+\end{corollary}
+
+\begin{proof}
+A cycle of the digraph uses at most one out-edge at each vertex, so some
+selection contains it and is no routing; conversely if the digraph is
+acyclic so is every selection. The class statement is
+\Cref{thm:routing} at an optimal pair, \Cref{thm:determinacy} making
+$\val=v_{\sigma^\ast,\tau^\ast}$.
+\end{proof}
+
+\begin{proposition}[The retyping identity]\label{prop:retyping}
+Let $G$ be stopping, $v\in C$, and freeze the other controlled vertices at
+a positional pair. If $v$ is retyped as an average vertex and the frozen
+pair is absorbing there, its value vector is
+$\bigl(Z^{0}v^{0}+Z^{1}v^{1}\bigr)/(Z^{0}+Z^{1})$, where $v^{i}$ is the value
+vector with $v$ frozen to action $i$ and $Z^{i}$ the number of routings of
+that frozen pair ($v^{i}$ is immaterial when $Z^{i}=0$). More generally,
+weighting a selection by $\prod_{u\in C}p_u^{[f(u)=1]}(1-p_u)^{[f(u)=0]}$
+for $p\in[0,1]^{C}$, the value at $v_0$ of the chain in which each
+controlled vertex $u$ takes its index $1$ with probability $p_u$ is
+$A(p)/B(p)$, with $A$ and $B$ the weights of the routings sending $v_0$ to
+$t_1$ and of all routings, both multilinear in $p$ and $B>0$ on a stopping
+game.
+\end{proposition}
+
+\begin{proof}
+Each selection contributes a monomial of degree at most one in each $p_u$,
+and the term-by-term proof of \Cref{thm:routing} applies to the chain
+with out-edge probabilities $1-p_u,p_u$ at $u$; $B>0$ because $B$ is a
+convex combination of the corner counts $|\mathcal R|\ge1$. At $p_v=\tfrac12$
+with the other coordinates at a corner, $A$ and $B$ are the averages of
+their two corner values, which is the display. (Checked on $150$ random
+stopping games by the route's auditor and on $52$ here, \texttt{fr\_root.py}.)
+\end{proof}
+
+The deterministic avatar of the routing measure is the rotor-router: each
+average vertex carries a rotor that alternates between its two out-edges,
+and chips are released one at a time. With two players routing the chip at
+their own vertices this is a finite perfect-information game with no
+chance move, and it computes the value --- up to an additive constant that
+the problem cannot afford.
+
+\begin{definition}[The $n$-chip rotor game]\label{def:rotor}
+A \emph{rotor configuration} is $\rho\in\{0,1\}^{\Vavg}$. A chip at a sink
+stops; at a controlled vertex its owner moves it to a successor of his
+choice; at $u\in\Vavg$ it moves to $u^{(\rho_u)}$ and $\rho_u$ is replaced
+by $1-\rho_u$. In $\mathrm{ROT}_\rho(n)$ the chips $1,\dots,n$ are released
+one at a time from $v_0$, the next after the previous has stopped, the
+rotor configuration persisting; Max maximises and Min minimises the number
+$\mathrm{OUT}_n$ of chips stopping at $t_1$, both seeing the whole state.
+Its value is $M_\rho(n)$.
+\end{definition}
+
+\begin{lemma}[Termination]\label{lem:rotor-terminate}
+On a stopping SSG every play of $\mathrm{ROT}_\rho(n)$ is finite, so the
+reachable states (chips left, position, rotor configuration) form a
+finite acyclic graph and $M_\rho(n)$ is defined by backward induction;
+under positional play one chip is absorbed within $N2^{a}$ steps. For an
+absorbing pair the same holds with the pair's chain in place of $G$.
+\end{lemma}
+
+\begin{proof}
+If a chip walked for ever, the set $U$ of vertices it visits infinitely
+often would contain a successor of each of its vertices, both successors
+of each of its average vertices (an average vertex entered infinitely
+often alternates its rotor) and no sink: a trap, against
+\Cref{lem:trapchar}; for a pair, a closed set of its chain avoiding the
+sinks, against absorption. A play revisiting a state (chips left,
+position, rotor) would be infinite, so no reachable state recurs. Under
+positional play (position, rotor) determines the next state, and there
+are $N2^{a}$ such pairs.
+\end{proof}
+
+\begin{theorem}[The rotor identity]\label{thm:rotor-identity}
+Let $h\colon V\to\mathbb R$ satisfy $h(t_0)=0$, $h(t_1)=1$ and
+$2h(u)=h(u^{(0)})+h(u^{(1)})$ at every $u\in\Vavg$. Run $\mathrm{ROT}_\rho(n)$
+under any play, let $K_u$ be the number of visits to $u\in\Vavg$, put
+$s_u:=+1$ if $\rho_u=0$ and $-1$ otherwise, and
+$\delta_u:=\tfrac12\bigl(h(u^{(0)})-h(u^{(1)})\bigr)$. Then
+\[
+ \mathrm{OUT}_n=n\,h(v_0)+\sum_{u\in\Vavg}s_u\,[K_u\ \text{odd}]\,\delta_u
+ +\sum_{v\in C}\ \sum_{\text{visits to }v}\bigl(h(\text{chosen successor})-h(v)\bigr).
+\]
+\end{theorem}
+
+\begin{proof}
+Telescope $h$ along each chip's path and sum the increments by vertex: the
+$j$-th visit to $u\in\Vavg$ contributes $(-1)^{j-1}s_u\delta_u$, and
+consecutive visits cancel in pairs.
+\end{proof}
+
+\begin{corollary}[The rotor sandwich]\label{cor:rotor-sandwich}
+Let $G$ be stopping, $w=\val$ and
+$\mathcal A(G):=\sum_{u\in\Vavg}|w(u^{(0)})-w(u^{(1)})|\le a$. Then for every
+$n\ge1$ and every $\rho$, $|M_\rho(n)-n\val(v_0)|\le\tfrac12\mathcal A(G)$;
+so $\val(v_0)=\lim_nM_\rho(n)/n$ for every $\rho$, the value being the
+growth rate of a deterministic game. The constant is attained: on $E_1$
+with $\Vmax=\{v_0\}$, $\Vavg=\{u_1,u_2\}$, $v_0\to(u_1,u_2)$,
+$u_i\to(t_1,t_0)$, one has $\val(v_0)=\tfrac12$, $\mathcal A=2$ and
+$M_{(0,0)}(n)=\tfrac n2+1$ for every even $n$, while a positional Max
+forces only $\lceil n/2\rceil$, so positional play is not optimal in the
+rotor game.
+\end{corollary}
+
+\begin{proof}
+Take $h=w$ in \Cref{thm:rotor-identity}: Max routing every chip to an
+optimal successor kills his terms, Min's terms are nonnegative, and the
+average terms are at least $-\tfrac12\mathcal A(G)$; dually for Min. On
+$E_1$, Max sends each chip to a vertex whose rotor points at $t_1$ if
+there is one and to $u_1$ otherwise: the first two chips reach $t_1$ and
+leave both rotors at $1$, after which the chips alternate, giving
+$2+\lfloor(n-2)/2\rfloor$; a positional Max uses one $u_i$, whose rotor
+alternates from $0$. (The exact rotor-game value by backward induction on
+$E_1$ for $n\le10$ and on $276$ random small games here, the identity on
+$330$ runs, \texttt{fr\_root.py}; the auditor found the constant attained
+at both ends, $M_{(1,1)}(n)=\tfrac n2-1$.)
+\end{proof}
+
+\begin{remark}[Exactness over a rotor period]\label{rem:rotor-period}
+For an absorbing pair let $\Phi$ send $\rho$ to the configuration left by
+one chip released at $v_0$; $\Phi$ is well defined by
+\Cref{lem:rotor-terminate}, every orbit is eventually periodic, and if
+$\rho$ is recurrent with period $p\le2^{a}$ then every $K_u$ over those $p$
+chips is even (the rotor at $u$ has period two), so
+\Cref{thm:rotor-identity} with $h=v_{\sigma,\tau}$ gives
+$v_{\sigma,\tau}(v_0)=\mathrm{OUT}_p/p$ exactly: a positional pair is
+evaluated by counting, and its denominator divides $p$. As an algorithm
+this is inside \Cref{thm:few-avg}'s regime ($p\le2^{a}$ chips of
+polynomially many steps). Whether $p$ always divides the routing count
+$|\mathcal R(\sigma,\tau)|$ --- true in every one of $1503$ instances the
+auditor and the route tested, and the shape of the rotor-router group
+theorem, from memory --- is not proved.
+\end{remark}
+
+\begin{theorem}[The rotor game needs exponentially many chips]\label{thm:rotor-chips}
+For $m\ge3$ let $\mathrm{RT}(m)$ be the stopping SSG on $N=m+17$ vertices:
+a complete binary tree of seven Max vertices with root $v_0$ and eight
+average leaves $u_1,\dots,u_8$, each $u_i\to(q_1,t_0)$, above a chain
+$q_1,\dots,q_m\in\Vavg$ with $q_i\to(t_1,q_{i+1})$ for $i<m$ and
+$q_m\to(t_1,t_0)$. Then $\val(q_i)=1-2^{-(m-i+1)}$ and
+$\val(v_0)=\val(u_i)=\tfrac12-2^{-(m+1)}<\tfrac12$, while for
+$\rho\equiv0$, $M_\rho(n)>\tfrac n2$ for every $n<7(2^{m}-1)=2^{\Omega(N)}$:
+reading the bit of \Cref{prob:main} off the chip game needs
+$2^{\Omega(N)}$ chips. The family is one-player, so this bounds the chip
+readout and not the instances.
+\end{theorem}
+
+\begin{proof}
+Every average vertex has a sink successor, so no average vertex lies in a
+trap and no set of Max vertices alone is one: $G$ is stopping. With
+$\rho\equiv0$ every $\delta_u$ is positive ($\delta_{u_i}=\tfrac12\val(q_1)$,
+$\delta_{q_i}=\tfrac12(1-\val(q_{i+1}))$, $q_{m+1}:=t_0$), $s_u=+1$, and all
+Max increments vanish, every tree vertex having two successors of equal
+value; so $\mathrm{OUT}_n\ge n\val(v_0)$ under any play. Send the $i$-th chip
+to $u_i$ for $i\le7$ and every later chip to $u_8$: the chain
+$q_1,\dots,q_m$ with all rotors at $0$ delivers the first $2^{m}-1\ge7$
+chips that enter it to $t_1$, so $\mathrm{OUT}_n=n$ for $n\le7$ (this is
+where $m\ge3$ is used; the route stated the theorem for $m\ge1$ and its
+auditor found $M_\rho(n)=n/2$ at $n=2,4,6$ for $m=1$), and for $n\ge7$
+$K_{u_1}=\dots=K_{u_7}=1$ stay odd, whence
+$\mathrm{OUT}_n\ge n\val(v_0)+\tfrac72\val(q_1)
+=\tfrac n2-n2^{-(m+1)}+\tfrac72(1-2^{-m})$, which exceeds $\tfrac n2$
+exactly when $n<7(2^{m}-1)$. There is no Min vertex, so
+$M_\rho(n)\ge\mathrm{OUT}_n$. (Built and run from the games at $m=4,6$
+here, $2\,\mathrm{OUT}_n>n$ holding up to $n=119$ and $503$ with minimum
+excess exactly $\tfrac72\val(q_1)$, \texttt{fr\_root.py},
+\texttt{RC\_m4\_GAME.json}; the auditor at $m=3,\dots,6$, the first
+failure at $n=8\cdot2^{m}-8$.)
+\end{proof}
+
+So the value is the growth rate of a deterministic game whose state is
+$(\text{chips},\text{position},\rho)$, the additive error
+$\tfrac12\mathcal A(G)$ is of order $a$ where the decision needs
+$2^{-\Theta(N)}$, and the chip budget alone must be exponential: the
+derandomisation exists and is provably not a route to \Cref{prob:main}.
+Its one use here is \Cref{thm:routing}, which turns
+``$\val(v_0)\ge\tfrac12$'' into ``the losing routings of the optimal pair
+inject into the winning ones'' --- a certificate format the document did
+not have, and one no more accessible than \Cref{def:bracket}'s.
 
 \section{A polynomial special case}\label{sec:special}
 
@@ -7114,12 +7438,14 @@ that \Cref{thm:escape-mixed}(b) reads below $\tfrac{6856791}{18130160}$,
 and on the whole of $[0,\tfrac{23232377303}{48259671705}]$ one has
 $y_6\le y_3$ componentwise while the parity is even at $6$ and odd at $3$
 (seven further pairs $(2,1),(2,3),(2,7),(4,1),(5,1),(6,1),(6,7)$ do the
-same). What is
-not decided is $z=8$ with $R_\alpha-C_\alpha$ mixed in sign --- the one
-case \Cref{thm:escape-mixed} leaves, in which $\rho(\sigma,\cdot)$ need not
-be concave and the comparison fails --- and, beyond this block, a driven
-three-Max block that reads the level-three drive or is not the published
-one. On the window above the block's eight value curves have eight
+same). The case
+$z=8$ with $R_\alpha-C_\alpha$ mixed in sign --- the one case
+\Cref{thm:escape-mixed} leaves, in which $\rho(\sigma,\cdot)$ need not be
+concave and the comparison fails --- is decided below by an exact
+certificate (\Cref{thm:escape-block-closed}); what stays open is, beyond
+this block, a driven three-Max block that reads the level-three drive or is
+not the published one, and over this block the relabelled second shape
+(\Cref{rem:escape-second-shape}). On the window above the block's eight value curves have eight
 comparable pairs with the parity even below odd and five with it odd below
 even, so $\{\tilde\varphi=0\}$ is neither up- nor down-closed there, which
 is what makes the block a candidate at all: the pinned shape needs one
@@ -7127,10 +7453,317 @@ closure (\Cref{lem:pinned-upclosed}) and the degenerate escapes $R_\beta=0$
 and $\widehat D=0$ the other. A floating-point search over the seventeen parameters of
 \Cref{thm:escape-level} from several thousand starts did not reach
 feasibility for $z=8$, the residual sitting at the inner strategy
-$\sigma=1$; a search is not a proof. (The route; the drive-line values,
+$\sigma=1$; a search is not a proof, and the certificate follows. (The
+round-$18$ route; the drive-line values,
 the nine failures for $z=10$ and the eight comparable pairs on the whole
 window recomputed here, \texttt{scripts/round18-verify/dl\_line.py}.)
 \end{corollary}
+
+The corner \Cref{cor:escape-m3} leaves --- $z=8$ with $R_\alpha-C_\alpha$
+mixed in sign --- was closed by the round-$19$ escape-certificate route,
+not by a search but by an exact certificate, and the same certificate
+reaches the escape shape that \Cref{thm:escape-no-beta} does not. The
+route's move is a change of coordinates: the feasibility question is
+posed not in the parameters of \Cref{thm:escape-level} but in the four
+\emph{drive maps} of the layers, each a substochastic row over the block's
+readable coordinates, and in those coordinates every condition on a drive
+is linear.
+
+\begin{definition}[The generalised escape extension]\label{def:escape-ext2}
+A \emph{generalised escape extension} of a driven block $\mathfrak B$ with
+drive $\beta$ is the game on $C\cup\{\alpha,\beta\}$, $\alpha,\beta\in\Vmax$,
+with
+\[
+ \alpha:\ (0)\ A\,y_\beta+C_\alpha\!\cdot\!y+q_A,\quad(1)\ R_\alpha\!\cdot\!y+q'_A;
+ \qquad
+ \beta:\ (0)\ A'y_\alpha+C_\beta\!\cdot\!y+q_B,\quad(1)\ A''y_\alpha+R_\beta\!\cdot\!y+q'_B,
+\]
+$A,A'>0$, $A''\ge0$, $C_\alpha,C_\beta,R_\alpha,R_\beta\ge0$, every row
+substochastic with a strict leak, and no row of $\mathfrak B$ reading
+$\alpha$. \Cref{def:escape-ext} is the case $A''=0$; $A''>0$, in which the
+switch action of $\beta$ reads $\alpha$ as well, is the \emph{second escape
+shape}. Put $\Delta:=1-AA'$, $\Delta'':=1-AA''$, let $y_\sigma(t)$ be the
+block's values at the drive $t$ and $\Phi_\sigma(c,d)$ the unique
+$t\in[0,1]$ with $t=c\cdot y_\sigma(t)+d$, and set
+\[
+\begin{array}{llll}
+ c_{00}=\dfrac{A'C_\alpha+C_\beta}{\Delta}, & d_{00}=\dfrac{A'q_A+q_B}{\Delta}; &
+ c_{10}=A'R_\alpha+C_\beta, & d_{10}=A'q'_A+q_B;\\[2mm]
+ c_{01}=\dfrac{A''C_\alpha+R_\beta}{\Delta''}, & d_{01}=\dfrac{A''q_A+q'_B}{\Delta''}; &
+ c_{11}=A''R_\alpha+R_\beta, & d_{11}=A''q'_A+q'_B,
+\end{array}
+\]
+the \emph{drive maps} $f^\sigma_L(t):=c_L\cdot y_\sigma(t)+d_L$ and the
+\emph{drives} $w_L(\sigma):=\Phi_\sigma(c_L,d_L)$ of the four layers
+$L=(\sigma_\alpha,\sigma_\beta)$.
+\end{definition}
+
+\begin{lemma}[The four drive maps are substochastic]\label{lem:escape-substochastic}
+In a generalised escape extension $c_L\ge0$, $d_L\ge0$ and $|c_L|_1+d_L<1$
+for each of the four layers. Consequently $t\mapsto f^\sigma_L(t)$ is
+nondecreasing with slope at most $|c_L|_1<1$, $t-f^\sigma_L(t)$ is strictly
+increasing, and for every $e\in[0,1]$
+\[
+ w_L(\sigma)<e\iff f^\sigma_L(e)<e,\qquad w_L(\sigma)>e\iff f^\sigma_L(e)>e :
+\]
+confining a drive to an interval is a pair of inequalities \emph{linear}
+in $(c_L,d_L)$.
+\end{lemma}
+
+\begin{proof}
+$\Delta,\Delta''>0$ because $A,A',A''<1$. Substochasticity of the four rows
+reads $|C_\alpha|_1+q_A<1-A$, $|R_\alpha|_1+q'_A<1$, $|C_\beta|_1+q_B<1-A'$,
+$|R_\beta|_1+q'_B<1-A''$; hence
+$|A'C_\alpha+C_\beta|_1+A'q_A+q_B<A'(1-A)+(1-A')=\Delta$,
+$|A'R_\alpha+C_\beta|_1+A'q'_A+q_B<A'+(1-A')=1$,
+$|A''C_\alpha+R_\beta|_1+A''q_A+q'_B<\Delta''$ and
+$|A''R_\alpha+R_\beta|_1+A''q'_A+q'_B<1$. The slope bound is
+\Cref{thm:escape-level}'s ($y'_\sigma\le\bbone$), whose proof already
+contains $|c|_1<1$ for the three maps with $A''=0$; the equivalences hold
+because a strictly increasing function is negative exactly below its
+unique zero.
+\end{proof}
+
+\begin{theorem}[The level theorem for the second escape shape]\label{thm:escape-level-two}
+Let $G$ be a nondegenerate stopping generalised escape extension. On the
+layer $L$ the drive $y_\beta$ equals $w_L(\sigma)$, and the inner part of
+the improvement outmap at $(\sigma,L)$ is $s_{\mathfrak B}(w_L(\sigma))(\sigma)$.
+If $A''>0$ the eight outer bits are the four edge comparisons of the four
+drives: writing $O_\alpha(L)$, $O_\beta(L)$ for whether $\alpha$, resp.\
+$\beta$, is switchable on $L$,
+\[
+\begin{array}{ll}
+ O_\alpha(0,0)=[w_{00}<w_{10}], & O_\alpha(1,0)=1-O_\alpha(0,0),\\
+ O_\alpha(0,1)=[w_{01}<w_{11}], & O_\alpha(1,1)=1-O_\alpha(0,1),\\
+ O_\beta(0,0)=[w_{00}<w_{01}],  & O_\beta(0,1)=1-O_\beta(0,0),\\
+ O_\beta(1,0)=[w_{10}<w_{11}],  & O_\beta(1,1)=1-O_\beta(1,0).
+\end{array}
+\]
+So at every inner strategy the outer square is oriented by the four
+numbers $w_L(\sigma)$, each edge pointing at the larger drive --- the
+argument of \Cref{thm:escape-no-beta}'s proof from \Cref{lem:switch} ---
+and its sink, unique by \Cref{prop:allsw-auso}, is the layer of largest
+drive. When $A''=0$ one has $w_{01}=w_{11}$, the two $\alpha$-bits on the
+layers $(0,1)$, $(1,1)$ are the bit $S$ of \Cref{thm:escape-level} and its
+complement, and the theorem is \Cref{thm:escape-level}.
+\end{theorem}
+
+\begin{proof}
+Freezing the outer pair at a layer leaves a system in $(y_\alpha,y_\beta)$
+whose block input is $y_\sigma(y_\beta)$, no block row reading $\alpha$
+(\Cref{lem:readout}); eliminating $y_\alpha$ gives the four fixed-point
+equations of \Cref{def:escape-ext2}, and \Cref{lem:readout} gives the inner
+clause. For the outer bits put
+$g_{00}(t):=AA't+(A'C_\alpha+C_\beta)\cdot y_\sigma(t)+A'q_A+q_B$,
+$g_{10}(t):=A'(R_\alpha\cdot y_\sigma(t)+q'_A)+C_\beta\cdot y_\sigma(t)+q_B$,
+$g_{01}(t):=AA''t+(A''C_\alpha+R_\beta)\cdot y_\sigma(t)+A''q_A+q'_B$ and
+$g_{11}(t):=A''(R_\alpha\cdot y_\sigma(t)+q'_A)+R_\beta\cdot y_\sigma(t)+q'_B$,
+each nondecreasing with slope below one and with the unique fixed point
+$w_{00},w_{10},w_{01},w_{11}$ respectively. On the layer $(0,0)$,
+$y_\alpha=Aw_{00}+C_\alpha y+q_A$, and $\beta$'s action $1$ is worth
+$A''y_\alpha+R_\beta y+q'_B=g_{01}(w_{00})$, so $\beta$ is switchable there
+iff $g_{01}(w_{00})>w_{00}$, i.e.\ iff $w_{00}<w_{01}$; on $(0,1)$,
+$y_\alpha=Aw_{01}+C_\alpha y+q_A$ and $\beta$'s action $0$ is worth
+$g_{00}(w_{01})$, so $\beta$ is switchable iff $w_{01}<w_{00}$; on $(1,0)$
+and $(1,1)$, $y_\alpha=R_\alpha y+q'_A$ and the same computation with
+$g_{11}$, $g_{10}$ gives $[w_{10}<w_{11}]$ and $[w_{11}<w_{10}]$. For
+$\alpha$: on $(0,0)$ it is switchable iff
+$R_\alpha y+q'_A>Aw_{00}+C_\alpha y+q_A$, which multiplied by $A'>0$ and
+augmented by $C_\beta y+q_B$ reads $g_{10}(w_{00})>g_{00}(w_{00})=w_{00}$,
+i.e.\ $w_{00}<w_{10}$; on $(1,0)$ the reverse; on $(0,1)$ multiply the
+same comparison at the drive $w_{01}$ by $A''>0$ and add $R_\beta y+q'_B$
+to get $g_{11}(w_{01})>g_{01}(w_{01})=w_{01}$, i.e.\ $w_{01}<w_{11}$; on
+$(1,1)$ the reverse. (The route verified the theorem from two explicit
+second-shape extensions of the level-two block built by
+\Cref{lem:dyadic-row}, on $138$ and $149$ vertices, of bottom-antipodal
+heights $9$ and $5$, and on $60$ random extensions at the level of the
+normal form; recomputed here from both games by brute force over all $64$
+positional pairs, \texttt{scripts/round19-verify/ec\_root.py},
+\texttt{EC\_SHAPE2\_GAME.json}, \texttt{EC\_SHAPE2B\_GAME.json}.)
+\end{proof}
+
+\begin{lemma}[The two escape identities]\label{lem:escape-identity}
+With $\rho(\sigma,t):=(R_\alpha-C_\alpha)\cdot y_\sigma(t)+(q'_A-q_A)-At$
+as in \Cref{thm:escape-level}, in every generalised escape extension and
+for all $\sigma$ and $t\in[0,1]$,
+\[
+ A'\,\rho(\sigma,t)=\bigl(f^\sigma_{10}(t)-t\bigr)+\Delta\bigl(t-f^\sigma_{00}(t)\bigr),
+ \qquad
+ A''\rho(\sigma,t)=\bigl(f^\sigma_{11}(t)-t\bigr)+\Delta''\bigl(t-f^\sigma_{01}(t)\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+$A'(R_\alpha-C_\alpha)=c_{10}-\Delta c_{00}$ and $A'(q'_A-q_A)=d_{10}-\Delta d_{00}$,
+so $A'\rho=f_{10}(t)-\Delta f_{00}(t)-(1-\Delta)t$; the second display is the
+same computation with $A''$, $R_\beta$, $q'_B$, $\Delta''$. The first is the
+manipulation inside \Cref{thm:escape-level}'s proof carried out at a general
+$t$ rather than at a fixed point; its use below is at a $t$ that is a fixed
+point of neither map.
+\end{proof}
+
+\begin{lemma}[Domination on the level-two drive line]\label{lem:escape-domination}
+Let $\mathfrak B_2:=\{c_1,c_2,c_3,c_6\}$ be the level-two block of
+\Cref{prop:b2-realised} driven by $y_{c_5}$ (\Cref{rem:pinned-escape}), and
+put $b:=\tfrac{47723619}{255897160}$, $a:=\tfrac{1175936917}{2026652880}$,
+$T:=\tfrac{10168377}{16341335}$ --- the first, eighth and ninth fences.
+Let $(c,d)$ and $(c',d')$ be substochastic ($c,c'\ge0$, $d,d'\ge0$,
+$|c|_1+d<1$, $|c'|_1+d'<1$) with $\Phi_4(c,d)<b$ and $\Phi_0(c',d')>a$.
+Then $c\cdot y_\sigma(t)+d\le c'\cdot y_\sigma(t)+d'$ for every inner
+strategy $\sigma\in\{0,\dots,7\}$ and every $t\in[0,T]$.
+\end{lemma}
+
+\begin{proof}
+By \Cref{lem:escape-substochastic} the two hypotheses are the linear
+inequalities $c\cdot y_4(b)+d<b$ and $c'\cdot y_0(a)+d'>a$. Every $y_\sigma$
+is affine on each of the $17$ pieces into which the $13$ fences and the $3$
+drives at which the block's Min vertex switches cut $[0,1]$, so
+$t\mapsto(c-c')\cdot y_\sigma(t)+(d-d')$ is affine on each piece and its
+maximum over $[0,T]$ is attained at $0$, at $T$ or at one of the $11$
+breakpoints between them. For each of the $8\times13$ pairs $(\sigma,t)$
+the system
+\[
+ -c\le0,\ -d\le0,\ |c|_1+d<1,\ -c'\le0,\ -d'\le0,\ |c'|_1+d'<1,\
+ c\cdot y_4(b)+d<b,\ -c'\cdot y_0(a)-d'<-a,\ (c'-c)\cdot y_\sigma(t)+(d'-d)<0
+\]
+in the ten unknowns is infeasible, by a rational $\lambda\ge0$ with
+$\lambda^{\!\top}\!A=0$ and $\lambda^{\!\top}\!b\le0$, positive on a strict
+row when $\lambda^{\!\top}\!b=0$: summing the rows with those weights would
+give $0<\lambda^{\!\top}\!b\le0$. The $104$ certificates are archived
+(\texttt{scripts/round19-verify/ec\_minimal\_certs.json}) and were
+re-verified here against rows rebuilt from the normal form
+(\texttt{ec\_root.py}); the route's novelty auditor confirmed the lemma by
+a different method, solving the two three-constraint programmes
+$\max\{c\cdot y+d\}$ and $\min\{c'\cdot y+d'\}$ by vertex enumeration at
+all $104$ points, with least gap
+$\tfrac{1204786569985001139227975}{123658871785688451847910352}\approx0.0097$
+at $\sigma=4$, $t=T$. The base system without the last row is feasible
+($c=c'=0$, $d=0$, $d'=\tfrac{a+1}2$), so no certificate is vacuous.
+\end{proof}
+
+\begin{theorem}[No escape extension of the level-two block doubles]\label{thm:escape-block-closed}
+Let $\mathfrak B_2$ be the level-two block of \Cref{prop:b2-realised} driven
+by $y_{c_5}$, with the outer pair labelled $(\alpha,\beta)=(\alpha_2,\beta_2)$
+as in \Cref{cor:escape-m3}. For every doubling $z\in\{8,10,24,26\}$,
+$B^{2}(\cdot\oplus z)$ is the improvement outmap of no nondegenerate
+stopping generalised escape extension of $\mathfrak B_2$: for every
+$A,A'>0$, every $A''\ge0$, all nonnegative $C_\alpha,C_\beta,R_\alpha,R_\beta$
+and all constants, with no sign hypothesis on $R_\alpha-C_\alpha$. In
+particular the case $z=8$ with $R_\alpha-C_\alpha$ mixed in sign that
+\Cref{cor:escape-m3} leaves open is excluded, and so is the second shape,
+which \Cref{thm:escape-no-beta} does not reach.
+\end{theorem}
+
+\begin{proof}
+Write $Z:=\{0,2,4,5,6\}$ and $O:=\{1,3,7\}$ for the inner strategies at
+which the target reads $\tilde\varphi=0$, resp.\ $1$.
+
+\emph{Windows.} By \Cref{thm:escape-level-two} the drive $w_L(\sigma)$ is
+confined to the set of drives at which the block's outmap at $\sigma$ takes
+the value the target prescribes: a union of cells of the drive line whose
+endpoints are fences at which an incidence \emph{of $\sigma$} ties ---
+excluded by nondegeneracy --- while fences at which only other incidences
+tie are interior, and $t=0,1$ belong to it, the block having no tied
+incidence there. For $z=10$ and $z=26$ some such set is empty: at
+$\sigma=0$ the layer $(0,0)$ demands the block value $3$, which no cell
+presents at $\sigma=0$ (the values there are $0,1,5,7$) --- the inner
+reason of \Cref{cor:escape-m3}, now for both shapes. For $z=8$ and $z=24$
+every drive is confined either to the cells where the block presents
+$B^{1}$ at $\sigma$ or to those where it presents $B^{1}(\cdot\oplus e_{\beta_1})$;
+the former form one interval $\mathrm{LOW}_\sigma$ starting at $0$ at
+every $\sigma$ except $3$ and $7$, where a second component begins exactly
+at $T$, and the latter one interval $\mathrm{HIGH}_\sigma$, with
+$\sup\mathrm{LOW}_\sigma\le\inf\mathrm{HIGH}_\sigma$, $\sup\mathrm{LOW}_4=b$
+and $\inf\mathrm{HIGH}_0=a$. In both targets every $\mathrm{LOW}$ drive is
+demanded strictly below the unique $\mathrm{HIGH}$ drive at the same
+$\sigma$, which lies below $T$ at $\sigma=3,7$, so the second component is
+never used and $\sup\mathrm{LOW}_\sigma\le T$ throughout. For $z=8$ the
+drives $w_{00},w_{01},w_{11}$ lie in $\mathrm{LOW}$ and $w_{10}$ in
+$\mathrm{HIGH}$; for $z=24$, $w_{00},w_{10},w_{01}$ in $\mathrm{LOW}$ and
+$w_{11}$ in $\mathrm{HIGH}$. (The windows and the layer assignment were
+recomputed here from the normal form and the target,
+\texttt{scripts/round19-verify/ec\_root.py}.)
+
+\emph{$z=8$.} Fix $\sigma\in O$ and put $p:=w_{01}(\sigma)$. The target
+demands $p<w_{00}(\sigma)<w_{10}(\sigma)$ and, when $A''>0$,
+$w_{11}(\sigma)<p$. By \Cref{lem:escape-substochastic}, $f_{10}(p)>p$ and
+$f_{00}(p)>p$. If $A''>0$ the second identity of \Cref{lem:escape-identity}
+at $t=p$ reads $A''\rho(\sigma,p)=f_{11}(p)-p<0$; if $A''=0$ then
+$w_{11}=w_{01}=p$ and the bit $S$ of \Cref{thm:escape-level} demanded by
+the target is $0$, i.e.\ again $\rho(\sigma,p)<0$. The first identity then
+gives $(f_{10}(p)-p)+\Delta(p-f_{00}(p))<0$, i.e.\
+$\Delta(f_{00}(p)-p)>f_{10}(p)-p>0$, and $\Delta<1$ forces
+$f_{00}(p)>f_{10}(p)$. But $\Phi_4(c_{00},d_{00})\in\mathrm{LOW}_4$ gives
+$\Phi_4(c_{00},d_{00})<b$, $\Phi_0(c_{10},d_{10})\in\mathrm{HIGH}_0$ gives
+$\Phi_0(c_{10},d_{10})>a$, and $p\in\mathrm{LOW}_\sigma\subseteq[0,T]$, so
+\Cref{lem:escape-domination} gives $f_{00}(p)\le f_{10}(p)$: a
+contradiction.
+
+\emph{$z=24$.} Here $A''=0$ is impossible at once, $w_{01}=w_{11}$ lying in
+disjoint intervals (\Cref{thm:escape-no-beta} again). For $A''>0$ fix
+$\sigma\in O$ and put $p:=w_{00}(\sigma)$; the target demands
+$w_{10}<p<w_{01}<w_{11}$, so $f_{10}(p)<p$, $f_{01}(p)>p$ and $f_{11}(p)>p$.
+The first identity at $t=p$ gives $A'\rho(\sigma,p)=f_{10}(p)-p<0$, the
+second then $\Delta''(f_{01}(p)-p)>f_{11}(p)-p>0$, and $\Delta''<1$ forces
+$f_{01}(p)>f_{11}(p)$; \Cref{lem:escape-domination} applied to the pair
+$(c_{01},d_{01})$, $(c_{11},d_{11})$ --- $\Phi_4(c_{01},d_{01})<b$,
+$\Phi_0(c_{11},d_{11})>a$, $p\in[0,T]$ --- gives $f_{01}(p)\le f_{11}(p)$: a
+contradiction. (The route; the whole chain --- fences, refined pieces,
+identities, windows, certificates and the two games --- recomputed here
+from the normal form, \texttt{ec\_root.py}; both auditors reproduced it
+independently, the correctness auditor confirming the domination by
+vertex enumeration and the layer assignment for both $z$ and both shapes.)
+\end{proof}
+
+\begin{remark}[The second shape, and what stays open over this block]\label{rem:escape-second-shape}
+Three points about the scope. First, \Cref{thm:escape-no-beta}'s proof
+does not survive $A''>0$: with four distinct drives the three comparisons
+$(P,Q,R)$ become the four edge comparisons of
+\Cref{thm:escape-level-two}, and for each doubling $z$ and each inner
+strategy the eight bits the target demands are the edge comparisons of a
+genuine total order of the four drives ---
+$w_{00}<w_{01}<w_{11}<w_{10}$ where $\tilde\varphi=0$ and
+$w_{11}<w_{01}<w_{00}<w_{10}$ where $\tilde\varphi=1$ for $z=8$;
+$w_{01}<w_{00}<w_{10}<w_{11}$ and $w_{10}<w_{00}<w_{01}<w_{11}$ for $z=24$;
+likewise for $z=10,26$ --- so the tournament excludes nothing there.
+Whether the \emph{conclusion} of \Cref{thm:escape-no-beta} survives is
+not known: no generalised escape extension of any block realising a
+translate carrying its $\beta$-coordinate is exhibited, and over the
+level-two block \Cref{thm:escape-block-closed} excludes $z=24$ and $z=26$
+for $A''>0$ as well ($z=26$ by the inner condition, $19$ of the $32$
+drives having an empty window). Second, the theorem fixes the labelling
+$(\alpha,\beta)=(\alpha_2,\beta_2)$: the block's drive is the coordinate
+the target calls $\beta_2$. With the drive as $\alpha_2$ the first shape
+is excluded for all four doublings by \Cref{thm:escape-no-beta}, but the
+second shape is not: $z=10$ and $z=26$ still die on the inner condition,
+while $z=8$ and $z=24$ pass the tournament and the inner condition, with
+the orders $w_{00}<w_{10}<w_{11}<w_{01}$ / $w_{11}<w_{10}<w_{00}<w_{01}$
+for $z=8$ and $w_{10}<w_{00}<w_{01}<w_{11}$ / $w_{01}<w_{00}<w_{10}<w_{11}$
+for $z=24$; there exactly one drive is confined to $\mathrm{HIGH}$ and it
+is not the one the identities pair with the layer-$(0,0)$ drive, so
+\Cref{lem:escape-domination} does not bite --- evaluating the identities
+at $w_{11}$ leaves, for $\sigma\in O$, a comparison between two maps both
+confined to $\mathrm{LOW}$ together with a condition on $\Delta$, and the
+order relaxation of that system (the algebraic link dropped) is feasible.
+The exact open statement: no nondegenerate stopping generalised escape
+extension of the level-two block driven by $y_{c_5}$ with $A''>0$ and the
+outer pair labelled $(\beta_2,\alpha_2)$ has improvement outmap
+$B^{2}(\cdot\oplus8)$ or $B^{2}(\cdot\oplus24)$. Third, neither definition
+lets $\alpha$'s switch action read $y_\beta$, and no block other than the
+published one is touched: the question of \Cref{rem:pinned-escape} --- a
+driven block presenting $B^{2}$ at one drive and $B^{2}(\cdot\oplus z)$ at
+another --- is, for the escape shapes over \emph{this} block, answered in
+the negative, and open elsewhere. What the certificate says about other
+blocks is a design constraint rather than a criterion: the argument needs
+one drive confined below the first fence at some $\sigma$ and a drive
+paired with it by an identity confined above a later fence at another,
+and then the two three-constraint programmes of
+\Cref{lem:escape-domination}'s auditor in the block's drive-line data
+alone decide it; a block over which the escape shape can double must have
+a drive line on which that domination fails. (The route reported a
+criterion of this form without the pairing hypothesis; both auditors
+found it unproved as stated, and it is not carried here.)
+\end{remark}
 
 \begin{remark}[What a game would have to read]\label{rem:blowup-realise}
 \Cref{thm:blowup} sharpens the realisability question of
@@ -18876,7 +19509,13 @@ case with every constant computed (\Cref{thm:stopping-transform}).
 Without any stopping hypothesis, $\val$ and every $\val_\sigma$ are the
 \emph{least} fixed points of their operators (\Cref{thm:lfp-general}),
 proved by a first-passage decomposition rather than by exchanging a limit
-with an infimum.
+with an infimum. The value of a positional pair is the fraction of its
+acyclic edge-selections that route the vertex to $t_1$, the routing count
+a determinant that the sharp denominator divides
+(\Cref{thm:routing,cor:routing-det}); its deterministic avatar, the
+two-player rotor game, computes the value only up to an additive constant
+of order $a$ and needs $2^{\Omega(N)}$ chips to read the bit
+(\Cref{cor:rotor-sandwich,thm:rotor-chips}).
 
 \paragraph{Positive algorithmic results.} Several tractable regimes, each
 with a complete proof, most of whose algorithms we implemented and checked
@@ -19012,9 +19651,11 @@ its translated layer remains unrealised (\Cref{prop:b3-outer}) and out
 of reach of the pinned shape, which cannot double
 (\Cref{cor:pinned-no-doubling}), while the escape shape whose outer rest
 actions read the block cannot realise a translate carrying its
-$\beta$-coordinate, so over the level-two block only $z=8$ of the four
-doublings, with a mixed-sign rest readout, survives
-(\Cref{thm:escape-no-beta,cor:escape-m3}) --- and
+$\beta$-coordinate, and over the level-two block no doubling at all, in
+either escape shape, once the block's drive is the target's
+$\beta_2$-coordinate, by an exact certificate
+(\Cref{thm:escape-no-beta,cor:escape-m3,thm:escape-block-closed}), the
+relabelled second shape being what remains there --- and
 \Cref{rem:blowup-realise} states the question
 that remains: whether each further level costs only a constant number of
 controlled vertices and of bits; the height of a blow-up is exactly
