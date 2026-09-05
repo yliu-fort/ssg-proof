@@ -50,8 +50,21 @@ unchecked backlog as secondary targets). All 25 agents on Opus 5 at
 
 ## The root agent's two cheap checks (decision A4), done during the run
 
-Both settled, with proofs, in `scripts/round19-verify/` (batch H, after a
-single-agent correctness audit):
+Both settled, with proofs, in `scripts/round19-verify/` (batch H). A
+single-agent adversarial correctness audit (Opus 5, effort high, run
+`wf_eac574a6-9fc`, 25 min, 199k tokens) reconstructed every step and
+rebuilt every computation independently (300 stopping games, the star at
+$m=2,3,4$, 777 member checks, 2800 fourth queries, the star on all 832
+certificate worlds): the mathematics held; two clauses were false as
+written and repaired (the lemma's statement said "supported in $U$" where
+mass one is meant; a parenthetical about a seven-vertex "mixed-$\tau$"
+witness was wrong --- that game's violation is a singleton, and with one
+Min vertex a single $\tau$ always serves); nine minor points applied
+("never survives $m+1$" qualified to the star's queries; naming counts
+by depth; the 960 figure attributed to `ed_star.py`; uniqueness of the
+fixed point under the trap hypothesis proved inside `cor:readout-exact`;
+the corollary $d(G)=|C|$ for nondegenerate one-player games stated; the
+two-player caveat and the orientation-oracle sentence made precise).
 
 1. **The trap hypothesis holds.** The rational readout system that
    `thm:readout-realise`(a) delivers always satisfies the hypothesis of
@@ -81,8 +94,10 @@ single-agent correctness audit):
    fixed in advance (`thm:eval-star`). With `prop:eval-decide-lower` the
    decision complexity is exactly $|C|+1$ at $|C|\in\{2,3\}$; naming costs
    at most that, and the certificates do not bound naming (NO world and
-   YES witness share their optimum at 9/16 and 277/400 nodes,
-   `ed_naming.py`). At $|C|=3$ a fourth query is wasted essentially only
+   YES witness share their optimum at 9 of the 12 depth-2 nodes at $m=2$
+   and 242 of the 336 depth-3 nodes at $m=3$, `ed_naming.py`); also
+   $d(G)=|C|$ for every nondegenerate one-player game, so `thm:eval-queries`'
+   bound reads $|C|+2$ on that whole class, one more than needed. At $|C|=3$ a fourth query is wasted essentially only
    when it completes the three queries to a 2-face (`rem:eval-face`); on
    the route's depth-3 certificate exactly 149 nodes (144 face completions
    + 5 coincidences) admit a forced fourth query and the tree extends there

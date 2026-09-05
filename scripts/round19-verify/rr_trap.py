@@ -4,7 +4,8 @@
 Claim (proved by hand in the round-19 README and in the paper): for a STOPPING SSG G with Max set Vmax, the pieces of
 lem:readout(a) -- for each incidence (v,a) and each positional Min strategy tau, the first-passage law (q; p) from v^(a)
 onto Vmax u {t1} when Min plays tau, Max vertices absorbing -- satisfy the hypothesis
-   (T)  no nonempty U <= Vmax has at each of its vertices v an action a and a tau whose law has q = 0 and supp(p) <= U.
+   (T)  no nonempty U <= Vmax has at each of its vertices v an action a and a tau whose law has q = 0 and
+        sum_{u in U} p_u = 1 (mass one inside U; 'supp(p) <= U' alone would not do -- an action into t0 has q = 0).
 Proof: if such U, (a_v, tau_v) existed, W := U u (the union over v in U of the vertices visited with positive
 probability from v^(a_v) under tau_v before hitting Vmax) would be a trap of G in the sense of lem:trapchar: every
 average vertex of W has both successors in W, every Min vertex of W has its tau_v-successor in W, every Max vertex of
@@ -136,9 +137,10 @@ for it in range(3000):
             stats['trap_confirmed'] += 1
 print(stats)
 assert stats['stopping_viol'] == 0 and stats['stopping'] >= 300
-# the hand example of the proof's mixed-tau configuration: two Max vertices whose full-mass laws to each other use the
-# SAME Min vertex with opposite choices -- the union of the visited sets is a trap although no single tau traps from
-# both; the game is not stopping, as the proof says.
+# a non-stopping example: the violation found is the singleton U = {0} (action 0 of vertex 0 returns to 0 surely under
+# the Min choice 2 -> 6), and W = {0, 2, 3, 6} is the trap. (The root agent's auditor: with one Min vertex a single tau
+# always serves every vertex of U; a configuration needing two different tau_v was not found in 40000 games with two
+# Min vertices -- the proof handles it, whether or not it occurs.)
 #   0: max -> (3, t0); 1: max -> (4, t0); 3: avg -> (2, 2); 4: avg -> (2, 2); 2: min -> (5, 6); 5: avg -> (1, 1); 6: avg -> (0, 0)
 g = G(['max', 'max', 'min', 'avg', 'avg', 'avg', 'avg'], [(3, 7), (4, 7), (5, 6), (2, 2), (2, 2), (1, 1), (0, 0)])
 P = pieces(g); vio = violation(g, P); assert vio is not None and not is_stopping(g)

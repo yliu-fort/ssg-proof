@@ -13,7 +13,7 @@ from ed_star import Sys, alpha_system, rank
 
 for m, fn in ((2, 'cert_m2_d2.json'), (3, 'cert_m3_d3.json')):
     cert = json.load(open(os.path.join(R18, fn))); strategies = list(itertools.product((0, 1), repeat=m))
-    disjoint = 0; overlap = []
+    disjoint = 0; overlap = []; bydepth = {}
     for c in cert:
         W = Sys(m, {tuple(map(int, k.split(','))): tuple(F(x) for x in v) for k, v in c['no_rows'].items()})
         Y = Sys(m, {tuple(map(int, k.split(','))): tuple(F(x) for x in v) for k, v in c['yes_rows'].items()})
@@ -22,9 +22,10 @@ for m, fn in ((2, 'cert_m2_d2.json'), (3, 'cert_m3_d3.json')):
             return {s for s in strategies if vals[s] == star}
         oW, oY = optimal(W), optimal(Y)
         assert len(oW) == 1 and len(oY) == 1     # nondegenerate one-player: a unique optimum
-        if oW & oY: overlap.append((c['queries'], oW, oY))
+        dep = len(c['queries']); bydepth.setdefault(dep, [0, 0]); bydepth[dep][1] += 1
+        if oW & oY: overlap.append((c['queries'], oW, oY)); bydepth[dep][0] += 1
         else: disjoint += 1
-    print(f'm={m}: {len(cert)} nodes; optimal strategies of NO world and YES witness disjoint at {disjoint}, overlapping at {len(overlap)}')
+    print(f'm={m}: {len(cert)} nodes; optimal strategies of NO world and YES witness disjoint at {disjoint}, overlapping at {len(overlap)}; by depth (overlapping/total): ' + ', '.join(f'depth {d}: {o}/{n}' for d, (o, n) in sorted(bydepth.items())))
     if overlap: print('   overlaps:', overlap[:5])
     if m == 3:
         faces = coinc = 0

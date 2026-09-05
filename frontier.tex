@@ -204,8 +204,10 @@ actions per state, and it is not the bias homotopy
 (\Cref{prop:discount-fold,prop:one-player-fold,cor:two-homotopies}); and
 every such bound is a bound on the rounds of a rule, not on information,
 since an optimal strategy is found from $|C|+2$ adaptively chosen
-evaluations (\Cref{thm:eval-queries}), and the bit alone still needs
-$|C|+1$ of them at $|C|\in\{2,3\}$ (\Cref{prop:eval-decide-lower}). For the all-switches rule
+evaluations (\Cref{thm:eval-queries}), a nondegenerate one-player game
+is even determined by $|C|+1$ chosen in advance (\Cref{thm:eval-star}),
+and the bit alone needs that many at $|C|\in\{2,3\}$
+(\Cref{prop:eval-decide-lower}). For the all-switches rule
 itself we prove three monotonicity laws
 (\Cref{cor:no-return,cor:law-b,cor:law-u}, the first from
 \Cref{lem:monotone-law}, the second from \Cref{thm:peak-law}, the third
@@ -1169,10 +1171,10 @@ $U\subseteq\Vmax$ has at each of its vertices an action one of whose
 pieces puts mass one inside $U$ --- a trap of the constructed game
 contains, through the Min chain, some gadget entry, hence every leaf of
 that gadget's tree, hence the full mass of that piece inside the trap,
-and conversely. Whether the rational system delivered by
-\Cref{thm:readout-realise}(a) satisfies this hypothesis, which would
-make the dyadic question at the end of that theorem moot, is not settled
-here.
+and conversely. The rational system delivered by
+\Cref{thm:readout-realise}(a) does satisfy this hypothesis
+(\Cref{lem:readout-trap}: a violation is a trap of the game), so the two
+halves of that theorem meet (\Cref{cor:readout-exact}).
 \end{remark}
 
 
@@ -4010,7 +4012,122 @@ a nondegenerate one-player game \Cref{lem:switch} forbids once the
 algorithm has flipped that vertex; past the first query the lift has
 mixed signs and is paid for out of the escape masses of the rows. Whether
 it survives $m$ queries on some system is known at $m\le3$ only, by
-certificate.
+certificate; it never survives the $m+1$ queries chosen as in
+\Cref{thm:eval-star}.
+
+\begin{lemma}[A forced answer depends on the data alone]\label{lem:eval-forced}
+(One player.) Let $D=((\sigma_r,x_r,A_r))_{r\le t}$ be data recorded from
+a nondegenerate stopping harmonic system, so that
+$\Delta_r(v):=A_r(v,\overline{\sigma_r}(v))-x_r(v)\neq0$ for all $r\le t$
+and $v\in C$, and let $\sigma$ be a strategy. For a member $M'$ of $K(D)$
+the value $\val_{M',\sigma}|_C$ lies in the affine hull of $x_1,\dots,x_t$
+if and only if the linear system
+\[
+ \sum_{r\le t}\alpha_r=1,\qquad
+ \sum_{r\le t:\ \sigma_r(v)\neq\sigma(v)}\alpha_r\,\Delta_r(v)=0\quad(v\in C)
+ \tag{$\ast$}
+\]
+has a solution, and then $\val_{M',\sigma}|_C=\sum_r\alpha_rx_r$ for every
+solution $\alpha$ and every member $M'$. So either every member of $K(D)$
+answers $\sigma$ with the same point of the hull, and the query changes
+neither $\rho(D)$ nor $K(D)$, or no member does, and the query raises
+$\rho(D)$ by one for every member; which of the two happens is read off
+the data.
+\end{lemma}
+
+\begin{proof}
+For $\alpha$ with $\sum_r\alpha_r=1$ put $x:=\sum_r\alpha_rx_r$, so that
+$\langle x\rangle=\sum_r\alpha_r\langle x_r\rangle$ and every row $z$ of
+every member reads $\langle x\rangle\cdot z=\sum_r\alpha_rA_r(v,a)$ at $x$,
+a number fixed by the data. For the row $(v,\sigma(v))$ one has
+$A_r(v,\sigma(v))=x_r(v)$ when $\sigma_r(v)=\sigma(v)$, the reading of the
+row $\sigma_r$ uses, and $A_r(v,\sigma(v))=x_r(v)+\Delta_r(v)$ otherwise;
+so $x$ is a fixed point of the operator of $M'$ frozen at $\sigma$ exactly
+when $x(v)=\sum_r\alpha_rA_r(v,\sigma(v))$ for every $v$, which is
+$(\ast)$. If $\val_{M',\sigma}|_C$ lies in the hull, any affine
+representation of it solves $(\ast)$; conversely a solution gives a fixed
+point $x\in\mathbb R^{C}$ of an affine map $y\mapsto q_\sigma+P_\sigma y$
+whose matrix $I-P_\sigma$ is invertible, $M'$ being stopping
+(\Cref{lem:survival-contract}), so $x=\val_{M',\sigma}|_C$.
+\end{proof}
+
+\begin{theorem}[$|C|+1$ evaluations, chosen in advance, determine a nondegenerate one-player game]\label{thm:eval-star}
+Let $G$ be a nondegenerate stopping SSG with $\Vmin=\emptyset$,
+$C=\Vmax=\{1,\dots,m\}$, and let $e_i$ be the Max strategy playing action
+$1$ at $i$ and $0$ elsewhere. The values $\val_\sigma|_C$ at the $m+1$
+strategies $e_1,\dots,e_m,0$ are affinely independent. Hence the answers to
+these $m+1$ queries, fixed in advance, determine every row of the harmonic
+normal form of $G$ over $C$, and with it $w^\ast$, the bit of
+\Cref{prob:main} and an optimal strategy. In particular $d(G)=|C|$ for
+every nondegenerate one-player stopping game, the $m+1$ values spanning
+an affine space of dimension $m$. In the model of \Cref{thm:eval-queries}
+such a game therefore costs at most $|C|+1$ evaluations, non-adaptively
+and with no solving between the queries, against the $d(G)+2=|C|+2$
+adaptive ones that theorem allows it; with
+\Cref{prop:eval-decide-lower} the decision complexity at $|C|\in\{2,3\}$
+is exactly $|C|+1$, and the naming complexity there is at most $|C|+1$.
+\end{theorem}
+
+\begin{proof}
+Let $x_r$ be the value at $\sigma_r:=e_r$ for $r\le m$ and $x_{m+1}$ the
+value at $\sigma_{m+1}:=0$. Suppose $x_1,\dots,x_t$ affinely independent
+($t\le m$; $t=1$ is trivial) and let $\sigma:=\sigma_{t+1}$. If $(\ast)$
+for the data of the first $t$ queries and this $\sigma$ had a solution
+$\alpha$, pick $r$ with $\alpha_r\neq0$. At the vertex $v=r$ one has
+$\sigma_r(r)=1\neq0=\sigma(r)$, since $\sigma$ is $e_{t+1}$ with
+$t+1\neq r$ or is $0$, while $\sigma_{r'}(r)=0=\sigma(r)$ for every other
+$r'\le t$; so the equation of $v=r$ in $(\ast)$ reads
+$\alpha_r\Delta_r(r)=0$, against $\alpha_r\neq0$ and $\Delta_r(r)\neq0$.
+Hence $(\ast)$ has no solution, and \Cref{lem:eval-forced}, applied to the
+data recorded from $G$ and to $G$'s own system as the member, gives
+$x_{t+1}\notin\operatorname{aff}(x_1,\dots,x_t)$. So
+$\langle x_1\rangle,\dots,\langle x_{m+1}\rangle$ are linearly independent,
+and each row $z_{v,a}\in\mathbb R^{1+C}$ is the unique solution of the
+$m+1$ equations $\langle x_r\rangle\cdot z=A_r(v,a)$; the normal form
+known, $w^\ast$ is its value (\Cref{thm:one-player}, or the componentwise
+maximum over the $2^{m}$ strategies), and a greedy strategy is optimal.
+The counts follow: $|C|+1$ suffice, $|C|+1$ are necessary for the bit at
+$|C|\in\{2,3\}$ by \Cref{prop:eval-decide-lower}, and naming costs at most
+what determining the system costs. (Verified in exact arithmetic,
+\texttt{scripts/round19-verify/ed\_star.py}: rank $m+1$ and exact recovery
+of every row from the readings on random nondegenerate stopping systems
+for $m\le6$; the lemma on $3300$ (member, strategy) pairs with members
+built along the fibres, the $28$ forced queries answered alike by every
+member; on $30$ degenerate systems in which one vertex's two rows coincide
+the rank drops in every case, so nondegeneracy is needed.)
+\end{proof}
+
+\begin{remark}[Which fourth query is wasted at $|C|=3$]\label{rem:eval-face}
+The system $(\ast)$ says when a query is uninformative. A solution with
+support $S$ needs, at every vertex $v$, either no or at least two $r\in S$
+with $\sigma_r(v)\neq\sigma(v)$; so $|S|=1$ forces $\sigma=\sigma_r$ and
+$|S|=2$ forces $\sigma_r=\sigma_{r'}$, both excluded. Consequently the
+second query always differs in value from the first, the third is always
+informative --- any three distinct strategies of a nondegenerate one-player
+game have affinely independent values --- and a fourth query $\sigma_4$
+can be uninformative after $\sigma_1,\sigma_2,\sigma_3$ only with $|S|=3$:
+either $\sigma_4=\sigma_1\oplus\sigma_2\oplus\sigma_3$, or the three queries
+agree at some vertex where $\sigma_4$ differs. Generically only the first
+case with the three queries on a common $2$-face --- $\sigma_4$ its fourth
+vertex --- survives, $(\ast)$ having then two pair equations and the
+normalisation in three unknowns; every other pattern imposes at least
+four equations on three unknowns and is solvable only on a proper
+algebraic subset of the data. On the certificate of
+\Cref{prop:eval-decide-lower} at $|C|=3$: at each of its $336$ depth-three
+nodes at least four of the five possible fourth queries are informative
+for every consistent world (the sign of the affine-hull condition, a
+multi-affine function of the three moving rows, checked at the eight
+corners of the fibre box), and the fourth query is forced at $149$ nodes
+--- the $144$ ordered face completions and $5$ coincidences of the
+designed worlds --- exactly where a depth-four extension of the tree was
+found and nowhere else; so the round-$18$ route's depth-four search could
+not have succeeded, as \Cref{thm:eval-star} says. On $40$ random systems
+and all $56$ triples, precisely the $960$ face completions were forced
+(\texttt{ed\_star.py}); on $60$ more, every one of the $3360$ triples had
+four or five provably informative fourth queries (\texttt{ed\_random4.py});
+the certificate counts are \texttt{ed\_corners.py}, \texttt{ed\_depth4.py}
+and \texttt{ed\_naming.py}.
+\end{remark}
 
 \begin{proposition}[$|C|+1$ evaluations are necessary to decide the bit at $|C|\in\{2,3\}$]\label{prop:eval-decide-lower}
 For $m\in\{2,3\}$ there is a family $\mathcal F_m$ of nondegenerate
@@ -4019,7 +4136,8 @@ vertices, their $2m$ successors distinct fresh average vertices --- with
 a start $v_0$, containing members with $\val(v_0)\ge\tfrac12$ and members
 with $\val(v_0)<\tfrac12$, on which every deterministic evaluation
 algorithm needs at least $m+1=|C|+1$ evaluations to decide
-$\val(v_0)\ge\tfrac12$; \Cref{thm:eval-queries} decides it with $|C|+2$.
+$\val(v_0)\ge\tfrac12$; $|C|+1$ chosen in advance suffice
+(\Cref{thm:eval-star}), so the bound is exact.
 The members have at most $191$ vertices at $m=2$ and $3863$ at $m=3$.
 \end{proposition}
 
@@ -4060,45 +4178,54 @@ full.
 \end{proof}
 
 \begin{remark}[What is proved, and what it is worth]\label{rem:eval-decide-gap}
-At $|C|\in\{2,3\}$ the decision problem needs $|C|+1$ evaluations and
-$|C|+2$ suffice; on the family itself $d(G)=m$ for every NO world (the
-correctness auditor's computation), so the naming bound of
-\Cref{thm:eval-queries} there is exactly $|C|+2$, and
-$|C|+1\le\text{decision}\le\text{naming}\le|C|+2$: the two complexities
-agree up to one query at those sizes, which is what the first caveat of
-\Cref{prop:hdp-eval} left open there. Whether $|C|+1$ or $|C|+2$ is exact
-is open even at $|C|=3$, a depth-$4$ search having been cut short after ten
-minutes with no root query resolved. The mechanism is
+At $|C|\in\{2,3\}$ the bit needs $|C|+1$ evaluations
+(\Cref{prop:eval-decide-lower}) and $|C|+1$ chosen in advance suffice
+(\Cref{thm:eval-star}), so the decision complexity of a nondegenerate
+one-player game is exactly $|C|+1$ there; naming an optimal strategy costs
+at most the same, and the certificates bound the bit only --- the NO world
+and the YES witness share their optimal strategy at $9$ of the $12$
+depth-two nodes at $|C|=2$ and at $242$ of the $336$ depth-three nodes at
+$|C|=3$ (\texttt{scripts/round19-verify/ed\_naming.py}) --- so no
+nondegenerate lower bound for naming is proved here beyond the trivial
+one, and the degenerate family of \Cref{prop:hdp-eval} costs $m$. Since
+$d(G)=|C|$ for every nondegenerate one-player game (\Cref{thm:eval-star}),
+the bound $d(G)+2$ of \Cref{thm:eval-queries} reads $|C|+2$ on the whole
+class and is one more than needed there; what the remaining extra query
+buys in the general model is not determined here. The lower-bound mechanism is
 \Cref{prop:eval-lift}: a lift to level $c\ge\tfrac12$ exists while
 $\langle c\mathbf 1\rangle$ lies outside the span of the recorded
-$\langle x_r\rangle$, which can persist for $|C|$ queries and never for
-$|C|+1$. The general statement is \textbf{not} proved, and under this
-document's rule that a family certified at fewer than five sizes with
-no growth law claims nothing beyond those sizes, nothing is claimed
-beyond $|C|=3$. The missing sentence is exactly this: for every $m$
-there is a nondegenerate stopping one-player harmonic system $W_0$ on
-$m$ controlled vertices with $\val^{\ast}(v_0)<\tfrac12$ such that, for
-every datum $D$ of at most $m$ queries generated by the adversary from
-$W_0$, some member of $K(D)$ is stopping and nondegenerate with
-$\val^{\ast}(v_0)<\tfrac12$ and leaves the next query strictly
-switchable, and some member is stopping and nondegenerate with
-$\val^{\ast}(v_0)\ge\tfrac12$. No mechanism by which a NO world survives
-a query it leaves switchable is exhibited beyond the certificates: the
-worlds were found by search over the vertices of the fibres, the
-route's measurements (reproduced by the correctness auditor) show random
-systems at $m=3$ with their bit forced after three or four queries, and
-the common direction of \Cref{prop:eval-lift} is only a sufficient
-condition that \Cref{lem:switch} obstructs. Two further items are open:
-the two-player version of the lemma and the proposition (the
-definition, \Cref{rem:eval-fibre} and \Cref{lem:rational-row} are
-player-neutral), and the zero-error randomised decision complexity, for
-which \Cref{prop:hdp-eval} has $m/\log_2(m+1)$ in the naming version.
-And none of it bears on \Cref{prob:main}: \Cref{thm:eval-queries} caps
-every quantity of the model at $|C|+2$, no mechanism of
-\Cref{sec:refutations} is an evaluation algorithm, and the reading of
-\Cref{rem:eval-queries} stands --- the exponential lower bounds of this
-document are bounds on rounds, and the information, for the bit as for
-the strategy, costs about $|C|$ evaluations.
+$\langle x_r\rangle$, which can persist for $|C|$ queries and not for
+the $|C|+1$ of \Cref{thm:eval-star} (a further query completing a
+$2$-face changes nothing, \Cref{lem:eval-forced}). The general lower bound is \textbf{not} proved, and under this
+document's rule that a family certified at fewer than five sizes with no
+growth law claims nothing beyond those sizes, nothing is claimed beyond
+$|C|=3$ on that side. The missing sentence is exactly this: for every $m$
+there is a nondegenerate stopping one-player harmonic system $W_0$ on $m$
+controlled vertices with $\val^{\ast}(v_0)<\tfrac12$ such that, for every
+datum $D$ of at most $m$ queries generated by the adversary from $W_0$,
+some member of $K(D)$ is stopping and nondegenerate with
+$\val^{\ast}(v_0)<\tfrac12$ and leaves the next query strictly switchable,
+and some member is stopping and nondegenerate with
+$\val^{\ast}(v_0)\ge\tfrac12$. \Cref{lem:eval-forced} says what such an
+adversary must do: it cannot make a query uninformative except where
+$(\ast)$ is solvable, so after $m$ queries chosen as in \Cref{thm:eval-star}
+the fibres have dimension at most one and both bits must live on them; the certificates
+show that they can at $m\le3$, found by search over the vertices of the
+fibres, and no mechanism by which a NO world survives a query it leaves
+switchable is exhibited beyond them. Two further items are open: the
+two-player version of the lemma and the proposition (the definition,
+\Cref{rem:eval-fibre} and \Cref{lem:rational-row} are player-neutral, but
+at a Min vertex the frozen fixed-point equation is a minimum of readings,
+so an affine combination of values need not be a fixed point and
+\Cref{lem:eval-forced} does not carry over),
+and the zero-error randomised decision complexity, for which
+\Cref{prop:hdp-eval} has $m/\log_2(m+1)$ in the naming version. And none
+of it bears on \Cref{prob:main}: \Cref{thm:eval-queries} caps every
+quantity of the model at $|C|+2$, no mechanism of \Cref{sec:refutations}
+is an evaluation algorithm, and the reading of \Cref{rem:eval-queries}
+stands --- the exponential lower bounds of this document are bounds on
+rounds, and the information, for the bit as for the strategy, costs about
+$|C|$ evaluations.
 \end{remark}
 
 \Cref{thm:short-path} guarantees that a short improving path exists; it
@@ -7068,10 +7195,12 @@ realised (\Cref{prop:m3-realised,prop:m3-one-min}), naming the sink of an
 unknown one of the $728$ from out-set queries alone costs exactly $4$ in
 the worst case (exact minimax, \texttt{scripts/round17-verify/dout3.py};
 $3$ once the algorithm is told which realisation's skeleton it faces, the
-route's correctness auditor), while by \Cref{thm:eval-queries} $|C|+2\ge5$
-value queries always suffice, so on that data the orientation oracle is the
-cheaper of the two (the round-$18$ paper audit, correcting a claim of the
-opposite here); whether
+route's correctness auditor), while $|C|+1=4$ value queries suffice for
+the one-player realisations (\Cref{thm:eval-star}) and
+\Cref{thm:eval-queries} gives $|C|+2\ge6$ for the two-player ones ---
+upper bounds, against the orientation oracle's exact $4$, no lower bound
+on value queries being proved for that class (the round-$18$ paper audit,
+correcting a claim of the opposite here); whether
 the outmap-query complexity of the SSG-realisable orientations is
 superlinear is open (for arbitrary unique sink orientations a
 superlinear deterministic bound is Schurr and Szab\'o's, from memory,
@@ -8838,7 +8967,10 @@ $r\le2^{k}$ pieces while (b) spends $r-1$ Min vertices per readout, and
 leaking ones; whether every rational readout system realising a
 nondegenerate $s$ can be replaced by a dyadic $\delta$-leaky one
 realising the same $s$ was shown by the route for one player only, by
-perturbation, and is left open here for two.
+perturbation; \Cref{cor:readout-exact} makes the question unnecessary for
+the correspondence, the trap hypothesis of \Cref{rem:rational-row} ---
+which the system of (a) always satisfies, \Cref{lem:readout-trap} ---
+replacing both dyadic and leaking.
 \end{theorem}
 
 \begin{proof}
@@ -8867,6 +8999,91 @@ $g_\sigma+p_\sigma\cdot(x_{\sigma',-v}-x_{\sigma,-v})\ge g_{\sigma'}$ and
 the substochastic bounds; the one-player case ties all $p_\sigma$, and
 \Cref{prop:oneplayer-lp} is the statement that the tied programme forces
 Holt--Klee.
+
+\begin{lemma}[The readout system of a stopping game satisfies the trap hypothesis]\label{lem:readout-trap}
+Let $G$ be a stopping SSG and, for each incidence $(v,a)$ and each
+positional Min strategy $\tau$, let $(q^{v,a,\tau};p^{v,a,\tau})$ be the
+first-passage law from $v^{(a)}$ onto $\Vmax\cup\{t_1\}$ when Min plays
+$\tau$, the pieces of $F_{v,a}$ in \Cref{lem:readout}(a). Then no nonempty
+$U\subseteq\Vmax$ has at each of its vertices $v$ an action $a$ and a
+$\tau$ with $q^{v,a,\tau}=0$ and $\sum_{u\in U}p^{v,a,\tau}_u=1$ --- a law of
+mass one inside $U$; equivalently, after the elimination of \Cref{lem:readout-reduce}, there is
+no nonempty $U$ at each of whose vertices some piece of some
+$\Psi_{v,a}$ puts mass one inside $U$. So the rational readout system
+delivered by \Cref{thm:readout-realise}(a) satisfies the hypothesis of
+\Cref{rem:rational-row}.
+\end{lemma}
+
+\begin{proof}
+Suppose $U$ and $(a_v,\tau_v)_{v\in U}$ violate the conclusion, so that
+each law $(q^{v,a_v,\tau_v};p^{v,a_v,\tau_v})$ puts its whole mass on $U$. For
+$v\in U$ let $W_v$ be the set of vertices the walk from $v^{(a_v)}$ under
+$\tau_v$ visits with positive probability before it first meets
+$\Vmax\cup\{t_0,t_1\}$, and put $W:=U\cup\bigcup_{v\in U}W_v$. Since the
+law of that first meeting has no mass off $U$, the walk continued from any
+vertex of $W_v$, which is reached with positive probability, meets
+$\Vmax\cup\{t_0,t_1\}$ inside $U$ almost surely; so an average vertex of
+$W_v$ has both successors in $W_v\cup U$, a Min vertex $u\in W_v$ has its
+successor $\tau_v(u)$ there, every Max vertex of $W$ lies in $U$ --- the
+walks stop at $\Vmax$ --- and has its successor $v^{(a_v)}$ in $W$, and
+$W$ contains no sink, $q^{v,a_v,\tau_v}=0$ excluding $t_1$ and the full
+mass on $U$ excluding $t_0$. Hence $W\neq\emptyset$ is a trap in the sense
+of \Cref{lem:trapchar}, and $G$ is not stopping. That the $\tau_v$ may
+disagree at a Min vertex lying in two of the $W_v$ does not matter: a
+trap needs only some successor of each controlled vertex inside it, so no
+single pair need realise all the walks at once. After the elimination a
+piece puts mass one inside $U$ exactly when $q=0$ and
+$\sum_{u\in U}p_u=1$, the coefficient of $v$ itself included, which is the
+condition above. (Checked in exact arithmetic on $3000$ random two-player
+games: no violation on the $332$ stopping ones, and on the $2668$
+non-stopping ones every one of the $2370$ violations yields the trap $W$;
+\texttt{scripts/round19-verify/rr\_trap.py}; the root agent's auditor
+rebuilt the check on $300$ further stopping games.)
+\end{proof}
+
+\begin{corollary}[Realisability is rational readout with the trap hypothesis]\label{cor:readout-exact}
+An orientation $s$ of the $m$-cube is the improvement outmap of a
+nondegenerate stopping SSG with $m$ Max and $k$ Min vertices only if some
+rational readout system of order $(m,2^{k})$ satisfying the hypothesis of
+\Cref{rem:rational-row} realises $s$; and if a rational readout system of
+order $(m,r)$ and common denominator $D'$ satisfying that hypothesis
+realises $s$, then $s$ is the improvement outmap of a nondegenerate
+stopping SSG with $m$ Max vertices, at most $2m(r-1)$ Min vertices and at
+most $2mr(m+3)\lceil\log_2D'\rceil$ average vertices. So the dyadic and
+leaking hypotheses of \Cref{thm:readout-realise}(b) can be replaced by the
+trap hypothesis, under which the two halves of that theorem meet, and the
+question at its end --- whether a rational system realising $s$ can be
+replaced by a dyadic $\delta$-leaky one --- no longer stands between them;
+what does not close is the size, $r\le2^{k}$ on one side against
+$2m(r-1)$ Min vertices on the other.
+\end{corollary}
+
+\begin{proof}
+The hypothesis refers to the pieces of the presentation of the $\Psi_{v,a}$
+as minima; (a) delivers the full family of $2^{k}$ pieces and the second
+half consumes the presentation it is given. Under the hypothesis the fixed
+point of $y\mapsto(\Psi_{v,\sigma(v)}(y_{-v}))_v$ is unique for every
+$\sigma$, so ``realises'' in \Cref{def:readout-system} is well defined
+without a leak: if $y\neq y'$ were two, let $\delta:=\max_v|y_v-y'_v|>0$
+and $U^{+}:=\{v:y_v-y'_v=\delta\}$, nonempty after exchanging $y$ and
+$y'$ if need be; for $v\in U^{+}$ and a piece $(q;p)$ of
+$\Psi_{v,\sigma(v)}$ attaining the minimum at $y'$,
+$\delta=y_v-y'_v\le p\cdot(y-y')_{-v}\le|p|_1\delta\le\delta$, so $|p|_1=1$,
+$q=0$, and every $u$ in the support of $p$ has $y_u-y'_u=\delta$, i.e.\
+lies in $U^{+}$ --- a piece of mass one inside $U^{+}$ at every vertex of
+$U^{+}$, against the hypothesis. The first half is now
+\Cref{thm:readout-realise}(a) with \Cref{lem:readout-trap}. For the second, run the proof of
+\Cref{thm:readout-realise}(b) with the gadget of \Cref{lem:rational-row}
+in place of \Cref{lem:dyadic-row} for each piece, behind the same Min
+chains: by \Cref{rem:rational-row} the traps of the constructed game are
+exactly the violations of the hypothesis, so the game is stopping; Min
+choosing the least piece, the eliminated readouts of the game are the
+given $\Psi_{v,a}$, and the value restriction at $\sigma$ is a fixed point of
+$y\mapsto(\Psi_{v,\sigma(v)}(y_{-v}))_v$, hence the unique one, so the
+outmap is $s$, and the strict inequalities of the realisation make the
+game nondegenerate (\Cref{def:improvement-uso}: ties at Max vertices
+only).
+\end{proof}
 
 \begin{theorem}[Min vertices are needed in proportion to the Holt--Klee defect]\label{thm:min-count}
 For an outmap $s$ of the $m$-cube let $\chi_{\mathrm{HK}}(s)$ be the
@@ -18969,9 +19186,10 @@ itself runs superpolynomially long, which no construction here achieves.
 And every exponential lower bound above is a bound on the rounds of a
 rule, never on information: an optimal strategy is found from $|C|+2$
 adaptively chosen evaluations, at the price of solving the hypothesis
-between them (\Cref{thm:eval-queries}), and the bit itself needs $|C|+1$
-of them at $|C|\in\{2,3\}$ (\Cref{prop:eval-decide-lower}); the order of
-the average values
+between them (\Cref{thm:eval-queries}), a nondegenerate one-player game
+from $|C|+1$ fixed in advance (\Cref{thm:eval-star}), and the bit itself
+needs $|C|+1$ of them at $|C|\in\{2,3\}$ (\Cref{prop:eval-decide-lower});
+the order of the average values
 is a unique certificate (\Cref{rem:order-unique}), and no certificate
 format closes the gap (\Cref{prop:bracket}).
 
