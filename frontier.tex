@@ -18682,7 +18682,7 @@ exactly $D+1$ for $D\le6$, attained from the all-ones start: the round-$19$
 paper audit, correcting a row of numbers printed here). The
 tent device therefore serves the pivot of \Cref{rem:blowup-realise} neither
 as a visiting order nor as a driven block, and what survives is a fold fed
-back into its own drive. Third, one player makes the envelope convex: each
+back into its own drive (taken up in \Cref{def:ff} below). Third, one player makes the envelope convex: each
 $y^{\pi}_{\varrho}(v)=\sum_{\ell\ge1}h^{\pi,v}_{\ell}\varrho^{\ell}$ is the
 probability generating function of the first-passage time to $t_1$, hence
 absolutely monotone on $[0,1)$, and with $\Vmin=\emptyset$ one positional
@@ -18708,6 +18708,207 @@ Like $P_D$ and $\mathrm{BP}(D)$ the family is acyclic and solved by
 backward induction; it bounds a parametric schema, not the problem.
 \end{remark}
 
+
+\subsubsection*{A fold fed back into its own drive}
+
+The closing sentence of \Cref{rem:one-player-fold} was taken up by the
+round-$19$ fold-feedback route: what happens when the drive of a fold
+cascade is not a frozen payoff but a vertex of the game that reads the
+cascade's own values, so that the cascade carries a cycle. The answer at
+small depth is a collapse: every all-switches step of a fold is one of $m$
+combinatorial maps, the mismatch level between the strategy and the drive's
+itinerary climbs unless the drive leaves its cell, and at $m\le4$ the
+feedback buys, in the families measured, nothing.
+
+\begin{definition}[Fold cascade, and the feedback fold]\label{def:ff}
+Let $G$ be a stopping SSG. A \emph{fold cascade of depth $D$} in $G$
+consists of a vertex $u$ (the \emph{drive}), vertices $X_d,Y_d$
+$(0\le d\le D)$, Max vertices $F_d\to(X_d,Y_d)$ and \emph{partners}
+$Z_d\to(X_d,Y_d)$ for $d<D$, each $Z_d$ either an average vertex (\emph{one
+player}) or a Min vertex (\emph{two players}), such that, writing $t$ for
+the value of $u$, $\varphi_d:=\val(X_d)-\val(Y_d)$ and $\varepsilon_d:=+1$
+if $\sigma(F_d)=X_d$ and $-1$ otherwise, one has under \emph{every}
+strategy, with $u$ read as a frozen payoff,
+\[
+  \varphi_0=s\,(t-\tfrac12)\quad(s>0),\qquad
+  \varphi_d=\kappa_d\bigl(\val(F_{d-1})-\val(Z_{d-1})\bigr)-e_d
+  \quad(1\le d\le D),
+\]
+with $\kappa_d>0$ and $e_d>0$ (the normalisation $\val(Y_0)=\tfrac12$ is a
+choice of origin for the drive; the general case replaces $t$ by
+$t-\val(Y_0)+\tfrac12$ throughout). Since $\val(F_{d-1})-\val(Z_{d-1})$
+equals $\tfrac12\varepsilon_{d-1}\varphi_{d-1}$ with one player and
+$(\varepsilon_{d-1}\varphi_{d-1})_+$ with two, the normalised differences
+$\psi_d:=\varphi_d/e_d$, $e_0:=s/2$, obey
+\[
+  \psi_0=2t-1,\qquad
+  \psi_d=\mu_d\,\varepsilon_{d-1}\psi_{d-1}-1
+  \quad\text{resp.}\quad
+  \psi_d=\mu_d\,(\varepsilon_{d-1}\psi_{d-1})_+-1,
+\]
+$\mu_d:=\tfrac12\kappa_de_{d-1}/e_d$ resp.\ $\kappa_de_{d-1}/e_d$ the
+\emph{gains}. The cascade is a \emph{fold} if $\mu_d\ge2$ for every $d$, and
+a \emph{tent fold} if $\mu_d=2$: then the greedy signs
+$\varepsilon_d=\operatorname{sign}\psi_d$ give $\psi_d=2|\psi_{d-1}|-1$, so the greedy
+sign vector at drive $t$ is the tent itinerary of $t$
+(\Cref{thm:fold,prop:one-player-fold}). We call
+$\gamma(t):=(\operatorname{sign}\psi^{\mathrm{gr}}_d(t))_{d\le D}$ the \emph{itinerary} of
+the drive, $\psi^{\mathrm{gr}}$ being the greedy orbit
+$\psi^{\mathrm{gr}}_d=\mu_d|\psi^{\mathrm{gr}}_{d-1}|-1$ from
+$\psi^{\mathrm{gr}}_0=2t-1$; the cascade is \emph{nondegenerate} at $\sigma$
+if $\psi_d\ne0$ for every $d$.
+
+The cascade is a \emph{feedback fold} if $u$ is not a sink but a vertex
+from which the token reaches the cascade's vertices and the sinks through
+average vertices only, so that its first-passage row $w$ over them
+(\Cref{lem:excursion}, applied target by target) does not depend on the
+strategy: $t=\val_\sigma(u)=\sum_vw_v\val_\sigma(v)+w_1$ with $w\ge0$,
+$\sum_vw_v+w_1\le1$. Under a fixed $\sigma$ every cascade value is affine
+in the frozen drive, $\val_\sigma(v;t)=A^\sigma_vt+B^\sigma_v$ with
+$A^\sigma_v=\Pr_\sigma[v\to u]\in[0,1]$, so $t_\sigma$ is the unique
+solution of $t=\lambda_\sigma t+(w_1+\sum_vw_vB^\sigma_v)$ with
+$\lambda_\sigma:=\sum_vw_vA^\sigma_v<1$, the probability that the token
+returns to $u$.
+\end{definition}
+
+\begin{theorem}[Every all-switches step of a fold is one of $m$ maps]\label{thm:ff-bmap}
+Let the cascade be a fold, nondegenerate at $\sigma$, let $\varepsilon$ be
+$\sigma$'s sign vector, $m:=D+1$, and let
+$i:=\min\{d:\varepsilon_d\ne\gamma_d(t_\sigma)\}$, $i:=\infty$ if there is
+no such $d$. If $i=\infty$ no $F_d$ is strictly switchable. Otherwise the
+switched set is $S_\sigma=\{d:\varepsilon_d\ne B(\varepsilon,i)_d\}$,
+$\min S_\sigma=i$, and the sign vector of $\sigma[S_\sigma]$ is
+\[
+  B(\varepsilon,i)_d=\varepsilon_d\ (d<i),\qquad
+  B(\varepsilon,i)_i=-\varepsilon_i,\qquad
+  B(\varepsilon,i)_d=-\!\!\prod_{k=i+1}^{d-1}\!\!\varepsilon_k\ \ (d>i).
+\]
+So from a given $\sigma$ the all-switches step has at most $m$ possible
+outcomes, indexed by $i$ alone, whatever the drive is and whether it is fed
+back or not, with one player and with two.
+\end{theorem}
+
+\begin{proof}
+$F_d$ is strictly switchable exactly when $\varepsilon_d\ne\operatorname{sign}\psi_d$, so
+the new sign vector is $d\mapsto\operatorname{sign}\psi_d$, all $\psi_d$ taken at
+$t=t_\sigma$. For $d\le i$ every $\varepsilon_e$ with $e<d$ agrees with
+$\gamma_e$, so both recursions reduce to $\mu_d|\psi_{d-1}|-1$ and
+$\psi_d=\psi^{\mathrm{gr}}_d$, whence $\operatorname{sign}\psi_d=\gamma_d$: equal to
+$\varepsilon_d$ for $d<i$ and to $-\varepsilon_i$ at $d=i$. Above $i$,
+$\varepsilon_i\psi_i<0$, so with one player
+$\psi_{i+1}=\mu_{i+1}\varepsilon_i\psi_i-1<-1$ and with two
+$\psi_{i+1}=\mu_{i+1}(\varepsilon_i\psi_i)_+-1=-1$; in both cases
+$|\psi_{i+1}|\ge1$ and $\operatorname{sign}\psi_{i+1}=-1$, the empty product. Inductively
+let $d>i$ with $|\psi_d|\ge1$. With one player
+$|\mu_{d+1}\varepsilon_d\psi_d|\ge2$, so
+$\operatorname{sign}\psi_{d+1}=\operatorname{sign}(\varepsilon_d\psi_d)=\varepsilon_d\operatorname{sign}\psi_d$ and
+$|\psi_{d+1}|\ge\mu_{d+1}-1\ge1$; with two players the same holds when
+$\varepsilon_d\psi_d>0$, and when $\varepsilon_d\psi_d<0$ one gets
+$\psi_{d+1}=-1$, again of sign $\varepsilon_d\operatorname{sign}\psi_d$ and modulus $1$.
+So $n_d:=\operatorname{sign}\psi_d$ satisfies $n_{i+1}=-1$ and
+$n_{d+1}=\varepsilon_dn_d$, which is the display. (Checked here on $5997$
+random nondegenerate configurations with gains in $[2,6)$, $m\le6$, one and
+two players, and round by round on the route's games below;
+\texttt{scripts/round19-verify/ff\_root.py}.)
+\end{proof}
+
+\begin{corollary}[The mismatch level climbs unless the drive leaves its cell]\label{cor:ff-climb}
+For a sign vector $\varepsilon$ and $i\le D$ let
+$J(\varepsilon,i):=\{t:\gamma_d(t)=\varepsilon_d\ (d<i),\ \gamma_i(t)=-\varepsilon_i\}$,
+and $J(\varepsilon,\infty):=\{t:\gamma(t)=\varepsilon\}$. Each is an
+interval, since along the greedy orbit $\psi^{\mathrm{gr}}_d$ is affine in
+$t$ as long as the signs are prescribed; for a tent fold $J(\varepsilon,i)$
+is the dyadic interval of length $2^{-(i+1)}$ carrying the prefix, and a
+round of an all-switches run has mismatch level $i$ exactly when
+$t_\sigma\in J(\varepsilon,i)$. Along an all-switches run of a feedback fold
+write $t_k$, $i_k$, $J_k$ for the drive, the mismatch level and its cell at
+round $k$. Then $t_k$ is nondecreasing (\Cref{lem:switch}) and
+\[
+  t_{k+1}\in J_k\ \Longrightarrow\ i_{k+1}>i_k .
+\]
+Consequently the run splits into at most $E+1$ segments of length at most
+$m$, $E$ being the number of rounds at which the drive leaves its cell, each
+such exit a monotone crossing of an endpoint of one of the at most $2^{m}$
+cells, so $L\le m(E+1)$; a fold whose drive stays in one cell --- a frozen
+drive in particular, as \Cref{thm:component-bound} also gives --- has
+$L\le m$, and a run of length $L$ forces the drive to cross at least
+$L/m-1$ cell endpoints monotonically, for a tent fold $L/m-1$ points of the
+grid $2^{-m}\mathbb Z$.
+\end{corollary}
+
+\begin{proof}
+$\sigma_{k+1}$ has sign vector $B(\varepsilon_k,i_k)$, which agrees with
+$\gamma(t_k)$ on $\{0,\dots,i_k\}$ by \Cref{thm:ff-bmap}. If
+$t_{k+1}\in J_k$ then $\gamma(t_{k+1})$ agrees with $\gamma(t_k)$ there
+too, so $\varepsilon_{k+1}$ agrees with $\gamma(t_{k+1})$ on
+$\{0,\dots,i_k\}$ and the first mismatch lies above $i_k$. Within a segment
+the levels $i_k<i_{k+1}<\dots$ are distinct, so a segment has at most $m$
+rounds; the drive is monotone, so it crosses each endpoint at most once.
+\end{proof}
+
+\begin{remark}[What the search at $m\le4$ found]\label{rem:ff-measured}
+The route built two families of feedback tent folds --- one player and two,
+$c_d=\tfrac12$, the drive a halving chain over $F_D$ and a constant --- on
+$7D+6$ and $6D+6$ non-sinks; verified here from the games for $D\le4$
+(\texttt{ff\_root.py}): stopping, every gain $\mu_d=2$, $\val(Y_0)=\tfrac12$,
+the identities of \Cref{def:ff} and the prediction of \Cref{thm:ff-bmap} at
+every one of the $2{+}19{+}45{+}113$ nondegenerate rounds of each family,
+and the longest all-switches run over all $2^{m}$ starts exactly $m-1$. It
+then searched, for tent cascades of $m\le4$ levels in the pure form
+$\val(X_d)=c_d\val(F_{d-1})$, $\val(Y_d)=c_d\val(Z_{d-1})+b_d$ with
+$c_d=1-e_d$ or $c_d=\tfrac12$, one player and two, over every path of
+$B$-maps, deciding by an exact linear programme in the drive row $w$ whether
+some feedback fold on that cascade runs along the path. Its finding, which
+its correctness auditor reproduced independently after relaxing the two
+restrictions the route's programme carried (a loop-gain cap
+$1-\lambda_\sigma\ge2^{-6}$ and a shrinking of every cell, replaced by
+$2^{-20}$ and $10^{-6}$, and by $2^{-60}$ at $m=3$), is that the longest
+run realisable is exactly $m$ at every $m\le4$, in all four families,
+attained --- the auditor's correction --- by several mismatch sequences and
+by drives that are not constant, while the $B$-map graph alone admits paths
+of length $2^{m}-1$. This is a measurement over two parameter families with
+$a_d=0$, not a theorem over all cascades, and we record it as such; its
+content is that at $m\le4$ the feedback fold runs no longer than the frozen
+fold of \Cref{rem:one-player-fold}, well below the one-player ceiling
+$h^{\ast}_{1}(4)=6$ of \Cref{cor:hstar-one}. The route also showed (its
+auditor confirming on $1024$ gadget games) that a fold can present the sign
+of a difference of two of its own values to a downstream Max vertex as a
+strict comparison, at the cost of one Max vertex and $a+1$ average
+vertices, $a$ the average-vertex count (\Cref{lem:denominator-sharp}); each
+such read costs one cube coordinate, so the device does not answer the
+additive-cost question of \Cref{rem:blowup-realise}.
+\end{remark}
+
+\begin{proposition}[The blow-up escapes the fold model at level two]\label{prop:ff-blowup}
+(a) The bottom-antipodal walks of $B(1\text{-cube})$ (\Cref{thm:blowup};
+the $3$-cube orientation $(0,1,3,6,7,4,5,2)$, walks $4,3,5,1,0$ and
+$6,3,5,1,0$ of length $4$) are paths of $B$-maps in the sense of
+\Cref{thm:ff-bmap} under exactly $2$, respectively $4$, of the $48$
+relabellings of the cube (permutation of the coordinates and
+complementation), with mismatch levels $0,0,2,1$, respectively $1,0,2,1$ and
+$1,0,1,2$; of the two relabellings of the first walk only one is compatible
+with a nondecreasing drive at level $0$. Yet for all six pairs the
+realisability programme of \Cref{rem:ff-measured} is infeasible, for the
+extremal one-player fold, the extremal two-player fold and the dyadic folds
+alike (the route and its auditor, at loop-gain floor $2^{-40}$): the first
+blow-up level is combinatorially the walk of a fold, and in the families
+searched no drive delivers it. (b) The bottom-antipodal walk
+$12,19,13,17,8,16,0,7,1,5,4$ of $B^{2}$ (\Cref{prop:b2-realised}, height
+$10$, $m=5$) is a path of $B$-maps under \emph{none} of the $3840$
+relabellings. So the device that doubles the height is not a feedback fold
+from level two on, and the collapse of \Cref{cor:ff-climb,rem:ff-measured}
+does not touch it.
+\end{proposition}
+
+\begin{proof}
+(a) and (b) are finite checks on the walks, recomputed here from the two
+outmaps (\texttt{ff\_root.py}): for each relabelling the walk's vertices
+become sign vectors, and consecutive pairs are tested against the display
+of \Cref{thm:ff-bmap} at the first index where they differ. The
+infeasibility statements in (a) are the route's linear programmes, rerun by
+its correctness auditor with the restrictions relaxed; they are recorded as
+measurements.
+\end{proof}
 
 \subsection{Coupling the two: the transport--slack hybrid}\label{sec:hybrid}
 
