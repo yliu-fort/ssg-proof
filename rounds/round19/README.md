@@ -48,6 +48,52 @@ unchecked backlog as secondary targets). All 25 agents on Opus 5 at
   `thm:readout-realise`(a)'s system satisfies the trap hypothesis; whether
   |C|+1 or |C|+2 is exact at |C|=3) itself, per decision A4.
 
+## The root agent's two cheap checks (decision A4), done during the run
+
+Both settled, with proofs, in `scripts/round19-verify/` (batch H, after a
+single-agent correctness audit):
+
+1. **The trap hypothesis holds.** The rational readout system that
+   `thm:readout-realise`(a) delivers always satisfies the hypothesis of
+   `rem:rational-row`: a violation --- a set $U\subseteq\Vmax$ at each of
+   whose vertices some action has, under some Min strategy $\tau_v$, a
+   first-passage law of full mass inside $U$ --- makes
+   $W=U\cup\bigcup_v(\text{vertices visited before }\Vmax)$ a trap of the
+   game in the sense of `lem:trapchar` (a trap needs only *some* in-set
+   successor at each controlled vertex, so the $\tau_v$ need not agree),
+   against stopping. Hence the two halves of `thm:readout-realise` meet:
+   realisability by a nondegenerate stopping SSG is exactly realisability
+   by a rational readout system with the trap hypothesis
+   (`lem:readout-trap`, `cor:readout-exact`); the dyadic question at the
+   end of the theorem no longer separates them, only the size does.
+   `rr_trap.py`: 3000 random two-player games, no violation on the 332
+   stopping ones, every one of the 2370 violations on non-stopping games
+   yields the trap.
+2. **$|C|+1$ is exact at $|C|\in\{2,3\}$, and $|C|+1$ suffice for every
+   nondegenerate one-player game, non-adaptively.** The key is a lemma
+   (`lem:eval-forced`): whether a query's answer lies in the affine hull of
+   the recorded values is decided by a linear system $(\ast)$ in the data
+   alone --- either every consistent system answers with the same hull
+   point (the query is wasted) or none does (the rank grows). For the
+   queries $e_1,\dots,e_m,0$ the system $(\ast)$ is never solvable, so the
+   $m+1$ values are affinely independent and determine every row of the
+   normal form: the bit and an optimal strategy from $|C|+1$ evaluations
+   fixed in advance (`thm:eval-star`). With `prop:eval-decide-lower` the
+   decision complexity is exactly $|C|+1$ at $|C|\in\{2,3\}$; naming costs
+   at most that, and the certificates do not bound naming (NO world and
+   YES witness share their optimum at 9/16 and 277/400 nodes,
+   `ed_naming.py`). At $|C|=3$ a fourth query is wasted essentially only
+   when it completes the three queries to a 2-face (`rem:eval-face`); on
+   the route's depth-3 certificate exactly 149 nodes (144 face completions
+   + 5 coincidences) admit a forced fourth query and the tree extends there
+   and nowhere else (`ed_depth4.py`, `ed_corners.py`: at every node at least
+   four of the five fourth queries are informative for every consistent
+   world, by the sign of a multi-affine function at the eight corners of
+   the fibre box), so the round-18 route's depth-4 search could not have
+   succeeded. `ed_star.py`: rank $m+1$ and exact row recovery for
+   $m\le6$; the lemma on 3300 (member, strategy) pairs; 960 = all face
+   completions forced on 40 random systems; degenerate systems drop rank.
+
 ## Outcomes
 
 (pending)
