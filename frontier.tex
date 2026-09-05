@@ -242,8 +242,9 @@ realised on $194$ vertices while the translated layer remains unrealised
 (\Cref{prop:b3-outer}) and out of reach of the pinned shape that realised
 the outer half, which provably cannot double (\Cref{cor:pinned-no-doubling}),
 and of the escape shape beyond it for the two doublings carrying its
-$\beta$-coordinate, so that one doubling with a mixed-sign rest readout is
-all that remains of that route (\Cref{thm:escape-no-beta,cor:escape-m3});
+$\beta$-coordinate, so that over the published level-two block one
+doubling with a mixed-sign rest readout is all that remains of that route
+(\Cref{thm:escape-no-beta,cor:escape-m3});
 the height of every blow-up is exactly $2h+2$
 (\Cref{prop:blowup-height}). The one-player ceiling is
 $1,2,4,6$ for $m\le4$, at least $11$ at $m=5$ --- exactly $11$ for
@@ -1140,12 +1141,14 @@ redirected, so a node survives only if its interval straddles one of the
 $\ell+1$ boundaries $K_1,\dots,K_\ell,D$, at most $\ell+1$ per depth. For
 the consequence replace each action of each controlled vertex by such a
 gadget. A trap (\Cref{lem:trapchar}) containing a gadget vertex contains
-every leaf below it, and from every surviving node some leaf below is a
-target or $t_0$; as $t_0$ is a sink the leaf is a target, and then, the
-rejecting leaves returning to the entry, the trap contains the entry and
-with it every leaf of the tree, so the row puts mass one on targets in
-the trap. Hence the traps are exactly the closed full-mass action sets of
-the normal form. (The gadget was built and its exit probabilities solved
+every leaf below it. If the trap meets $C$ then, both successors of a
+controlled vertex being gadget entries, it contains an entry and with it
+every leaf of that tree, hence every target of the row and no leaf
+pointing at a sink, so the row puts mass one on targets in the trap; if
+it contains gadget vertices only, every leaf below any of its nodes is a
+rejecting leaf, but a node whose whole leaf interval rejects was deleted.
+Hence the traps are exactly the closed full-mass action sets of the
+normal form. (The gadget was built and its exit probabilities solved
 exactly for nine rows, among them $(\tfrac13,\tfrac13)$ in $3$ vertices,
 $(\tfrac27,\tfrac37)$ in $5$, $(\tfrac4{15},\tfrac13,\tfrac25)$ in $7$
 and $(\tfrac7{37},\tfrac9{37},\tfrac{20}{37})$ in $11$,
@@ -3897,7 +3900,10 @@ $K(D)$ is the set of stopping systems in $\prod_{(v,a)}K_{v,a}(D)$, and
 $\rho(D):=\dim\operatorname{span}\{\langle x_r\rangle:r\le t\}\le\min(t,m+1)$.
 For a one-player system $\val_{M,\sigma}$ is the least fixed point of
 $x\mapsto q_\sigma+P_\sigma x$ on $[0,1]^{C}$, namely
-$\sum_kP_\sigma^{k}q_\sigma$, and $\val^{\ast}_M:=\max_\sigma\val_{M,\sigma}$.
+$\sum_kP_\sigma^{k}q_\sigma$, and $\val^{\ast}_M:=\max_\sigma\val_{M,\sigma}$;
+for two players $\val^{\ast}_M$ is the value of the stopping game the
+system defines (\Cref{lem:rational-row}), the unique fixed point of its
+Shapley operator.
 \end{definition}
 
 \begin{remark}[Three facts about the fibres]\label{rem:eval-fibre}
@@ -3911,7 +3917,7 @@ applies to any finite family of substochastic rows over $C$); this is
 the reproduction clause of \Cref{rem:run-informs}. Hence an evaluation
 algorithm, whose output is a function of the data, may output
 $\val(v_0)\ge\tfrac12$ only if every member of $K(D)$ that is an SSG of
-the class considered --- every rational member, by
+the class considered --- every rational nondegenerate member, by
 \Cref{lem:rational-row} --- has $\val^{\ast}(v_0)\ge\tfrac12$, and
 $\val(v_0)<\tfrac12$ only if every such member has
 $\val^{\ast}(v_0)<\tfrac12$; a closed queried strategy forces
@@ -4004,9 +4010,10 @@ $19$ lifts built with $M'$ stopping reproduced both queries with value
 $c$ throughout, \texttt{scripts/round18-verify/ed\_lift.py}.)
 \end{proof}
 
-\Cref{lem:eval-one-query} is the case $t=1$, $c=1$,
-$\sigma^{\ast}=\sigma_1[v]$ of the common direction, with $d$ chosen so
-that $z'$ is supported on $v$ alone. A nonnegative direction exists only
+\Cref{lem:eval-one-query} has the form of the case $t=1$, $c=1$,
+$\sigma^{\ast}=\sigma_1[v]$ of the common direction, with one row moved
+along a direction supported on $v$ and $t_1$ alone rather than every row
+of $\sigma^{\ast}$ along one $d$. A nonnegative direction exists only
 if some controlled vertex has value $0$ in every recorded query, which in
 a nondegenerate one-player game \Cref{lem:switch} forbids once the
 algorithm has flipped that vertex; past the first query the lift has
@@ -4138,7 +4145,9 @@ with $\val(v_0)<\tfrac12$, on which every deterministic evaluation
 algorithm needs at least $m+1=|C|+1$ evaluations to decide
 $\val(v_0)\ge\tfrac12$; $|C|+1$ chosen in advance suffice
 (\Cref{thm:eval-star}), so the bound is exact.
-The members have at most $191$ vertices at $m=2$ and $3863$ at $m=3$.
+The members have at most $191$ vertices at $m=2$ and $3863$ at $m=3$ for
+the leaf assignment of \texttt{ed\_games.py}; other orders of the targets
+in the rejection tree give $185$ to $196$ and $3809$ to $3865$.
 \end{proposition}
 
 \begin{proof}
@@ -7054,7 +7063,7 @@ Let $G$ be a nondegenerate stopping escape extension whose outmap is
 $B_\varphi(s,z')(\cdot\oplus\zeta)$ with $\zeta_\alpha=1$, $\zeta_\beta=0$,
 and let $\tilde\varphi$ take the value $1$ somewhere. Then:
 \begin{enumerate}[label=(\alph*),leftmargin=2.2em]
-\item $R_\alpha-C_\alpha$ has a strictly negative component;
+\item $R_\alpha-C_\alpha$ has a strictly positive component;
 \item if $R_\alpha-C_\alpha\ge0$ componentwise (the pinned shape has
       $C_\alpha=0$), then for inner strategies $\sigma,\sigma'$ with
       $y_\sigma(t)\le y_{\sigma'}(t)$ componentwise for every $t$ between
@@ -9632,11 +9641,16 @@ and $n$ average vertices, so no colour is acyclic and the Max-reachability
 digraph is one component of size $n^{2}/2$; every escape certificate has
 $\lambda>1-2^{1-n}$ (inside $\mathrm{SL}_i$ the certificate rows read
 $\lambda x_r\ge\tfrac12(x_1+x_{r+1})$, and $x\ge\bbone$ forces
-$2\lambda>2-2^{2-n}$, using $2n<2^{n}$ for $n\ge4$); the $n$ rows and the $n$ slow blocks are pairwise
-disjoint, so every freezing modulator of \Cref{thm:modulator} into any of
-its classes has size at least $n$; and no set of fewer than $2n/5$ vertices
-is a balanced separator, so the treewidth is at least $2n/5-1$ and
-\Cref{thm:qp} gives $N^{\Theta(\sqrt N\log N)}$. And yet $\mathrm{HZ}(n)$ is
+$2\lambda>2-2^{2-n}$, using $2n<2^{n}$ for $n\ge4$); the $n$ rows are
+pairwise disjoint directed cycles through vertices of both players and
+average vertices, so a freezing modulator of \Cref{thm:modulator} into a
+class defined by the acyclicity of a colour, or into the class of
+\Cref{thm:bounded-components}, must meet every one of them and has size at
+least $n$ (for the other freezing-closed classes the slow blocks and $a$
+decide); and the controlled vertices and bridges form an $n\times n$ torus
+grid, whose treewidth grows linearly with $n$ (the grid theorem, from
+memory, unchecked; an earlier version asserted a balanced-separator bound
+that was not recomputed), so \Cref{thm:qp} gives $N^{\Theta(\sqrt N\log N)}$. And yet $\mathrm{HZ}(n)$ is
 solved in polynomial time: eliminating the average vertices by one linear
 solve (\Cref{lem:readout} with $C$ as the pinned set) leaves a reduced
 system every one of whose rows has mass exactly $\tfrac12$ over $C$, so the
@@ -13130,14 +13144,16 @@ the attractor sweeps decide in linear time; the threshold plays no part
 in the difficulty, the naming of a vertex does.
 
 The free datum is a little larger than one vertex above $\tfrac12$. On a
-\emph{reduced} game (every non-sink value in $(0,1)$, after the sweeps)
+\emph{reduced} stopping game (every non-sink value in $(0,1)$, after the
+sweeps)
 the sink-adjacent average vertices split into $\mathrm H$ (one successor
 $t_1$, the other a non-sink), $\mathrm M$ (successors $t_0,t_1$) and
 $\mathrm L$ (one successor $t_0$, the other a non-sink), with
 $w^\ast>\tfrac12$, $=\tfrac12$ and $<\tfrac12$ respectively; and
 \Cref{lem:alphabet-cover} at the extreme letters --- the largest non-sink
 value is attained at an average vertex with $t_1$ as a successor, the
-smallest at one with $t_0$, else the set attaining it would be a trap ---
+smallest at one with $t_0$, else, the game being stopping, the set
+attaining it would be a trap ---
 makes $\mathrm H\cup\mathrm M$ and $\mathrm L\cup\mathrm M$ nonempty. So
 one pass over the edge list returns \emph{some} strict comparison between
 two average vertices, or correctly reports that every non-sink value is
@@ -13148,7 +13164,12 @@ average vertices, even a set inside $\mathrm H$, it is
 against $Q\to(t_1,q)$). And the free datum decides no controlled vertex:
 two reduced stopping games on $2L+4$ non-sinks differing in one edge
 have the same three blocks and opposite answers at their only Max vertex,
-with gaps $\pm2^{-(L+1)}$ (the round-$18$ weakest-oracle route;
+with gaps $\pm2^{-(L+1)}$: $\mathrm{FB}(L)^{\pm}$ has two average chains
+$p_1,\dots,p_L$ and $q_1,\dots,q_L$ with $p_j\to(t_1\text{ or }t_0,p_{j+1})$
+reading the bits $10^{L-2}1$ and $q_j$ the bits $01^{L-1}$ ($p_{L+1}=q_{L+1}=t_0$),
+$m\to(t_0,t_1)$, $B\to(m,m)$, $A\to(p_1,m)$ in $\mathrm{FB}^{+}$ and
+$A\to(q_1,m)$ in $\mathrm{FB}^{-}$, and the Max vertex $v\to(A,B)$ (the
+round-$18$ weakest-oracle route;
 recomputed, \texttt{scripts/round18-verify/wo\_verify.py}: the blocks on
 $778$ random reduced games, the copies, the pair $\mathrm{FB}(L)^{\pm}$
 for $L\le9$).
@@ -15969,8 +15990,11 @@ Stopping and the values: $\kappa\bbone$ on the Max vertices, extended by the
 average equalities, is a fixed point of $T$ ($\max(\kappa,\kappa)$ at an
 internal node, $\max(g\kappa,\kappa)=\kappa$ at a leaf), and a trap avoiding
 $t_1$ would contain $k_D$, which has the successor $t_0$; so
-$w^{\ast}=\kappa\bbone$ by \Cref{cor:comparison}, and $\bbone\in Q$ gives
-$\max_Qx(\mathrm{root})=1$. Write $\Delta_j:=x_{j-1}-x_j=K2^{-j}$ with
+$w^{\ast}=\kappa\bbone$ by \Cref{cor:comparison}, and the point equal to
+$1$ on the tree vertices, to $1-2^{-(e-r+1)}$ at $c_r$ (so $g$ at $c_1$) and
+to the chain's own values on the $k$-chain lies in $Q$, its leaf rows
+reading $1\ge g$ and $1\ge\kappa$, so $\max_Qx(\mathrm{root})=1$ (the
+all-ones vector itself violates the average row at $c_e$). Write $\Delta_j:=x_{j-1}-x_j=K2^{-j}$ with
 $K:=n\kappa(1-g)/S$; then $x_d-gx_0=K/n=\Delta_d$, $x_d\ge\kappa$ (this is
 $g\ge\kappa$) and $gx_0\ge\kappa$ (the hypothesis), so $x\in Q$. By
 \Cref{rem:choice-lift}, $R_1=\bigcap_v\operatorname{conv}(F^{0}_v\cup F^{1}_v)$
@@ -16030,8 +16054,8 @@ $j$ above the number of splitters; the paper defines only levels zero and
 one and does not carry it.) This is the first proved statement of the
 shape the round-$17$ claim above has, with a parameter incomparable with
 $\rho$: on $W_{14}$ that claim gives level three from $\rho_{\max}=3$
-while one frozen vertex makes every merged variant transient, giving the
-true first exact level two, and $\mathrm{WD}(4,2,6)$ has $\rho_{\max}=2$,
+while one frozen vertex makes every merged variant transient, giving
+level two as the first exact level in the route's formalisation, and $\mathrm{WD}(4,2,6)$ has $\rho_{\max}=2$,
 a non-transient $M$, and is level-one exact. It inherits the same
 dismissal: on one-player games $R_1$-exactness has no algorithmic content
 (\Cref{thm:one-player}); the freezing here commits a controlled vertex to
@@ -16239,7 +16263,7 @@ they are $\max\{x(0)-x(4)\}$ and $\max\{-x(4)\}$, both $\le0$ by the Max rows
 and both met at the first; and at the Min vertex $6$ they are
 $\max\{x(6)-x(0)\}$ and $\max\{x(6)\}$, and $x(6)=0$ throughout. None is
 negative, so clause (ii) decides no vertex; clause (i) ---
-$\max\{x(v)-x(v^{(i)})\}\le0$ at a Min vertex --- fires at $6$ alone, where
+$\max\{x(v^{(i)})-x(v)\}\le0$ at a Min vertex, i.e.\ $\operatorname{Sep}(v,v^{(i)})\le0$ --- fires at $6$ alone, where
 $x(6)=0=x(t_0)$ throughout: its separators are $\tfrac12,\tfrac34$ at $1$,
 $1,1$ at $4$ and $\tfrac12,0$ at $6$ (the round-$18$ paper audit; recomputed,
 \texttt{scripts/round18-verify/own\_r.py}).
@@ -16263,7 +16287,7 @@ $x(1)=0$), the clause-(i) separators are $1$ and $\tfrac23$, and $x(1)-x(2)$
 ranges over $[-\tfrac13,\tfrac23]$, so all three readings are silent there;
 but in the same round vertex $3$ is decided by clause (ii)
 ($\operatorname{Sep}(3,t_0)=-\tfrac23$) and vertex $1$ by the pair test
-($\operatorname{Sep}(3,t_1)=0$), and once those two are retyped as in
+($\operatorname{Sep}(t_1,3)=0$), and once those two are retyped as in
 \Cref{thm:decide-one-bit} the certificate decides $4$ as well
 ($\operatorname{Sep}(4,2)=-\tfrac13$): the rule, iterated, solves the game
 in two rounds, and a stall proper --- every reading silent at every
@@ -16476,8 +16500,8 @@ $(1\le d\le D)$, $F_0,\dots,F_D\in\Vmax$, all others average, with
  &X_d\to(F_{d-1},t_0),\quad Y_d\to(H_{d-1},S_d),\quad F_d\to(X_d,Y_d),\quad H_d\to(X_d,Y_d),
 \end{aligned}
 \]
-$N=7D+7$ with $u$ and the sinks. Freeze $u$ at the payoff $\theta\in[0,1]$
-as in \Cref{thm:fold}. Then, with $x_d,y_d,\varphi_d$ as before and
+$N=7D+7$ with $u\to(t_0,t_1)$ and the sinks. Freeze $u$ at the payoff
+$\theta\in[0,1]$ as in \Cref{thm:fold}. Then, with $x_d,y_d,\varphi_d$ as before and
 $e_d:=\tfrac12 8^{-d}$, $\varphi_d=\tfrac14|\varphi_{d-1}|-e_d$ and
 $\varphi_d/e_d=2T^{d}(\theta)-1$, and
 \[
@@ -16642,7 +16666,7 @@ one-player game with $\val(u^{(0)})-\val(u^{(1)})=\tfrac14\varrho^{4}(\varrho-\t
 at whose breakpoint $\tfrac12$ both actions are optimal in the derived
 game. Whether the fold needs the Min vertex was the natural question,
 and it does not: \Cref{prop:one-player-fold} below folds with one player,
-at nine average vertices per level, by taking the maximum and the mean of
+at eight average vertices per level, by taking the maximum and the mean of
 the same pair. Like $P_D$, $\mathrm{BP}(D)$ is acyclic, hence in
 \Cref{thm:avg-acyclic}'s class and solved by backward induction; the
 statement constrains one algorithm schema and none of the mechanisms
@@ -16760,7 +16784,9 @@ with $\varepsilon_{d}=\pm1$ the choice at $F_d$, the absolute value being a
 property of the greedy choice and not of the game, and $\mathrm{OF}(D)$ is
 acyclic, so every component of its Max-reachability digraph is a singleton
 and all-switches halts within $D+1$ rounds from every start
-(\Cref{thm:component-bound}; measured $1,1,2,3,3,4,5$ at $D\le6$). The
+(\Cref{thm:component-bound}; the worst run over all $2^{D+1}$ starts is
+exactly $D+1$ for $D\le6$, attained from the all-ones start: the round-$19$
+paper audit, correcting a row of numbers printed here). The
 tent device therefore serves the pivot of \Cref{rem:blowup-realise} neither
 as a visiting order nor as a driven block, and what survives is a fold fed
 back into its own drive. Third, one player makes the envelope convex: each
@@ -18986,8 +19012,9 @@ its translated layer remains unrealised (\Cref{prop:b3-outer}) and out
 of reach of the pinned shape, which cannot double
 (\Cref{cor:pinned-no-doubling}), while the escape shape whose outer rest
 actions read the block cannot realise a translate carrying its
-$\beta$-coordinate, so of the four doublings only $z=8$ with a mixed-sign
-rest readout survives (\Cref{thm:escape-no-beta,cor:escape-m3}) --- and
+$\beta$-coordinate, so over the level-two block only $z=8$ of the four
+doublings, with a mixed-sign rest readout, survives
+(\Cref{thm:escape-no-beta,cor:escape-m3}) --- and
 \Cref{rem:blowup-realise} states the question
 that remains: whether each further level costs only a constant number of
 controlled vertices and of bits; the height of a blow-up is exactly
@@ -19024,7 +19051,7 @@ $7$ breakpoints at $|C|=3$ and $22$ at $|C|=6$
 in the survival probability is a different path, exponentially long on
 $\mathrm{BP}(D)$ and on \Cref{thm:fold}'s $P_D$ with a two-vertex seed
 (\Cref{prop:discount-fold,cor:two-homotopies}), and already with one
-player: on $\mathrm{OF}(D)$, nine average vertices per level, the path
+player: on $\mathrm{OF}(D)$, eight average vertices per level, the path
 is a Hamiltonian walk of the Max cube with $2^{m}-1$ breakpoints, the
 $2^{m}$ of the general ceiling is attained and the remaining factor is
 $O(m\sqrt n)$, while no all-switches run of any stopping game follows
