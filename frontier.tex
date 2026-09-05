@@ -17819,9 +17819,10 @@ $x(v)=y_vx(v^{(0)})+(1-y_v)x(v^{(1)})$ with a choice variable
 $y_v\in[0,1]$ and take the level-$j$ Sherali--Adams
 (reformulation--linearisation) lift $R_j(G)$ over the choice variables, a
 linear programme of size $N^{O(j)}$ whose level zero is $Q(G)$ itself
-(Sherali and Adams, from memory, unchecked; the level-one set is Balas'
-disjunctive closure $\bigcap_{v\in C}\operatorname{conv}(F_v^{0}\cup F_v^{1})$
-of the faces $F_v^{i}:=\{x\in Q(G):x(v)=x(v^{(i)})\}$). Level one is not
+(Sherali and Adams, from memory, unchecked; that the level-one set is
+Balas' disjunctive closure $\bigcap_{v\in C}\operatorname{conv}(F_v^{0}\cup F_v^{1})$
+of the faces $F_v^{i}:=\{x\in Q(G):x(v)=x(v^{(i)})\}$ is
+\Cref{lem:choice-lift-balas} below, with the programme written out). Level one is not
 exact, and $W_{14}$ is again the witness: in the coordinates
 $u=(x(v_1),x(v_2),x(v_3))$ the point
 $u=(\tfrac35,\tfrac{23}{40},\tfrac{11}{20})$ lies in $R_1(W_{14})$, being
@@ -17848,6 +17849,120 @@ any fixed level is target-equivalent and is not conjectured. Level one is
 not merely inexact but asymptotically vacuous, already with one player
 (\Cref{prop:router-tree}), and the one-player level is governed by a
 branching process (\Cref{rem:merged-matrix}).
+\end{remark}
+
+\begin{definition}[The level-$j$ choice lift]\label{def:choice-lift}
+For $v\in C$ and $i\in\{0,1\}$ write $\ell^{i}_{v}(u):=u(v)-p^{v,i}\cdot u-q^{v,i}$
+for the slack of the action $(v,i)$ in the controlled coordinates
+(\Cref{lem:transport-dim}; $(p^{v,i},q^{v,i})$ the first-passage law of the
+action over $C\cup\{t_1\}$), so that $F^{i}_{v}=\{u\in\tilde Q(G):\ell^{i}_{v}(u)=0\}$
+and the choice variable of \Cref{rem:choice-lift} is meant as
+$y_v=1\Leftrightarrow\ell^{1}_{v}(u)=0$. The \emph{level-$j$ choice lift}
+has, for every ordered pair of disjoint $A,B\subseteq C$ with $|A|+|B|\le j$,
+a scalar $w_{A,B}$ (linearising $\prod_{A}y_v\prod_{B}(1-y_v)$) and a vector
+$z_{A,B}\in\mathbb R^{C}$ (that monomial times $u$), subject to
+\begin{enumerate}[label=(L\arabic*),leftmargin=3em]
+\item $w_{\emptyset,\emptyset}=1$;
+\item for $|A|+|B|\le j-1$ and $v\notin A\cup B$:
+      $w_{A,B}=w_{A+v,B}+w_{A,B+v}$ and $z_{A,B}=z_{A+v,B}+z_{A,B+v}$;
+\item $w_{A,B}\ge0$ and $a\cdot z_{A,B}\le b\,w_{A,B}$ for every row
+      $a\cdot u\le b$ of $\tilde Q(G)$, the box rows included;
+\item $z_{A,B}(v)-p^{v,1}\cdot z_{A,B}-q^{v,1}w_{A,B}=0$ for $v\in A$ and
+      $z_{A,B}(v)-p^{v,0}\cdot z_{A,B}-q^{v,0}w_{A,B}=0$ for $v\in B$.
+\end{enumerate}
+$R_j(G)$ is the set of $u=z_{\emptyset,\emptyset}$ arising this way, the
+projection of a linear programme with $O((2|C|)^{j}N)$ variables and rows,
+and $\operatorname{lev}(G):=\min\{j:R_j(G)=\{w^{\ast}\}\}$ is the least
+exact level.
+\end{definition}
+
+\begin{lemma}[Level one is Balas' closure, and the hierarchy closes at $|C|$]\label{lem:choice-lift-balas}
+$R_0(G)=\tilde Q(G)$, $R_{j+1}(G)\subseteq R_j(G)$ and $w^{\ast}\in R_j(G)$
+for every $j$. If $u\in R_j(G)$ and $|A|+|B|=k\le j$ with $w_{A,B}>0$, then
+$z_{A,B}/w_{A,B}$ lies in $R_{j-k}(G)\cap\bigcap_{v\in A}F^{1}_{v}\cap\bigcap_{v\in B}F^{0}_{v}$,
+and for every $S\subseteq C$ with $|S|\le j$, $u$ is a convex combination of
+such points over the $2^{|S|}$ sign patterns on $S$. Consequently
+\[
+  R_1(G)=\bigcap_{v\in C}\operatorname{conv}\bigl(F^{0}_{v}\cup F^{1}_{v}\bigr),
+  \qquad R_{|C|}(G)=\{w^{\ast}\},\qquad \operatorname{lev}(G)\le|C|,
+\]
+the first of which is the parenthetical of \Cref{rem:choice-lift} that the
+proof of \Cref{prop:router-tree} uses.
+\end{lemma}
+
+\begin{proof}
+$R_0$ is (L3) at the single pair $(\emptyset,\emptyset)$ with $w=1$;
+monotonicity drops the variables of degree $j+1$; for $w^{\ast}$ take an
+optimal positional pair, write $\pi^{\ast}:C\to\{0,1\}$ for its actions and
+put $w_{A,B}:=1$ if $A$ carries $1$ and $B$ carries $0$ under $\pi^{\ast}$
+and $0$ otherwise, $z_{A,B}:=w_{A,B}w^{\ast}$: (L4) is the tightness of
+the chosen rows at $w^{\ast}$ and (L2) the telescoping of a point mass.
+Conditioning: dividing (L3) by $w_{A,B}>0$ puts $z_{A,B}/w_{A,B}$ in
+$\tilde Q$, (L4) puts it in the faces, and the family
+$\{w_{A\cup A',B\cup B'},z_{A\cup A',B\cup B'}\}_{|A'|+|B'|\le j-k}$ divided
+by $w_{A,B}$ --- every pair whose $A'$ meets $B$ or whose $B'$ meets $A$
+declared to carry $(w,z)=(0,0)$, which satisfies (L2)--(L4) vacuously and
+telescopes correctly (the route's auditor supplied this case) --- satisfies
+(L1)--(L4) at level $j-k$; summing (L2) along any
+order of $S$ gives the convex decomposition, with the pairs of weight zero
+contributing nothing since (L3) with the box rows forces $z_{A,B}=0$ when
+$w_{A,B}=0$. So $R_1\subseteq\bigcap_v\operatorname{conv}(F^{0}_v\cup F^{1}_v)$.
+Conversely let $u$ lie in that intersection and, for each $v$, write
+$u=\lambda_vy^{v}+(1-\lambda_v)z^{v}$ with $y^{v}\in F^{1}_{v}$,
+$z^{v}\in F^{0}_{v}$ --- faces of $\tilde Q$, hence convex; put
+$w_{\{v\},\emptyset}:=\lambda_v$, $z_{\{v\},\emptyset}:=\lambda_vy^{v}$,
+$w_{\emptyset,\{v\}}:=1-\lambda_v$, $z_{\emptyset,\{v\}}:=(1-\lambda_v)z^{v}$,
+$w_{\emptyset,\emptyset}:=1$, $z_{\emptyset,\emptyset}:=u$; (L1)--(L4) hold
+by construction. Finally at $S=C$ each face
+$\bigcap_{v}F^{\alpha(v)}_{v}$ is the zero set on $\tilde Q$ of the
+objective of \Cref{thm:transport-objective} for the profile $\alpha$, hence
+empty unless $\alpha$ is optimal and then $\{w^{\ast}\}$; so the convex
+decomposition at $S=C$ has a single term and $R_{|C|}=\{w^{\ast}\}$. (The
+round-$19$ extension-complexity route, which also computed the lifts:
+level two is exact, $R_2=\{w^{\ast}\}$ in every coordinate, on the router
+trees $T_1(2,\tfrac38)$ and $T_2(2,\tfrac38)$ of \Cref{prop:router-tree} ---
+exactly, by the route on variants with a damping chain per leaf and by its
+auditor on the ten- and fourteen-vertex instances defined there --- and, in
+floating point only, on every named instance of this paper it tried and on
+some $8\cdot10^{5}$ random controlled systems with $|C|\le7$, one and two
+players, of which $5\,732$ failed at level one and none at level two.
+Whether some stopping
+game has $\operatorname{lev}\ge3$ is open; since level two is a programme of
+size $O(|C|^{3}N)$, exactness of level two on every stopping game would put
+\Cref{prob:main} in $\mathrm{P}$, so by the standing rule this is not
+conjectured, and no single instance settles it either way without a growth
+law.)
+\end{proof}
+
+\begin{remark}[The value polytope, and the ladder as a parallelotope]\label{rem:value-polytope}
+Put $V(G):=\operatorname{conv}\{\val_\sigma:\sigma\in\{0,1\}^{\Vmax}\}$ and
+$V_C(G):=\operatorname{conv}\{\val_\sigma|_{C}\}$, so that $V(G)=\Psi(V_C(G))$
+with $\Psi$ the affine map of \Cref{lem:transport-dim}. By
+\Cref{thm:determinacy} $w^{\ast}$ dominates $V(G)$ coordinatewise, so
+$\max_{x\in V(G)}x(v)=w^{\ast}(v)$ at every $v$ at once, and deciding
+\Cref{prob:main} is linear optimisation over $V(G)$ in one coordinate: an
+algorithm producing, in polynomial time for every stopping $G$, an extended
+formulation of $V(G)$ of polynomial size would put \Cref{prob:main} in
+$\mathrm{P}$; conversely a superpolynomial lower bound on the extension
+complexity of $V(G_n)$ for an explicit family would close only that route,
+not the problem, since $w^{\ast}(v_0)$ can be computed without any
+description of $V(G)$. The natural candidate for such a bound is the
+ladder $L_n$ of \Cref{def:ladder}, whose $2^{n}$ value vectors are
+distinct; it is exactly the wrong one. With $a_i:=x(v_i)$ and
+$\varphi_i(x):=2^{n-i}a_i-\sum_{k>i}2^{n-k}a_k$, the rows of $L_n$ give
+$d_i:=\val_\sigma(w_i)-\val_\sigma(v_i)=(\tfrac12-\sigma_i)d_{i+1}$ with
+$d_{n+1}=1$ ($\sigma_i=1$ meaning $v_i\to w_{i+1}$), hence
+$\varphi_i(\val_\sigma)-\varphi_{i+1}(\val_\sigma)=2^{n-i}\sigma_id_{i+1}=\sigma_i(-1)^{\sum_{k>i}\sigma_k}$
+and, inducting downwards from $\varphi_n=\sigma_n$,
+$\varphi_i(\val_\sigma)=\bigoplus_{k\ge i}\sigma_k$. Since $\varphi$ is a
+triangular linear automorphism and $\sigma\mapsto(\bigoplus_{k\ge i}\sigma_k)_i$
+is a bijection of $\{0,1\}^{n}$, $V_C(L_n)=\varphi^{-1}([0,1]^{n})$ is a
+parallelotope with $2n$ facets, its own extended formulation of size $2n$
+(the round-$19$ extension-complexity route; the identity recomputed here
+from the game for $n\le10$, \texttt{scripts/round19-verify/xc\_root.py}).
+No family with a superpolynomial lower bound on the extension complexity of
+its value polytope is known, none is needed by any algorithm of this paper,
+and such a bound would be no barrier; the direction is recorded and closed.
 \end{remark}
 
 \begin{proposition}[The router tree: level one is asymptotically vacuous, with one player]\label{prop:router-tree}
@@ -17890,7 +18005,7 @@ reading $1\ge g$ and $1\ge\kappa$, so $\max_Qx(\mathrm{root})=1$ (the
 all-ones vector itself violates the average row at $c_e$). Write $\Delta_j:=x_{j-1}-x_j=K2^{-j}$ with
 $K:=n\kappa(1-g)/S$; then $x_d-gx_0=K/n=\Delta_d$, $x_d\ge\kappa$ (this is
 $g\ge\kappa$) and $gx_0\ge\kappa$ (the hypothesis), so $x\in Q$. By
-\Cref{rem:choice-lift}, $R_1=\bigcap_v\operatorname{conv}(F^{0}_v\cup F^{1}_v)$
+\Cref{lem:choice-lift-balas}, $R_1=\bigcap_v\operatorname{conv}(F^{0}_v\cup F^{1}_v)$
 with $F^{i}_v=\{y\in Q:y(v)=y(v^{(i)})\}$, and one exhibits the two
 decompositions. At the leaves: $A_\ell:=(ng+n(1-g)2^{-\ell}-1)/(n-1)$ lies in
 $Q$, is tight at the feedback action of every leaf ($A_d=gA_0$), and
@@ -17917,8 +18032,11 @@ thirteen-vertex instances were found by the route's correctness auditor. The fam
 two counts --- $a$ is constant, so \Cref{thm:few-avg} decides it, and it
 carries escape certificates of rate $1-\Theta(1/\log N)$ --- so, as with
 \Cref{thm:lasserre-vacuous}, this is weakness where the problem is easy;
-whether level two is exact on it is measured only ($d\le2$, exact dual
-certificates at the root).
+level two is exact on it at $d=1,2$ --- $R_2=\{w^{\ast}\}$ in every
+coordinate, by exact linear programming (the round-$19$
+extension-complexity route on variants with a chain per leaf, its auditor
+on the instances defined here; \Cref{lem:choice-lift-balas}) --- and in
+floating point only at $d=3$.
 \end{proof}
 
 \begin{remark}[The merged matrix bounds the level, with one player]\label{rem:merged-matrix}
