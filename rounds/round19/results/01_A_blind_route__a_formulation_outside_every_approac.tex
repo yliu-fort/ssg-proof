@@ -1,0 +1,279 @@
+% Route fresh-19: routings and the rotor game.  Paste-ready, amsthm style of
+% frontier.tex; all labels prefixed fresh19:.  Full text also in
+% /tmp/claude-1000/-data-ssg-proof/c506180a-e393-4ffa-a18f-efc78c98397e/scratchpad/r19-fresh-19/results.tex
+
+\subsection{Routings: the value as a ratio of counts}\label{sec:fresh19}
+
+Throughout this subsection $G$ is an SSG, $S$ its set of non-sinks, $a=|\Vavg|$,
+and $(\sigma,\tau)$ a positional pair.  Nothing below uses the Shapley operator,
+a linear programme, a cube of strategies or a propagation calculus: the value is
+read off a finite set of combinatorial objects by counting.
+
+\begin{definition}[Selections and routings]\label{fresh19:def-routing}
+A \emph{selection} for $(\sigma,\tau)$ is a map $f\colon S\to\{0,1\}$ with
+$f(v)=i$ at $v\in\Vmax$ when $\sigma(v)=v^{(i)}$ and $f(v)=i$ at $v\in\Vmin$
+when $\tau(v)=v^{(i)}$; at $v\in\Vavg$ the value $f(v)$ is free.  (Selections
+are maps to \emph{indices}, so a vertex whose two out-edges coincide still has
+two selections through it.)  The \emph{functional digraph} of $f$ sends $v\in S$
+to $v^{(f(v))}$.  A selection is a \emph{routing} if its functional digraph has
+no cycle, equivalently if from every vertex the $f$-path reaches a sink; the
+$f$-path from $v$ then has a well-defined endpoint
+$\mathrm{end}_f(v)\in\{t_0,t_1\}$.  Write $\mathcal R(\sigma,\tau)$ for the set
+of routings; there are exactly $2^{a}$ selections, so
+$|\mathcal R(\sigma,\tau)|\le2^{a}$.
+\end{definition}
+
+\begin{lemma}[When routings exist]\label{fresh19:lem-nonempty}
+$\mathcal R(\sigma,\tau)\ne\emptyset$ if and only if the Markov chain
+$M_{\sigma,\tau}$ is absorbing.
+\end{lemma}
+
+\begin{proof}
+Call $w$ an \emph{allowed successor} of $v\in S$ if $w=v^{(i)}$ for some index
+$i$ permitted to $f$ at $v$.  Let $A_0=\{t_0,t_1\}$ and
+$A_{k+1}=A_k\cup\{v:\text{some allowed successor of }v\text{ lies in }A_k\}$, and
+$A_\infty=\bigcup_kA_k$.  If $A_\infty\supseteq S$, choosing at each $v$ an
+allowed successor of strictly smaller rank gives a selection with no cycle.  If
+$U:=S\setminus A_\infty\ne\emptyset$, every allowed successor of a vertex of $U$
+lies in $U$, so $U$ is closed for $M_{\sigma,\tau}$ and no vertex of $U$ ever
+reaches a sink; and every selection maps the finite nonempty set $U$ into
+itself, hence has a cycle.
+\end{proof}
+
+\begin{theorem}[The routing formula]\label{fresh19:thm-routing}
+Let $(\sigma,\tau)$ be an absorbing pair, $Z:=|\mathcal R(\sigma,\tau)|\ge1$ and
+$c(v):=|\{f\in\mathcal R(\sigma,\tau):\mathrm{end}_f(v)=t_1\}|$ for $v\in S$.
+Then $v_{\sigma,\tau}(v)=c(v)/Z$ for every $v\in S$.
+\end{theorem}
+
+\begin{proof}
+Put $c(t_1):=Z$, $c(t_0):=0$, $x:=c/Z$.  At a controlled vertex $v$ with chosen
+successor $s$, $\mathrm{end}_f(v)=\mathrm{end}_f(s)$ for every routing, so
+$x(v)=x(s)$.  Let $u\in\Vavg$ and split
+$\mathcal R=\mathcal R^0\sqcup\mathcal R^1$ by $f(u)$.  Write $f_{-u}$ for the
+restriction of a selection to $S\setminus\{u\}$ and let $P$ be the set of those
+$f_{-u}$ with no cycle avoiding $u$.  For $f_{-u}\in P$ the $f_{-u}$-path from
+$u^{(i)}$ cannot cycle, so it ends at $t_0$, $t_1$ or $u$; call that endpoint
+$d^{i}\in\{t_0,t_1,u\}$, so $\mathcal R^{i}=\{f_{-u}\in P:d^{i}\ne u\}$.  With
+$A^{i}:=|\{f_{-u}\in P:d^{i}=t_1\}|$ we get $c(u)=A^{0}+A^{1}$ and
+\[
+  c(u^{(0)})=A^{0}+|\{d^{0}=t_1,d^{1}\ne u\}|+|\{d^{0}=u,d^{1}=t_1\}|,
+\]
+the first summand counting the $f\in\mathcal R^{0}$ and the others the
+$f\in\mathcal R^{1}$; symmetrically for $c(u^{(1)})$.  Since
+$A^{0}=|\{d^{0}=t_1,d^{1}\ne u\}|+|\{d^{0}=t_1,d^{1}=u\}|$ and likewise for
+$A^{1}$, adding gives $c(u^{(0)})+c(u^{(1)})=2c(u)$.  Hence $x$ solves
+$(I-Q)x_{|S}=b$ for the substochastic matrix $Q$ of $M_{\sigma,\tau}$; for an
+absorbing pair $\rho(Q)<1$, the solution is unique, and $v_{\sigma,\tau}$ is one.
+\end{proof}
+
+\begin{corollary}[The routing count is a common denominator]\label{fresh19:cor-den}
+Let $M$ be the integer matrix indexed by $S$ whose row at $u\in\Vavg$ is
+$2e_u-e_{u^{(0)}}-e_{u^{(1)}}$ and whose row at a controlled $v$ with chosen
+successor $s$ is $e_v-e_s$ (sink columns deleted).  Then
+$\det M=|\mathcal R(\sigma,\tau)|$, and the whole value vector of the pair is
+integral over that one number, which lies in $[1,2^{a}]$.  It is \emph{not} the
+integer $\det A_U$ of \Cref{lem:denominator-sharp}, which divides it and is in
+general strictly smaller (equality in $192$ of $253$ pairs measured).
+\end{corollary}
+
+\begin{proof}
+Induction on $a$.  For $a=0$, $M=I-P$ with at most one $1$ per row: if the
+functional digraph is acyclic a topological order makes $M$ unitriangular, so
+$\det M=1=|\mathcal R|$; if it has a cycle $C$, the rows of $C$ vanish outside
+the columns $C$ and there form $I$ minus a cyclic permutation, so
+$\det M=0=|\mathcal R|$.  For $a\ge1$ pick $u\in\Vavg$ and write its row as
+$(e_u-e_{u^{(0)}})+(e_u-e_{u^{(1)}})$; the determinant is linear in that row, so
+$\det M=\det M^{0}+\det M^{1}$ with $M^{i}$ the matrix with $u$ frozen to index
+$i$, and $|\mathcal R|=|\mathcal R^{0}|+|\mathcal R^{1}|$.
+\end{proof}
+
+\begin{remark}[Attribution]\label{fresh19:rem-attr}
+The identity of \Cref{fresh19:thm-routing} is the \emph{forest balance} of a
+round-ten free-search route, confirmed then by the root agent on $800$ and on
+$4401$ (game, pair) instances and deliberately kept out of this paper because
+the only proof available went through the all-minors matrix-tree theorem, which
+would be a fifth import.  What is new above is the proof --- a term-by-term
+count and the linearity of a determinant in one row --- so the identity can now
+be stated without any import; and that route's downstream claim that $\det A_U$
+\emph{is} the routing count was refuted then and is corrected in
+\Cref{fresh19:cor-den}.  From memory and unchecked against any source, the
+identity is the absorbing case of the Markov-chain tree theorem (Kirchhoff,
+Tutte, Chaiken--Kleitman), and the rotor facts below are in the neighbourhood of
+the rotor-router literature (Priezzhev--Dhar, Holroyd--Propp) --- but the game
+with two players is not.
+\end{remark}
+
+\begin{corollary}[The product case]\label{fresh19:cor-acyclic}
+$|\mathcal R(\sigma,\tau)|=2^{a}$ iff the digraph in which average vertices keep
+both out-edges and controlled vertices keep the chosen one is acyclic; then the
+routing measure is the uniform product measure on $\{0,1\}^{\Vavg}$.  This holds
+for every pair simultaneously iff the game digraph is acyclic.
+\end{corollary}
+
+\begin{proof}
+If the digraph is acyclic so is every selection; a cycle uses at most one
+out-edge at each of its vertices, so some selection (and some pair) contains it.
+\end{proof}
+
+\begin{proposition}[The routing count is a few-denominator parameter]\label{fresh19:prop-collapse}
+Put $\nu(G):=\max_{(\sigma,\tau)}|\mathcal R(\sigma,\tau)|\le2^{a}$ over
+absorbing pairs.  Every value of every pair, hence every letter of $\Lambda(G)$,
+has denominator dividing $\nu(G)$; so for every polynomial $q$ the class
+$\{G\ \text{stopping}:\nu(G)\le q(N)\}$ lies inside the class of
+\Cref{thm:few-denominator} and is solved in $O(N^{2}\nu(G)^{2})$ by
+\Cref{thm:alphabet-iteration}.  No polynomial class outside the eight known ones
+arises from a bound on the number of routings.
+\end{proposition}
+
+\subsection{The rotor game: the same value without probability}
+
+\begin{definition}[The $n$-chip rotor game]\label{fresh19:def-rotor}
+A \emph{rotor configuration} is $\rho\in\{0,1\}^{\Vavg}$.  A chip at a sink
+stops; at a controlled vertex its owner moves it to a successor of his choice;
+at $u\in\Vavg$ it moves to $u^{(\rho_u)}$ and then $\rho_u$ is replaced by
+$1-\rho_u$.  In $\mathrm{ROT}_\rho(n)$ the chips $1,\dots,n$ are released one at
+a time from $v_0$, the next only after the previous has stopped, the rotor
+configuration persisting; Max maximises and Min minimises the number
+$\mathrm{OUT}_n$ of chips stopping at $t_1$.  Both players see the whole state.
+Its value is $M_\rho(n)$.
+\end{definition}
+
+\begin{lemma}[Termination]\label{fresh19:lem-terminate}
+On a stopping SSG every play of $\mathrm{ROT}_\rho(n)$ is finite; under
+positional play one chip is absorbed within $N2^{a}$ steps.
+\end{lemma}
+
+\begin{proof}
+If a chip walked for ever, the set $U$ of vertices visited infinitely often
+would satisfy: every vertex of $U$ has a successor in $U$; an average vertex of
+$U$ is entered infinitely often, so its rotor alternates and both successors lie
+in $U$; and $U$ contains no sink.  So $U$ is a trap, contradicting
+\Cref{lem:trapchar}.  Under positional play (position, rotor configuration)
+determines its successor, and there are $N2^{a}$ such pairs.
+\end{proof}
+
+\begin{theorem}[The rotor identity]\label{fresh19:thm-identity}
+Let $h\colon V\to\mathbb R$ satisfy $h(t_0)=0$, $h(t_1)=1$ and
+$2h(u)=h(u^{(0)})+h(u^{(1)})$ at every $u\in\Vavg$.  Run $\mathrm{ROT}_\rho(n)$
+under any play, let $K_u$ be the number of visits to $u\in\Vavg$, put
+$s_u:=+1$ if $\rho_u=0$ and $-1$ otherwise, and
+$\delta_u:=\tfrac12(h(u^{(0)})-h(u^{(1)}))$.  Then
+\[
+  \mathrm{OUT}_n=n\,h(v_0)+\sum_{u\in\Vavg}s_u[K_u\ \text{odd}]\,\delta_u
+   +\sum_{v\in C}\ \sum_{\text{visits to }v}\bigl(h(\text{chosen successor})-h(v)\bigr).
+\]
+\end{theorem}
+
+\begin{proof}
+Telescope $h$ along each chip's path and sum the increments by vertex; the
+$j$-th visit to $u\in\Vavg$ contributes $(-1)^{j-1}s_u\delta_u$, and consecutive
+visits cancel in pairs.
+\end{proof}
+
+\begin{corollary}[The rotor sandwich]\label{fresh19:cor-sandwich}
+Let $G$ be stopping, $w=\val$ and
+$A(G):=\sum_{u\in\Vavg}|w(u^{(0)})-w(u^{(1)})|\le a$.  Then for every $n\ge1$
+and every $\rho$,
+\[
+   \bigl|M_\rho(n)-n\,\val(v_0)\bigr|\;\le\;\tfrac12A(G),
+\]
+so $\val(v_0)=\lim_n M_\rho(n)/n$ for every $\rho$: the value of an SSG is the
+growth rate of a deterministic perfect-information game with no chance moves.
+\end{corollary}
+
+\begin{proof}
+Take $h=w$ in \Cref{fresh19:thm-identity}.  Max routing every chip to an optimal
+successor kills his terms, Min's terms are $\ge0$, and the average terms are at
+least $-\tfrac12A(G)$; dually for Min.  The game is finite by
+\Cref{fresh19:lem-terminate}.
+\end{proof}
+
+\begin{theorem}[Exactness over a rotor period]\label{fresh19:thm-period}
+Fix an absorbing pair and let $\Phi$ send $\rho$ to the rotor configuration left
+by one chip released at $v_0$.  If $\rho$ is recurrent for $\Phi$ with period
+$p\le2^{a}$, then every $K_u$ over those $p$ chips is even and
+$v_{\sigma,\tau}(v_0)=\mathrm{OUT}_p/p$ exactly; in particular the denominator
+of $v_{\sigma,\tau}(v_0)$ divides $p$.
+\end{theorem}
+
+\begin{proof}
+$\Phi$ is well defined by \Cref{fresh19:lem-terminate} and every orbit is
+eventually periodic; the rotor at $u$ has period two, so $\Phi^{p}\rho=\rho$
+forces $K_u$ even.  Apply \Cref{fresh19:thm-identity} with
+$h=v_{\sigma,\tau}$: the controlled increments vanish and every average term
+carries $[K_u\ \text{odd}]=0$.
+\end{proof}
+
+\begin{proposition}[The derandomisation is lossy, and the constant is attained]\label{fresh19:prop-lossy}
+Let $E_1$ be the stopping SSG on five vertices with $\Vmax=\{v_0\}$,
+$\Vavg=\{u_1,u_2\}$, $v_0\to(u_1,u_2)$, $u_1\to(t_1,t_0)$, $u_2\to(t_1,t_0)$.
+Then $\val(v_0)=\tfrac12$, $A(E_1)=2$, and for $\rho=(0,0)$ and every even $n$,
+$M_\rho(n)=\tfrac n2+1=n\val(v_0)+\tfrac12A(E_1)$, so
+\Cref{fresh19:cor-sandwich} is tight; while the best Max can force
+\emph{positionally} is $\lceil n/2\rceil$, so positional play is strictly
+suboptimal in the rotor game from $n=2$ on.
+\end{proposition}
+
+\begin{proof}
+The upper bound is \Cref{fresh19:cor-sandwich}.  For the lower bound Max sends
+each chip to a vertex whose rotor points at $t_1$ if there is one and to $u_1$
+otherwise: the first two chips reach $t_1$ and leave both rotors at $1$, after
+which the chips alternate $t_0,t_1,\dots$, giving
+$\mathrm{OUT}_n=2+\lfloor(n-2)/2\rfloor$.  A positional Max uses one $u_i$ only,
+whose rotor alternates from $0$.
+\end{proof}
+
+\begin{theorem}[The rotor game needs exponentially many chips]\label{fresh19:thm-chips}
+For $m\ge1$ let $\mathrm{RC}(m)$ be the stopping SSG on $N=m+17$ vertices: a
+complete binary tree of seven Max vertices with root $v_0$ and leaves
+$u_1,\dots,u_8\in\Vavg$, each $u_i\to(q_1,t_0)$, above a chain
+$q_1,\dots,q_m\in\Vavg$ with $q_i\to(t_1,q_{i+1})$ for $i<m$ and
+$q_m\to(t_1,t_0)$.  Then $\val(q_i)=1-2^{-(m-i+1)}$ and
+$\val(v_0)=\val(u_i)=\tfrac12-2^{-(m+1)}<\tfrac12$, while for $\rho\equiv0$
+\[
+   M_\rho(n)>\tfrac n2\qquad\text{for every }n<7(2^{m}-1)=2^{\Omega(N)} .
+\]
+Deciding the bit of \Cref{prob:main} from $M_\rho(n)$ needs $2^{\Omega(N)}$ chips.
+\end{theorem}
+
+\begin{proof}
+Every average vertex has a sink among its successors, so no average vertex lies
+in a trap and no set of tree vertices alone is one: $G$ is stopping.  With
+$\rho\equiv0$ every $\delta_u$ is positive ($\delta_{u_i}=\tfrac12\val(q_1)$,
+$\delta_{q_i}=\tfrac12(1-\val(q_{i+1}))$ with $q_{m+1}:=t_0$) and $s_u=+1$; all
+Max increments vanish because every tree vertex has two successors of equal
+value.  So $\mathrm{OUT}_n\ge n\val(v_0)$ under any play, and for $n\le7$ the
+schedule sending the $i$-th chip to $u_i$ gives $\mathrm{OUT}_n=n$.  For $n\ge7$
+that schedule, followed by sending every later chip to $u_8$, leaves
+$K_{u_1}=\dots=K_{u_7}=1$ odd, so
+$\mathrm{OUT}_n\ge n\val(v_0)+\tfrac72\val(q_1)
+=\tfrac n2-n2^{-(m+1)}+\tfrac72(1-2^{-m})$, which exceeds $n/2$ exactly when
+$n<7(2^{m}-1)$.  Finally $M_\rho(n)\ge\mathrm{OUT}_n$, there being no Min vertex.
+\end{proof}
+
+\subsection{Biased routings}
+
+\begin{proposition}[The behavioural value is a ratio of multilinear forms]\label{fresh19:prop-mixed}
+For $p\in[0,1]^{C}$ weight a selection by
+$\omega_p(f)=\prod_{v\in C}p_v^{[f(v)=1]}(1-p_v)^{[f(v)=0]}$ and let $B(p)$ be
+the total weight of the acyclic selections (all coordinates free) and $A(p)$
+that of those with $\mathrm{end}_f(v_0)=t_1$.  Then $A,B$ are multilinear,
+$B>0$ on $[0,1]^{C}$ for a stopping game, and $A(p)/B(p)$ is the value at $v_0$
+of the chain in which each $v\in C$ takes index~$1$ with probability $p_v$.
+Consequently (1) in each coordinate the value is a M\"obius function of $p_v$,
+hence monotone --- randomising at a controlled vertex never beats both pure
+choices; and (2) at $p_v=\tfrac12$, i.e.\ retyping $v$ as an average vertex, the
+value vector is $\bigl(Z^{0}v^{0}+Z^{1}v^{1}\bigr)/(Z^{0}+Z^{1})$, the two
+frozen value vectors weighted by the numbers $Z^{i}$ of routings with $f(v)=i$.
+\end{proposition}
+
+\begin{proof}
+Each selection contributes a monomial of degree at most one in each $p_v$.
+Freezing $C$ to a corner recovers \Cref{fresh19:thm-routing}, and for general
+$p$ the same term-by-term proof applies to the chain with out-edge
+probabilities $1-p_v,p_v$ at $v$.  $B(p)>0$ because $B$ is a convex combination
+of the corner counts $|\mathcal R(\sigma,\tau)|\ge1$.  (1) is the monotonicity
+of a ratio of affine functions with nonvanishing denominator; (2) is the corner
+expansion at $p_v=\tfrac12$.
+\end{proof}

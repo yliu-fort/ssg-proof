@@ -1,0 +1,299 @@
+%% Route: the escape shape as a semialgebraic feasibility set.
+%% Paste-ready, amsthm style of frontier.tex.  Labels prefixed ec:.
+%% Full file: /tmp/claude-1000/-data-ssg-proof/c506180a-e393-4ffa-a18f-efc78c98397e/scratchpad/r19-escape-certificate/ec_results.tex
+
+\begin{definition}[The generalised escape extension]\label{def:ec-escape2}
+A \emph{generalised escape extension} of a driven block $\mathfrak B$ with drive $\beta$ is the
+game on $C\cup\{\alpha,\beta\}$, $\alpha,\beta\in\Vmax$, with
+\[
+ \alpha:\ (0)\ A\,y_\beta+C_\alpha\!\cdot\!y+q_A,\quad(1)\ R_\alpha\!\cdot\!y+q'_A;
+ \qquad
+ \beta:\ (0)\ A'y_\alpha+C_\beta\!\cdot\!y+q_B,\quad(1)\ A''y_\alpha+R_\beta\!\cdot\!y+q'_B,
+\]
+$A,A'>0$, $A''\ge0$, $C_\alpha,C_\beta,R_\alpha,R_\beta\ge0$, every row substochastic with a
+strict leak, and no row of $\mathfrak B$ reading $\alpha$. \Cref{def:escape-ext} is the case
+$A''=0$; we call $A''>0$ the \emph{second escape shape}. Put $\Delta:=1-AA'$,
+$\Delta'':=1-AA''$ and, with $y_\sigma(t)$ the block's values at the drive $t$ and
+$\Phi_\sigma(c,d)$ the unique $t\in[0,1]$ with $t=c\cdot y_\sigma(t)+d$,
+\[
+\begin{array}{llll}
+ c_{00}=\dfrac{A'C_\alpha+C_\beta}{\Delta}, & d_{00}=\dfrac{A'q_A+q_B}{\Delta}; &
+ c_{10}=A'R_\alpha+C_\beta, & d_{10}=A'q'_A+q_B;\\[2mm]
+ c_{01}=\dfrac{A''C_\alpha+R_\beta}{\Delta''}, & d_{01}=\dfrac{A''q_A+q'_B}{\Delta''}; &
+ c_{11}=A''R_\alpha+R_\beta, & d_{11}=A''q'_A+q'_B,
+\end{array}
+\]
+$w_L(\sigma):=\Phi_\sigma(c_L,d_L)$ and $f^\sigma_L(t):=c_L\cdot y_\sigma(t)+d_L$.
+\end{definition}
+
+\begin{lemma}[The four drive maps are substochastic]\label{lem:ec-substochastic}
+In a generalised escape extension $c_L\ge0$, $d_L\ge0$ and $|c_L|_1+d_L<1$ for each of the four
+layers $L$. Consequently $t\mapsto f^\sigma_L(t)$ is nondecreasing with slope at most
+$|c_L|_1<1$, so $t-f^\sigma_L(t)$ is strictly increasing and, for every $e\in[0,1]$,
+\[
+ w_L(\sigma)<e\iff f^\sigma_L(e)<e,\qquad w_L(\sigma)>e\iff f^\sigma_L(e)>e .
+\]
+\end{lemma}
+
+\begin{proof}
+Nonnegativity is clear and $\Delta,\Delta''>0$ because $A,A',A''<1$. Substochasticity of the four
+rows reads $|C_\alpha|_1+q_A<1-A$, $|R_\alpha|_1+q'_A<1$, $|C_\beta|_1+q_B<1-A'$,
+$|R_\beta|_1+q'_B<1-A''$. Hence
+$|A'C_\alpha+C_\beta|_1+A'q_A+q_B<A'(1-A)+(1-A')=\Delta$, so $|c_{00}|_1+d_{00}<1$;
+$|A'R_\alpha+C_\beta|_1+A'q'_A+q_B<A'+(1-A')=1$;
+$|A''C_\alpha+R_\beta|_1+A''q_A+q'_B<A''(1-A)+(1-A'')=\Delta''$; and
+$|A''R_\alpha+R_\beta|_1+A''q'_A+q'_B<A''+(1-A'')=1$. The slope bound is that of
+\Cref{thm:escape-level} ($y'_\sigma\le\bbone$), and the displayed equivalences follow because a
+strictly increasing function is negative exactly below its unique zero.
+\end{proof}
+
+\begin{theorem}[The level theorem for the second escape shape]\label{thm:ec-level2}
+Let $G$ be a nondegenerate stopping generalised escape extension. On the layer
+$(\sigma_\alpha,\sigma_\beta)=L$ the drive $y_\beta$ equals $w_L(\sigma)$, and the inner part of
+the improvement outmap at $(\sigma,L)$ is $s_{\mathfrak B}(w_L(\sigma))(\sigma)$. The eight
+outer bits are the four edge comparisons of the four drives: writing $[\,\cdot\,]$ for the
+truth value and listing whether $\alpha$, resp.\ $\beta$, is switchable,
+\[
+\begin{array}{ll}
+ O_\alpha(0,0)=[w_{00}<w_{10}], & O_\alpha(1,0)=1-O_\alpha(0,0),\\
+ O_\alpha(0,1)=[w_{01}<w_{11}], & O_\alpha(1,1)=1-O_\alpha(0,1),\\
+ O_\beta(0,0)=[w_{00}<w_{01}],  & O_\beta(0,1)=1-O_\beta(0,0),\\
+ O_\beta(1,0)=[w_{10}<w_{11}],  & O_\beta(1,1)=1-O_\beta(1,0).
+\end{array}
+\]
+So at every inner strategy the outer square is the orientation of the $2$-cube induced by the
+four numbers $w_L(\sigma)$, each edge pointing at the larger: it is acyclic, its sink is the
+layer of largest drive and its source the layer of smallest drive. When $A''=0$ one has
+$w_{01}=w_{11}$ and the two $\alpha$-bits on the layers $(0,1),(1,1)$ degenerate; they are then
+the bit $S$ of \Cref{thm:escape-level}, and the theorem specialises to it.
+\end{theorem}
+
+\begin{proof}
+Freezing the outer pair at a layer leaves a system in $(y_\alpha,y_\beta)$ whose block input is
+$y_\sigma(y_\beta)$, no block row reading $\alpha$ (\Cref{lem:readout}); eliminating $y_\alpha$
+gives the four fixed-point equations of \Cref{def:ec-escape2}, and \Cref{lem:readout} gives the
+inner clause. For the outer bits, define
+\[
+ g_{00}(t):=AA't+(A'C_\alpha+C_\beta)\cdot y_\sigma(t)+A'q_A+q_B,\quad
+ g_{10}(t):=A'\bigl(R_\alpha\cdot y_\sigma(t)+q'_A\bigr)+C_\beta\cdot y_\sigma(t)+q_B,
+\]
+\[
+ g_{01}(t):=AA''t+(A''C_\alpha+R_\beta)\cdot y_\sigma(t)+A''q_A+q'_B,\quad
+ g_{11}(t):=A''\bigl(R_\alpha\cdot y_\sigma(t)+q'_A\bigr)+R_\beta\cdot y_\sigma(t)+q'_B,
+\]
+each nondecreasing with slope $<1$ and with unique fixed point $w_{00},w_{10},w_{01},w_{11}$
+respectively. On the layer $(0,0)$, $y_\alpha=Aw_{00}+C_\alpha y+q_A$; $\beta$'s action $1$ is
+worth $A''y_\alpha+R_\beta y+q'_B=g_{01}(w_{00})$, so $\beta$ is switchable there iff
+$g_{01}(w_{00})>w_{00}$, i.e.\ iff $w_{00}<w_{01}$. On $(0,1)$, $y_\alpha=Aw_{01}+C_\alpha y+q_A$
+and $\beta$'s action $0$ is worth $A'y_\alpha+C_\beta y+q_B=g_{00}(w_{01})$, so $\beta$ is
+switchable iff $w_{01}<w_{00}$. On $(1,0)$ and $(1,1)$, $y_\alpha=R_\alpha y+q'_A$ and the same
+computation with $g_{11}$, $g_{10}$ gives $[w_{10}<w_{11}]$ and $[w_{11}<w_{10}]$. For $\alpha$:
+on $(0,0)$ it is switchable iff $R_\alpha y+q'_A>Aw_{00}+C_\alpha y+q_A$; multiplying by $A'>0$
+and adding $C_\beta y+q_B$ turns this into $g_{10}(w_{00})>g_{00}(w_{00})=w_{00}$, i.e.\
+$w_{00}<w_{10}$; on $(1,0)$ the reverse; on $(0,1)$ multiply the same comparison at the drive
+$w_{01}$ by $A''$ and add $R_\beta y+q'_B$ to get $g_{11}(w_{01})>g_{01}(w_{01})=w_{01}$, i.e.\
+$w_{01}<w_{11}$; on $(1,1)$ the reverse. (Verified from two explicit games,
+\texttt{EC\_SHAPE2\_GAME.json} on $138$ vertices and \texttt{EC\_SHAPE2B\_GAME.json} on $149$,
+and on $60$ further random nondegenerate extensions of the level-two block at the level of the
+normal form; \texttt{ec\_build2.py}, \texttt{ec\_build3.py}, \texttt{ec\_shape2\_test.py}.)
+\end{proof}
+
+\begin{corollary}[\Cref{thm:escape-no-beta} is sharp: the second shape revives $z=24,26$]%
+\label{cor:ec-no-beta-fails}
+\Cref{thm:escape-no-beta}'s hypothesis that $\beta$'s action $1$ read only the block cannot be
+dropped. For $A''>0$ the drives $w_{01}$ and $w_{11}$ are distinct, the three comparisons
+$(P,Q,R)$ of \Cref{thm:escape-no-beta} are replaced by the four edge comparisons of
+\Cref{thm:ec-level2}, and the excluded patterns disappear: for each of the four doubling
+translations $z\in\{8,10,24,26\}$ of $B^{2}$ and each of the eight inner strategies the demanded
+eight outer bits are the edge comparisons of a genuine total order of the four drives, namely
+\[
+ z=8:\quad w_{00}<w_{01}<w_{11}<w_{10}\ \ (\tilde\varphi=0),\qquad
+           w_{11}<w_{01}<w_{00}<w_{10}\ \ (\tilde\varphi=1),
+\]
+\[
+ z=24:\quad w_{01}<w_{00}<w_{10}<w_{11}\ \ (\tilde\varphi=0),\qquad
+            w_{10}<w_{00}<w_{01}<w_{11}\ \ (\tilde\varphi=1),
+\]
+and likewise for $z=10,26$. Over the level-two block the inner condition then kills $z=10$ and
+$z=26$ ($19$ of the $32$ drives get an empty window; at $\sigma=0$ the layer $(0,0)$ demands the
+block orientation value $3$, which no drive presents) and leaves $z=8$ and $z=24$.
+(\texttt{ec\_s2tour.py}.)
+\end{corollary}
+
+\begin{theorem}[The two escape identities]\label{thm:ec-identity}
+Let $\rho(\sigma,t):=(R_\alpha-C_\alpha)\cdot y_\sigma(t)+(q'_A-q_A)-At$ be the functional of
+\Cref{thm:escape-level}. In every generalised escape extension, for all $\sigma$ and all
+$t\in[0,1]$,
+\[
+ A'\,\rho(\sigma,t)=\bigl(f^\sigma_{10}(t)-t\bigr)+\Delta\bigl(t-f^\sigma_{00}(t)\bigr),
+ \qquad
+ A''\rho(\sigma,t)=\bigl(f^\sigma_{11}(t)-t\bigr)+\Delta''\bigl(t-f^\sigma_{01}(t)\bigr).
+\]
+\end{theorem}
+
+\begin{proof}
+$A'(R_\alpha-C_\alpha)=(A'R_\alpha+C_\beta)-(A'C_\alpha+C_\beta)=c_{10}-\Delta c_{00}$ and
+$A'(q'_A-q_A)=d_{10}-\Delta d_{00}$, so
+$A'\rho=(c_{10}-\Delta c_{00})\cdot y_\sigma(t)+(d_{10}-\Delta d_{00})-AA't
+ =f_{10}(t)-\Delta f_{00}(t)-(1-\Delta)t$, which is the first display. The second is the same
+computation with $A''$, $R_\beta$, $q'_B$, $\Delta''$. (Checked exactly, at all $21$ breakpoints
+of the level-two drive line and all $8$ inner strategies, on the $138$-vertex pinned realisation
+of \Cref{prop:b2-realised} and on both second-shape games: \texttt{ec\_reduce.py},
+\texttt{ec\_ident2.py}.)
+\end{proof}
+
+\begin{lemma}[Domination on the level-two drive line]\label{lem:ec-domination}
+Let $\mathfrak B_2:=\{c_1,c_2,c_3,c_6\}$ be the level-two block of \Cref{prop:b2-realised}
+driven by $y_{c_5}$, and put
+\[
+ b:=\tfrac{47723619}{255897160},\qquad a:=\tfrac{1175936917}{2026652880},\qquad
+ T:=\tfrac{10168377}{16341335}.
+\]
+Let $(c,d)$ and $(c',d')$ be substochastic --- $c,c'\ge0$, $d,d'\ge0$, $|c|_1+d<1$,
+$|c'|_1+d'<1$ --- and suppose
+\[
+ \Phi_4(c,d)<b \qquad\text{and}\qquad \Phi_0(c',d')>a .
+\]
+Then $c\cdot y_\sigma(t)+d\ \le\ c'\cdot y_\sigma(t)+d'$ for every inner strategy
+$\sigma\in\{0,\dots,7\}$ and every $t\in[0,T]$.
+\end{lemma}
+
+\begin{proof}
+By \Cref{lem:ec-substochastic} the two hypotheses are the linear inequalities
+$c\cdot y_4(b)+d<b$ and $c'\cdot y_0(a)+d'>a$. The map
+$t\mapsto (c-c')\cdot y_\sigma(t)+(d-d')$ is affine on each of the $20$ refined pieces into
+which the fences of the drive line and the switches of the block's Min vertex cut $[0,1]$
+(\texttt{ec\_block.py}), so its maximum over $[0,T]$ is attained at $0$, at $T$, or at one of
+the $11$ interior breakpoints below $T$. For each of the $8\times13$ pairs $(\sigma,t)$ the
+system consisting of
+\[
+ -c\le0,\ -d\le0,\ |c|_1+d<1,\ -c'\le0,\ -d'\le0,\ |c'|_1+d'<1,\
+ c\cdot y_4(b)+d<b,\ -c'\cdot y_0(a)-d'<-a
+\]
+together with $(c-c')\cdot y_\sigma(t)+(d-d')>0$ is infeasible: an exact rational vector
+$\lambda\ge0$ with $\lambda^{\!\top}\!A=0$, $\lambda^{\!\top}\!b\le0$ and positive weight on a
+strict row is recorded for each of the $104$ pairs in \texttt{ec\_minimal\_certs.json} and
+re-verified by \texttt{ec\_final.py} (if $\lambda\ge0$, $\lambda^{\!\top}\!A=0$,
+$\lambda^{\!\top}\!b\le0$ and some strict row carries positive weight, then $Ax<b$ has no
+solution, since summing the rows with these weights gives $0<\lambda^{\!\top}\!b\le0$).
+The base system is feasible --- $c=c'=0$, $d=0$, $d'=\tfrac{a+1}2$, slack
+$\tfrac{47723619}{255897160}$ --- so no certificate is vacuous.
+\end{proof}
+
+\begin{theorem}[No escape extension of the level-two block doubles]\label{thm:ec-main}
+Let $\mathfrak B_2$ be the level-two block of \Cref{prop:b2-realised} driven by $y_{c_5}$, and let
+$(\alpha,\beta)=(\alpha_2,\beta_2)$. For every doubling translation $z\in\{8,10,24,26\}$,
+$B^{2}(\cdot\oplus z)$ is the improvement outmap of no nondegenerate stopping generalised escape
+extension of $\mathfrak B_2$ --- for every $A,A'>0$, every $A''\ge0$, all nonnegative
+$C_\alpha,C_\beta,R_\alpha,R_\beta$ and all constants, with no sign hypothesis on
+$R_\alpha-C_\alpha$. This closes the case \Cref{cor:escape-m3} leaves open, and it closes it for
+the shape \Cref{thm:escape-no-beta} does not reach.
+\end{theorem}
+
+\begin{proof}
+Write $Z:=\{0,2,4,5,6\}$ and $O:=\{1,3,7\}$ for the inner strategies at which the target demands
+$\tilde\varphi=0$, resp.\ $1$.
+
+\emph{The windows.} By \Cref{thm:ec-level2} the inner part of the outmap at $(\sigma,L)$ is
+$s_{\mathfrak B_2}(w_L(\sigma))(\sigma)$, so $w_L(\sigma)$ is confined to the set of drives at
+which the block's outmap at $\sigma$ takes the value the target prescribes. That set is a union
+of intervals whose endpoints are the fences at which an incidence \emph{of $\sigma$} ties, which
+nondegeneracy excludes; the fences at which some other incidence ties are interior to it, and
+$t=0$, $t=1$ belong to it, the block having no tied incidence there. For $z=10$ and $z=26$ some
+such set is empty --- at $\sigma=0$ the layer $(0,0)$ demands the value $3$, and $\sigma=0$
+presents only $0,1,5,7$ --- so those two are excluded. For $z=8$ and $z=24$ the order relations
+of \Cref{cor:ec-no-beta-fails} prune the second component at $\sigma=3,7$ and leave, for every
+$\sigma$, one interval $\mathrm{LOW}_\sigma$ (where the block presents $B^{1}$ at $\sigma$) and
+one interval $\mathrm{HIGH}_\sigma$ (where it presents $B^{1}(\cdot\oplus e_{\beta_1})$), with
+$\sup\mathrm{LOW}_\sigma\le\inf\mathrm{HIGH}_\sigma$,
+$\sup\mathrm{LOW}_\sigma\le T$, $\sup\mathrm{LOW}_4=b$ and $\inf\mathrm{HIGH}_0=a$. For $z=8$
+the drives $w_{00},w_{01},w_{11}$ are confined to $\mathrm{LOW}$ and $w_{10}$ to
+$\mathrm{HIGH}$; for $z=24$, $w_{00},w_{10},w_{01}$ to $\mathrm{LOW}$ and $w_{11}$ to
+$\mathrm{HIGH}$. For $z=24$ and $A''=0$ one has $w_{01}=w_{11}$, which is impossible since the
+two lie in disjoint intervals --- this is \Cref{thm:escape-no-beta} again --- so $A''>0$ there.
+
+\emph{$z=8$.} Fix $\sigma\in O$ and put $p:=w_{01}(\sigma)$. The target demands
+$p<w_{00}(\sigma)<w_{10}(\sigma)$, and $w_{11}(\sigma)<p$ when $A''>0$
+(\Cref{cor:ec-no-beta-fails}). By \Cref{lem:ec-substochastic}, $f_{10}(p)>p$ and $f_{00}(p)>p$.
+If $A''>0$, the second identity of \Cref{thm:ec-identity} at $t=p$ reads
+$A''\rho(\sigma,p)=f_{11}(p)-p<0$; if $A''=0$ then $w_{11}=w_{01}=p$ and the bit $S$ of
+\Cref{thm:escape-level} demanded by the target is $0$, i.e.\ again $\rho(\sigma,p)<0$. The first
+identity then gives $\bigl(f_{10}(p)-p\bigr)+\Delta\bigl(p-f_{00}(p)\bigr)<0$, i.e.\
+$\Delta\bigl(f_{00}(p)-p\bigr)>f_{10}(p)-p>0$; since $\Delta=1-AA'<1$ this forces
+$f_{00}(p)>f_{10}(p)$. But $\Phi_4(c_{00},d_{00})\in\mathrm{LOW}_4$ gives
+$\Phi_4(c_{00},d_{00})<b$, $\Phi_0(c_{10},d_{10})\in\mathrm{HIGH}_0$ gives
+$\Phi_0(c_{10},d_{10})>a$, and $p\in\mathrm{LOW}_\sigma\subseteq[0,T]$, so
+\Cref{lem:ec-domination} gives $f_{00}(p)\le f_{10}(p)$ --- a contradiction.
+
+\emph{$z=24$.} Fix $\sigma\in O$ and put $p:=w_{00}(\sigma)$. The order is
+$w_{10}<p<w_{01}<w_{11}$, so $f_{10}(p)<p$, $f_{01}(p)>p$, $f_{11}(p)>p$. The first identity at
+$t=p$ reads $A'\rho(\sigma,p)=f_{10}(p)-p<0$, so $\rho(\sigma,p)<0$; the second gives
+$\bigl(f_{11}(p)-p\bigr)+\Delta''\bigl(p-f_{01}(p)\bigr)<0$, i.e.\
+$\Delta''\bigl(f_{01}(p)-p\bigr)>f_{11}(p)-p>0$, and $\Delta''<1$ forces $f_{01}(p)>f_{11}(p)$.
+Now $\Phi_4(c_{01},d_{01})<b$, $\Phi_0(c_{11},d_{11})>a$ and $p\in[0,T]$, so
+\Cref{lem:ec-domination}, applied to the pair $(c_{01},d_{01})$, $(c_{11},d_{11})$, gives
+$f_{01}(p)\le f_{11}(p)$ --- a contradiction.
+\end{proof}
+
+\begin{proposition}[What the doubling asks of a block's drive line]\label{prop:ec-criterion}
+Let $\mathfrak B$ be any driven block, $\sigma_{\mathrm{lo}},\sigma_{\mathrm{hi}}$ inner
+strategies and $b<a$ reals such that the target's inner condition confines the low map's fixed
+point at $\sigma_{\mathrm{lo}}$ below $b$ and the high map's fixed point at
+$\sigma_{\mathrm{hi}}$ above $a$. Put $u:=y_{\sigma_{\mathrm{lo}}}(b)$,
+$U:=y_{\sigma_{\mathrm{hi}}}(a)$ and, for a value vector $y$,
+\[
+ \mathrm M(y):=\max\{c\cdot y+d:\ c,d\ge0,\ |c|_1+d\le1,\ c\cdot u+d\le b\}
+  =\min_{\mu\ge0}\Bigl(\max\bigl(\max_i(y_i-\mu u_i),\,1-\mu,\,0\bigr)+\mu b\Bigr),
+\]
+\[
+ \mathrm m(y):=\min\{c\cdot y+d:\ c,d\ge0,\ |c|_1+d\le1,\ c\cdot U+d\ge a\}
+  =\max_{\nu\ge0}\Bigl(a\nu-\max\bigl(\max_i(\nu U_i-y_i),\,\nu-1,\,0\bigr)\Bigr).
+\]
+If $\mathrm M(y_\sigma(t))\le \mathrm m(y_\sigma(t))$ for every $\sigma$ and every $t$ in the low
+windows, then no generalised escape extension of $\mathfrak B$ realises the corresponding
+doubling. The condition mentions only the block's drive line: in the Farkas certificates of
+\Cref{lem:ec-domination} the multipliers of the nonnegativity and substochasticity rows are
+universal --- they are the multipliers of the two little linear programmes above --- and the
+only block data entering are the two numbers $b,a$ and the two vectors $u,U$. On
+$\mathfrak B_2$, with $\sigma_{\mathrm{lo}}=4$, $\sigma_{\mathrm{hi}}=0$ and $b,a$ as in
+\Cref{lem:ec-domination}, the criterion holds with least margin
+$\mathrm m-\mathrm M=\tfrac{1204786569985001139227975}{123658871785688451847910352}
+ =0.00974\ldots$ at $\sigma=4$, $t=T$; the two-term relaxation
+$\max_i(y_i-u_i)^{+}+\max_i(U_i-y_i)^{+}\le a-b$ of the same criterion is \emph{not} enough --- it
+fails at $14$ of the $104$ pairs --- so the pair of linear programmes is what does the work.
+(\texttt{ec\_crit.py}.)
+\end{proposition}
+
+\begin{remark}[The scope of \Cref{thm:ec-main}, and what is left]\label{rem:ec-scope}
+\Cref{thm:ec-main} fixes the labelling $(\alpha,\beta)=(\alpha_2,\beta_2)$ of
+\Cref{cor:escape-m3}: the drive of the block is the coordinate the target calls $\beta_2$. For
+the first shape the other labelling --- the drive being the coordinate the target calls
+$\alpha_2$ --- is excluded for all four doublings by \Cref{thm:escape-no-beta}; recomputed here,
+its tournament fails at every one of the four (\texttt{ec\_swap.py}). For the second shape it is
+not: with $A''>0$ and the drive $\alpha_2$, $z=10$ and $z=26$ still die on the inner condition
+($19$ of the $32$ drives get an empty window) but $z=8$ and $z=24$ survive both the tournament
+and the inner condition, with the drive orders
+\[
+ z=8:\ w_{00}<w_{10}<w_{11}<w_{01}\ (\tilde\varphi=0),\quad w_{11}<w_{10}<w_{00}<w_{01}\
+ (\tilde\varphi=1);
+\]
+\[
+ z=24:\ w_{10}<w_{00}<w_{01}<w_{11}\ (\tilde\varphi=0),\quad w_{01}<w_{00}<w_{10}<w_{11}\
+ (\tilde\varphi=1),
+\]
+in which exactly one of the four drives is confined to the $\mathrm{HIGH}$ windows and it is not
+the one the identities of \Cref{thm:ec-identity} pair with the layer-$(0,0)$ drive. There
+\Cref{lem:ec-domination} does not bite: evaluating the identities at $w_{11}$ leaves, for
+$\sigma\in O$, the condition $f_{00}(w_{11})>f_{10}(w_{11})$ between two maps both confined to
+$\mathrm{LOW}$, and a global $\Delta\in(0,1)$ with
+$\max_{\sigma\in O}X_\sigma/Y_\sigma<\Delta<\min_{\sigma\in Z}X_\sigma/Y_\sigma$,
+$X_\sigma:=w_{11}(\sigma)-f^{\sigma}_{10}(w_{11}(\sigma))$,
+$Y_\sigma:=w_{11}(\sigma)-f^{\sigma}_{00}(w_{11}(\sigma))$. GAP, exactly:
+\emph{no nondegenerate stopping generalised escape extension of the level-two block
+$\{c_1,c_2,c_3,c_6\}$ driven by $y_{c_5}$ with $A''>0$, whose outer pair is labelled
+$(\alpha,\beta)=(\beta_2,\alpha_2)$, has improvement outmap $B^{2}(\cdot\oplus8)$ or
+$B^{2}(\cdot\oplus24)$.} The order relaxation of that system --- three substochastic maps with
+fixed points in the $\mathrm{LOW}$ windows interleaving as displayed, one in the $\mathrm{HIGH}$
+windows, the algebraic link between them dropped --- \emph{is} feasible
+(\texttt{ec\_s2\_hit\_3.json}), so a certificate must use the $\Delta$ conditions.
+\end{remark}

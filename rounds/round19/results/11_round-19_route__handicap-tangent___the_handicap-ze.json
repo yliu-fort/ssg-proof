@@ -1,0 +1,120 @@
+{
+ "target": "round-19 route \"handicap-tangent\" (the handicap-zero class R against its own tangent cut; visit number kappa)",
+ "sound": true,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "ht:def-visits / ht:thm-kappa",
+   "defect": "The object is not new to the project and the theorem is the project's own recorded claim (v11), so the class new-object is wrong; the honest class is 'proof of a claim round 13 already made'. This does not make the result worthless (the constants, the non-stationary clause and the 1/n decay lemma are new), but it must be labelled that way if integrated.",
+   "evidence": "/data/ssg-proof/rounds/round14/memory-snapshot.md l.2241: 'the local defect times kappa(G) = the max expected number of visits to CONTROLLED vertices -- poly-time computable, replacing the naive N 2^a'; l.2296: 'Its kappa is the RESOLVENT of my own survival operator, and bounded kappa already gives a poly algorithm unconditionally -- which is why its conditional path algorithm is worthless.' That is briefing item (v11) verbatim, from round 13's softmax-homotopy route. The route does flag this inside ht:thm-kappa's argument and in prior_art (5); its novelty field does not."
+  },
+  {
+   "severity": "major",
+   "result_name": "ht:cor-rlambda",
+   "defect": "The document already contains, as attributed prior art it declines to develop, a STRONGER answer to the question the corollary claims to settle: rem:lcp says a polynomially bounded LCP handicap decides prob:main, and R is exactly the handicap-zero class, so all of R -- not just the slice lambda >= 1/poly, and in time polynomial in N rather than in 1/lambda -- is already known to be decided in polynomial time by interior-point methods. The route's prior_art cites Cottle-Pang-Stone and Kozlov-Tarasov-Khachiyan but not the paper's own sentence, and its gap (2) presents the lambda -> 0 case as open when rem:lcp's prior art covers it. What survives is real but smaller: an import-free proof inside the four-import rule, by a mechanism (visit number) that is not interior-point.",
+   "evidence": "frontier.tex l.16049 rem:lcp: 'interior-point methods solve LCP(M,q) in O((1+kappa)sqrt n L) iterations when M is sufficient with handicap kappa, so a polynomially bounded handicap would decide prob:main. We do not develop this, because it is not ours and it is closed.' Handicap zero is exactly M+M^T psd, which rem:handicap-base (l.9536) identifies with B >= 0 at every base profile by the congruence B = sym(R_beta^T (E M_beta E) R_beta)."
+  },
+  {
+   "severity": "major",
+   "result_name": "ht:prop-tworounds",
+   "defect": "Restatement reported as a result. The paper already records a member of R on which M7 is silent at round zero AND round one and fires at round two, so the 'law' the proposition refutes was already inconsistent with the paper; and W_10's statement is itself tie-break-specific, exactly as the paper's record is, so it adds no robustness. Three lines: (1) rem:tangent-cut states BC(2,s) lies in R and 'the cut decides at round one or two according to the tie-break (round one here, round two in the route's correctness audit)'; (2) the route's round indexing coincides with the paper's, both putting WD(4,2,6)'s clause-(ii) firing at round 1; (3) hence firing at round two is silence at rounds zero and one, which is exactly W_10's reported profile.",
+   "evidence": "frontier.tex l.17376 rem:tangent-cut, the BC(2,s) sentence and 'a fixed tie-break among optima is part of the definition'; route verification field: 'WD(4,2,6) and WD(6,3,7) silent at round 0 and decided at both Max vertices at round 1', matching rem:tangent-cut's 'clause (ii) fires at round one'."
+  },
+  {
+   "severity": "major",
+   "result_name": "ht:prop-cutform",
+   "defect": "Restatement reported as a result: the identity is the product rule applied to the paper's own definition of q, in two lines, and the paper already prints the exact second-order expansion it is a rearrangement of. Three lines: (1) q = sum_v u_{v,0}u_{v,1} with u_{v,a} affine is the sum printed after thm:transport-objective, and u_{v,a} >= 0 on Q(G) is def:transport's defining inequality; (2) affineness gives grad u_{v,a}(x).(y-x) = u_{v,a}(y) - u_{v,a}(x); (3) the product rule summed over v is the claimed display, and the cut is rem:tangent-cut's inequality rearranged.",
+   "evidence": "frontier.tex l.17376: 'Taylor's formula on the affine hull of Q(G) reads q(y)=q(x)+grad q(x).(y-x)+||y-x||_B^2 ... the tangent cut at x is satisfied by w* and excludes x itself unless x=w*'."
+  },
+  {
+   "severity": "major",
+   "result_name": "next_steps item 1 (the claimed design constraint on M7-stalling families)",
+   "defect": "Non sequitur, and refuted by the route's own instance. 'A family designed against M7 must sit in R with lambda_min(B) = 2^{-omega(log N)}, else ht:cor-rlambda solves it' confuses tractability with mechanism-decidability: the paper's own prop:fv-stall exhibits PERMANENT stalls of M2, M2T and M4 inside the few-denominator polynomial class. ht:cor-rlambda therefore supplies no necessary condition on an M7-stalling family, and this sentence must not be carried into the paper as one.",
+   "evidence": "W_10, the route's own witness of two-round silence, has lambda_min(B) = 0.2136... = Omega(1) (I recomputed: leading minors 2, 15/16, 215/512; eigenvalues 0.21364, 0.73418, 2.67718), i.e. it lies in R_{1/poly}, the slice ht:cor-rlambda proves polynomial. So silence and membership in the tractable slice already co-occur in this route's own data."
+  },
+  {
+   "severity": "minor",
+   "result_name": "ht:cor-cutwidth",
+   "defect": "The advertised consequence is vacuous. Since u_{v,a} <= 1 on Q(G), nu(P) <= 1 <= |C|, so the recursion Phi(P') <= |C| Phi(P)/nu(P) has right-hand side >= Phi(P) for every polytope and never certifies any decrease; 'the first quantitative bound on what one cut buys' buys nothing. Only the one-cut inequality max_{P'} u_{v,ibar} <= q(x)/M(v,i) has content, and that is a two-line consequence of dropping nonnegative terms.",
+   "evidence": "Definition of u_{v,a} on Q(G) (def:transport: 0 <= x <= 1 with the pairwise inequalities), and the route's own definitions Phi(P) = max_w min_a M(w,a), nu(P) = min_v max_a M(v,a)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "ht:prop-damping",
+   "defect": "Proved and games built, but on the cheapest possible members of R: DR and DE are engineered so that P_0 = P_1 exactly, i.e. the two actions have identical first-passage rows over C and differ only in the sink they leak to, whence B = R^T R >= 0 for a reason unrelated to the convexity R is meant to capture. So 'R is not closed under damping' is established at a corner where membership is accidental, and by the route's own gap (3) it does not touch thm:stopping-transform's actual rho = 1 - 2^{-m}. The paper also already records that membership in R is a property of the presentation (subdivision carries 16 of 181 members out), so the new content is the operation, not the phenomenon.",
+   "evidence": "Route's own argument (a) and restatement 2; rem:handicap-base l.9536: 'membership is moreover a property of the presentation, like a in prop:a-presentation: the subdivision below carries members out of it (the route's correctness auditor, 16 of 181)'. I reproduced the damped determinant exactly: det B_rho = -3.751771e-05, d^T B_rho d = -9.174378e-06 at r=8, L=38, rho=127/128."
+  },
+  {
+   "severity": "minor",
+   "result_name": "ht:thm-kappa (the class {kappa <= poly})",
+   "defect": "The class is a genuine ninth polynomial class, but its only exhibited member outside the eight named bounds is HZ(n), which prop:hz already solves in polynomial time by the row-mass-1/2 special case of the very same reduced value iteration, and which the paper explicitly calls a presentation artefact. So the class abstracts a paragraph the paper already has; no new instance is brought within reach.",
+   "evidence": "frontier.tex l.9610 prop:hz: 'eliminating the average vertices by one linear solve leaves a reduced system every one of whose rows has mass exactly 1/2 over C, so the reduced Shapley operator is a 1/2-contraction in the sup norm, 2a+O(1) iterations reach precision 2^{-2a-O(1)}, and lem:round-recover returns w* exactly' -- ht:thm-kappa's algorithm with the contraction rate read off row masses instead of kappa."
+  },
+  {
+   "severity": "note",
+   "result_name": "headline",
+   "defect": "No defect: the headline is a sentence the route proved, in the words of its results, and I verified both halves independently. This is the round-18 lesson respected.",
+   "evidence": "My own harmonic-row/B/kappa implementation (independent of the route's rlib) on 250 freshly generated random stopping games in R (seed 4242, n = 3..8, |C| <= 5): kappa <= 3|C|/lambda held on every one, worst ratio kappa*lambda/(3|C|) = 0.3333. Script /tmp/claude-1000/-data-ssg-proof/c506180a-e393-4ffa-a18f-efc78c98397e/scratchpad/r19-audit-handicap-tangent-novelty/chk2.py."
+  },
+  {
+   "severity": "note",
+   "result_name": "whole route",
+   "defect": "Nothing here bears on prob:main, and the assigned deliverable (A) -- a family in R silent under M7 -- is not achieved; the route says so plainly. The route's net effect on the search is one exclusion (the strongly convex slice cannot carry a superpolynomial visit number) and one abstraction (prop:hz's algorithm becomes a class).",
+   "evidence": "Route's gap field, items (1)-(3)."
+  }
+ ],
+ "novelty_table": [
+  {
+   "result_name": "ht:lem-sigmin --- the handicap bounds every selection from below",
+   "closest_label": "rem:handicap-base",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "ht:thm-kappa --- bounded visit number is a polynomial class",
+   "closest_label": "prop:hz (algorithm); thm:escape-class (class); briefing (v11) / rounds/round14/memory-snapshot.md l.2296 (object and claim)",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "ht:cor-rlambda --- the strongly convex slice of R is a polynomial class",
+   "closest_label": "rem:lcp (prior art: polynomially bounded handicap decides prob:main) and prop:hz",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "ht:prop-damping --- R is not closed under damping",
+   "closest_label": "rem:handicap-base (membership is a property of the presentation; subdivision carries 16 of 181 out)",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "ht:prop-cutform --- the tangent cut is a complementarity pairing",
+   "closest_label": "rem:tangent-cut (Taylor display) with q as printed after thm:transport-objective and def:transport",
+   "class": "restatement"
+  },
+  {
+   "result_name": "ht:cor-cutwidth --- what one cut buys",
+   "closest_label": "rem:tangent-cut",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "ht:prop-tworounds --- M7 is not a one-round mechanism",
+   "closest_label": "rem:tangent-cut (BC(2,s) decided at round one or two according to the tie-break)",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement 1 (the identity d^T B d = ||(I-Pbar)d||^2 - (1/4)||(P_1-P_0)d||^2)",
+   "closest_label": "rem:handicap-base",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement 2 (P_0 = P_1 implies B = R^T R >= 0)",
+   "closest_label": "rem:handicap-base",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement 3 (q >= 0 on Q(G) with unique zero w*)",
+   "closest_label": "thm:transport-objective",
+   "class": "restatement"
+  }
+ ],
+ "verdict": "NEW-THEOREM, but a small one, and smaller than the route presents it. DID THE OBJECT CHANGE? Only mildly: kappa(G) is the resolvent of lem:survival-contract's reduced survival operator S over C, i.e. the paper's own survival-time quantity (prop:escape-family's display sum_k S^k 1 <= kappa(x)/(1-lambda)) restricted from V to C; the restriction is not a collapse and the route PROVES the separation from the escape class through prop:hz, which is to its credit. But the restricted object was already named by round 13 and its main property recorded as (v11), so the paper's inventory is the wrong yardstick for calling it new. CIRCULAR OR VACUOUS? Not circular: no oracle, no target-equivalent hypothesis, and {kappa <= poly} does have a member outside the eight bounds on the reachable subgame (HZ(n), prop:hz). But it is close to vacuous in reach: that member is one the paper already solves by hand with the same algorithm, and the paper's own (v11) reading -- 'any algorithm conditional on kappa is worthless' -- is now proved rather than overturned. RUBRIC: at least one proved result of class new-relation exists (ht:lem-sigmin, which I re-verified on 250 freshly generated members of R, and ht:cor-rlambda), so new-theorem stands; two of six results are restatements (ht:prop-cutform, ht:prop-tworounds) and must not be integrated as results. THE REAL REMAINING GAP, more precisely than the route states it: not 'is R a polynomial class' (rem:lcp already records the prior art that answers it for all of R), and not 'find a family in R with lambda_min superpolynomially small' (a non sequitur, refuted by the route's own W_10) -- it is: exhibit a stopping SSG family, in R or out of it, on which the tangent cut M7 together with the three readings of rem:own-successor over the Z-seeded transport polytope is silent at a value-distinguishing vertex for superpolynomially many rounds UNDER EVERY TIE-BREAK among the lexicographic optima, since every silence recorded so far (BC(2,s) in the paper, W_10 here) is a one- or two-round artefact of a particular tie-break. WOULD INTEGRATING MAKE THE PAPER BETTER? Better, if pruned. INTEGRATE, as a short block beside rem:handicap-base/prop:hz: ht:def-visits, ht:lem-sigmin, ht:lem-nonstat, ht:lem-sigma (the two lemmas in the LaTeX are the actual mathematical content and should be kept as lemmas), ht:thm-kappa, ht:cor-rlambda, ht:rem-freeze -- with three sentences the route did not write: that kappa and the claim are round 13's (v11), now proved with constants; that rem:lcp's attributed prior art already gives all of R by interior-point methods, so this is the import-free version inside the four-import rule; and that prop:hz's paragraph is its special case (prop:hz should then cite it rather than argue by row masses). INTEGRATE COMPRESSED, as one or two sentences inside rem:handicap-base rather than a proposition: ht:prop-damping (games built and verified, but the witness has P_0 = P_1). DO NOT INTEGRATE: ht:prop-cutform (restatement), ht:prop-tworounds (already recorded for BC(2,s)), ht:cor-cutwidth's Phi recursion (never a contraction; at most keep the one-cut inequality max_{P'} u_{v,ibar} <= q(x)/M(v,i) as a clause), and none of next_steps item 1."
+}

@@ -1,0 +1,105 @@
+{
+ "target": "frontier.tex round-18 diff",
+ "sound": false,
+ "confidence": "high",
+ "verdict": "Two majors and nine minors/notes; no fatal. The round-18 mathematics is in unusually good shape: I reproduced, in exact rational arithmetic and from the manuscript's statements alone, essentially every printed number in the 1317 added lines — prop:hstar-one-eleven (outmap, least margin 580908876268806955/409811754332034205696, USO/acyclic/Holt-Klee, height 11 at sigma=10,11, the walk and its eleven switched sets, facet heights 5,5,5,5,5,5,6,6,6,6, the 253 gadget vertices giving N=260, and that its class is outside the 3840-element orbit of prop:hkfive's witness); the whole drive line of prop:b2-realised's block (14 cells, 13 fences at exactly the 13 printed fractions, one edge reversing at each, the 8 fences forced by the 8 differing edges); Theta_w=2036/3313, Theta_u=2048/3313; the edge distances 42,52,32,44; thm:escape-no-beta's tournament violations (five at z=24,26 with pattern (1,0,1,1), three each for z=8,10 with the roles exchanged, none otherwise); cor:escape-m3's inner exclusion of z=10 and its 8 even-below-odd / 5 odd-below-even comparable pairs; prop:hz (N=98, a=80, stopping, reachable, row masses exactly 1/2, lambda_min(B)=1/4); prop:handicap-singular's B and kernel; the B matrices and lambda_min for WD and CC; the WD tangent cut -gamma xi_1+(gamma+mu)xi_2 <= mu^2/2 for general lambda; prop:router-tree's 6/11, 4/7, 2/3, 8/11 with the exhibited points verified in R_1 by exact disjunctive LPs; lem:rational-row's gadget sizes 3,5,7,11; the eval-decision certificates (416 nodes, 0 failures, 291-bit denominator); prop:one-player-fold and prop:one-player-response in full for D<=6; the ruin derivative 2i(K+1-i)/(K+1) for K<=7; and rem:cyclic-antipodal's \"six of eight\". The two majors are single-symbol integration errors of exactly the kind this audit looks for: thm:escape-mixed(a) states the wrong sign, which makes clause (b) — and hence cor:escape-m3's whole z=8 case — vacuous; and prop:own-stall's proof describes clause (i) at a Min vertex by the clause-(ii) expression, which its own numbers contradict. Both are one-line repairs; the results they belong to are otherwise correct.",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "thm:escape-mixed(a) (l.7057)",
+   "defect": "Clause (a) says R_alpha-C_alpha has a strictly NEGATIVE component, while its own proof establishes a strictly POSITIVE one, and with the printed sign clause (b) and cor:escape-m3's z=8 case become vacuous.",
+   "evidence": "The proof (l.6949-6953) argues: if R_alpha-C_alpha <= 0 then rho(sigma,.) = (R_alpha-C_alpha).y_sigma(t)+(q'_A-q_A)-At is strictly decreasing (y_sigma nondecreasing, A>0); but at a sigma with tilde-phi=1 one has rho(sigma,w_01)<0, w_01<w_00 and rho(sigma,w_00)>0, so rho increases. That refutes R_alpha-C_alpha <= 0, i.e. it produces a strictly positive component, not a negative one. As printed, (a) asserts a negative component always, so the hypothesis of (b), 'R_alpha-C_alpha >= 0 componentwise', can never hold, (b) is vacuous, and cor:escape-m3's 'z=8 is excluded over this block for every escape extension with R_alpha >= C_alpha' together with 'what is not decided is z=8 with R_alpha-C_alpha mixed in sign' becomes incoherent. The theorem's own closing sentence ('either the rest action of alpha reads some block vertex strictly more than its switch action and some other strictly less, or ...') needs the positive component from (a) and the negative one from the contraposition of (b), confirming that (a) should read 'strictly positive component'. Everything else in thm:escape-level, thm:escape-no-beta, thm:escape-mixed(b) and cor:escape-m3 I reconstructed step by step and recomputed and it is correct."
+  },
+  {
+   "severity": "major",
+   "result_name": "prop:own-stall, proof (l.16241-16243)",
+   "defect": "The parenthetical formula for clause (i) at a Min vertex is the clause-(ii) expression, which is <=0 at EVERY Min vertex of Q(G) and is 0 at vertex 1 as well, contradicting 'fires at 6 alone' and the correct separators printed two words later.",
+   "evidence": "The proof writes 'clause (i) --- max{x(v)-x(v^{(i)})} <= 0 at a Min vertex --- fires at 6 alone'. With def:transport's convention Sep(p,q)=max{x(q)-x(p)}, max{x(v)-x(v^{(i)})} is Sep(v^{(i)},v), the clause-(ii) separator, and the Min row x(v)<=x(v^{(i)}) makes it <=0 identically; the same proof states three lines above that it is 0 at vertex 1 (and I recomputed Sep(5,1)=Sep(3,1)=Sep(4,0)=Sep(4,t0)=Sep(0,6)=Sep(t0,6)=0 by exact LP over Q(R;L,U) with the free seed). Clause (i) at a Min vertex is Sep(v,v^{(i)})=max{x(v^{(i)})-x(v)}<=0; recomputing that gives exactly the printed numbers 1/2, 3/4 at 1; 1, 1 at 4; 1/2, 0 at 6, so only the displayed criterion is wrong. Since round 17 and round 18 both had to correct the standing rule here, the wrong formula is worth fixing precisely."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:own-stall (l.16266)",
+   "defect": "The printed separator 'Sep(3,t_1)=0' is false: with def:transport's convention Sep(3,t_1)=1/3; it is Sep(t_1,3) that equals 0 and names 3 optimal at the Min vertex 1.",
+   "evidence": "Exact LP on the seven-vertex game (Vavg={0,2}, Vmin={1}, Vmax={3,4}): Q pins x(0)=2/3, x(2)=1/3 and gives x(3) in [2/3,1], so Sep(3,t_1)=max{x(t_1)-x(3)}=1-2/3=1/3 and Sep(t_1,3)=max{x(3)-1}=0. The arguments are transposed. The other numbers of the remark all check: clause-(ii) separators at 4 are 0 and 0, clause-(i) 1 and 2/3, x(1)-x(2) ranges over [-1/3,2/3], Sep(3,t_0)=-2/3, and after retyping 1 and 3, Sep(4,2)=-1/3."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:one-player-fold (l.16763)",
+   "defect": "The parenthetical '(measured 1,1,2,3,3,4,5 at D<=6)' does not reproduce; the worst-case all-switches run of OF(D) is exactly D+1, i.e. 1,2,3,4,5,6,7 for D=0..6.",
+   "evidence": "I built OF(D) exactly and ran all-switches from all 2^{D+1} starts for D=0..6, computing val_sigma by exact linear solve on the acyclic game. The run-length distribution is {0:1, 1:1, 2:2, 3:4, ..., D+1:2^D}: the maximum is D+1, attained from the all-ones start, and 0 from the all-zeros start. At D=1 the worst run is 2, not 1 (from sigma=(1,1): val(F_0)=1/2, X_1=1/4<Y_1=7/16 so both switch to (0,1); then X_1=1/2>7/16 so F_1 switches again; halt). No natural statistic of the family gives 1,1,2,3,3,4,5. The substantive claim, halting within D+1 rounds from every start, is correct and in fact tight, which is stronger than the printed numbers suggest."
+  },
+  {
+   "severity": "minor",
+   "result_name": "rem:one-player-fold (l.16645) and Summary (l.19027)",
+   "defect": "'nine average vertices per level' is wrong: OF(D) has eight average vertices and one Max vertex per level (8D+3 average non-sinks in all).",
+   "evidence": "Per level d the definition lists P_d, X_d, R_d, S_d, S'_d, S''_d, Y_d, F_d plus H_d = nine vertices, of which F_d is in Vmax. Non-sinks 9D+4, |Vmax|=D+1, so average non-sinks = 8D+3, i.e. eight per level. The same phrase appears in rem:discount-fold (l.16645) and in the Summary (l.19027)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:one-player-response (l.16468-16480)",
+   "defect": "The out-edges of the vertex u are never given, so OP_D is not a completely specified SSG although u is counted in N=7D+7 and the game is called 'the one-player SSG'.",
+   "evidence": "The displayed edge list gives X_0 -> (u,u) but nothing for u itself; only the frozen game OP_D[u:=theta] is determined. thm:fold, on which the freezing is modelled, does specify u -> (t_0,t_1). With that reading everything else checks: I verified the recursions, the closed form and its constant c_D=(4^{D+1}-1)/(3*2^{3D+2}), convexity, exactly 2^D+1 pieces and the slope set {j 4^{-D}} for D<=6 in exact arithmetic."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:router-tree, proof (l.15972)",
+   "defect": "'1 in Q gives max_Q x(root)=1' is false as stated: the all-ones vector is not in Q(G), the average row at c_e forcing x(c_e)=(x(root)+x(t_0))/2=1/2.",
+   "evidence": "The conclusion is nonetheless right: the point that is 1 on every tree vertex, g on c_1 and kappa on the k-chain lies in Q (the leaf rows read 1 >= g and 1 >= kappa), so max_Q x(root)=1. Only the justification is wrong. Everything else in the proposition checks exactly: N and a, w*=kappa on the Max vertices, the identities x_{j-1}-x_j=K2^{-j}, x_d-gx_0=Delta_d, mu A_ell+(1-mu)kappa=x_ell with mu in [0,1], the internal-node decomposition, and the four instances 6/11, 4/7, 2/3, 8/11 with the exhibited points verified in R_1 at every Max vertex by exact per-vertex disjunctive LPs."
+  },
+  {
+   "severity": "minor",
+   "result_name": "Abstract (l.245) and Summary (l.18989)",
+   "defect": "'of the four doublings only z=8 with a mixed-sign rest readout survives' drops cor:escape-m3's restriction to the published level-two block: only z=24 and z=26 are excluded for every block, z=10's exclusion is block-specific.",
+   "evidence": "cor:escape-m3 is titled 'The decision at m=3 over the level-two block' and says explicitly that what is not decided includes, 'beyond this block, a driven three-Max block that reads the level-three drive or is not the published one'. thm:escape-no-beta excludes only the two doublings carrying the beta-coordinate for arbitrary blocks. The abstract and summary sentences read as a general statement about the escape route."
+  },
+  {
+   "severity": "minor",
+   "result_name": "prop:hz (l.9636-9638)",
+   "defect": "The modulator lower bound ('every freezing modulator has size at least n') and the separator/treewidth bound ('no set of fewer than 2n/5 vertices is a balanced separator') are asserted without proof and are not among the items the closing parenthesis says were recomputed.",
+   "evidence": "The parenthesis lists 'the structure, B, its least eigenvalue, the reachability, the value 2^{-n^2}, the strongly connected component and the row masses' as recomputed at n=4,6; the modulator and separator claims are not there and no argument is given beyond 'the n rows and the n slow blocks are pairwise disjoint'. Everything in the list I did recompute and it is correct (N=98, a=80, |Vmax|=|Vmin|=8, stopping, all 96 non-sinks reachable, all first-passage rows of mass exactly 1/2 over C, lambda_min(B)=1/4 matching the circulant formula, w*(d_1)=2^{-16}), as is the escape-certificate bound lambda>1-2^{1-n} and the reduced 1/2-contraction argument."
+  },
+  {
+   "severity": "minor",
+   "result_name": "The 'free datum' paragraph after thm:top (l.13140-13154)",
+   "defect": "The witness pair FB(L)^{pm} for 'the free datum decides no controlled vertex' is named but never defined, and the trap step of the H/M/L argument needs the reduced game to be stopping, which the paragraph does not say.",
+   "evidence": "The paragraph asserts 'two reduced stopping games on 2L+4 non-sinks differing in one edge have the same three blocks and opposite answers at their only Max vertex, with gaps +-2^{-(L+1)}' and cites wo_verify.py for 'the pair FB(L)^{pm} for L<=9', but no construction appears in the text, against the document's standard that every negative claim carries an explicit instance. Separately, 'else the set attaining it would be a trap' is a contradiction only for a stopping game; 'reduced' is defined as 'every non-sink value in (0,1), after the sweeps', which does not by itself exclude a nonempty trap. The rest of the argument is correct: in a reduced game a sink-adjacent average vertex is in H, M or L with value >1/2, =1/2, <1/2, and the maximum non-sink value must be attained at an average vertex with t_1 as a successor, so H u M and L u M are nonempty and one pass returns a strict comparison or reports every value 1/2."
+  },
+  {
+   "severity": "note",
+   "result_name": "rem:eval-fibre (l.3914) and def:eval-data",
+   "defect": "The output criterion says 'every rational member, by lem:rational-row', but the class considered in prop:eval-decide-lower is the NONDEGENERATE one-player SSGs, so it should be every rational nondegenerate member; and val* is defined in def:eval-data only for one-player systems yet used unqualified.",
+   "evidence": "lem:rational-row turns a stopping rational harmonic system into an SSG but says nothing about nondegeneracy; prop:eval-decide-lower's certificates do check nondegeneracy of every W and Y, so the proposition is unaffected. def:eval-data introduces val_{M,sigma} and val*_M in a sentence beginning 'For a one-player system', while rem:eval-fibre and the halting discussion use val* for the general case; rem:eval-decide-gap separately says the definition is player-neutral."
+  },
+  {
+   "severity": "note",
+   "result_name": "Paragraph after prop:eval-lift (l.4126-4133)",
+   "defect": "'lem:eval-one-query is the case t=1, c=1, sigma*=sigma_1[v] of the common direction' is a loose identification: the lemma replaces one row, the proposition replaces the row (u,sigma*(u)) at every u, and at c=1 the common direction gives val identically 1 on all of C, not only at v.",
+   "evidence": "In lem:eval-one-query only z_{v,bar-sigma_1(v)} changes and only val_{M',sigma_1[v]}(v)=1 is claimed; for the other u the proposition's lambda_u = 1 - mass(z_{u,sigma_1(u)}) is nonzero whenever that row leaks, so the common direction would change those rows too. The single row is of the common-direction form (take d proportional to z'-z), so the analogy is recoverable, but 'is the case ... of' overstates it. Both statements themselves are correct: I reconstructed both proofs step by step and they hold, including the hull criterion, the row-sum computation (I-P')(c 1)=q', and the stopping clause 'as it is whenever every q'_v>0'."
+  },
+  {
+   "severity": "note",
+   "result_name": "lem:rational-row, proof",
+   "defect": "The trap step 'the trap contains the entry and with it every leaf of the tree' is asserted rather than derived; it needs a case split, since a trap containing a gadget vertex need not contain the entry.",
+   "evidence": "The correct argument: (i) if the trap meets C then, both successors of a controlled vertex being gadget entries, it contains some entry, hence every leaf below it, hence every target, so no leaf may point at t_0 or t_1 and the row puts mass one on targets inside the trap; (ii) if the trap contains only gadget vertices then every leaf below any of its nodes must be a rejecting leaf, but a node whose whole leaf interval rejects was deleted, a contradiction. The conclusion 'the traps are exactly the closed full-mass action sets of the normal form' is correct. The four quoted gadget sizes reproduce exactly: (1/3,1/3) in 3 vertices, (2/7,3/7) in 5, (4/15,1/3,2/5) in 7, (7/37,9/37,20/37) in 11."
+  },
+  {
+   "severity": "note",
+   "result_name": "prop:eval-decide-lower (l.4141, l.4169-4179)",
+   "defect": "The vertex counts 191 (m=2) and 3863 (m=3) depend on the unstated order in which targets are assigned to the leaf intervals of lem:rational-row's tree, and are not reproducible from the manuscript alone.",
+   "evidence": "Building every world from the certificate rows by lem:rational-row (private entry per incidence + pruned tree) I get, over the (at most 3!) target orders, a family maximum between 185 and 196 at m=2 and between 3809 and 3865 at m=3; the printed 191 and 3863 lie inside those ranges, so they are consistent but not determined by the statement. The minimum 41 at m=3 and the '291 bits' largest denominator both reproduce exactly. Everything else in the proposition I checked independently and it holds: 16 and 400 nodes with the right depth profile, every node of depth<m having a child for every unqueried strategy, and for all 416 nodes every W substochastic/stopping/nondegenerate with val*(v_0)<1/2 and its last query strictly switchable, every Y stopping/nondegenerate with val*(v_0)>=1/2, W and Y producing identical x_r and A_r on every query of the path, and full ancestor consistency (0 failures)."
+  },
+  {
+   "severity": "note",
+   "result_name": "rem:blowup-realise (already repaired at HEAD 8059686)",
+   "defect": "The round-18 sentence 'so on that data the orientation oracle is the cheaper of the two' compared an exact minimax (4) with an upper bound (|C|+2 >= 5) and is invalid, since a value query at sigma determines the out-set at sigma, so on a fixed skeleton the value oracle is at least as cheap.",
+   "evidence": "The diff at 6e6c011 reads '... while by thm:eval-queries |C|+2 >= 5 value queries always suffice, so on that data the orientation oracle is the cheaper of the two (the round-18 paper audit, correcting a claim of the opposite here)'. The current working tree (round-19 batch H, commit 8059686) already replaces this by '|C|+1=4 value queries suffice for the one-player realisations (thm:eval-star) and thm:eval-queries gives |C|+2>=6 for the two-player ones --- upper bounds, against the orientation oracle's exact 4, no lower bound on value queries being proved for that class', which is correct. Recorded only so the fix is not undone."
+  },
+  {
+   "severity": "note",
+   "result_name": "rem:merged-matrix (l.15800 region)",
+   "defect": "'giving the true first exact level two' on W_14 uses the route's higher-level formalisation of the lift, which the same remark says the paper does not define or carry.",
+   "evidence": "The remark states 'the paper defines only levels zero and one and does not carry it', then compares 'level three from rho_max=3' with 'the true first exact level two'. The proved content — D >= 0 and D <= MD for every x in R_1 on a one-player stopping game, hence R_1={w*} when M is transient, hence exactness when no Max vertex is a splitter — I reconstructed and it is correct."
+  }
+ ],
+ "novelty_table": []
+}

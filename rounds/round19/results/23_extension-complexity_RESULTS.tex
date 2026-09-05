@@ -1,0 +1,406 @@
+%%% Route: extension complexity / the choice hierarchy.  Round 19.
+%%% Paste-ready; labels prefixed xc:.
+
+\subsection{The choice hierarchy at level \texorpdfstring{$j$}{j}}\label{xc:sec-lift}
+
+\Cref{rem:choice-lift} defines the choice lift at levels zero and one only.  We fix a
+level-$j$ lift, check that it agrees with Balas' closure at level one, and measure where it
+stops.  Throughout $G$ is stopping, $C=\Vmax\cup\Vmin$, and we work in the controlled
+coordinates of \Cref{lem:transport-dim}: $u=x|_{C}$, $x(v^{(i)})=p^{v,i}\!\cdot\!u+q^{v,i}$, and
+\[
+ \widetilde Q(G)=\Bigl\{u\in[0,1]^{C}:\ s^{i}_{v}(u)\ge0\ (v\in C,\ i=0,1)\Bigr\},\qquad
+ s^{i}_{v}(u):=\begin{cases} u(v)-p^{v,i}\!\cdot\!u-q^{v,i}, & v\in\Vmax,\\[2pt]
+ p^{v,i}\!\cdot\!u+q^{v,i}-u(v), & v\in\Vmin.\end{cases}
+\]
+Write $F^{i}_{v}:=\{u\in\widetilde Q:s^{i}_{v}(u)=0\}$ and, for $S\subseteq C$ and
+$\alpha\in\{0,1\}^{S}$, $F^{\alpha}_{S}:=\bigcap_{v\in S}F^{\alpha(v)}_{v}$.
+
+\begin{definition}[The level-$j$ choice lift]\label{xc:def-lift}
+The intended meaning of the choice variable is $y_v=1\Leftrightarrow s^{1}_{v}(u)=0$; the base
+system is $\widetilde Q$ together with the two bilinear complementarity equations
+$y_vs^{1}_{v}(u)=0$ and $(1-y_v)s^{0}_{v}(u)=0$.  Its \emph{level-$j$
+reformulation--linearisation lift} has, for every ordered pair of disjoint $A,B\subseteq C$ with
+$|A|+|B|\le j$, a scalar $w_{A,B}$ (linearising $\prod_{A}y_v\prod_{B}(1-y_v)$) and a vector
+$z_{A,B}\in\mathbb R^{C}$ (that monomial times $u$), subject to
+\begin{enumerate}[label=(L\arabic*),leftmargin=3em]
+\item $w_{\emptyset,\emptyset}=1$;
+\item for $|A|+|B|\le j-1$ and $v\notin A\cup B$:
+      $w_{A,B}=w_{A+v,B}+w_{A,B+v}$ and $z_{A,B}=z_{A+v,B}+z_{A,B+v}$;
+\item $w_{A,B}\ge0$ and $a\!\cdot\!z_{A,B}\le b\,w_{A,B}$ for every row $a\!\cdot\!u\le b$ of
+      $\widetilde Q$ (the box rows included);
+\item $\widehat s^{\,1}_{v}(z_{A,B},w_{A,B})=0$ for $v\in A$ and
+      $\widehat s^{\,0}_{v}(z_{A,B},w_{A,B})=0$ for $v\in B$, where $\widehat s^{\,i}_{v}(z,w)$
+      is $s^{i}_{v}$ with $u$ replaced by $z$ and the constant $q^{v,i}$ by $q^{v,i}w$.
+\end{enumerate}
+$R_j(G)$ is the set of $u=z_{\emptyset,\emptyset}$ arising this way.  It is the projection of a
+linear programme with $O\bigl((2|C|)^{j}N\bigr)$ variables and rows, i.e.\ of size $N^{O(j)}$.
+Put $\operatorname{lev}(G):=\min\{j:R_j(G)=\{w^{\ast}\}\}$.
+\end{definition}
+
+\begin{lemma}[Conditioning, and the elementary facts]\label{xc:conditioning}
+$R_0(G)=\widetilde Q(G)$; $R_{j+1}(G)\subseteq R_j(G)$; $w^{\ast}\in R_j(G)$ for every $j$.  If
+$u\in R_j(G)$ and $|A|+|B|=k\le j$ with $w_{A,B}>0$, then $u^{A,B}:=z_{A,B}/w_{A,B}$ lies in
+$R_{j-k}(G)\cap F^{\alpha}_{A\cup B}$, where $\alpha$ is $1$ on $A$ and $0$ on $B$; and for every
+$S$ with $|S|\le j$, $u=\sum_{\alpha\in\{0,1\}^{S}}w_{A_\alpha,B_\alpha}u^{A_\alpha,B_\alpha}$
+with $\sum_\alpha w_{A_\alpha,B_\alpha}=1$.  Consequently
+\[
+  R_j(G)\ \subseteq\ D_j(G):=\bigcap_{|S|\le j}\operatorname{conv}
+  \Bigl(\bigcup_{\alpha\in\{0,1\}^{S}}F^{\alpha}_{S}\Bigr),
+  \qquad R_{|C|}(G)=\{w^{\ast}\},\qquad \operatorname{lev}(G)\le|C| .
+\]
+\end{lemma}
+
+\begin{proof}
+$R_0$ is (L3) at the single pair $(\emptyset,\emptyset)$ with $w=1$.  Monotonicity: drop the
+variables of degree $j+1$.  $w^{\ast}\in R_j$: take an optimal positional pair $(\sigma^{\ast},\tau^{\ast})$, write $\pi^{\ast}$ for the induced map $C\to\{0,1\}$, and put
+$w_{A,B}=1$ if $\alpha$ agrees with $\pi^{\ast}$ on $A\cup B$ and $0$ otherwise,
+$z_{A,B}=w_{A,B}w^{\ast}$; (L4) is $s^{\pi^{\ast}(v)}_{v}(w^{\ast})=0$ and (L2) is the telescoping of a
+point mass.  Conditioning: rescaling (L3) by $w_{A,B}>0$ gives $u^{A,B}\in\widetilde Q$, (L4)
+gives $u^{A,B}\in F^{\alpha}_{A\cup B}$, and the family $\{w_{A\cup A',B\cup B'},
+z_{A\cup A',B\cup B'}\}_{|A'|+|B'|\le j-k}$, divided by $w_{A,B}$, satisfies (L1)--(L4) at level
+$j-k$.  Summing (L2) along any order of $S$ gives the convex decomposition, whence
+$R_j\subseteq D_j$.  At $S=C$ every $F^{\alpha}_{C}$ is the zero set of the objective
+$\mathrm{obj}_\alpha$ of \Cref{thm:transport-objective}, hence empty unless $\alpha$ is optimal
+and $=\{w^{\ast}\}$ then; so $D_{|C|}=\{w^{\ast}\}$.
+\end{proof}
+
+\begin{proposition}[Level one is Balas' closure]\label{xc:level-one}
+$R_1(G)=D_1(G)=\bigcap_{v\in C}\operatorname{conv}\bigl(F^{0}_{v}\cup F^{1}_{v}\bigr)$, the set
+that \Cref{rem:choice-lift} calls level one.
+\end{proposition}
+
+\begin{proof}
+$\subseteq$ is \Cref{xc:conditioning}.  For $\supseteq$, let $u\in D_1$ and, for each $v$, write
+$u=\lambda_v y^{v}+(1-\lambda_v)z^{v}$ with $y^{v}\in F^{1}_{v}$, $z^{v}\in F^{0}_{v}$ (the two
+sets are faces of $\widetilde Q$, hence convex).  Put $w_{\{v\},\emptyset}:=\lambda_v$,
+$z_{\{v\},\emptyset}:=\lambda_vy^{v}$, $w_{\emptyset,\{v\}}:=1-\lambda_v$,
+$z_{\emptyset,\{v\}}:=(1-\lambda_v)z^{v}$, $w_{\emptyset,\emptyset}=1$,
+$z_{\emptyset,\emptyset}=u$.  (L1)--(L4) hold by construction.
+\end{proof}
+
+\begin{remark}\label{xc:lift-verified}
+The lift of \Cref{xc:def-lift} was checked against the paper's own level-one programme: at
+$j=1$ its optimum agrees with the Balas-closure linear programme of
+\texttt{scripts/round18-verify/rl\_verify.py} at every controlled vertex of $25$ random stopping
+games with $|C|\le4$ (one and two players), and on $T_1(2,\tfrac38)$ of
+\Cref{prop:router-tree} it returns the recorded interval $[\tfrac38,\tfrac6{11}]$ at the root.
+\end{remark}
+
+\begin{theorem}[The level-$j$ exit bound]\label{xc:exit}
+Let $G$ be stopping with $\Vmin=\emptyset$.  For $v\in C$, a set $S\ni v$ with $|S|\le j$ and
+$\alpha\in\{0,1\}^{S}$ let $E^{\alpha}_{S}(v,\cdot)$ be the law, on $C\setminus S$, of the first
+vertex of $C\setminus S$ visited by the walk started at $v$ which uses the action $\alpha(u)$ at
+every $u\in S$ and is stopped on leaving $S$ (it is defective: the walk may be absorbed in a
+sink).  Choose, for each $v$, one such $S_v$ and put
+$K(v,\cdot):=\max_{\alpha\in\{0,1\}^{S_v}}E^{\alpha}_{S_v}(v,\cdot)$, the componentwise maximum
+(and $K(v,u)=0$ for $u\in S_v$).  Then every $x\in D_j(G)$ --- so every $x\in R_j(G)$ ---
+satisfies
+\[
+   D:=x-w^{\ast}\ \ge\ 0\qquad\text{and}\qquad D\ \le\ KD .
+\]
+If $K$ is transient, i.e.\ $I-K$ is invertible with a nonnegative inverse, then
+$D_j(G)=\{w^{\ast}\}$ and $\operatorname{lev}(G)\le j$.
+\end{theorem}
+
+\begin{proof}
+$D\ge0$ because $w^{\ast}$ is the least element of $\widetilde Q(G)$ when $\Vmin=\emptyset$
+(\Cref{thm:one-player}).  Fix $v$ and $S:=S_v$.  By the definition of $D_j$ write
+$x=\sum_{\alpha}\lambda_\alpha x^{\alpha}$ with $\lambda\ge0$, $\sum\lambda_\alpha=1$ and
+$x^{\alpha}\in F^{\alpha}_{S}$; put $D^{\alpha}:=x^{\alpha}-w^{\ast}\ge0$, so
+$\sum_\alpha\lambda_\alpha D^{\alpha}=D$.  For $u\in S$ tightness gives
+$x^{\alpha}(u)=p^{u,\alpha(u)}\!\cdot\!x^{\alpha}+q^{u,\alpha(u)}$ while
+$w^{\ast}(u)\ge p^{u,\alpha(u)}\!\cdot\!w^{\ast}+q^{u,\alpha(u)}$, hence
+$D^{\alpha}(u)\le p^{u,\alpha(u)}\!\cdot\!D^{\alpha}$.  Splitting the right-hand side over $S$
+and $C\setminus S$, $D^{\alpha}|_{S}\le P^{\alpha}_{S}D^{\alpha}|_{S}+R^{\alpha}
+D^{\alpha}|_{C\setminus S}$ with $P^{\alpha}_{S}$ substochastic; $G$ stopping makes the
+$\alpha$-walk on $S$ absorbed with probability one, so $I-P^{\alpha}_{S}$ has a nonnegative
+inverse and $D^{\alpha}|_{S}\le(I-P^{\alpha}_{S})^{-1}R^{\alpha}D^{\alpha}|_{C\setminus S}
+=E^{\alpha}_{S}D^{\alpha}|_{C\setminus S}\le KD^{\alpha}$, all vectors being nonnegative.
+Reading the $v$-th row, multiplying by $\lambda_\alpha$ and summing gives $D(v)\le(KD)(v)$.  If
+$K$ is transient then $D\le K^{k}D\to0$, so $D=0$.
+\end{proof}
+
+\begin{remark}\label{xc:exit-generalises}
+At $j=1$, $S_v=\{v\}$: $E^{b}_{\{v\}}(v,\cdot)$ is $p^{v,b}$ off $v$, renormalised by the
+self-loop, so $K$ dominates the merged matrix $M$ of \Cref{rem:merged-matrix} entrywise and
+$K=M$ when no action reads its own vertex.  \Cref{xc:exit} is therefore the level-$j$ form of
+that remark, and it is not vacuous at $j=2$: on $T_1(e,\kappa)$ of \Cref{prop:router-tree}
+(root $r$, leaves $\ell_1,\ell_2$) the choices $S_r=\{r,\ell_1\}$,
+$S_{\ell_1}=\{\ell_1,r\}$, $S_{\ell_2}=\{\ell_2,r\}$ give
+$K(r,\ell_2)=1$, $K(\ell_1,\ell_2)=K(\ell_2,\ell_1)=g$ and all other entries $0$: the only cycle
+has weight $g^{2}<1$, so $K$ is transient and $\operatorname{lev}(T_1)\le2$ --- while $M$ has the
+cycle weight $2g>1$ and \Cref{rem:merged-matrix} certifies nothing.
+\end{remark}
+
+\begin{proposition}[Transience is sufficient but not necessary]\label{xc:cyc}
+Let $\mathrm{CYC}(n,e,\kappa)$ be the one-player game with $\Vmax=\{v_0,\dots,v_{n-1}\}$ in
+which the action $b$ of $v_i$ is a damping chain of $e$ average vertices
+(\Cref{def:damping}) leading to $v_{i+1+b\bmod n}$ whose leak enters the head of the dyadic
+chain of \Cref{lem:dyadic-row} of value $\kappa$, so that
+$x(v_i^{(b)})=g\,x(v_{i+1+b})+(1-g)\kappa$ with $g=1-2^{-e}$.  Then $\mathrm{CYC}$ is stopping
+and $w^{\ast}\equiv\kappa$ on $\Vmax$.  For $n=3$, $e=2$, $\kappa=\tfrac38$ --- a stopping
+one-player game on $20$ vertices, $3$ Max and $15$ average --- the merged matrix is
+$M(i,j)=\tfrac34$ for $j\ne i$, whose Perron root is $\tfrac32$, so $M$ is not transient; and
+nevertheless $R_1(\mathrm{CYC}(3,2,\tfrac38))=\{w^{\ast}\}$, i.e.\ $\operatorname{lev}=1$.
+Every one of the three Max vertices is a splitter.
+\end{proposition}
+
+\begin{proof}
+$\kappa\bbone$ on $\Vmax$, extended by the average equalities, is a fixed point of $T$
+($\max$ of two equal numbers $g\kappa+(1-g)\kappa=\kappa$); a trap avoiding $t_1$ would have to
+contain the last vertex of a damping chain, which has the successor $t_0$; so the game is
+stopping and $w^{\ast}=\kappa\bbone$ by \Cref{cor:comparison}.  The rest was computed from the
+game in exact arithmetic: the game file, the first-passage rows, $M$, the failure of
+transience, and $\max_{R_1}\sum_{v\in\Vmax}x(v)=\min_{R_1}\sum_{v\in\Vmax}x(v)=\tfrac98
+=3\kappa$.
+\end{proof}
+
+\begin{proposition}[Where the choice hierarchy actually stops]\label{xc:stops}
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item Level one decides every stall published in this paper: $R_1=\{w^{\ast}\}$ on $G_8$
+      (\Cref{prop:simorder-stalls}), on $S$ and $S_r$ (\Cref{thm:transport-barrier}) and on
+      $H_m$, $m\le4$ (\Cref{cor:slack-stalls}) --- these have $|C|=1$, where
+      \Cref{xc:onectrl} makes it automatic --- and also, where it is not automatic, on the
+      seven-vertex game of \Cref{rem:own-stall} ($|C|=3$) and on the ten-vertex two-player
+      game $R$ of \Cref{prop:own-stall} ($|C|=5$), the paper's one genuine decision stall of
+      the transport programme.
+\item $\operatorname{lev}\bigl(T_1(2,\tfrac38)\bigr)=\operatorname{lev}\bigl(T_2(2,\tfrac38)\bigr)=2$
+      exactly, and $\operatorname{lev}\bigl(T_3(2,\tfrac38)\bigr)=2$ in floating point; so the asymptotic vacuity
+      of \Cref{prop:router-tree} is a level-one phenomenon and does not grow with $d$.  The
+      same holds for the necklace $\mathrm{NK}(d)$ ($d$ routers $r_i\to(\ell_i,\ell_i')$ in a
+      cycle, $\ell\to$ (damped feedback to $r_{i+1}$, constant $\kappa$)), $d=1,2,3$.
+\item Consequently the number of splitters does not track $\operatorname{lev}$: the
+      parenthetical extension of \Cref{rem:merged-matrix} (``exactness for every $j$ above the
+      number of splitters'') gives $\operatorname{lev}(T_d)\le2^{d}$, which is $4$ on $T_2$
+      against the true $2$ and $8$ on $T_3$; and in the other direction
+      $\mathrm{CYC}(3,2,\tfrac38)$ has three splitters and a non-transient merged matrix and
+      is exact already at level one.  Both parameters are therefore only loosely related to
+      the level.
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}[The frontier of the hierarchy is at level three]\label{xc:frontier}
+No stopping SSG with $\operatorname{lev}\ge3$ is known here.  Besides the instances of
+\Cref{xc:stops} the level was computed on every controlled system reached by a search over
+abstract controlled data --- each action a dyadic damped edge to a controlled vertex plus a
+dyadic terminal mass, which \Cref{lem:dyadic-row} realises as a game --- with $|C|\le7$, one
+and two players (\Cref{xc:measured} lists the counts); among all of them level two was exact.  This is not evidence (random sampling
+has never produced a hard instance in this project) but it locates the question exactly.  The
+statement that is missing is a single sentence:
+\begin{quote}
+\emph{there is a stopping SSG $G$, and a point $x\in R_2(G)$ with $x\ne w^{\ast}(G)$.}
+\end{quote}
+It matters because level two is a linear programme of size $O(|C|^{3}N)$: were
+$\operatorname{lev}(G)\le2$ for every stopping game, \Cref{prob:main} would be in $\mathsf P$
+by \Cref{rem:choice-lift}'s target-equivalence.  A family with $\operatorname{lev}(G_n)\to\infty$
+is what a barrier for this hierarchy needs, and it must begin at level three.
+\end{remark}
+
+\subsection{The value polytope}\label{xc:sec-vpoly}
+
+\begin{definition}[The value polytope]\label{xc:def-vpoly}
+For an SSG $G$ put $V(G):=\operatorname{conv}\{\mathrm{val}_\sigma:\sigma\in\{0,1\}^{\Vmax}\}
+\subseteq[0,1]^{V}$ and $V_C(G):=\operatorname{conv}\{\mathrm{val}_\sigma|_{C}\}$.  Since every
+$\mathrm{val}_\sigma$ satisfies the average equalities, $V(G)=\Psi(V_C(G))$ with $\Psi$ the
+affine map of \Cref{lem:transport-dim}; and by \Cref{thm:determinacy}
+$w^{\ast}=\mathrm{val}_{\sigma^{\ast}}$ dominates $V(G)$ coordinatewise, so
+$\max_{x\in V(G)}x(v)=w^{\ast}(v)$ \emph{simultaneously at every $v$}.  Deciding
+\Cref{prob:main} is therefore linear optimisation over $V(G)$ --- over one fixed coordinate.
+\end{definition}
+
+\begin{lemma}[Factorisation; Yannakakis, from memory, unchecked against the source]\label{xc:yannakakis}
+Let $P=\operatorname{conv}\{x^{1},\dots,x^{V}\}=\{x:a_i\!\cdot\!x\le b_i,\ i\le F\}$ be a
+polytope with the $a_i\!\cdot\!x\le b_i$ facet-defining, and let $S\in\mathbb R^{F\times
+V}_{\ge0}$, $S_{ij}:=b_i-a_i\!\cdot\!x^{j}$, be its slack matrix.  Call
+$\operatorname{xc}(P)$ the least $r$ for which there are a polyhedron
+$\mathcal Q=\{y:c_k\!\cdot\!y\le d_k,\ k\le r\}$ (equalities free) and an affine $\pi$ with
+$\pi(\mathcal Q)=P$.  Then $\operatorname{xc}(P)=\operatorname{rank}_+(S)$, the least $r$ with
+$S=TU$, $T\in\mathbb R^{F\times r}_{\ge0}$, $U\in\mathbb R^{r\times V}_{\ge0}$.
+\end{lemma}
+
+\begin{proof}
+$(\le)$ Given $S=TU$, put $\mathcal Q:=\{(x,\lambda):\lambda\ge0,\
+a_i\!\cdot\!x+(T\lambda)_i=b_i\ \forall i\}$ and $\pi(x,\lambda)=x$; it has $r$ inequalities.
+$\pi(\mathcal Q)\subseteq P$ since $(T\lambda)_i\ge0$.  For each $j$, $\lambda:=U_{\cdot j}\ge0$
+gives $(T\lambda)_i=S_{ij}=b_i-a_i\!\cdot\!x^{j}$, so $x^{j}\in\pi(\mathcal Q)$; $\pi(\mathcal
+Q)$ is convex, hence contains $P$.
+
+$(\ge)$ Let $\mathcal Q,\pi$ be an extension of size $r$.  Fix $i$ and let
+$f_i(y):=b_i-a_i\!\cdot\!\pi(y)=\gamma+g\!\cdot\!y$, an affine function that is $\ge0$ on
+$\mathcal Q$.  The linear programme $\min\{g\!\cdot\!y:c_k\!\cdot\!y\le d_k\}$ is feasible and
+bounded below by $-\gamma$; by LP duality it has an optimal $\mu\ge0$ with
+$g=-\sum_k\mu_kc_k$ and $\min g\!\cdot\!y=-\sum_k\mu_kd_k$, whence
+$f_i(y)=\nu_i+\sum_k\mu_{ik}(d_k-c_k\!\cdot\!y)$ with
+$\nu_i=\gamma-\sum_k\mu_{ik}d_k\ge0$.  Because $a_i\!\cdot\!x\le b_i$ defines a facet there is
+$y\in\mathcal Q$ with $f_i(y)=0$, and all the summands are nonnegative, so $\nu_i=0$.  Now pick
+$y^{j}\in\mathcal Q$ with $\pi(y^{j})=x^{j}$ and set $T_{ik}:=\mu_{ik}\ge0$,
+$U_{kj}:=d_k-c_k\!\cdot\!y^{j}\ge0$; then $(TU)_{ij}=f_i(y^{j})=S_{ij}$.
+\end{proof}
+
+\begin{proposition}[What an extended formulation of $V(G)$ would buy]\label{xc:reduction}
+If some algorithm outputs, in time polynomial in $N$ and on every stopping $G$, a system
+$(\mathcal Q,\pi)$ of size polynomial in $N$ with $\pi(\mathcal Q)=V(G)$, then
+\Cref{prob:main} reduces in polynomial time to linear programming: $w^{\ast}(v_0)=
+\max\{\pi(y)_{v_0}:y\in\mathcal Q\}$ by \Cref{xc:def-vpoly}.  An exponential lower bound on
+$\operatorname{xc}(V(G_n))$ for an explicit family is thus the only form in which the extension
+complexity of a polytope bears on \Cref{prob:main}; a lower bound for a polytope one does not
+optimise over is not a barrier.
+\end{proposition}
+
+\begin{theorem}[The ladder's value polytope is a cube]\label{xc:ladder}
+For the ladder $L_n$ of \Cref{def:ladder} write $a_i:=x(v_i)$ and, for $1\le i\le n$,
+\[
+   \varphi_i(x)\ :=\ 2^{\,n-i}a_i-\sum_{k=i+1}^{n}2^{\,n-k}a_k
+   \qquad(\varphi_n=a_n).
+\]
+Then $\varphi=(\varphi_1,\dots,\varphi_n)$ is a linear automorphism of $\mathbb R^{n}$ and
+\[
+   \varphi\bigl(\mathrm{val}_\sigma|_{\Vmax}\bigr)\ =\
+   \Bigl(\textstyle\bigoplus_{k\ge1}\sigma_k,\ \bigoplus_{k\ge2}\sigma_k,\ \dots,\ \sigma_n\Bigr),
+\]
+a bijection of $\{0,1\}^{n}$ onto $\{0,1\}^{n}$.  Hence $V_C(L_n)=\varphi^{-1}([0,1]^{n})$ is a
+parallelotope: $2^{n}$ vertices, exactly $2n$ facets, and $\operatorname{xc}(V(L_n))\le2n$.
+\end{theorem}
+
+\begin{proof}
+Write $a_i=\mathrm{val}_\sigma(v_i)$, $b_i=\mathrm{val}_\sigma(w_i)$, $a_{n+1}=0$, $b_{n+1}=1$,
+and $d_i:=b_i-a_i$.  The rows of $L_n$ give $a_i=a_{i+1}+\sigma_id_{i+1}$ and
+$b_i=\tfrac12(a_{i+1}+b_{i+1})=a_{i+1}+\tfrac12d_{i+1}$, so
+$d_i=(\tfrac12-\sigma_i)d_{i+1}$ and, with $d_{n+1}=1$,
+\[
+   d_{i+1}=\prod_{k>i}\bigl(\tfrac12-\sigma_k\bigr)=2^{-(n-i)}(-1)^{\sum_{k>i}\sigma_k}.
+\]
+Subtracting the definitions of $\varphi_i$ and $\varphi_{i+1}$,
+$\varphi_i-\varphi_{i+1}=2^{\,n-i}a_i-2^{\,n-i-1}a_{i+1}-2^{\,n-i-1}a_{i+1}
+=2^{\,n-i}(a_i-a_{i+1})=2^{\,n-i}\sigma_id_{i+1}=\sigma_i(-1)^{\sum_{k>i}\sigma_k}$.
+Now induct downwards: $\varphi_n=a_n=\sigma_n$, and if
+$\varphi_{i+1}=\bigoplus_{k>i}\sigma_k\in\{0,1\}$ then
+$(-1)^{\sum_{k>i}\sigma_k}=1-2\varphi_{i+1}$, so
+$\varphi_i=\varphi_{i+1}+\sigma_i(1-2\varphi_{i+1})=\varphi_{i+1}\oplus\sigma_i$.  The map
+$\sigma\mapsto(\bigoplus_{k\ge i}\sigma_k)_i$ is a bijection of $\{0,1\}^{n}$, and $\varphi$ is
+triangular with diagonal $2^{\,n-i}\ne0$, hence invertible; so
+$V_C(L_n)=\operatorname{conv}\varphi^{-1}(\{0,1\}^{n})=\varphi^{-1}([0,1]^{n})$.  A parallelotope
+in $\mathbb R^{n}$ has $2n$ facets and an extended formulation of that size (itself).
+\end{proof}
+
+\begin{remark}\label{xc:ladder-remark}
+So the ladder --- whose $2^{n}$ \emph{distinct} value vectors make it the obvious candidate for
+a fooling set in the slack matrix of $V$ --- is exactly the wrong candidate: its slack matrix
+has nonnegative rank at most $2n$.  The identity
+$\varphi_i(\mathrm{val}_\sigma)=\bigoplus_{k\ge i}\sigma_k$ was recomputed from the game for
+$n=2,\dots,12$ (all $2^{n}$ strategies, exact arithmetic).
+\end{remark}
+
+\begin{proposition}[The occupancy polytope does not carry the value vector]\label{xc:occ}
+Let $\mathrm{AND}$ be the one-player stopping SSG on seven vertices
+$\Vmax=\{v_0,v_1\}$, $\Vavg=\{A,A',B\}$, $v_0\to(t_0,A)$, $v_1\to(t_0,B)$, $A\to(A',t_0)$,
+$A'\to(t_0,t_1)$, $B\to(v_0,t_0)$, so that
+$\mathrm{val}_\sigma|_{C}=\bigl(\tfrac14\sigma_0,\ \tfrac18\sigma_0\sigma_1\bigr)$.  Let
+$f_\sigma\in\mathbb R^{C\times\{0,1\}}_{\ge0}$ be the state--action occupancy of $\sigma$ from
+the start distribution $\bbone$ on $C$, i.e.\ the unique solution of
+$f=\bbone+f P_\sigma$ placed on the used actions (d'Epenoux).  Then no affine map $\phi$
+satisfies $\phi(f_\sigma)=\mathrm{val}_\sigma|_{C}$ for all four $\sigma$: with the four
+strategies ordered $00,01,10,11$,
+\[
+  f=\bigl(1,0,1,0\bigr),\ \bigl(\tfrac32,0,0,1\bigr),\ \bigl(0,1,1,0\bigr),\
+  \bigl(0,\tfrac32,0,1\bigr),\qquad
+  \mathrm{val}|_C=(0,0),\ (0,0),\ (\tfrac14,0),\ (\tfrac14,\tfrac18),
+\]
+and $\lambda=(\tfrac32,-1,-\tfrac32,1)$ has $\sum_\sigma\lambda_\sigma=0$,
+$\sum_\sigma\lambda_\sigma f_\sigma=0$ but
+$\sum_\sigma\lambda_\sigma\mathrm{val}_\sigma|_{C}=(-\tfrac18,\tfrac18)\ne0$.
+\end{proposition}
+
+\begin{remark}[What does carry them, and why the route stops there]\label{xc:coupled}
+The failure is not the linearity of the value but the choice of start: for a \emph{fixed} start
+$v$, $\mathrm{val}_\sigma(v)=\sum_{u,i}f^{v}_\sigma(u,i)\,q^{u,i}$ is a linear functional of the
+occupancy $f^{v}_\sigma$ from $v$, so $V(G)$ is the affine image of the \emph{coupled}
+occupancy polytope $Y(G):=\operatorname{conv}\{(f^{v}_\sigma)_{v\in C}:\sigma\}$ --- one
+occupancy measure per start, all of them forced to use \emph{one} strategy.  The coupling is
+exactly $f^{v}(u,0)\,f^{v'}(u,1)=0$: the same complementarity that
+\Cref{thm:transport-objective} isolates.  The route through extension complexity therefore
+returns to the branching of \Cref{thm:transport-objective} and stops there; no lower bound on
+$\operatorname{xc}(V(G_n))$ is proved here.
+\end{remark}
+
+\subsection{Two small facts used above}\label{xc:small}
+
+\begin{lemma}[One controlled vertex]\label{xc:onectrl}
+If $|C|=1$ then $\operatorname{lev}(G)\le1$.
+\end{lemma}
+
+\begin{proof}
+Let $C=\{v\}$, say $v\in\Vmax$ (dually at $\Vmin$).  In the single coordinate $u=x(v)$ the rows
+of $\widetilde Q$ are $u\ge p^{v,i}u+q^{v,i}$, i.e.\ $u\ge q^{v,i}/(1-p^{v,i})=\mathrm{val}_i(v)$
+for both $i$ (and $u\le1$), so $\widetilde Q=[w^{\ast}(v),1]$ with
+$w^{\ast}(v)=\max_i\mathrm{val}_i(v)$.  $F^{i}_{v}=\{\mathrm{val}_i(v)\}\cap\widetilde Q$, which
+is empty for a strictly suboptimal $i$ and $\{w^{\ast}(v)\}$ otherwise; so
+$R_1=\operatorname{conv}(F^{0}_v\cup F^{1}_v)=\{w^{\ast}\}$.
+\end{proof}
+
+\begin{remark}[The measurements behind \Cref{xc:stops} and \Cref{xc:frontier}]\label{xc:measured}
+All exact unless stated.  \emph{From the games:} $\operatorname{lev}=1$ on $G_8$, $S$, $S_r$
+($r=2,3$), $H_m$ ($m=2,3,4$) --- all with $|C|=1$, so \Cref{xc:onectrl} applies --- on the
+seven-vertex game of \Cref{rem:own-stall} ($|C|=3$), on the ten-vertex game $R$ of
+\Cref{prop:own-stall} ($|C|=5$, two players; $\max_{Q}\sum_{C}x=\tfrac52$ against
+$\sum_{C}w^{\ast}=2$, and $R_1$ collapses to $2$), and on $\mathrm{CYC}(3,2,\tfrac38)$
+($20$ vertices, $|C|=3$).  $\operatorname{lev}(T_1(2,\tfrac38))=2$ exactly
+($\max_{R_1}\sum_{C}x=\tfrac32$ against $\sum_{C}w^{\ast}=\tfrac98$; $R_2$ collapses), and on
+$T_2(2,\tfrac38)$ the symmetry-reduced exact lift (averaging over the tree automorphisms is
+legitimate because the instance and the objective $\sum_Cx$ are invariant) gives
+$\max_{R_1}\sum_{C}x=\tfrac{72}{17}$ and $\max_{R_2}\sum_Cx=\tfrac{21}{8}=\sum_Cw^{\ast}$,
+so $\operatorname{lev}(T_2(2,\tfrac38))=2$; with $x\ge w^{\ast}$ (one player) the maximum of
+the sum suffices.  \emph{Exploratory, floating point:} $\max_{R_2}\sum_Cx=\sum_Cw^{\ast}$ on
+$T_3$ and on the necklaces $\mathrm{NK}(d)$, $d\le3$; and $R_1=\{w^{\ast}\}$ already on the
+\emph{flat} router $\mathrm{FT}_d$ ($d\le3$), the variant in which every action is tied at
+$w^{\ast}$.  \emph{The search} (abstract controlled data --- each action a dyadic
+substochastic row over $C$ plus a dyadic terminal mass, which \Cref{lem:dyadic-row} realises as
+a game; the individual systems were not assembled as games): $261\,751$ systems with
+$|C|\in\{4,5\}$ and $0,1,2$ Min vertices, level computed to exactness --- maximum level $2$;
+$389\,406$ further systems with $|C|\in\{5,6,7\}$ and $0,2,3$ Min vertices, both actions of
+every vertex forced to distinct targets, of which $5\,732$ failed at level one and every one of
+those was exact at level two; $27\,203$ systems with general dyadic rows, all exact at level
+one; and $169\,716$ \emph{flat} systems (every action tied at $w^{\ast}$, the shape of
+\Cref{prop:fv-stall}'s vacuous stalls) --- not one of them failed at level one.  Finally
+$84\,691$ random stopping \emph{games} with $|C|\in\{3,4\}$, maximum level $1$.  The flat
+observation raises its own exact question: \emph{is $R_1(G)=\{w^{\ast}\}$ whenever every
+controlled vertex of a stopping one-player $G$ has $s^{0}_{v}(w^{\ast})=s^{1}_{v}(w^{\ast})=0$?}
+--- the merged matrix is not transient on those systems, so \Cref{rem:merged-matrix} does not
+answer it.
+\end{remark}
+
+\begin{lemma}[The hierarchy is a Balas iteration, and the emptiness test]\label{xc:balas-iter}
+Write $\mathcal B(P):=\bigcap_{v\in C}\operatorname{conv}\bigl((P\cap F^{0}_{v})\cup
+(P\cap F^{1}_{v})\bigr)$ for $P\subseteq\widetilde Q$.  Then
+$R_{j+1}(G)\subseteq\mathcal B\bigl(R_j(G)\bigr)$; in particular, if
+$R_j(G)\cap F^{i}_{v}=\emptyset$ for some $v\in C$ and one $i$, then
+$R_{j+1}(G)\subseteq R_j(G)\cap F^{1-i}_{v}$.  Consequently a necessary condition for
+$\operatorname{lev}(G)\ge j+2$ is that $R_j(G)\cap F^{i}_{v}\ne\emptyset$ for \emph{every}
+$v\in C$ and \emph{both} $i$.
+\end{lemma}
+
+\begin{proof}
+Let $x\in R_{j+1}$ with certificate $(w,z)$ and fix $v$.  By (L2),
+$x=z_{\{v\},\emptyset}+z_{\emptyset,\{v\}}$ and $1=w_{\{v\},\emptyset}+w_{\emptyset,\{v\}}$;
+by \Cref{xc:conditioning} each nonzero term, rescaled, lies in $R_{j}\cap F^{1}_{v}$
+respectively $R_{j}\cap F^{0}_{v}$.  So $x$ is a convex combination of points of
+$(R_j\cap F^{0}_{v})\cup(R_j\cap F^{1}_{v})$.  If the $i$-part is empty its weight is $0$.
+\end{proof}
+
+\begin{remark}[Why level two closes on the router tree]\label{xc:why-two}
+The test of \Cref{xc:balas-iter} is exactly what fires on \Cref{prop:router-tree}'s family: on
+$T_1(2,\tfrac38)$ and $T_2(2,\tfrac38)$ --- exactly, in both --- at every \emph{leaf} $\ell$ the
+face of the feedback action meets the level-one lift in nothing,
+$R_1\cap F^{0}_{\ell}=\emptyset$, and $\max_{R_1\cap F^{1}_{\ell}}\sum_Cx$ is already the
+target; so \Cref{xc:balas-iter} pins every point of $R_2$ to the constant action at every leaf
+at once and $R_2=\{w^{\ast}\}$ follows.  At the internal nodes both faces survive and survive
+strictly: on $T_2$, $\max_{R_1\cap F^{i}_{u}}\sum_Cx=\tfrac{39}{11}$ at the root and
+$\tfrac{219}{56}$ at the two nodes of depth one, for both $i$, against the target $\tfrac{21}8$.
+This locates what a level-three instance must do: keep both faces of \emph{every} controlled
+vertex alive inside $R_1$.  Making the two actions of every vertex \emph{tied} at $w^{\ast}$
+does keep them alive --- $w^{\ast}$ lies in all of them --- but it is not enough: on the flat
+router $\mathrm{FT}_d(g_1,g_2,\tfrac38)$, in which every action satisfies
+$x(v^{(i)})=g\,x(\cdot)+(1-g)\kappa$ with $T(\kappa\bbone)=\kappa\bbone$ attained at both
+actions of every vertex, level one is already exact ($d\le3$, three parameter pairs,
+floating point).
+\end{remark}

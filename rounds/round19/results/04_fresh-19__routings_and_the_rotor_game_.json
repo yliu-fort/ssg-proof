@@ -1,0 +1,100 @@
+{
+ "target": "fresh-19 (routings and the rotor game)",
+ "sound": true,
+ "confidence": "high",
+ "novelty_table": [
+  {
+   "result_name": "The routing formula (elementary proof)",
+   "closest_label": "lem:denominator",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "The routing count is a common denominator, and equals a determinant",
+   "closest_label": "lem:denominator-sharp",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "The rotor sandwich",
+   "closest_label": "thm:energy",
+   "class": "new-object"
+  },
+  {
+   "result_name": "Exactness over a rotor period",
+   "closest_label": "thm:eval-stopfree",
+   "class": "new-object"
+  },
+  {
+   "result_name": "The derandomisation is lossy, the constant is attained, and positional play is not optimal in the rotor game",
+   "closest_label": "thm:determinacy",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "The rotor game needs exponentially many chips",
+   "closest_label": "thm:vi-lower",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "The behavioural value is a ratio of multilinear forms, and the retyping identity",
+   "closest_label": "def:subcube / thm:decide-one-bit (retyping); thm:determinacy (clause 1)",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "Bounded routing count collapses into the few-denominator class",
+   "closest_label": "thm:few-denominator",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "restatement note: |R| <= 2^a re-derives the 2^a denominator bound",
+   "closest_label": "lem:denominator-sharp",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement note: randomising at a controlled vertex never beats both pure choices",
+   "closest_label": "thm:determinacy",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement note: the product case |R| = 2^a (acyclic game digraph)",
+   "closest_label": "thm:avg-acyclic",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement note: rotor evaluation of a pair costs p <= 2^a chips, i.e. poly(N)2^a",
+   "closest_label": "thm:few-avg",
+   "class": "restatement"
+  }
+ ],
+ "findings": [
+  {
+   "severity": "minor",
+   "result_name": "The routing count is a common denominator, and equals a determinant",
+   "defect": "The comparison with lem:denominator-sharp is reported as a MEASUREMENT (\"det A_U divides |R|, equal in 192 of 253 pairs\") where an exact theorem is available in three lines and would have replaced the row of numbers: for every absorbing pair, det M = det A_U * det A_{U^c}, where A_{U^c} is the contracted matrix on the average vertices from which t1 is unreachable (the controlled rows are unitriangular because absorption forces the pair-subgraph on C to be acyclic, so eliminating them gives the paper's D-contracted matrix, which is block-triangular along U / U^c). This is exactly the missing statement 'why is det A_U sometimes strictly smaller'.",
+   "evidence": "My nov5.py: for 66 (game,pair) instances from random stopping games, det M = det A_U * det A_{U^c} = det A_{Vavg} in 66/66, exact rational arithmetic. The route's own numbers (equality in 192 of 253) are the instances with U^c empty."
+  },
+  {
+   "severity": "minor",
+   "result_name": "The routing count is a common denominator, and equals a determinant",
+   "defect": "Incomplete in-project attribution. The route attributes the routing IDENTITY to round 10's forest balance, but presents the determinant form as its own corollary; the determinant form was also part of that route and was root-agent-verified then, in the words 'N = 2^a det(I-P)' -- which is det M verbatim, since M = D(I-P) with D = 2 at average vertices and 1 at controlled ones. So both halves of results 1 and 2 are in-project prior art; what is new in both is only the import-free proof.",
+   "evidence": "/data/ssg-proof/rounds/round14/memory-snapshot.md, line 53 ('Forest-balance identity ... D = #acyclic routings ... Verified on 4401 absorbing profiles. NOT included in frontier.tex because it needs the all-minors matrix-tree theorem'), line 484 ('D = #acyclic routings = 2^a det(I-Q)'), lines 1112-1117 (root agent: confirmed on 800 instances; 'the route's downstream claim det A_U IS the forest count is FALSE')."
+  },
+  {
+   "severity": "minor",
+   "result_name": "The rotor sandwich (headline)",
+   "defect": "The headline sentence is true, proved and verified -- but it announces an object that the route's own result 6 proves inert for prob:main, and the report's framing ('the value of an SSG is the growth rate of a deterministic perfect-information game with no chance moves') does not carry that. The additive error A(G)/2 is Theta(N) on the hard instances while the decision resolution is 2^{-Theta(N)}, so the sandwich alone separates nothing; thm:fresh19-chips then proves the chip budget must be exponential, and the rotor game's own state space is (chips, position, 2^a rotor bits). The headline should say that the deterministic avatar exists and is provably exponential, not that the value is a growth rate.",
+   "evidence": "cor:fresh19-sandwich with A(G) <= a; thm:fresh19-chips (verified by me: RC(m) stopping, val = 1/2 - 2^{-(m+1)} at m=3,4,5, and 2*OUT_n > n up to n = 119 at m=4 and n = 503 at m=6, first failure at 8*2^m - 8, i.e. the proved bound 7(2^m-1) is conservative). Under rubric 3 the chip lower bound is a barrier whose model contains none of M1-M6, all-switches, def:bsi or R_BR: it bounds only the route's own object."
+  },
+  {
+   "severity": "note",
+   "result_name": "Exactness over a rotor period / Bounded routing count collapses into the few-denominator class",
+   "defect": "Two of the eight 'results' are one-line corollaries and inflate the count. thm:fresh19-period is two lines from thm:fresh19-identity and, as an algorithm, sits inside thm:few-avg (the route says so in its own restatements list). prop:fresh19-collapse is a three-line consequence of thm:fresh19-routing plus thm:few-denominator and thm:alphabet-iteration, and exhibits NO member of {nu(G) <= q(N)} outside the eight known polynomial classes; both belong in remarks, not in numbered propositions.",
+   "evidence": "The route's restatements field itself lists thm:few-avg against the period result; prop:fresh19-collapse's own statement ends 'No polynomial class outside the eight known ones arises from a bound on the number of routings.'"
+  },
+  {
+   "severity": "note",
+   "result_name": "The behavioural value is a ratio of multilinear forms, and the retyping identity",
+   "defect": "Clause (1) of the proposition ('randomising at a controlled vertex never beats both pure choices') is positional determinacy for behavioural strategies and is not new; the route discloses this in its restatements field but still carries the clause inside the result's statement. Only the Moebius/multilinear form and the retyping identity are new.",
+   "evidence": "thm:determinacy; the route's own restatement entry for thm:determinacy. The genuinely new clause (2) I verified independently: retyping a controlled vertex v as an average vertex gives value vector (Z^0 v^0 + Z^1 v^1)/(Z^0+Z^1), 66/66 instances, nov5.py."
+  }
+ ],
+ "verdict": "VERDICT SUSTAINED AS new-theorem, but the weight is not where the route puts it. Everything I could check is CORRECT: I re-derived, from my own code in exact arithmetic, the routing formula and the nonemptiness characterisation and det M = |R| (2596 pairs, 0 failures), the rotor sandwich (60 random stopping games with Min vertices, 2 rotor starts, n=1..8, 0 violations, 77 exact attainments), its attainment on E1 (M(n) = n/2+1 for even n <= 10, exactly n*val + A/2, against best positional ceil(n/2)), the RC(m) chip lower bound from the game (stopping; val = 1/2 - 2^{-(m+1)} at m=3,4,5; 2*OUT_n > n through n=119 at m=4 and n=503 at m=6), the period exactness and even the open gap (p | |R| in 232 fresh instances), and the retyping identity. The headline is a sentence the route proved -- a welcome break from round 18, where four headlines were false. DID IT CHANGE THE OBJECT? Yes: the counting measure on acyclic selections and the two-player rotor-router chip game appear nowhere in frontier.tex under any name (no 'rotor', 'chip', 'spanning', 'matrix-tree'; 'forest' only in prop:forest-k1). But the routing half is an in-project REDISCOVERY: it is round 10's forest balance, root-verified then on 800 and 4401 instances and kept out of the paper only because its proof needed the all-minors matrix-tree theorem, a fifth import (rounds/round14/memory-snapshot.md, lines 53, 484, 1112-1117). The route attributes the identity but not its determinant form; what is genuinely new in results 1-2 is the PROOF -- a term-by-term count plus linearity of a determinant in one row -- and that is exactly the thing the project has been missing for eight rounds. The rotor game is new to the project and, so far as the route's flagged-unchecked memory goes, the two-player version is new outside it (the single-walker discrepancy bound and the rotor-router group are classical and are attributed). NOT CIRCULAR, NOT VACUOUS: no target-equivalent oracle, no class claimed outside the eight, families built as games and re-checked at five sizes with a proved growth law, and the route PROVES its own collapse in both directions (prop:fresh19-collapse for the counting parameter, thm:fresh19-chips for the rotor game) rather than merely noticing it. THE REAL REMAINING GAP, stated more precisely than the route states it: the route names 'the period of Phi divides |R|', which is a rotor-router group-order question that would not touch prob:main; the actual gap is that nothing in the route bounds the deterministic error term A(G)/2 = (1/2) sum_u |w(u^0)-w(u^1)| by anything smaller than a/2, so no rotor schedule is known that resolves a value gap of 2^{-Theta(N)} within polynomially many chips -- and thm:fresh19-chips proves the naive chip budget cannot. INTEGRATION -- the paper gets BETTER, but only from the routing half. Integrate: fresh19:def-routing, fresh19:lem-nonempty, fresh19:thm-routing, fresh19:cor-den (rewritten with the exact factorisation det M = det A_U * det A_{U^c} in place of the 192/253 row of numbers), fresh19:cor-acyclic, clause (2) of prop:fresh19-mixed (the retyping identity), and above all fresh19:rem-attr, which must keep the round-10 priority and the Markov-chain-tree attribution. These close a documented hole and correct a false in-project claim. Integrate SHORT, as a closed route with the negative result attached: def-rotor, lem-terminate, thm-identity, cor-sandwich, prop-lossy, thm-chips -- one subsection, stated as a derandomisation that exists and is provably exponential, not as a direction. Do NOT integrate as numbered results: thm:fresh19-period and prop:fresh19-collapse (remarks), and drop clause (1) of prop:fresh19-mixed."
+}

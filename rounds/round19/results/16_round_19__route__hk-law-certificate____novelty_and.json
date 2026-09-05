@@ -1,0 +1,86 @@
+{
+ "target": "round 19, route \"hk-law-certificate\" — novelty and significance audit",
+ "sound": true,
+ "confidence": "high",
+ "verdict": "NEW-THEOREM, and the strongest of the round's realisability work I have seen: the route closes, by proof, exactly the gap the round-18 novelty audit named (\"not one Holt-Klee AUSO in any dimension is proved unrealisable by a nondegenerate one-player stopping SSG\"). hkc:obstruction (new-object, proved) and hkc:main (new-relation, proved) both survive my independent search of inventory.txt and frontier.tex. THE HEADLINE IS SUPPORTED WORD FOR WORD by hkc:main as proved — unlike four of round 18's — and it is the exact sentence the paper asks for: rem:hk-survey names s_0 = (8,9,10,11,13,12,14,15,7,6,4,5,3,2,1,0) as \"the smallest candidate for a further law\", says \"at m=4, then, Holt-Klee appears to be the whole condition for one-player realisability; this is a measurement\", and this route refutes that reading. DID THE OBJECT CHANGE? Yes, but mildly and honestly: the object is the facet datum — an (m-1)-cube orientation t together with the colouring chi = b_u by a frozen coordinate's preferred action — and its co-realisability, i.e. a demand on the chirotope of the value configuration. The paper owns the 2-dimensional case of exactly this object under the name \"forbidden pair\" (cor:b2-min, from lem:crossing(c)); the route's object is that one dimension up with an arbitrary colouring, and I verified it is STRICTLY stronger and not a disguise: my own re-implementation of the forbidden-pair test reproduces cor:b2-min's published counts (0 of 6113 Holt-Klee classes, 4365 of 6527 others) and does not fire on s_0, while the new datum kills 13 Holt-Klee classes. So no collapse. NOT CIRCULAR OR VACUOUS: no oracle, no target-equivalent hypothesis, no class; the obstructed datum is non-empty (43 distinct exact readout systems and 26 explicit games from 37 to 284 vertices realise t), and I re-verified the certificate on 100 exact systems, plus two 4-Max realised systems for the facet lemma. The falsifiability checks all pass and are the real evidence: the 13 excluded Holt-Klee classes lie inside the 162 the round-18 survey left unresolved and NONE of the 5951 it realised is excluded (I recomputed both from the census and the round-18 exact systems), and prop:hstar-one-eleven's realised m=5 height-11 one-player witness carries no obstructed datum. WHAT IT IS NOT: it is not a barrier (covers no mechanism M1-M6, def:bsi, all-switches), it bears on prob:main not at all, and it moves NO ceiling — all 13 excluded classes have height 2, 3 or 4, every Holt-Klee class of height 6 at m=4 is realised, and the 162 unresolved contain none of height 6, so h*_1(4)=6 and the four-ceiling table are untouched and the pivot is untouched as it stands. THE REAL REMAINING GAP, more precisely than the route states it: the route has no general criterion for co-realisability of a 3-dimensional datum — it forces the five determinant signs of ONE circuit by hand, case-splitting on delta_5 vs delta_6, and its automated sweep of the other 2024 data is unsound (two of its exclusions are classes round 18 realised), so 149 of the 162 unresolved Holt-Klee classes at m=4 remain open, nothing is proved at m>=5 beyond the automatic propagation of these 13 low-height classes by hkc:remark(f), and no obstructed datum is known on any tall (height >= 6) orientation, which is the only place where the law could reach the pivot. INTEGRATE: yes, the paper gets better. Integrate hkc:def-datum (definition), hkc:obstruction (theorem, with the Radon proof), hkc:realised (the non-emptiness + one printed game, as the verification of hkc:obstruction), hkc:main (theorem + the 17-class enumeration and the 13 representatives), and hkc:remark (b),(c),(e),(f). Do NOT integrate hkc:facet as a standalone lemma — fold it into the definition as a one-line proof step citing lem:subgame and lem:readout-reduce (its content is already inside thm:min-count's proof). Do NOT integrate scan2's numbers (the route agrees they are not evidence) nor the search-consistency margins (-7.3e-5 .. -1.1e-4), beyond at most one parenthetical. rem:hk-survey MUST be amended in the same commit: strike \"at m = 4, then, Holt-Klee appears to be the whole condition for one-player realisability\", replace \"the smallest candidate for a further law is the Holt-Klee class (8,9,...,0)\" by a pointer to hkc:main, and restate its count as 13 proved unrealisable and 149 unresolved; prop:m3-realised's closing clause and the summary/abstract sentence on m=3 equality should point here too.",
+ "novelty_table": [
+  {
+   "result_name": "hkc:facet — the facet lemma",
+   "closest_label": "lem:subgame (with lem:readout-reduce; the same freezing step is already performed inside thm:min-count's proof)",
+   "class": "restatement"
+  },
+  {
+   "result_name": "hkc:obstruction — a facet datum that is not co-realisable",
+   "closest_label": "lem:crossing(c) / cor:parity-unreadable",
+   "class": "new-object"
+  },
+  {
+   "result_name": "hkc:main — Holt-Klee is not sufficient at m = 4",
+   "closest_label": "rem:hk-survey (with prop:m3-realised and prop:oneplayer-lp)",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "hkc:realised — the obstructed datum is not empty (supporting proposition in RESULTS.tex, not in the results list)",
+   "closest_label": "prop:m3-realised",
+   "class": "measurement-only"
+  },
+  {
+   "result_name": "restatement declared by the route: lem:crossing",
+   "closest_label": "lem:crossing",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement declared by the route: cor:b2-min (forbidden-pair test re-implemented, counts reproduced)",
+   "closest_label": "cor:b2-min",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement declared by the route: cor:parity-unreadable (the species 'no affine functional has the sign of a prescribed colouring')",
+   "closest_label": "cor:parity-unreadable",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement declared by the route: the objective f(sigma) = sum_v val_sigma(v) induces the improvement orientation",
+   "closest_label": "prop:oneplayer-lp",
+   "class": "restatement"
+  }
+ ],
+ "findings": [
+  {
+   "severity": "minor",
+   "result_name": "hkc:facet — the facet lemma",
+   "defect": "Misclassified as new-relation against the wrong closest label. Its content follows from the paper in three lines, so under the round's rubric it is a RESTATEMENT and should be integrated as a definition plus a proof step, not as a lemma. The three lines: (1) by lem:subgame(a),(b) the subgame freezing u at a is stopping, its value vectors are the restrictions of x_sigma to the free coordinates, and its outmap is the facet s|_{H_{u,a}} — this exact step is already carried out inside the proof of thm:min-count ('freezing Max coordinates leaves a stopping SSG whose outmap is the face (lem:subgame)'); (2) by lem:readout-reduce and def:readout-system with r = 1, D_u = Psi_{u,1} - Psi_{u,0} is affine with zero coefficient at x_u, hence an affine functional of the free values; (3) by def:readout-system its sign at x_sigma is b_u(sigma). The route's declared closest_label, lem:crossing, is not the closest statement and the comparison it makes there is against a lemma that proves something else.",
+   "evidence": "frontier.tex l.13287 lem:subgame(a),(b); l.8918 lem:readout-reduce; l.9088 thm:min-count and its proof. Verified computationally on two round-18 realised 4-Max systems (my /tmp/claude-1000/-data-ssg-proof/c506180a-e393-4ffa-a18f-efc78c98397e/scratchpad/r19-audit-nov/aud3.py): the system's outmap equals the class representative, D_u has zero self-coefficient and sign(D_u(x_sigma)) = b_u(sigma) at all 16 sigma and all four u. The statement is true; it is simply not new. This costs the route nothing: hkc:obstruction and hkc:main stand on their own."
+  },
+  {
+   "severity": "minor",
+   "result_name": "hkc:def-datum / hkc:facet",
+   "defect": "Definitional wobble: co-realisability is defined in terms of a nondegenerate one-player stopping SSG WITH m-1 MAX VERTICES, but the facet lemma's proof produces a rational affine READOUT SYSTEM in m-1 variables, and lem:subgame's subgame still has m Max vertices with one inert. Turning that system back into a game needs thm:readout-realise(b) (dyadic and delta-leaky) or lem:rational-row, neither of which is invoked and neither of whose hypotheses is checked for the reduced system. The theorem is unaffected — hkc:obstruction is proved at the level of readout systems (its remark (d) lists exactly what it uses: the sign pattern, four order relations, nonnegative rows with zero self-entry, and stopping through lambda, mu > 0) — but the definition should be stated for affine readout systems, with the game version noted as a corollary under dyadic rounding.",
+   "evidence": "RESULTS.tex hkc:def-datum ('some nondegenerate one-player stopping SSG with m-1 Max vertices') against the proof of hkc:facet ('gives substochastic affine maps Psi'_{v,c} ... which is a stopping game with m-1 Max vertices by lem:subgame(a)'); def:readout-system and thm:readout-realise(b) at frontier.tex l.8961/l.8990 require dyadic, delta-leaky."
+  },
+  {
+   "severity": "note",
+   "result_name": "hkc:main — Holt-Klee is not sufficient at m = 4",
+   "defect": "Scope qualifier must be carried into the second clause of the headline. What is proved is that s_0 is not the improvement orientation of any NONDEGENERATE one-player stopping SSG; degenerate one-player games are untouched, and by thm:flat-resolution every all-switches run of a degenerate game is still a BA walk of an AUSO, so the theorem says nothing about which orientations arise as flat resolutions (compare sec:ties, thm:no-seven, which had to treat degeneracy separately at m = 4). The route's statements all carry 'nondegenerate'; the headline's trailing clause 'one-player realisability is strictly stronger than the Holt-Klee condition' drops it and should not.",
+   "evidence": "prop:oneplayer-lp (frontier.tex l.5729) bounds only nondegenerate games; rem:oneplayer-lp and sec:ties (l.7113 ff.) record that the hypothesis is genuine; thm:no-seven had to rule out ties separately at m = 4."
+  },
+  {
+   "severity": "note",
+   "result_name": "hkc:main — Holt-Klee is not sufficient at m = 4",
+   "defect": "Significance ceiling, which the route states correctly in its README but which should be stated in the paper too: all 13 excluded Holt-Klee classes have bottom-antipodal height 2, 3 or 4, and the 162 classes the round-18 survey left unresolved contain none of height 6, so the new law cannot move h*_1(4) = 6, cannot touch rem:four-ceilings, and does not reach the pivot (rem:blowup-realise). Its value to the programme is entirely prospective: it becomes a constraint on the lower-bound programme only if a datum is found on a TALL orientation at m >= 5.",
+   "evidence": "My own scan (aud2.py) of the 12640 class representatives: exactly 17 carry the datum, HK/height multiplicities (hk=1,h=2):3, (hk=1,h=3):6, (hk=1,h=4):4, (hk=0,h=4):4. rem:hk-survey: the 162 unresolved have heights 2 to 5 with counts 12, 56, 69, 25 and none of height 6, and all 56 Holt-Klee classes of height 6 are realised. Confirmed also on prop:hstar-one-eleven's m=5 height-11 realised witness: no obstructed datum on any 3-subcube with a frozen coordinate (aud6.py)."
+  },
+  {
+   "severity": "note",
+   "result_name": "prior_art (iii)",
+   "defect": "The route writes that the failure of the converse to Gaertner-Morris-Ruest at m = 4 is something it 'has not seen anywhere' and that the USO literature 'appears to leave open' which USOs are LP orientations of occupancy polytopes. From memory, unchecked against the source and with no web access: that the realisable (LP-induced) USOs form a STRICT subclass of the Holt-Klee USOs is, I believe, known in the USO literature (Develin on LP orientations of cubes; Gaertner's survey), so the general inclusion's strictness should be attributed as a possible rediscovery. What is unambiguously the route's own, and what the paper needs, is the SSG-specific statement — non-realisability by the occupancy polytope of a transient two-action MDP, i.e. by a nondegenerate one-player stopping SSG, with an explicit Holt-Klee witness at m = 4 — proved here from first principles with the certificate exhibited rather than a theorem invoked, so no fifth import. One hedged sentence of attribution is all that is needed.",
+   "evidence": "prior_art field of the route's return; the project's standing prior-art list already imports Gaertner-Morris-Ruest ('realisable USOs are Holt-Klee') and Schurr-Szabo."
+  },
+  {
+   "severity": "note",
+   "result_name": "gap / scan2 sweep",
+   "defect": "The route's own gap statement understates how far the METHOD is from the remaining 149 classes: the sweep that would have extended the law is unsound at its sample size (two of its exclusions, classes 411 and 425 of height 5, are classes round 18 realised), and the proof of hkc:obstruction is not mechanical — the fifth determinant needed a case split on delta_5 vs delta_6 along two different edge-paths, found by hand. So 'automate the circuit search over all 2024 canonical data' (next_steps 1) is an unproved plan, not a routine extension. The route is honest about the sweep; the paper should record only the one proved datum.",
+   "evidence": "README.md, scan2.json / scan2_killed.json, and the route's own gap field: 'at that sample size the test is UNSOUND and its numbers are not evidence — only the one datum proved here stands'."
+  }
+ ]
+}

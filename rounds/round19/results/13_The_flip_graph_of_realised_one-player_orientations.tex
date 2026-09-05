@@ -1,0 +1,529 @@
+%% Round 19, route "m6-walk".  The complete paste-ready text is in
+%% /tmp/claude-1000/-data-ssg-proof/c506180a-e393-4ffa-a18f-efc78c98397e/scratchpad/r19-m6-walk/RES_ALL.tex
+%% (= RES_A.tex + RES_C.tex + RES_B.tex, 588 lines).  It is reproduced here.
+%% ============================ (A) THE OBJECT =============================
+%% insert after prop:oneplayer-lp, or as a subsection before sec:readouts
+
+\begin{definition}[The flip graph and the realisation graph]\label{mw:def-graph}
+Let $\mathcal F_m$ be the graph whose vertices are the acyclic unique sink
+orientations of the $m$-cube and whose edges join two orientations differing
+in the direction of exactly one edge of the cube; write $d_{\mathrm{flip}}$
+for its graph distance and, for two outmaps $s,t$, $\Delta(s,t)$ for the set
+of cube edges on which they differ, so that
+$d_{\mathrm{flip}}(s,t)\ge|\Delta(s,t)|$. Let $\mathcal R_m$ be the set of
+improvement orientations (\Cref{def:improvement-uso}) of nondegenerate
+one-player stopping SSGs with $|\Vmax|=m$ --- equivalently, by
+\Cref{thm:readout-realise}, of dyadic $\delta$-leaky readout systems of order
+$(m,1)$ --- and let $W_m:=\mathcal F_m[\mathcal R_m]$ be the induced subgraph:
+the \emph{realisation graph}.
+\end{definition}
+
+\begin{theorem}[The single-edge reversal criterion]\label{mw:flip}
+Let $s$ be a unique sink orientation of the $m$-cube, let $i<m$, let
+$u\in\{0,1\}^m$, $u':=u\oplus e_i$, and let $t$ be $s$ with the edge
+$\{u,u'\}$ reversed, that is
+$t(u)=s(u)\oplus e_i$, $t(u')=s(u')\oplus e_i$ and $t=s$ elsewhere.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $t$ is a unique sink orientation if and only if
+      $s(u)\oplus s(u')=e_i$, that is if and only if
+      $u\oplus s(u)=u'\oplus s(u')$: the two endpoints of the reversed edge
+      have the same bottom-antipodal successor.
+\item When the criterion holds, $t=s\circ(u\,u')$, the transposition of the
+      two endpoints; the bottom-antipodal successor of every vertex other
+      than $u,u'$ is unchanged, while $u$ and $u'$ acquire the common
+      successor $z\oplus e_i$, $z$ being their common successor under $s$;
+      and the sink of $t$ is that of $s$ unless the latter is an endpoint of
+      the reversed edge, in which case it moves to the other endpoint.
+\item Acyclicity is a further, independent condition: if $s$ is acyclic and
+      $t$ is a unique sink orientation, then $t$ is acyclic if and only if
+      the only directed $s$-path from the tail of $\{u,u'\}$ to its head is
+      the edge itself. It can fail: on the $3$-cube the acyclic unique sink
+      orientation $s=(0,1,3,2,6,5,4,7)$ and the edge $\{1,5\}$ in direction
+      $2$ satisfy the criterion, and the reversal
+      $t=(0,5,3,2,6,1,4,7)$ is a \emph{cyclic} unique sink orientation.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) \emph{Sufficiency.} Assume $s(u)\oplus s(u')=e_i$, so $t(u)=s(u')$ and
+$t(u')=s(u)$, which is (b)'s first clause. We verify the Szab\'o--Welzl
+condition $(t(x)\oplus t(y))\cap(x\oplus y)\ne\emptyset$ for all $x\ne y$.
+For $x,y\notin\{u,u'\}$ nothing changed. For $\{x,y\}=\{u,u'\}$,
+$t(u)\oplus t(u')=e_i=u\oplus u'$. Let then $x=u$ and $y\notin\{u,u'\}$, and
+put $d:=t(u)\oplus t(y)=s(u')\oplus s(y)$. If $i\notin u'\oplus y$ then
+$u\oplus y=(u'\oplus y)\cup\{i\}\supseteq u'\oplus y$, and
+$d\cap(u'\oplus y)\ne\emptyset$ because $s$ is a unique sink orientation, so
+$d\cap(u\oplus y)\ne\emptyset$. If $i\in u'\oplus y$ then
+$u\oplus y=(u'\oplus y)\setminus\{i\}$; suppose $d\cap(u\oplus y)=\emptyset$.
+Then $d\cap(u'\oplus y)\subseteq\{i\}$ and, being nonempty, equals $\{i\}$.
+But $s(u)\oplus s(y)=d\oplus e_i$ and $i\notin u\oplus y$, so
+$(s(u)\oplus s(y))\cap(u\oplus y)=d\cap(u\oplus y)=\emptyset$, contradicting
+the unique sink condition for $s$ at the pair $(u,y)$. The case $x=u'$ is
+symmetric.
+
+\emph{Necessity.} Suppose $j\ne i$ lies in $s(u)\oplus s(u')$ and let $F$ be
+the $2$-face spanned by the directions $i,j$ through $u$; write its vertices
+$u$, $u'=u\oplus e_i$, $a:=u\oplus e_j$, $b:=u'\oplus e_j$. The restriction
+of a unique sink orientation to a face with free set $J$ is one --- for
+$x,y$ in the face, $x\oplus y\subseteq J$, so
+$((s(x)\cap J)\oplus(s(y)\cap J))\cap(x\oplus y)=(s(x)\oplus s(y))\cap(x\oplus y)\ne\emptyset$
+--- so $s|_F$ is a unique sink orientation of the square, and so is $t|_F$ if
+$t$ is one. By hypothesis
+exactly one of the two $j$-edges $\{u,a\}$, $\{u',b\}$ points towards
+$j$-level $1$; say $u\to a$ and $b\to u'$ (the other case is the same with
+$u$ and $u'$ exchanged). Then $u$ is a sink of $F$ never, $b$ never; $a$ is a
+sink of $F$ iff $b\to a$, and $u'$ is a sink of $F$ iff $u\to u'$. So $F$ has
+exactly one sink iff exactly one of ``$u\to u'$'' and ``$b\to a$'' holds; and
+reversing the edge $\{u,u'\}$ turns that exclusive disjunction into its
+negation. Hence $s|_F$ and $t|_F$ cannot both be unique sink orientations.
+
+(b) The identification $t=s\circ(u\,u')$ is immediate. For $x\notin\{u,u'\}$
+nothing changed. With $z:=u\oplus s(u)=u'\oplus s(u')$ one computes
+$u\oplus t(u)=u\oplus s(u)\oplus e_i=z\oplus e_i$ and
+$u'\oplus t(u')=u'\oplus s(u')\oplus e_i=z\oplus e_i$. The sink clause is
+$t(x)=0\Leftrightarrow s(x)=0$ for $x\notin\{u,u'\}$, and
+$t(u)=s(u')$, $t(u')=s(u)$.
+
+(c) Deleting the edge $\{u,u'\}$ leaves the same digraph in $s$ and in $t$,
+which is acyclic; so every directed cycle of $t$ uses the reversed edge, and
+$t$ has a directed cycle iff $s$ has a directed path from the tail of
+$\{u,u'\}$ to its head not using that edge. The stated example is checked
+directly: $s$ is an acyclic unique sink orientation of bottom-antipodal
+heights $(0,1,2,2,3,1,3,1)$, $s(1)\oplus s(5)=1\oplus5=4=e_2$, and $t$ is a
+unique sink orientation containing the directed cycle $1\to5\to7\to3\to1$.
+\end{proof}
+
+\begin{remark}\label{mw:flip-verified}
+All three clauses were verified exhaustively at $m\le3$: over all $744$
+unique sink orientations of the $3$-cube and all $8928$ single-edge
+reversals, the criterion of (a) agrees with the unique sink property in
+every case, the transposition and path clauses of (b) and (c) hold in every
+case, and exactly $48$ of the reversals turn an acyclic orientation into a
+cyclic one. This proves the assertion recorded as a measurement in
+\Cref{rem:pinned-escape} and adds the acyclicity clause it does not mention.
+\end{remark}
+
+\begin{definition}[Drive lines, fences, cells]\label{mw:def-line}
+Fix $m$ and $\delta>0$ and let $\Sigma_{m,\delta}$ be the set of one-player
+reduced readout systems $\Psi=(p^{v,a},q^{v,a})_{v\le m,\,a\in\{0,1\}}$
+(\Cref{lem:readout-reduce}, \Cref{def:readout-system} with $r=1$) with
+$p^{v,a}\ge0$, $p^{v,a}_v=0$, $q^{v,a}\ge0$ and
+$|p^{v,a}|_1+q^{v,a}\le1-\delta$; it is a convex polytope in
+$\mathbb R^{2m^2}$. For $\Psi\in\Sigma_{m,\delta}$ and
+$\sigma\in\{0,1\}^m$ let $P_\sigma$ be the matrix with rows $p^{v,\sigma(v)}$,
+$q_\sigma$ the vector with entries $q^{v,\sigma(v)}$,
+$x_\sigma:=(I-P_\sigma)^{-1}q_\sigma$ and
+\[
+  g_\Psi(\sigma,v)\;:=\;p^{v,1-\sigma(v)}\!\cdot x_\sigma+q^{v,1-\sigma(v)}-x_\sigma(v).
+\]
+$\Psi$ is \emph{nondegenerate} when no $g_\Psi(\sigma,v)$ vanishes, and then
+its outmap is $s_\Psi(\sigma)=\{v:g_\Psi(\sigma,v)>0\}$. A \emph{drive line}
+is a map $\Psi:[0,1]\to\Sigma_{m,\delta}$ whose coordinates are rational
+functions of $t$ without poles on $[0,1]$; a \emph{fence} is a $t$ at which
+$\Psi(t)$ is degenerate, and the \emph{cells} are the connected components of
+the complement of the fence set. A fence $t^{\ast}$ is \emph{simple} when
+exactly one cube edge is tied at it and the two gaps on that edge change sign
+there.
+\end{definition}
+
+\begin{lemma}[Ties are an edge phenomenon]\label{mw:tie-edge}
+For $\Psi\in\Sigma_{m,\delta}$, $\sigma\in\{0,1\}^m$ and $v\le m$, write
+$\sigma':=\sigma\oplus e_v$. Then $g_\Psi(\sigma,v)=0$ if and only if
+$x_\sigma=x_{\sigma'}$, if and only if $g_\Psi(\sigma',v)=0$; and otherwise
+$g_\Psi(\sigma,v)$ and $g_\Psi(\sigma',v)$ are nonzero of opposite signs.
+\end{lemma}
+
+\begin{proof}
+This is \Cref{lem:trichotomy} in the readout language. If $g_\Psi(\sigma,v)=0$
+then $x_\sigma$ satisfies $x_\sigma(w)=\Psi_{w,\sigma'(w)}(x_\sigma)$ for
+every $w$, so by uniqueness of the fixed point of the contraction
+$y\mapsto(\Psi_{w,\sigma'(w)}(y))_w$ we get $x_{\sigma'}=x_\sigma$, whence
+$g_\Psi(\sigma',v)=0$; and symmetrically. If $g_\Psi(\sigma,v)>0$ then the
+monotone map $F(y)_w:=\Psi_{w,\sigma'(w)}(y)$ satisfies $F(x_\sigma)\ge
+x_\sigma$ with strict inequality at $v$, so its fixed point $x_{\sigma'}$
+dominates $F(x_\sigma)$ and $x_{\sigma'}(v)>x_\sigma(v)$; were
+$g_\Psi(\sigma',v)>0$ the same argument with the roles exchanged would give
+$x_\sigma(v)>x_{\sigma'}(v)$, and $g_\Psi(\sigma',v)=0$ is excluded by the
+first part; so $g_\Psi(\sigma',v)<0$.
+\end{proof}
+
+\begin{theorem}[The cell theorem]\label{mw:cells}
+Let $\Psi$ be a drive line no gap of which vanishes identically.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item The fence set is finite, of cardinality at most $(m+1)m2^{m-1}$; on
+      each cell the outmap $s_{\Psi(t)}$ is constant, and it lies in
+      $\mathcal R_m$.
+\item If $t^{\ast}$ is a simple fence with tied edge $e$, the outmaps of the
+      two cells adjacent to $t^{\ast}$ differ exactly in the direction of
+      $e$; both endpoints of $e$ have the same bottom-antipodal successor in
+      each of the two, as \Cref{mw:flip}(b) requires.
+\item Consequently, if every fence of $\Psi$ is simple, the sequence of cell
+      outmaps of $\Psi$ is a walk in $W_m$, and the number of fences is at
+      least $|\Delta(s_{\Psi(0)},s_{\Psi(1)})|$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) $\det(I-P_\sigma(t))$ is a polynomial of degree at most $m$ which does not
+vanish on $[0,1]$, and by Cramer $x_\sigma$ has numerator of degree at most
+$m$; so $g_\Psi(\sigma,v)$ is a polynomial of degree at most $m+1$ over that
+determinant, with at most $m+1$ zeros; by \Cref{mw:tie-edge} the zeros come
+in edge-pairs, and the cube has $m2^{m-1}$ edges. Off the fences no gap
+vanishes, so the outmap is locally constant, hence constant on a cell. That
+outmap lies in $\mathcal R_m$: the conditions ``$\Psi$ realises $s$'' are
+finitely many strict inequalities, so they hold on a neighbourhood inside
+$\Sigma_{m,\delta/2}$, which contains dyadic systems, to which
+\Cref{thm:readout-realise}(b) applies.
+(b) Only the two gaps on $e$ change sign, so only $s(\sigma)$ and
+$s(\sigma\oplus e_v)$ change, and each in the coordinate $v$ only: that is
+the reversal of $e$. Both cell outmaps are acyclic unique sink orientations
+(\Cref{prop:allsw-auso}), so \Cref{mw:flip}(a) applies.
+(c) Immediate from (b) and \Cref{mw:def-graph}.
+\end{proof}
+
+\begin{theorem}[Monotone drive lines]\label{mw:monotone}
+Let $\Psi$ be an affine drive line for which either
+(i) exactly one row $(v_0,a_0)$ of $\Psi(t)$ is non-constant, or
+(ii) every $p^{v,a}$ is constant and only the $q^{v,a}$ move --- the shape of
+a driven block (\Cref{def:pinned}, \Cref{rem:pinned-escape}).
+Then every gap $g_{\Psi(t)}(\sigma,v)$ is a quotient of two affine functions
+of $t$ with denominator of constant sign on $[0,1]$ --- affine outright in
+case (ii). Hence each gap that is not identically zero vanishes at most once,
+each edge of the cube is tied at most once, the fences number at most
+$m2^{m-1}$, and if all of them are simple their number is \emph{exactly}
+$|\Delta(s_{\Psi(0)},s_{\Psi(1)})|$: the walk in $W_m$ that the line performs
+is a geodesic of $\mathcal F_m$ and no edge is reversed twice.
+\end{theorem}
+
+\begin{proof}
+Case (ii): $I-P_\sigma$ is constant and invertible, so $x_\sigma(t)$ is affine
+and so is $g(\sigma,v)$. Case (i): if $\sigma(v_0)\ne a_0$ then $x_\sigma$ is
+constant and $g(\sigma,v)$ is constant unless $(v,1-\sigma(v))=(v_0,a_0)$,
+when it is affine. If $\sigma(v_0)=a_0$, only the row $v_0$ of
+$I-P_\sigma(t)$ and of $q_\sigma(t)$ moves, and affinely; expanding along it,
+both Cramer determinants are affine, and the alternative rows are all
+constant since $(v_0,a_0)=(v,1-\sigma(v))$ would force $\sigma(v_0)=1-a_0$.
+A quotient of two affine functions with non-vanishing denominator has at most
+one zero unless it is identically zero; by \Cref{mw:tie-edge} an edge is tied
+exactly where either of its gaps vanishes. If every fence is simple, the
+fences are in bijection with the edges reversed, each reversed once, so the
+count equals $|\Delta|$.
+\end{proof}
+
+\begin{remark}[Verified exactly]\label{mw:verified}
+On the height-$11$ five-state system of \Cref{prop:hstar-one-eleven}: twelve
+$q$-lines (case (ii)), every gap verified affine in $t$, all $30$ to $62$
+fences simple, every cell an acyclic unique sink orientation, every step a
+single-edge reversal satisfying \Cref{mw:flip}(a), no edge reversed twice,
+and the fence count exactly $|\Delta|$ --- $41,35,62,59,59,55,31,35,58,30,49,45$.
+Six one-row lines (case (i)): the M\"obius property verified by the vanishing
+of the $4\times4$ determinant of the rows $(1,t,g,tg)$ at four sample points
+for all $160$ incidences; the fences, located by bisection to $2^{-60}$, are
+pairwise distinct, hence all simple, and number exactly $|\Delta|$:
+$6,5,5,16,12,28$. Repeated on the fresh and larger six-state witness of
+\Cref{mw:h13}: six $q$-lines with $83,106,149,107,83,117$ fences against the
+ceiling $m2^{m-1}=192$, all simple, all single-edge reversals meeting the
+criterion, no edge twice, every cell an acyclic unique sink orientation of
+height between $3$ and $13$, fence count $=|\Delta|$ in every case.
+\end{remark}
+
+\begin{proposition}[$W_3$ is connected]\label{mw:w3}
+$\mathcal R_3$ is exactly the set of Holt--Klee acyclic unique sink
+orientations of the $3$-cube, $656$ of the $728$ acyclic ones
+(\Cref{prop:oneplayer-lp}, \Cref{prop:m3-realised}), and the induced subgraph
+$W_3$ is connected, of minimum degree $3$, maximum degree $12$ and average
+degree $5.41$; the flip graph $\mathcal F_3$ of all $728$ is connected as
+well.
+\end{proposition}
+
+\begin{remark}[What is open about $W_m$]\label{mw:open}
+Is $W_m$ connected for $m\ge4$? Is every Holt--Klee class reachable in $W_m$
+from the trivial orientation --- the $162$ unresolved Holt--Klee classes of
+the $4$-cube of \Cref{rem:hk-survey} are exactly those no walk has reached?
+And is every pair of realised systems joined by a drive line all of whose
+fences are simple? The segment between two systems of $\Sigma_{m,\delta}$
+lies in $\Sigma_{m,\delta}$, which is convex, and each degeneracy locus
+$\{g(\sigma,v)=0\}$ is a smooth hypersurface ---
+$\partial g(\sigma,v)/\partial q^{v,1-\sigma(v)}=1$ identically, that row not
+entering $x_\sigma$ --- so what is missing for ``$W_m$ is connected'' is
+exactly a transversality statement: that a generic segment meets no two
+degeneracy loci at once. We do not prove it.
+\end{remark}
+
+\begin{corollary}[A one-player driven block never returns]\label{mw:drive-return}
+Let $G$ be stopping, $\mathfrak B\subseteq\Vmax$ with $|\mathfrak B|=m'$, and
+$\beta\notin\mathfrak B$ pinned at the payoff $\theta$ (\Cref{def:readout}).
+Suppose that on an interval of drive values the readouts of $\mathfrak B$ in
+the pinned game form a \emph{one-player} readout system whose coefficients on
+the $\mathfrak B$-values do not depend on $\theta$, only the constant terms
+doing so, and affinely. Then the drive line is of type (ii) of
+\Cref{mw:monotone}: every edge of the $m'$-cube ties at most once, the
+block's orientation performs a walk in $\mathcal F_{m'}$ that reverses no
+edge twice and therefore never returns to an orientation it has left, and the
+line has at most $m'2^{m'-1}$ fences and $m'2^{m'-1}+1$ cells.
+\end{corollary}
+
+\begin{proposition}[The Min vertex of the level-two realisation is needed for
+the drive line, not only for the outmap]\label{mw:b2-return}
+Recomputed here in exact arithmetic from the game of \Cref{prop:b2-realised}:
+the level-two block --- Max $c_1,c_2,c_3$ with the Min vertex $c_6$, driven by
+$\theta=y_{c_5}$, no inner row reading $c_4$ (\Cref{rem:b2-anatomy}) --- has
+on $[0,1]$ exactly the $14$ cells and $13$ fences of
+\Cref{rem:pinned-escape}, at the thirteen rationals listed there; every fence
+is simple; the outmap is $B^{1}=(0,1,3,6,7,4,5,2)$ on the first cell and
+$B^{1}(\cdot\oplus e_{\beta_1})=(7,4,5,2,0,1,3,6)$ on the ninth. The
+successive cells are
+\[
+ \begin{array}{ll}
+ (0,1,3,6,7,4,5,2)&(0,1,3,6,5,4,7,2)\\
+ (0,1,3,2,5,4,7,6)&(1,0,3,2,5,4,7,6)\\
+ (5,0,3,2,1,4,7,6)&(5,4,3,2,1,0,7,6)\\
+ (5,4,7,2,1,0,3,6)&(5,4,7,2,0,1,3,6)\\
+ (7,4,5,2,0,1,3,6)&(7,4,5,6,0,1,3,2)\\
+ (7,6,5,4,0,1,3,2)&(7,6,5,4,0,1,2,3)\\
+ (7,6,4,5,0,1,2,3)&(7,6,4,5,0,3,2,1)
+ \end{array}
+\]
+and the thirteen edges reversed, in order, are $(4,\beta_1)$, $(3,\beta_1)$,
+$(0,\mathrm{seed})$, $(0,\beta_1)$, $(1,\beta_1)$, $(2,\beta_1)$,
+$(4,\mathrm{seed})$, $(0,\alpha_1)$, $(3,\beta_1)$, $(1,\alpha_1)$,
+$(6,\mathrm{seed})$, $(2,\mathrm{seed})$, $(5,\alpha_1)$, where $(u,i)$ names
+the edge $\{u,u\oplus e_i\}$. The edge $\{3,7\}$ in the direction $\beta_1$
+is reversed \emph{twice}, at the second and at the ninth fence, and the flip
+distance between the first and the last cell is $11$ against $13$ fences.
+By \Cref{mw:drive-return} the block is therefore not a one-player driven
+block: its Min vertex $c_6$ is necessary already for the shape of the drive
+line. And this is not visible cell by cell: all fourteen cell outmaps are
+\emph{Holt--Klee} acyclic unique sink orientations of the $3$-cube, of
+heights $4,3,2,1,2,2,2,3,4,3,3,2,2,3$, so by \Cref{prop:m3-realised} each of
+them separately is the improvement orientation of a nondegenerate one-player
+stopping SSG and \Cref{thm:min-count} demands nothing at any single drive
+value ($\chi_{\mathrm{HK}}=1$ throughout). What forces the Min vertex is the
+\emph{return}: no one-player driven block can present an orientation, leave
+it and present it again.
+\end{proposition}
+
+\begin{proof}
+The rows used are the game's own: from the $138$-vertex game file of
+\Cref{prop:b2-realised} the first-passage law of each controlled action onto
+$C\cup\{t_1\}$ was recomputed here by solving the $130\times130$ rational
+system on the average vertices with $C$ and the sinks absorbing, and it is
+exactly the printed harmonic normal form.
+The block system, $y_{c_5}$ substituted, is a $4\times4$ linear fixed-point
+problem in $(y_{c_1},y_{c_2},y_{c_3},y_{c_6})$ whose matrix is independent of
+$\theta$ and whose right-hand side is affine in $\theta$, one such system per
+Min action; $\val_\sigma$ is the componentwise minimum of the two solutions
+(\Cref{cor:comparison}), so each block value is a minimum of two affine
+functions of $\theta$ and each gap is piecewise affine with at most two
+pieces --- which is exactly the room the extra reversal needs. The cells were
+found on the grid $\theta\in\frac1{4000}\mathbb Z\cap[0,1]$, which yields
+fourteen of them and thirteen transitions; each of the thirteen rationals
+printed in \Cref{rem:pinned-escape} was then confirmed exactly to be a fence
+--- the outmap is undefined there, some gap vanishing, and differs on the two
+sides --- and each falls in one of the thirteen grid intervals, so the
+correspondence is one-to-one and every fence is simple. The reported cell
+outmaps and the edge reversed at each transition are exact. Each of them is a
+single-edge reversal, as \Cref{mw:cells}(b) predicts, and each satisfies the
+criterion of \Cref{mw:flip}(a). Twelve edges of the $3$-cube against thirteen
+fences forces a repetition; the computation names it.
+\end{proof}
+
+%% ========================= (C) TIES AT $m=5$ =============================
+%% insert in sec:ties, after prop:hkfive and the paragraph that follows it,
+%% which it supersedes
+
+\begin{lemma}[The height-twelve orientations of the $5$-cube, and their ties]\label{mw:twelve-flat}
+There are exactly $480$ acyclic unique sink orientations of the $5$-cube whose
+bottom-antipodal walk from $0$ has length $12$, and none whose walk from $0$
+has length $13$; so, up to translation, these are all the orientations of
+bottom-antipodal height $12$, and $h^{\ast}(5)=12$ (\Cref{prop:hstar-five}).
+None of the $480$ is Holt--Klee (\Cref{prop:hkfive}). For each of them
+consider, as in \Cref{lem:seven-flat}, the partitions of the $5$-cube into
+subcubes satisfying
+(F1) $s(\sigma)\oplus s(\sigma')=\sigma\oplus\sigma'$ inside a block ---
+equivalently, $\sigma\oplus s(\sigma)$ constant on a block;
+(F2) $s(\sigma_t)\cap D_{A(\sigma_t)}=\emptyset$ at every walk vertex;
+(F3) the quotient digraph on blocks, arcs from the non-flat $s$-edges,
+acyclic;
+(F4) for every face $F$ with free set $J$, the set
+$\{\sigma\in F:(s(\sigma)\setminus D_{A(\sigma)})\cap J=\emptyset\}$ equal to
+$A\cap F$ for a single block $A$.
+Exactly $240$ of the $480$ admit a partition with a block of dimension at
+least $1$; in each such case the partition is unique, its only nontrivial
+block is the single edge $\{\sigma_0,\sigma_0\oplus e_x\}$ at the
+\emph{start}, and the run carries exactly one flat incidence, namely
+$(\sigma_0,x)$. The five values of $x$ occur $48$ times each.
+\end{lemma}
+
+\begin{proof}
+A finite exhaustive computation, of the same shape as
+\Cref{lem:seven-flat}'s. The $480$ orientations are produced by a depth-first
+search over the walk $\sigma_0=0,\dots,\sigma_{12}$ with $s(\sigma_t)=S_t$
+and $s(\sigma_{12})=0$, pruned by \Cref{cor:no-return}, \Cref{cor:law-b} and
+the Szab\'o--Welzl condition among the assigned vertices (the outmap of a
+unique sink orientation is a bijection), followed by a bijective completion
+of the remaining $19$ vertices under that condition and an acyclicity test;
+the same program at length $13$ returns nothing, which reproduces
+$h^{\ast}(5)=12$, and at $m=4$, length $7$ it returns the $48$ orientations
+of \Cref{lem:seven-flat} with $\sigma_0=0$. For each of the $480$ the
+candidate blocks are the subcubes on which
+$\sigma\mapsto\sigma\oplus s(\sigma)$ is constant, and all exact covers of
+the cube by them are enumerated and tested against (F2)--(F4). Rerun at $m=4$
+the same code returns \Cref{lem:seven-flat} verbatim: $24$ of the $48$, one
+partition each, the single edge $\{0,e_x\}$ at the start, one flat incidence
+$(0,x)$.
+\end{proof}
+
+\begin{theorem}[One player cannot reach twelve, with or without ties]\label{mw:no-twelve}
+No stopping SSG with $\Vmin=\emptyset$ and $|\Vmax|=5$ has an all-switches
+run of length $12$, degenerate or not. Hence
+\[
+  h^{\ast}_{1}(5)\;=\;h^{\ast,\mathrm{nd}}_{1}(5)\;=\;h^{\ast}_{\mathrm{LP}}(5)
+  \;=\;h^{\ast}_{\mathrm{HK}}(5)\;=\;11\;<\;12\;=\;h^{\ast}(5),
+\]
+and the one-player row of \Cref{rem:four-ceilings} reads $1,2,4,6,11$ for
+$m\le5$: ties do not beat the Holt--Klee ceiling at any $m\le5$, and the
+one-player ceiling is now known exactly at every $m\le5$.
+\end{theorem}
+
+\begin{proof}
+Suppose $G$ is such a game with run $\sigma_0,\dots,\sigma_{12}$. Its run
+vertices lie in pairwise distinct flat classes (\Cref{lem:flat-class}(c)), so
+$c_{A(\sigma_t)}:=\sigma_t$ is a consistent choice of corners; extend it
+arbitrarily and let $s'$ be the resolution of \Cref{thm:flat-resolution}. By
+\Cref{cor:ceiling-general} the run is the bottom-antipodal walk of $s'$ from
+$\sigma_0$, so $s'$ has height at least $12$, hence exactly $12$ by
+$h^{\ast}(5)=12$; translating by $\sigma_0$ we may assume $\sigma_0=0$, and
+then $s'$ is one of the $480$ of \Cref{mw:twelve-flat}. The flat partition of
+$G$ satisfies (F1)--(F4) with respect to $s'$ and $\sigma_0$: (F1) because
+$s'(\sigma)=S_A\cup(\sigma\oplus c_A)$ on a class $A$; (F2) because
+$s'(\sigma_t)=S(\sigma_t)$ is disjoint from $D(\sigma_t)$; (F3) by
+\Cref{lem:flat-class}(c); (F4) by \Cref{lem:face-sink}. By
+\Cref{mw:twelve-flat} either every flat class is a singleton --- $G$ is
+nondegenerate --- or the only nontrivial class is the edge
+$\{\sigma_0,\sigma_0\oplus e_x\}$ and the run carries exactly one flat
+incidence. In both cases \Cref{cor:one-tie} and \Cref{lem:tie-perturb}
+produce a generic linear functional on $X(G)$ whose orientation is an acyclic
+unique sink orientation satisfying Holt--Klee on every face and whose
+bottom-antipodal walk from $\sigma_0$ is the run, of length $12$; so
+$12\le h^{\ast}_{\mathrm{HK}}(5)=11$ (\Cref{prop:hkfive}) --- a
+contradiction. The displayed chain follows from
+$h^{\ast,\mathrm{nd}}_{1}\le h^{\ast}_{\mathrm{LP}}\le h^{\ast}_{\mathrm{HK}}$
+(\Cref{prop:oneplayer-lp}), from $h^{\ast}_{\mathrm{HK}}(5)=11$ and from the
+nondegenerate witness of \Cref{prop:hstar-one-eleven}.
+\end{proof}
+
+\begin{remark}\label{mw:no-twelve-scope}
+Three things separate. First, the enumeration replaces the sentence after
+\Cref{prop:hkfive} --- ``other height-$12$ classes of the $5$-cube exist and
+cannot be enumerated'' --- which is too pessimistic: the walk-then-complete
+search of that proposition's own proof enumerates all of them, $480$ with the
+run starting at $0$, in about a second. Second, what is excluded is a
+\emph{run} of length $12$; a degenerate game whose resolution has height $12$
+while all its runs are shorter is not excluded, exactly as in
+\Cref{thm:no-seven}. Third, the mechanism by which a tie could beat the
+Holt--Klee ceiling is now known to be blocked in the same way at $m=4$ and at
+$m=5$: at both sizes the only tie a maximal run can carry sits on a single
+edge at the start, where the coordinate functional $d(y)=y_{x,a}$ of
+\Cref{cor:one-tie} breaks it. At $m=6$ the argument would need the
+height-$16$ orientations of the $6$-cube, which this method cannot enumerate.
+\end{remark}
+
+%% ======================== (B) THE WALK AT $m=6$ ==========================
+%% insert after prop:hstar-one-eleven; update rem:four-ceilings
+
+\begin{proposition}[$h^{\ast,\mathrm{nd}}_{1}(6)\ge13$]\label{mw:h13}
+The one-player readout system on six states with denominator $2^{14}$,
+written as $(p^{v,a}_{x_0},\dots,p^{v,a}_{x_5}\,|\,q^{v,a})$ in units of
+$2^{-14}$ with the remaining mass going to $t_0$,
+\[
+ \begin{array}{r@{\quad}l@{\qquad}l}
+  x_0: & (0,15754,0,1,0,1\,|\,599) & (0,0,14102,0,1792,7\,|\,464)\\
+  x_1: & (16370,0,1,4,1,1\,|\,2) & (21,0,22,2,0,16223\,|\,11)\\
+  x_2: & (4172,432,0,4,9769,30\,|\,0) & (0,3,0,16282,0,1\,|\,73)\\
+  x_3: & (42,0,14,0,15158,167\,|\,29) & (0,0,1,0,1,16373\,|\,0)\\
+  x_4: & (3920,454,2027,1,0,0\,|\,6185) & (10809,793,23,1070,0,2\,|\,0)\\
+  x_5: & (5,114,1,16170,0,0\,|\,46) & (0,0,9906,270,1091,0\,|\,3206)
+ \end{array}
+\]
+--- every row substochastic with $p^{v,a}_v=0$ and a strict leak, the least
+leak being $5\cdot2^{-14}$ --- is, by \Cref{lem:dyadic-row}, the harmonic
+normal form of a nondegenerate one-player stopping SSG on $418$ vertices
+($6$ Max, $410$ average, two sinks) whose improvement orientation is
+\[
+ \begin{aligned}
+ s=(&8,7,6,5,28,33,35,34,20,41,43,42,0,45,47,46,\\
+    &56,61,62,63,12,57,58,59,4,23,22,21,16,49,50,51,\\
+    &32,39,38,37,52,11,10,9,40,15,14,13,60,1,3,2,\\
+    &24,31,26,29,36,27,30,25,48,55,54,53,44,19,18,17),
+ \end{aligned}
+\]
+an acyclic \emph{Holt--Klee} unique sink orientation of the $6$-cube of
+bottom-antipodal height $13$, attained at the four strategies $25,27,57,59$.
+Its all-switches run from $\sigma=25$ is
+$25,14,33,6,37,46,45,44,16,40,0,8,28,12$ with switched sets
+\[
+ \{0,1,2,4\},\{0,1,2,3,5\},\{0,1,2,5\},\{0,1,5\},\{0,1,3\},\{0,1\},\{0\},
+ \{2,3,4,5\},\{3,4,5\},\{3,5\},\{3\},\{2,4\},\{4\}.
+\]
+Hence $h^{\ast}_{1}(6)\ge h^{\ast,\mathrm{nd}}_{1}(6)\ge13$ and, by
+\Cref{prop:oneplayer-lp}, $h^{\ast}_{\mathrm{LP}}(6)\ge13$, improving both
+entries $\ge12$ of \Cref{rem:four-ceilings}. With
+\Cref{prop:oneplayer-plus-one} this gives $h^{\ast}_{1}(7)\ge14$,
+$h^{\ast}_{\mathrm{LP}}(7)\ge14$ and $h^{\ast}_{1}(m)\ge m+7$ for $m\ge6$
+(so $h^{\ast}_{1}(8)\ge15$, superseding \Cref{prop:hstar-one-eight}), and
+with \Cref{cor:stack-family} at $m_2=6$ it gives $h^{\ast}_{1}(7k-1)\ge13k$
+for every $k$ and
+$\liminf_m h^{\ast}_{1}(m)/m\ge\tfrac{13}{7}>\tfrac{11}{6}$.
+\end{proposition}
+
+\begin{proof}
+The system was found by a guided walk in $W_6$ (\Cref{mw:def-graph}) of the
+kind \Cref{mw:cells} licenses: from the realised height-$12$ orientation of
+the round-$18$ pool, the criterion neighbours of \Cref{mw:flip}(a) that are
+acyclic and Holt--Klee were ordered by outmap distance to a target, and the
+first that a warm-started optimisation over the $72$ row parameters
+re-realised was taken; the target was itself produced combinatorially, by a
+best-first search in the Holt--Klee part of $\mathcal F_6$ from the same
+start, which reached a height-$13$ orientation after $569$ expansions along a
+walk of $32$ flips. The height-$13$ system appeared after six realised steps.
+Verified from the game, in exact rational arithmetic: the game is
+one-player, every non-sink has out-degree two, its greatest trap is empty
+(\Cref{lem:trapchar}), so it is stopping; the average part is acyclic, so
+resolving it in topological order expresses every vertex as a substochastic
+affine function of the six Max values, and the resulting first-passage laws
+over $(x_0,\dots,x_5,t_1)$ are exactly the printed rows; the $64$ value
+vectors, from $64$ rational $6\times6$ systems, give the displayed outmap with
+no tied incidence, least margin
+$226793593012712537793143/3187971438880543888553754624$; the outmap is a
+unique sink orientation, acyclic, and Holt--Klee by the
+unit-vertex-capacity maximum-flow test of \Cref{cor:seven-two-player}; its
+bottom-antipodal height is $13$, and the longest all-switches run over all
+$64$ starting strategies is $13$. The run was recomputed from the game by
+applying the all-switches rule itself and coincides with the bottom-antipodal
+walk; the value vector is nondecreasing along it and strictly increasing
+somewhere at each round.
+\end{proof}
+
+\begin{remark}[Where the walk stopped]\label{mw:walk-state}
+(i) The best-first search in the Holt--Klee part of $\mathcal F_6$ reaches a
+height-$13$ orientation from the realised height-$12$ start along $28$ to $32$
+flips, at flip distance $18$; the walk in $W_6$ that realises the same
+passage took six steps, so the realised subgraph is not a bottleneck at this
+height. (ii) The walk was then continued at height $13$: $475$ distinct
+realised height-$13$ orientations were reached, and among the $14\,957$
+acyclic criterion neighbours of $329$ of them --- all the single-edge
+reversals that \Cref{mw:flip} permits --- \emph{none} has height $14$ (the
+height distribution of those neighbours being $8{:}4$, $9{:}163$,
+$10{:}339$, $11{:}1767$, $12{:}2107$, $13{:}10577$); and over all $475$, none
+of the $1.1\times10^{6}$ orientations at flip distance two has height $14$
+either. So every realised height-$13$ orientation this round reached is at
+flip distance at least three from height $14$. (iii) The orientation $s_6$ of
+\Cref{prop:hk-records}, the height-$14$ Holt--Klee blow-up
+$B_\varphi(s,13)$ of \Cref{prop:hk-doubling-measured}(b), sits at outmap
+distance $48$ ($24$ cube edges) from the height-$13$ witness after the best of
+the $46\,080$ cube automorphisms; the walks aimed at it closed to $24$ bits
+and stalled. Whether the doubling of \Cref{thm:blowup} at the step $4\to6$ is
+realised by one player is still open, and $h^{\ast}_{\mathrm{HK}}(6)\ge14$ is
+still one above the one-player row.
+\end{remark}

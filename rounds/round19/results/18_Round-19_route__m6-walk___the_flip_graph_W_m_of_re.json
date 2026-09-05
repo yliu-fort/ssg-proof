@@ -1,0 +1,135 @@
+{
+ "target": "Round-19 route \"m6-walk\": the flip graph W_m of realised one-player cube orientations, the single-edge reversal criterion, drive lines as walks, h*_1(5)=11 with ties, and a height-13 one-player witness at m=6.",
+ "sound": true,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "headline",
+   "defect": "The headline sentence packs three equalities that are ALREADY the title of a paper proposition into a claim presented as new. prop:hstar-one-eleven is literally titled \"$h^{\\ast,\\mathrm{nd}}_{1}(5)=h^{\\ast}_{\\mathrm{LP}}(5)=h^{\\ast}_{\\mathrm{HK}}(5)=11$\". The only new item in the chain is dropping the nondegeneracy superscript, i.e. h*_1(5)=11; the leading clause (\"no run of length 12, degenerate or not\") is the genuine new content and should stand alone. As written the headline overstates by three quarters of its displayed equation.",
+   "evidence": "frontier.tex l.8740: \\begin{proposition}[$h^{\\ast,\\mathrm{nd}}_{1}(5)=h^{\\ast}_{\\mathrm{LP}}(5)=h^{\\ast}_{\\mathrm{HK}}(5)=11$]\\label{prop:hstar-one-eleven}; rem:four-ceilings (l.7952) already prints the h*_LP and h*_HK rows as 11 at m=5 and flags only \"whether h*_1 <= h*_HK ... settled there for m<=4 only\"."
+  },
+  {
+   "severity": "major",
+   "result_name": "mw:w3 — the realisation graph is connected at m = 3",
+   "defect": "Classified new-object by the route; it is measurement-only. Its first clause (R_3 = the Holt-Klee AUSOs of the 3-cube) follows from prop:oneplayer-lp + prop:m3-realised in two lines, as the route itself writes in its argument field; the remainder (connectivity, min/max/average degree, 656 of 728) is a finite computation on which no theorem of the route depends — the soundness of the guided walk comes from mw:cells, not from connectivity, and the route's own gap says connectivity is unproved at every m >= 4 where it would matter. Under rule 3 (\"a new row of measurements is NEVER a result\") it should be a sentence in the verification field of mw:cells, not a result.",
+   "evidence": "Reproduced here: 728 acyclic USOs, 656 Holt-Klee, W_3 connected with mindeg 3, maxdeg 12, avgdeg 5.415, F_3 connected with avgdeg 5.67 (w3b.py). No result of the route cites mw:w3."
+  },
+  {
+   "severity": "major",
+   "result_name": "mw:flip — the single-edge reversal criterion",
+   "defect": "Probable unattributed rediscovery of standard USO theory. Clause (a) says: reversing {u, u+e_i} preserves the unique-sink property iff s(u) and s(u') agree in every direction other than i — i.e. iff the 1-face {u,u'} is COMBED (all edges leaving it parallel in each outer direction). That is the |J| = 1 case of the standard lemma that the orientation inside a combed face may be replaced by any USO of that face, which is the workhorse of the USO counting/construction literature (from memory, unchecked against the source: Matousek's count of USOs of the hypercube; Schurr–Szabo's composition of USOs). The route states \"I know of no statement of it for USOs\", and the paper's own prior-art list already carries Schurr–Szabo. Integrating it without that flag would repeat the project's recurring rediscovery defect.",
+   "evidence": "mw:flip(a) reads s(u) XOR s(u') = e_i, which is exactly \"the outmap's j-component is constant on the face for every outer direction j\", the combedness hypothesis; the two USOs of a 1-cube are the two directions, so \"replace by any USO of the face\" is exactly \"reverse or not\"."
+  },
+  {
+   "severity": "minor",
+   "result_name": "mw:flip — the single-edge reversal criterion",
+   "defect": "Novelty class is strengthening, not new-relation. rem:pinned-escape states the same equivalence verbatim — \"a single-edge reversal of a unique sink orientation stays one exactly when the two endpoints have the same bottom-antipodal successor (checked exhaustively at m<=3)\". The route removes the hypothesis \"checked at m<=3\" by giving a proof and adds the acyclicity clause (c); the proof is worth having, but this is the same statement with a weaker hypothesis, which is the rubric's word \"strengthening\". Clause (c) is one line (\"every cycle of t uses the reversed edge\") plus an example.",
+   "evidence": "frontier.tex l.6896-6900."
+  },
+  {
+   "severity": "minor",
+   "result_name": "mw:b2-return — the level-two block returns",
+   "defect": "Internal inconsistency in the paste-ready edge list. Recomputing the reversed edge at each fence FROM THE ROUTE'S OWN printed cell outmaps, fence 1 reverses the edge {4,6} in the same cube direction as fences 8, 10 and 13 — the direction the route names alpha_1 — but the list prints fence 1 as (4, beta_1). Everything else in the list checks out, including the double reversal of {3,7} in direction beta_1 at fences 2 and 9, so the conclusion is unaffected; the printed list must be corrected before integration.",
+   "evidence": "cells[0]=(0,1,3,6,7,4,5,2) vs cells[1]=(0,1,3,6,5,4,7,2) differ at u=4 and u=6 by XOR 2 (bit 1); cells[1] vs cells[2] differ at u=3 and u=7 by XOR 4 (bit 2) = the direction the route calls beta_1 (cells.py)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "mw:drive-return — a one-player driven block never returns",
+   "defect": "The result NAME drops the hypothesis that carries the whole statement, and the paper already contains a one-player parametric family that does return. prop:one-vertex-path exhibits a ONE-PLAYER stopping SSG with a single Max vertex whose orientation reverses Omega(sqrt(N/log N)) times along the stopping-probability path, \"and for k >= 2 it returns to a pair it has left\". No contradiction — there the parameter enters the coefficients multiplicatively, not the constants affinely — but \"a one-player driven block never returns\" as a slogan is false without the affine/theta-independent shape, and the same return-as-invariant argument is already the paper's device in cor:two-homotopies.",
+   "evidence": "frontier.tex l.10005-10018 (prop:one-vertex-path), l.10047 (cor:two-homotopies)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "mw:b2-return — the level-two block returns",
+   "defect": "Significance is narrower than the proposition's framing. That prop:b2-realised's game needs a Min vertex is not in doubt — it has one by construction, and thm:min-count already forces k >= log2 chi_HK(B^2) = 1 for B^2 itself, which the paper records as attained. What is actually proved is that no one-player driven block of the pinned affine shape traces THIS itinerary of fourteen orientations. That constrains a design pattern, not the realisability of B^2 or B^3, and the route derived no consequence for the one surviving corner of cor:escape-m3 (it is listed only as next step 4). The claim \"what forces the Min vertex is the return\" should read \"what a one-player block of this shape cannot reproduce is the itinerary\".",
+   "evidence": "thm:min-count (l.9088) with chi_HK(B^2)=2, k=1 attained (paper digest and rem:b2-anatomy); the route's next_steps item (4) defers the escape-route application."
+  },
+  {
+   "severity": "note",
+   "result_name": "mw:no-twelve / mw:twelve-flat",
+   "defect": "Genuinely new and worth having, but obtained by joining two computations the paper already owned rather than by the route's own object: prop:hkfive's PROOF already enumerates exactly the same 480 orientations (\"gives exactly 480 orientations ... finds none of them Holt-Klee\"), and the (F1)-(F4) test is lem:seven-flat's. The paper's sentence after prop:hkfive — \"other height-12 classes of the 5-cube exist and cannot be enumerated\" — is contradicted by the paper's own proof two paragraphs above it, and must be struck on integration. Note also that the flip graph W_m, the route's declared object, plays no part in this proof at all.",
+   "evidence": "frontier.tex l.7418-7432 (prop:hkfive's proof, the 480) and l.7440-7448 (\"This does not give h*_1(5) <= 11: other height-12 classes ... cannot be enumerated\"). I re-verified the 480 are distinct AUSOs of height exactly 12, none Holt-Klee (c480.py), and that the 240 admissible ones are exactly those with |s(0)| = 4, a structural split, not a truncation."
+  },
+  {
+   "severity": "note",
+   "result_name": "mw:h13 — h*_1^nd(6) >= 13",
+   "defect": "One rung on a record the paper itself proves cannot reach the pivot: cor:stack-family states \"the run of a stack is the sum of its blocks' runs, so its length per state never exceeds that of its best block, and stacking can never by itself make h*_1 superlinear\". The improvement 11/6 -> 13/7 in the liminf slope is 1.833 -> 1.857. The witness is real and the game is built (I verified it end to end), but its significance is a table entry, not a step towards a superpolynomial family.",
+   "evidence": "frontier.tex l.8666-8670; rem:four-ceilings rows h*_1(6) >= 12, h*_LP(6) >= 12, h*_1(7) >= 13 become >= 13, >= 13, >= 14."
+  },
+  {
+   "severity": "note",
+   "result_name": "route object",
+   "defect": "The declared object does not carry the route's own headline. W_m is used (i) as a heuristic to guide the search that found mw:h13 — whose correctness is established from the game, not from the graph — and (ii) in mw:b2-return. mw:no-twelve, the headline, uses none of it. So the answer to \"did the route change the object?\" is: partially, and the new object is a search device plus one narrow obstruction, not the engine of the route's main theorem.",
+   "evidence": "mw:no-twelve's argument cites only lem:flat-class, thm:flat-resolution, cor:ceiling-general, lem:seven-flat's (F1)-(F4), cor:one-tie, lem:tie-perturb, prop:hkfive — all the paper's."
+  }
+ ],
+ "novelty_table": [
+  {
+   "result_name": "mw:flip — the single-edge reversal criterion",
+   "closest_label": "rem:pinned-escape",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "mw:cells and mw:monotone — a drive line is a walk in the flip graph; a monotone drive line is a geodesic",
+   "closest_label": "rem:pinned-escape (with prop:pinned-level, thm:escape-level)",
+   "class": "new-object"
+  },
+  {
+   "result_name": "mw:drive-return and mw:b2-return — a one-player driven block never returns, and the level-two block does",
+   "closest_label": "thm:min-count (with prop:one-vertex-path, cor:two-homotopies)",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "mw:no-twelve — one player cannot reach twelve at m = 5, with or without ties (and mw:twelve-flat)",
+   "closest_label": "thm:no-seven",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "mw:h13 — h*_1^nd(6) >= 13, and the stacking slope rises to 13/7",
+   "closest_label": "prop:hstar-one-eleven (with rem:four-ceilings, cor:stack-family, prop:oneplayer-plus-one)",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "mw:w3 — the realisation graph is connected at m = 3",
+   "closest_label": "prop:m3-realised",
+   "class": "measurement-only"
+  },
+  {
+   "result_name": "restatement: the 480 height-12 orientations of the 5-cube and their non-Holt-Klee verdict",
+   "closest_label": "prop:hkfive",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement: no AUSO of the 5-cube has height 13, h*(5) = 12",
+   "closest_label": "prop:hstar-five",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement: the m = 4 flat-partition test (48 orientations, unique starting-edge block, one tie)",
+   "closest_label": "lem:seven-flat",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement: the thirteen exact fences and fourteen cells of the level-two block's drive line",
+   "closest_label": "rem:pinned-escape",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement: re-verification of the 260-vertex height-11 witness from its game",
+   "closest_label": "prop:hstar-one-eleven",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement: one-player realisability at a fixed value configuration decouples into 2m per-row LPs",
+   "closest_label": "thm:readout-realise",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement: the harmonic normal form of the 138-vertex level-two game recomputed from the game",
+   "closest_label": "prop:b2-realised",
+   "class": "restatement"
+  }
+ ],
+ "verdict": "VERDICT: new-theorem, but barely, and on a different result from the one the route leads with. The rubric's bar is met by mw:monotone/mw:drive-return with mw:b2-return (proved, new-relation: an obstruction to one-player realisation of an ITINERARY that is invisible pointwise, since all fourteen cells are Holt-Klee and thm:min-count therefore demands nothing at any drive value) and by mw:cells (proved, new-object: drive lines as walks in a graph the paper does not own). The two results the route sells — mw:no-twelve and mw:h13 — are strengthenings, honest, verified, and worth integrating, but neither uses the route's object.\n\nWHAT I VERIFIED MYSELF (all exact, in /tmp/claude-1000/-data-ssg-proof/c506180a-e393-4ffa-a18f-efc78c98397e/scratchpad/r19-audit-m6-walk-novelty): the printed six-state readout system reproduces the printed outmap exactly, with the printed least margin and least leak; that outmap is a USO, acyclic, Holt-Klee (my max-flow test validated against prop:hkfive's witness), of BA height 13 at {25,27,57,59}, with the printed run and switched sets; H13_m6_WITNESS_GAME.json is a genuine 418-vertex one-player out-degree-two game with EMPTY greatest trap whose first-passage rows, recomputed by my own code, equal the printed system — games_built is honestly satisfied, unlike round 18's eval-decision route; the m=3 flip census (744/728/8928/0 mismatches/48 acyclicity failures and the printed counterexample); W_3's connectivity and degrees; the 480 height-12 orientations, all distinct, none Holt-Klee; and the 240 admissible partitions, whose split from the other 240 is structural (|s(0)| = 4 versus s(0) = 31), not a truncation. From the route's own printed cell outmaps I confirmed the double reversal, the 13 single-edge reversals all meeting the criterion, and flip distance 11 against 13 fences — with one mislabelled coordinate at fence 1.\n\nIS IT CIRCULAR OR VACUOUS? No. No oracle, no target-equivalent hypothesis, no class without a member, no family measured without a proved law; the negative result mw:no-twelve is exhaustive rather than sampled, and the positive one is a built game.\n\nTHE REAL REMAINING GAP, more precisely than the route states it: the route's gap is transversality for connectivity of W_m, but connectivity is not the obstruction — even a connected W_m would prove nothing, because the route has no bound relating one flip in W_m to the change in the number of average vertices or the number of bits of the realising system, which is exactly the additive-cost question of rem:blowup-realise that the pivot needs; the walk remains a search heuristic whose reach the route measured (all 475 realised height-13 orientations lie at flip distance >= 3 from any height-14 one) and not a proof device, and nothing here bears on prob:main.\n\nINTEGRATE (the paper gets better): (1) mw:no-twelve and mw:twelve-flat into sec:ties after prop:hkfive, REPLACING the paragraph whose sentence \"other height-12 classes of the 5-cube exist and cannot be enumerated\" is contradicted by prop:hkfive's own proof; update cor:hstar-one and the h*_1 row of rem:four-ceilings to 1,2,4,6,11 and drop the \"settled for m<=4 only\" clause. (2) mw:h13 as a proposition after prop:hstar-one-eleven, with the game file; update rem:four-ceilings (h*_1(6),h*_LP(6) >= 13; h*_1(7),h*_LP(7) >= 14; h*_1(m) >= m+7 for m >= 6), supersede prop:hstar-one-eight, and raise cor:stack-family's liminf to 13/7. (3) mw:flip as a short lemma replacing rem:pinned-escape's \"checked exhaustively at m <= 3\", WITH a prior-art flag that it is the 1-face case of the standard combed-face reorientation lemma (from memory, unchecked). (4) mw:monotone, mw:drive-return and mw:b2-return as a remark of a few sentences in rem:pinned-escape's neighbourhood — the reversed-edge list (fence 1 corrected), the double reversal, the no-return corollary with its hypothesis in the statement, and the observation that thm:min-count is blind to it.\n\nDO NOT INTEGRATE: mw:w3 (measurement-only; at most one clause in a verification note), mw:cells(a)-(b) as a standalone theorem block (a two-sentence definition of the drive line plus mw:monotone carries everything that is used), and the def:mw:def-graph subsection — W_m earns a definition only if mw:monotone goes in with it. The headline must be rewritten to its one new clause: \"no stopping SSG with Vmin empty and |Vmax| = 5 has an all-switches run of length 12, degenerate or not, so h*_1(5) = 11\"."
+}

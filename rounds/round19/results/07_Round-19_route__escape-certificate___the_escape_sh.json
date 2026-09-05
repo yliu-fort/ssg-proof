@@ -1,0 +1,97 @@
+{
+ "target": "Round-19 route \"escape-certificate\": the escape shape as a semialgebraic feasibility set — novelty and significance audit",
+ "sound": false,
+ "confidence": "high",
+ "novelty_table": [
+  {
+   "result_name": "The domination lemma on the level-two drive line (lem:ec-domination)",
+   "closest_label": "cor:escape-m3",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "No escape extension of the level-two block doubles (thm:ec-main)",
+   "closest_label": "cor:escape-m3",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "The level theorem for the second escape shape (thm:ec-level2)",
+   "closest_label": "thm:escape-level",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "thm:escape-no-beta is sharp: the second shape revives the beta-doublings (cor:ec-no-beta-fails)",
+   "closest_label": "thm:escape-no-beta",
+   "class": "unproved"
+  },
+  {
+   "result_name": "What the doubling asks of a block's drive line (prop:ec-criterion)",
+   "closest_label": "thm:escape-mixed",
+   "class": "unproved"
+  },
+  {
+   "result_name": "RESTATEMENT declared by the route: the identity A' rho = (f10-t)+Delta(t-f00)",
+   "closest_label": "thm:escape-level",
+   "class": "restatement"
+  },
+  {
+   "result_name": "RESTATEMENT declared by the route: substochasticity of the published drive maps, so 'w_L < e' is linear",
+   "closest_label": "thm:escape-level",
+   "class": "restatement"
+  },
+  {
+   "result_name": "RESTATEMENT declared by the route: the 14 cells and 13 fences of the level-two drive line",
+   "closest_label": "rem:pinned-escape",
+   "class": "restatement"
+  },
+  {
+   "result_name": "IMPLICIT (inside thm:ec-level2): the outer square's eight bits are the four edge comparisons of the drives, hence acyclic with sink at the largest drive",
+   "closest_label": "thm:escape-no-beta",
+   "class": "restatement"
+  }
+ ],
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "What the doubling asks of a block's drive line (prop:ec-criterion)",
+   "defect": "The criterion is stated as an unconditional implication ('If M(y_sigma(t)) <= m(y_sigma(t)) for every sigma and every t in the low windows, then no generalised escape extension of B realises the corresponding doubling') but its proof silently assumes the configuration-dependent fact that the two maps the identities of thm:ec-identity PAIR are one in LOW and one in HIGH. As literally quantified the proposition contradicts the route's own GAP: over the same block, with the exchanged labelling and A''>0, the route states that exactly one drive is confined to HIGH (so the hypothesis about sigma_lo, b, sigma_hi, a holds with the same numbers) and M <= m holds over that block (verified, margin 0.0097), yet the route declares z=8 and z=24 undecided there. So either prop:ec-criterion is false as stated or the gap is not a gap; the honest reading is that it is unproved as stated. Its salvageable content is the LP-duality half only: M(y) <= m(y) iff every substochastic map with Phi_{sigma_lo} < b is pointwise below every one with Phi_{sigma_hi} > a at y.",
+   "evidence": "Route statement and argument of prop:ec-criterion vs the route's own gap text ('exactly one of the four drives is confined to the HIGH windows and it is not the one the identities pair with the layer-(0,0) drive ... so lem:ec-domination does not bite'). I recomputed M and m independently by vertex enumeration (no reuse of the route's simplex): /tmp/claude-1000/-data-ssg-proof/c506180a-e393-4ffa-a18f-efc78c98397e/scratchpad/r19-audit-escape-certificate-novelty/indep_crit.py reproduces M <= m at all 104 (sigma,t) with the identical worst margin 1204786569985001139227975/123658871785688451847910352 at sigma=4, t=T — so the hypothesis really does hold over this block in every configuration, including the open one."
+  },
+  {
+   "severity": "major",
+   "result_name": "thm:escape-no-beta is sharp: the second shape revives the beta-doublings (cor:ec-no-beta-fails)",
+   "defect": "The result's name and its opening sentence ('The hypothesis of thm:escape-no-beta that beta's action 1 read only the block and constants cannot be dropped') claim that the CONCLUSION of thm:escape-no-beta fails without the hypothesis. Nothing of the kind is exhibited: no block, no parameters and no game realise a beta-translate with A''>0, and over the only block examined the conclusion still holds by the route's own thm:ec-main. What is proved is that the three-comparison tournament ARGUMENT stops applying because w01 and w11 separate — a statement about a proof, not about sharpness. This is exactly the round-18 failure mode (a headline-grade claim stronger than the mathematics under it), here at result level.",
+   "evidence": "Route result 4 statement and argument; ec_final.py step [6] prints only 'the tournament of the four drives is consistent at every sigma', i.e. the obstruction vanishes, and then step [6] itself excludes all four z over this block. A sharpness claim needs an instance where the conclusion fails; games_built lists two second-shape games, neither of which realises any translate."
+  },
+  {
+   "severity": "minor",
+   "result_name": "The level theorem for the second escape shape (thm:ec-level2)",
+   "defect": "Classified by the route as new-object; it is a strengthening of thm:escape-level (the same theorem with A''=0 relaxed to A''>=0), and its most emphasised clause — the eight outer bits are the four edge comparisons of the drives, so the outer square is potential-induced and acyclic — is a restatement of the argument already written out inside thm:escape-no-beta's proof at frontier.tex l.6900 ('By lem:switch an improving switch raises every value, so along each edge of the outer square y_beta is nondecreasing in the improving direction, and with nondegeneracy strictly'). Three lines: (i) lem:switch gives that switching alpha (or beta) in the improving direction on an edge of the outer square raises every value, y_beta included; (ii) the drive on layer L is w_L, so the bit on each of the four edges is the comparison of the two endpoint drives; (iii) antipodal bits are complementary and a potential-oriented square is acyclic. The genuinely new algebra is one substitution (A' -> A'', C_beta -> R_beta, q_B -> q'_B) in thm:escape-level's own (0,0)-layer computation, giving the factor 1/(1-AA'') at layer (0,1), plus the fourth substochasticity estimate. It is worth having, but not as a new object.",
+   "evidence": "frontier.tex l.6872-6924 (thm:escape-no-beta and its proof), l.6806-6871 (thm:escape-level and its proof); route's own restatements field already concedes the substochasticity and the first identity to thm:escape-level."
+  },
+  {
+   "severity": "minor",
+   "result_name": "No escape extension of the level-two block doubles (thm:ec-main)",
+   "defect": "Scope inflation outside the theorem statement. next_steps item 3 asserts 'over this block every escape shape, pinned or not, single- or double-reading, is now dead'. That is false twice: (a) it is contradicted by the route's own GAP (the exchanged labelling with A''>0 leaves z=8 and z=24 undecided over this very block); (b) the shape in which ALPHA's switch action reads y_beta (alpha: (1) A''' y_beta + R_alpha.y + q'_A) is covered neither by def:escape-ext nor by the route's def:ec-escape2, so the classification of outer-pair shapes is not exhaustive. The theorem itself is correctly scoped; the summary sentence must not be imported.",
+   "evidence": "Route next_steps 3 vs route gap; def:escape-ext (frontier.tex l.6791) and the route's def:ec-escape2 both fix alpha: (1) R_alpha.y + q'_A with no y_beta term."
+  },
+  {
+   "severity": "note",
+   "result_name": "The level theorem for the second escape shape (thm:ec-level2)",
+   "defect": "next_steps item 4 proposes testing whether the potential-induced acyclicity of the outer square survives when the outer pair is a Max and a Min vertex, 'which would be the first place a Min vertex could break the acyclicity of an outer square'. The paper already settles this: by thm:profile-uso the profile cube of a profile-nondegenerate stopping SSG is a unique sink orientation, every face of a USO is a USO, and no orientation of the 2-cube that is a directed 4-cycle has a sink at all — so a mixed Max/Min outer square can never be cyclic. The place where a Min coordinate does buy cyclicity is the whole profile cube (the section at frontier.tex l.11913 and prop:projection), not a 2-face.",
+   "evidence": "frontier.tex l.9110 (thm:profile-uso), l.9189 (prop:projection), l.11913 ('The induced orientation of the two-player cube can be cyclic')."
+  },
+  {
+   "severity": "note",
+   "result_name": "route framing: 'the escape shape as a semialgebraic feasibility set'",
+   "defect": "Rule 0 (change the object) is not met. The four drive maps (c_L,d_L), their substochasticity and the drive line are objects thm:escape-level and rem:pinned-escape already own; the route re-coordinatises thm:escape-level's parameter space and observes that the fixed-point windows are linear in (c,d), which turns the feasibility question into finitely many LPs. That is a good technique and it delivers the theorem, but it is a continuation of the round-18 drive-line route along that route's own next_steps item 1 ('close the gap by an exact infeasibility certificate rather than a search'), not an attachment of the problem to a new object. The collapse to the paper's existing framework is not proved as a result; it is the route's method.",
+   "evidence": "/data/ssg-proof/rounds/round18/results/07_The_drive_line_of_a_driven_block__the_orientations.json: its gap is verbatim the case thm:ec-main closes, and its next_steps 1 prescribes the certificate."
+  },
+  {
+   "severity": "note",
+   "result_name": "games_built",
+   "defect": "No defect — recorded as a positive check. The required games exist and I verified them independently of the route's code: EC_SHAPE2_GAME.json (138 vertices, 5 Max, 1 Min, 130 avg) and EC_SHAPE2B_GAME.json (149 vertices) are stopping, have ZERO tied incidences, and their 32-entry improvement outmaps (computed with val_sigma as the componentwise minimum over all positional tau) match the route's reported outmaps exactly; the control B2_small_GAME.json reproduces B^2 = (7,4,5,2,0,1,3,6,24,9,27,14,31,28,29,10,16,25,19,30,23,20,21,26,8,17,11,22,15,12,13,18) as published.",
+   "evidence": "/tmp/claude-1000/-data-ssg-proof/c506180a-e393-4ffa-a18f-efc78c98397e/scratchpad/r19-audit-escape-certificate-novelty/indep_game.py and its output; ec_final.py runs end to end with ALL CHECKS PASSED."
+  }
+ ],
+ "verdict": "VERDICT UNDER THE RUBRIC: new-theorem, qualified — the route has one proved result of class new-relation (thm:ec-main, resting on lem:ec-domination), and that result closes a case the paper explicitly declares open (cor:escape-m3: \"What is not decided is z=8 with R_alpha - C_alpha mixed in sign\"). Two of the five reported results, however, do not hold as stated (prop:ec-criterion, cor:ec-no-beta-fails), and one is misclassified (thm:ec-level2 is a strengthening, not a new object), so the route is weaker than its own return.\n\nDID IT CHANGE THE OBJECT? No. The object is thm:escape-level's parameter space re-coordinatised by the four layer drive maps (c_L,d_L); the drives, their substochasticity and the drive line are all already the paper's (thm:escape-level's own proof and rem:pinned-escape's fence list). The one real technical move — lem:ec-substochastic, which makes \"w_L(sigma) < e\" the LINEAR inequality c_L.y_sigma(e)+d_L < e and so turns a semialgebraic feasibility question into a finite union of LPs — is a two-line trick with real force, not an object. The route is the round-18 drive-line route continued along that route's own next_steps item 1; under round 19's rule 0 that is a continuation, and it should be reported as one.\n\nCIRCULAR OR VACUOUS? Neither. No oracle, no target-equivalent hypothesis, no class claim. The exclusion is non-vacuous in the paper's own sense: for z=8 (both shapes) and z=24 (second shape) the tournament is consistent and the inner windows are nonempty, so nothing but the certificate excludes them; the base LP system is feasible, so no Farkas certificate is vacuous. I reproduced the central computation independently, by vertex enumeration rather than their simplex, and got their exact margin.\n\nHEADLINE AUDIT. The headline is, for once, a sentence the route proved, and it is correctly scoped (this block, this labelling, the two shapes) — a rare pass after round 18. Two caveats: it inherits whatever the correctness audit says about the window/identity chain (my check confirms the domination core and the games, not the LOW/HIGH derivation), and the route's next_steps 3 restates it far more broadly (\"over this block every escape shape ... is now dead\"), which is false by the route's own gap. The root agent must take the headline, not the next_steps sentence.\n\nTHE REAL REMAINING GAP, more precisely than the route states it: over the published level-two block the doubling is now excluded only for outer pairs in which the block's drive is the target's beta_2 coordinate AND alpha's switch action does not read beta; the exchanged labelling with A''>0 is open (the route's stated gap), the shape with alpha's switch action reading y_beta is not even defined, and — the question rem:pinned-escape actually poses — every driven block other than the published one is untouched; prop:ec-criterion cannot be turned on those blocks until the missing hypothesis (that the two identity-paired drives are one in LOW and one in HIGH) is put into its statement.\n\nINTEGRATE OR NOT (paper better, on balance, with edits). Integrate: (1) lem:ec-substochastic, as a short lemma after thm:escape-level, with the route's own concession that thm:escape-level's proof already contains |c|_1 < 1 and the fixed-point equivalence — the new content is the fourth map and the sharpened |c|_1 + d < 1; (2) thm:ec-identity, two lines, needed downstream; (3) lem:ec-domination and thm:ec-main, placed immediately after cor:escape-m3, with cor:escape-m3's closing sentence amended from \"What is not decided is z=8 with R_alpha-C_alpha mixed in sign\" to name the surviving case (exchanged labelling, A''>0) — this is the paper's first exact infeasibility certificate in the realisation programme and it is worth having; (4) thm:ec-level2, as a strengthening of thm:escape-level (a numbered variant or an extended remark), with the outer-bit clause credited to lem:switch exactly as thm:escape-no-beta's proof already argues it, and with the \"potential-induced, hence acyclic\" sentence dropped or credited (it is lem:switch, and for the whole cube prop:allsw-auso). Do NOT integrate: (5) prop:ec-criterion as stated — it would contradict the route's own gap; at most integrate its correct half (the LP-duality identity M(y) <= m(y) iff every low map is pointwise below every high map at y) as a lemma; (6) cor:ec-no-beta-fails under its present name and first sentence — keep only a remark that thm:escape-no-beta's tournament argument does not survive A''>0, listing the four total orders of the drives, and say explicitly that whether the CONCLUSION survives is not known; (7) the two new games as propositions — they realise orientations of no interest (BA heights 9 and 8) and belong in the verification parenthetical of thm:ec-level2, where the route already puts them; (8) next_steps 3's sentence, in any form."
+}

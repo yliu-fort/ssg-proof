@@ -1,0 +1,98 @@
+{
+ "target": "route \"promise-gap\" (round 19): The promise problem Gap_eps / App_eps / Ord_eps for eps = 1/poly — novelty and significance audit",
+ "sound": false,
+ "confidence": "high",
+ "novelty_table": [
+  {
+   "result_name": "The middle of the eps-ladder collapses (thm:pg-collapse, lem:pg-maj, lem:pg-levels)",
+   "closest_label": "rem:eps-ladder",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "Acyclic amplifiers pay a square (thm:pg-influence, thm:pg-acyclic)",
+   "closest_label": "rem:no-amplification",
+   "class": "new-object"
+  },
+  {
+   "result_name": "The ruin amplifier is exact for every plug (prop:pg-ruin)",
+   "closest_label": "rem:no-amplification",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "No value-iteration scheme approximates: the well (def:pg-well, prop:pg-well, thm:pg-schemes)",
+   "closest_label": "thm:vi-lower",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "The up-rounded grid iteration returns the trivial bound below the denominator (rem:pg-grid)",
+   "closest_label": "cor:grid-iteration",
+   "class": "measurement-only"
+  },
+  {
+   "result_name": "restatement: cor:grid-iteration (round count + upper bound of the up-rounded iteration)",
+   "closest_label": "cor:grid-iteration",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement: amplification at eps = 4^{-a} is dominated by thm:few-avg",
+   "closest_label": "thm:few-avg",
+   "class": "restatement"
+  },
+  {
+   "result_name": "restatement: amplifying a gap delta costs Theta(1/delta) context vertices",
+   "closest_label": "rem:no-amplification",
+   "class": "restatement"
+  }
+ ],
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "The middle of the eps-ladder collapses (thm:pg-collapse)",
+   "defect": "The headline result is published prior art that THIS PROJECT HAS ALREADY RULED PRIOR ART ONCE, and the route's own brief named the source and told it to address it. Round 12's route \"approx-scheme\" — whose brief was verbatim \"the real question is poly(N, 1/eps), i.e. whether SSG-Value has gap amplification\" — produced approx:collapse, and its audit ruled: \"approx:collapse IS PRIOR ART -- Dai & Ge, 'New Results on Simple Stochastic Games' ... The collapse itself is real but published.\" Round 18's weakest-oracle audit flagged the same debt again. The round-19 brief handed to this route says: \"Prior art from memory, unchecked: Condon 1992 on the value gap; Dai-Ge on approximation collapse at exponentially small eps --- say what you remember and flag it.\" The route's prior_art field attributes Valiant (majority tower), Margulis-Russo, Holt-Klee-style folklore and Haddad-Monmege, but never names Dai-Ge, never mentions the round-12 route, and instead asserts \"I do not recall ... any published proof that the constant-gap promise version is as hard as the exact problem; the collapse of the 1/poly regime to the constant regime is what I believe to be new.\" Under the round's rule (\"a rediscovery presented as new is a defect\") this costs the headline its novelty claim. What IS new here is narrower and should be the headline instead: round 12's collapse was struck because its reductions handed the oracle a NON-STOPPING game and its load-bearing identity val(A[G]) = f_A(val_G(v0)) was \"never stated, never proved, and false in general\"; this route repairs exactly those two defects (an acyclic four-call context, so lem:gate applies and the composite is stopping, and the identity proved with q eliminated).",
+   "evidence": "/data/ssg-proof/rounds/round14/memory-snapshot.md l.1679-1683 and l.1751-1753; l.1576 (round-12 approx-scheme brief). /data/ssg-proof/rounds/round19/routes19.txt l.407-409. /data/ssg-proof/rounds/round18/results/05_route__weakest-oracle___round_18___the_hierarchy_o.json l.63-64 (the same debt flagged a round earlier). Route JSON prior_art item (7)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "The middle of the eps-ladder collapses (thm:pg-collapse)",
+   "defect": "Headline overreach in one word. \"The open middle of the eps-ladder of rem:eps-ladder is a single problem\" invites the reading that rem:eps-ladder's open question is closed. That question is not the internal one: rem:eps-ladder ends \"the question is exactly whether prob:main reduces in polynomial time to its own promise version with gap 1/poly(N), or 1/4\" — the reduction the route proves is between the two clauses of the trailing \"or\", not the question itself. Whether the middle is target-equivalent or polynomial is untouched, exactly as the route's own rem:pg-collapse concedes (\"It does not touch the exact problem\"). Round 18 lost four headlines over sound mathematics for less. The honest headline is: all Gap_eps, App_eps, Ord_eps with eps >= 1/poly are one problem, and rem:eps-ladder's trailing disjunction is therefore harmless.",
+   "evidence": "frontier.tex l.13022-13025 (rem:eps-ladder's closing sentence) against the route's headline field and pg.tex rem:pg-collapse."
+  },
+  {
+   "severity": "minor",
+   "result_name": "The up-rounded grid iteration returns the trivial bound below the denominator",
+   "defect": "Reported in the `results` array with novelty \"new-relation\" and status \"gap\", while the route simultaneously lists cor:grid-iteration in `restatements` for the same content. Its proved content IS cor:grid-iteration's mechanism (extensive rounding plus cor:comparison) plus a two-line identity that holds only for player-free games; everything else is a table and a gap sentence. Under rule 3 (\"a new row of measurements is NEVER a result\") it is measurement-only and belongs in the verification field of thm:pg-schemes, not in results. It also cannot contribute to the new-theorem verdict.",
+   "evidence": "Route JSON results[4] (status \"gap\", novelty \"new-relation\") duplicating restatements[0]; frontier.tex l.2623 cor:grid-iteration and its following remark."
+  },
+  {
+   "severity": "minor",
+   "result_name": "The up-rounded grid iteration returns the trivial bound below the denominator (rem:pg-grid prose)",
+   "defect": "The paste-ready LaTeX overstates the measurement and contradicts the route's own JSON. pg.tex rem:pg-grid says \"On WELL^-(K) ... it was computed exactly that y_D(v0) = 1 --- so the bound is off by 3/4 ... for every mesh D <= 2^{cK} tried\". I re-ran it exactly: on WELL^-(6) (w* = 1/4) the least fixed point is y_D(v0) = 13/D for every D from 14 to 26, e.g. 13/20 and 13/26 = 1/2 — not 1. The JSON's own wording (\"y_D(v0) >= 1/2\") is the correct one and matches my run; the LaTeX must be corrected before any integration.",
+   "evidence": "My /tmp/claude-1000/-data-ssg-proof/c506180a-e393-4ffa-a18f-efc78c98397e/scratchpad/r19-audit-promise-gap-novelty/mygrid.py, exact Fractions, WELL^-(6): D=14..26 gives y_D(v0)=13/D; D=26 -> 1/2, D=27 -> 13/27. pg.tex l.~395-400."
+  },
+  {
+   "severity": "note",
+   "result_name": "Acyclic amplifiers pay a square (thm:pg-acyclic)",
+   "defect": "Significance, not soundness. This is a barrier whose model contains none of M1-M6, all-switches, def:bsi or R_BR, and by rem:no-amplification's own closing sentence none of the paper's own transformations either (\"every transformation this document performs ... reads the input's edges and is outside their scope\"). In the only regime the target cares about, delta = 4^{-a}, both the bound it sharpens (delta^{-1}) and the bound it proves (delta^{-2}) are exponential and equally useless; its actual bite is confined to comparing two black-box amplifiers with each other, i.e. it says the route's own majority tower cannot be improved below delta^{-2}. The influence machinery itself (Margulis-Russo plus Bessel/Cauchy-Schwarz giving total influence <= sqrt(s)) is textbook Boolean analysis, which the route does attribute.",
+   "evidence": "frontier.tex l.4478-4483 (rem:no-amplification's scope sentence); pg.tex rem:pg-acyclic; the round's rule 3 on barrier models."
+  },
+  {
+   "severity": "note",
+   "result_name": "route object (rule 0)",
+   "defect": "The declared object — the gap-amplifying context read as a Boolean function of independent Bernoulli calls, with the call digraph's cycle structure as the discriminating datum — is genuinely not in the paper, but it carries only result 2. The headline (thm:pg-collapse) is proved entirely inside objects the paper already owns: def:gate, lem:gate and a four-vertex context, with no influence, no Fourier and no cyclicity. So rule 0 is satisfied by the route's weakest result and not by its strongest. Contexts themselves are the paper's (def:gate); what is new is the analysis of them and the acyclic subclass (which is strictly stronger than the paper's admissibility: a call on a cycle that passes through an average vertex with a sink successor is admissible but not acyclic).",
+   "evidence": "frontier.tex l.4309-4331 (def:gate, lem:gate); pg.tex def:pg-maj, lem:pg-maj (no use of thm:pg-influence)."
+  },
+  {
+   "severity": "note",
+   "result_name": "The ruin amplifier is exact for every plug (prop:pg-ruin)",
+   "defect": "Classification and domain. (a) Reclassified from the route's \"new-relation\" to \"strengthening\": it is rem:no-amplification's own displayed formula (1-r^i)/(1-r^{K+1}) with the player-free hypothesis on the plug dropped and the stopping hypothesis on the composite dropped — same statement, weaker hypothesis, proved (by a genuinely different argument, a monotone-birth-and-death coupling rather than lem:gate; the argument is correct as far as I checked, and it does need p > 0). (b) Its reduction clause silently changes the instance domain: sec:pg defines Gap_eps over STOPPING SSGs, and this clause reads \"if arbitrary SSGs are admitted as instances\". That is the second half of round 12's audit complaint (\"its two reductions hand the oracle a NON-STOPPING game while the problems are defined on stopping SSGs\"), reintroduced here — flagged by the route, but it must not be read as the collapse for the paper's own problem, which rests on thm:pg-collapse alone.",
+   "evidence": "frontier.tex l.4448-4457 (rem:no-amplification's ruin computation and its two-player caveat); pg.tex prop:pg-ruin and rem:pg-two; round14/memory-snapshot.md l.1681-1682."
+  },
+  {
+   "severity": "note",
+   "result_name": "No value-iteration scheme approximates: the well (thm:pg-schemes)",
+   "defect": "This is the route's most useful genuinely-new item and it is under-sold in the headline. It answers two of the three positive candidates the round brief posed — (a) \"does value iteration for poly(N)/eps rounds decide Gap_eps\" and (b) \"the stopping-probability path at rho = 1 - eps/poly\" — both negatively, with a proved 3^{h-1}/16 growth law, seven sizes, and the instances built as games. Its novelty against thm:vi-lower is real but should be stated precisely: thm:vi-lower's G_m satisfies no promise at all (val - 1/2 = 2^{-(m+1)}, so the constant 1/2 is already an App_{1/4} answer), while WELL has a constant gap; and thm:vi-lower covers neither the two-sided bracket nor def:discount-path. Part (a) alone is a straight strengthening of thm:vi-lower(iii); parts (b) and (c) are the new relations.",
+   "evidence": "frontier.tex l.12057-12120 (thm:vi-lower and its remark); routes19.txt l.412-419 (candidates (a) and (b)); my mywell.py reproduces val(WELL^-) = 1/4 exactly and val(WELL^+) at K = 4..16."
+  }
+ ],
+ "verdict": "MATHEMATICS SOUND, SELF-ASSESSMENT NOT. I re-derived the load-bearing lemma independently: on 55 randomly generated stopping games with p != q, the composite M<G> built as a real game and solved by brute force over all positional pairs has value exactly g(p) = 3p^2 - 2p^3 and is stopping in every case, so lem:pg-maj and hence thm:pg-collapse hold; WELL^-(K) has value exactly 1/4 and WELL^+(K) the seven stated values; the grid threshold sits at 3^{K/2} at K = 6, 8, 10. Nothing in the route is refuted. It has proved results of class new-object (thm:pg-influence/thm:pg-acyclic), new-relation (thm:pg-schemes) and strengthening (prop:pg-ruin), so it clears the rubric's bar for new-theorem on the letter.\n\nBut the headline is a rediscovery presented as new, of a result this project has already rediscovered and already ruled published: round 12's approx-scheme produced the same collapse and its audit struck it as Dai & Ge's approximation collapse (\"real but published\"), and this route's own brief named Dai-Ge and instructed it to say what it remembered. It did not. That is why I set sound = false: not because a theorem is wrong, but because the route's central novelty claim is not.\n\nDID IT CHANGE THE OBJECT? Partly. Contexts are the paper's (def:gate); the acyclic subclass and the influence/Bessel analysis are new and are strictly stronger than the paper's admissibility. But the headline never touches them.\n\nTHE REAL REMAINING GAP, stated more precisely than the route states it: not \"is Gap_{1/4} in P\", but — since every reduction the paper performs reads the input's edges while thm:pg-acyclic and rem:no-amplification bound only black-box compositions — whether there is a polynomial-time EDGE-READING reduction from prob:main (gap 4^{-a}) to Gap_{1/4}; equivalently whether prob:main reduces to its own promise version, which is exactly what rem:eps-ladder already asked and what thm:pg-collapse does not touch.\n\nINTEGRATE (the paper gets better): (1) def:pg-well, prop:pg-well, thm:pg-schemes — the most valuable item; it refutes two of the three positive candidates the round posed, with a proved growth law, seven sizes and games built, and it repairs the misleading gloss after thm:vi-lower that blames the exponentially small margin. (2) prop:pg-ruin — two sentences completing rem:no-amplification's own unfinished computation. (3) thm:pg-influence and thm:pg-acyclic — a real sharpening of rem:no-amplification's Lipschitz bound by a technique the paper does not have, provided they are printed with their narrow scope stated.\n\nINTEGRATE ONLY WITH ATTRIBUTION (otherwise the paper gets worse): thm:pg-collapse, lem:pg-maj, lem:pg-levels. They are correct and they close the \"1/poly, or 1/4\" ambiguity that rem:eps-ladder leaves dangling, and they are the first version of this collapse in the project that keeps the composite stopping and proves the amplification identity — both of which were round 12's fatal defects. Print them, but as a rediscovery: a paragraph naming Dai & Ge (from memory, unchecked), naming Valiant's majority amplification, and saying that what is ours is the stopping-preserving acyclic realisation. A paper that has been scrupulous about twenty prior-art debts would be damaged by a twenty-first undeclared one, particularly one its own earlier round already declared.\n\nDO NOT INTEGRATE: rem:pg-grid / result 5. Its proved part is cor:grid-iteration with the hypothesis dropped, the route itself lists it as a restatement, and its LaTeX prose (\"y_D(v0) = 1\") is contradicted by exact computation on WELL^-(6), where y_D(v0) = 13/D for D = 14..26."
+}

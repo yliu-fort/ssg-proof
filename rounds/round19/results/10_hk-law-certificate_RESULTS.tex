@@ -1,0 +1,342 @@
+% ======================================================================
+% Round 19, route "hk-law-certificate":
+% A necessary condition for one-player realisability strictly beyond
+% Holt--Klee, with an exact Radon certificate and a Holt--Klee witness.
+% To be placed after prop:m3-realised / rem:hk-survey (l.7082, l.8908).
+% ======================================================================
+
+\begin{definition}[Preferred actions, facet data, co-realisability]\label{hkc:def-datum}
+Let $s$ be an outmap of the $m$-cube. Its \emph{preferred-action vector} is
+$b(\sigma):=\sigma\oplus s(\sigma)$, so that $v\in s(\sigma)$ iff
+$b_v(\sigma)\ne\sigma_v$; for the improvement outmap of a nondegenerate
+one-player stopping SSG with readout system $(\Psi_{v,a})$
+(\Cref{def:readout-system}, $r=1$) and value configuration $(x_\sigma)$,
+writing
+\[
+   D_v:=\Psi_{v,1}-\Psi_{v,0}
+   \qquad\text{(affine, with zero coefficient at $x_v$)},
+\]
+one has $b_v(\sigma)=1$ iff $D_v(x_\sigma)>0$, and $D_v(x_\sigma)\ne0$ for all
+$v,\sigma$.
+
+For a coordinate $u$ and $a\in\{0,1\}$ the \emph{facet datum}
+$\mathcal D_{u,a}(s)$ is the pair consisting of the restriction of $s$ to
+$H_{u,a}:=\{\sigma:\sigma_u=a\}$, read as an outmap $t$ of the $(m-1)$-cube on
+the coordinates $\ne u$, together with the colouring $\chi:=b_u|_{H_{u,a}}$.
+Two pairs $(t,\chi)$, $(t',\chi')$ are \emph{isomorphic} when a coordinate
+permutation and a translation of the $(m-1)$-cube carry $t$ to $t'$ and $\chi$
+to $\chi'$ or to its complement.
+
+A pair $(t,\chi)$ is \emph{co-realisable} if some nondegenerate one-player
+stopping SSG with $m-1$ Max vertices has improvement outmap $t$ and value
+configuration $(y_\sigma)_{\sigma\in\{0,1\}^{m-1}}$
+(\Cref{lem:readout}(b)) for which some affine functional $\varphi$ on
+$\mathbb R^{m-1}$ satisfies $\varphi(y_\sigma)>0$ exactly when
+$\chi(\sigma)=1$.
+\end{definition}
+
+\begin{lemma}[The facet lemma]\label{hkc:facet}
+If $s$ is the improvement outmap of a nondegenerate one-player stopping SSG
+with $m$ Max vertices, then every facet datum $\mathcal D_{u,a}(s)$ is
+co-realisable.
+\end{lemma}
+
+\begin{proof}
+Let $(\Psi_{v,c})$ be the affine readout system of \Cref{thm:readout-realise}(a)
+and $(x_\sigma)$ its value configuration. Freeze $u$ at $a$: substituting
+$x_u=\Psi_{u,a}(x_{-u})$ into $\Psi_{v,c}$ for $v\ne u$ and eliminating the
+self-entry so created by \Cref{lem:readout-reduce} gives substochastic affine
+maps $\Psi'_{v,c}$ in the $m-2$ variables $y_{-v}$, $y\in[0,1]^{\Vmax\setminus\{u\}}$
+--- the readout system of the subcube $C=\{\sigma:\sigma_u=a\}$
+(\Cref{def:subcube}), which is a stopping game with $m-1$ Max vertices by
+\Cref{lem:subgame}(a). By \Cref{lem:subgame}(b) its value vectors are
+$y_\sigma=x_\sigma|_{\Vmax\setminus\{u\}}$ for $\sigma\in H_{u,a}$ and its
+improvement outmap is $s|_{H_{u,a}}=t$; it is nondegenerate because $s$ is.
+Finally $D_u=\Psi_{u,1}-\Psi_{u,0}$ is affine with zero coefficient at $x_u$,
+hence is an affine functional $\varphi$ of $y=x|_{\Vmax\setminus\{u\}}$, and
+$\varphi(y_\sigma)=D_u(x_\sigma)>0$ exactly when $b_u(\sigma)=1$, i.e. exactly
+when $\chi(\sigma)=1$.
+\end{proof}
+
+\begin{theorem}[A facet datum that is not co-realisable]\label{hkc:obstruction}
+Index $\{0,1\}^{3}$ by $\sigma=\sigma_0+2\sigma_1+4\sigma_2$ and let
+\[
+  t=(4,5,6,7,3,2,1,0),\qquad \chi^{-1}(1)=\{2,4,6,7\},\ \ \chi^{-1}(0)=\{0,1,3,5\}.
+\]
+Then $t$ is an acyclic Holt--Klee unique sink orientation of the $3$-cube of
+bottom-antipodal height $2$, realised by nondegenerate one-player stopping
+SSGs, and the pair $(t,\chi)$ is \emph{not} co-realisable.
+\end{theorem}
+
+\begin{proof}
+Let $\Psi_{v,c}(y_{-v})=p^{v,c}\cdot y+q^{v,c}$, $v\in\{0,1,2\}$, be an affine
+readout system realising $t$ ($p^{v,c}\ge0$, $p^{v,c}_v=0$,
+$|p^{v,c}|_1+q^{v,c}\le1$), $(y_\sigma)_{\sigma<8}$ its value configuration,
+$D_v=\Psi_{v,1}-\Psi_{v,0}$. Since $b(\sigma)=\sigma\oplus t(\sigma)$ equals
+$4=(0,0,1)$ for $\sigma\le3$ and $7=(1,1,1)$ for $\sigma\ge4$,
+\begin{equation}\label{hkc:eq-signs}
+  \operatorname{sign}D_0(y_\sigma)=\operatorname{sign}D_1(y_\sigma)=2\sigma_2-1,
+  \qquad \delta_\sigma:=D_2(y_\sigma)>0 ,
+\end{equation}
+all nonzero by nondegeneracy. \Cref{lem:switch} --- a single improving switch
+raises $\val$ pointwise and \emph{strictly at the switched coordinate} ---
+gives, from \eqref{hkc:eq-signs},
+\begin{equation}\label{hkc:eq-order}
+  y_3\le y_1\le y_0,\qquad y_3\le y_2\le y_0,
+\end{equation}
+each of the four a single improving switch --- of coordinate $1$ for
+$y_2\le y_0$ and $y_3\le y_1$, of coordinate $0$ for $y_1\le y_0$ and
+$y_3\le y_2$ --- hence strict at the coordinate switched. (Only these four
+relations are used.)
+
+\emph{Step 1: a shear.} Put $u_\sigma:=(y_\sigma(0),y_\sigma(1))\in\mathbb R^2$
+and $\rho_c(u):=p^{2,c}_0u^1+p^{2,c}_1u^2+q^{2,c}$, so $\rho_c(u_\sigma)=
+\Psi_{2,c}(y_\sigma)$ and $y_\sigma(2)=\rho_{\sigma_2}(u_\sigma)$. The map
+$(y(0),y(1),y(2))\mapsto(u,h)$ with $h:=y(2)-\rho_0(u)$ is affine with
+determinant $1$, and $h_\sigma=\sigma_2\,\delta_\sigma$. Writing
+$[abc]:=\det(b-a,\,c-a)$ for the doubled signed area in $\mathbb R^2$ and
+$D(i,j,k,l):=\det\bigl[(y_i,1),(y_j,1),(y_k,1),(y_l,1)\bigr]$, expansion of the
+$h$-column gives, for $\sigma_2(i)=\sigma_2(j)=0$ and $\sigma_2(k)=\sigma_2(l)=1$,
+\begin{equation}\label{hkc:eq-shear}
+  D(i,j,k,l)=\delta_k\,[u_iu_ju_l]-\delta_l\,[u_iu_ju_k],
+\end{equation}
+while for $\sigma_2(i)=\sigma_2(j)=\sigma_2(k)=0$ and $\sigma_2(l)=1$ the same
+expansion gives $D(i,j,k,l)=-\delta_l\,[u_iu_ju_k]$.
+
+\emph{Step 2: the line identities.} For $a,c\in\{0,1\}$ put
+$S_{a,c}(u):=p^{0,a}_1u^2+p^{0,a}_2\rho_c(u)+q^{0,a}$ and
+$R_{b,c}(u):=p^{1,b}_0u^1+p^{1,b}_2\rho_c(u)+q^{1,b}$. Since
+$y_\sigma(0)=\Psi_{0,\sigma_0}(y_\sigma)$ and $y_\sigma(2)=\rho_{\sigma_2}(u_\sigma)$,
+\begin{align}
+  V^{a,c}(\sigma)&:=u^1_\sigma-S_{a,c}(u_\sigma)
+   =(\sigma_0-a)D_0(y_\sigma)+p^{0,a}_2(\sigma_2-c)\,\delta_\sigma,
+   \label{hkc:eq-VL}\\
+  W^{b,c}(\sigma)&:=u^2_\sigma-R_{b,c}(u_\sigma)
+   =(\sigma_1-b)D_1(y_\sigma)+p^{1,b}_2(\sigma_2-c)\,\delta_\sigma.
+   \label{hkc:eq-VM}
+\end{align}
+Both $u\mapsto u^1-S_{a,c}(u)$ and $u\mapsto u^2-R_{b,c}(u)$ are affine, with
+gradients
+\[
+  g_{a,c}=\bigl(1-p^{0,a}_2p^{2,c}_0,\ -(p^{0,a}_1+p^{0,a}_2p^{2,c}_1)\bigr),
+  \qquad
+  h_{b,c}=\bigl(-(p^{1,b}_0+p^{1,b}_2p^{2,c}_0),\ 1-p^{1,b}_2p^{2,c}_1\bigr),
+\]
+whose first, resp. second, component is positive: $p^{0,a}_2p^{2,c}_0=1$ would
+make the token return from $x_0$ to $x_0$ almost surely under the pair
+$(a,c)$, against stopping (\Cref{lem:trapchar}), and likewise for
+$p^{1,b}_2p^{2,c}_1$. Put $\lambda_{a,c}:=(1-p^{0,a}_2p^{2,c}_0)^{-1}>0$ and
+$\mu_{b,c}:=(1-p^{1,b}_2p^{2,c}_1)^{-1}>0$.
+
+If $\sigma_0(i)=\sigma_0(j)=a$ and $\sigma_2(i)=\sigma_2(j)=c$ then
+$V^{a,c}(i)=V^{a,c}(j)=0$ by \eqref{hkc:eq-VL}, so $u_j-u_i\perp g_{a,c}$,
+i.e. $u_j-u_i=\tau\,g_{a,c}^{\perp}$ with $g^{\perp}:=(-g_2,g_1)$ and
+$\tau=(u^2_j-u^2_i)\lambda_{a,c}$; since
+$\det(g^{\perp},z)=-g\cdot z$,
+\begin{equation}\label{hkc:eq-lineL}
+  [u_iu_jw]=-(u^2_j-u^2_i)\,\lambda_{a,c}\,\bigl(w^1-S_{a,c}(w)\bigr)
+  \qquad\text{for every }w\in\mathbb R^2 .
+\end{equation}
+Symmetrically, if $\sigma_1(i)=\sigma_1(j)=b$ and $\sigma_2(i)=\sigma_2(j)=c$,
+\begin{equation}\label{hkc:eq-lineM}
+  [u_iu_jw]=(u^1_j-u^1_i)\,\mu_{b,c}\,\bigl(w^2-R_{b,c}(w)\bigr).
+\end{equation}
+
+\emph{Step 3: four scalars.} By \eqref{hkc:eq-order} and the strictness of the
+switched coordinate,
+$s_L:=u^2_0-u^2_2>0$, $s_M:=u^1_2-u^1_3>0$, $s'_L:=u^2_1-u^2_3>0$,
+$s'_M:=u^1_0-u^1_1>0$. Put $B:=s_L\lambda_{0,0}$, $A:=s_M\mu_{1,0}$,
+$B':=s'_L\lambda_{1,0}$, $A':=s'_M\mu_{0,0}$, all $>0$; by
+\eqref{hkc:eq-lineL}, \eqref{hkc:eq-lineM},
+\[
+ [u_0u_2w]=B\,\bigl(w^1-S_{0,0}(w)\bigr),\quad
+ [u_2u_3w]=-A\,\bigl(w^2-R_{1,0}(w)\bigr),
+\]
+\[
+ [u_0u_1w]=-A'\bigl(w^2-R_{0,0}(w)\bigr),\quad
+ [u_1u_3w]=B'\bigl(w^1-S_{1,0}(w)\bigr).
+\]
+
+\emph{Step 4: five determinants.} Evaluate \eqref{hkc:eq-VL},
+\eqref{hkc:eq-VM} at $\sigma=3,5,6$ (so $(\sigma_0,\sigma_1,\sigma_2)$ is
+$(1,1,0)$, $(1,0,1)$, $(0,1,1)$):
+\[
+\begin{array}{llll}
+ V^{0,0}(3)=D_0(y_3), & V^{0,0}(5)=D_0(y_5)+p^{0,0}_2\delta_5, & V^{0,0}(6)=p^{0,0}_2\delta_6,\\
+ W^{1,0}(3)=0,        & W^{1,0}(5)=-D_1(y_5)+p^{1,1}_2\delta_5,& W^{1,0}(6)=p^{1,1}_2\delta_6,\\
+ W^{0,0}(3)=D_1(y_3), & W^{0,0}(5)=p^{1,0}_2\delta_5,          & W^{0,0}(6)=D_1(y_6)+p^{1,0}_2\delta_6,\\
+ V^{1,0}(3)=0,        & V^{1,0}(5)=p^{0,1}_2\delta_5,          & V^{1,0}(6)=-D_0(y_6)+p^{0,1}_2\delta_6 .
+\end{array}
+\]
+Substituting into \eqref{hkc:eq-shear} the products $p^{\cdot}_2\delta_5\delta_6$
+cancel, and
+\begin{align}
+ D(0,2,5,6)&=B\bigl(\delta_5V^{0,0}(6)-\delta_6V^{0,0}(5)\bigr)=-B\,\delta_6\,D_0(y_5)<0,
+   \label{hkc:eq-d1}\\
+ D(2,3,5,6)&=-A\bigl(\delta_5W^{1,0}(6)-\delta_6W^{1,0}(5)\bigr)=-A\,\delta_6\,D_1(y_5)<0,
+   \label{hkc:eq-d2}\\
+ D(0,2,3,k)&=-\delta_k\,[u_0u_2u_3]=-\delta_k\,B\,D_0(y_3)>0\qquad(k=5,6),
+   \label{hkc:eq-d3}
+\end{align}
+using $D_0(y_5),D_1(y_5)>0$ and $D_0(y_3)<0$ from \eqref{hkc:eq-signs}. For the
+fifth, the identity $[u_0u_3w]=[u_2u_3w]+[u_0u_2w]-[u_0u_2u_3]$ (valid for all
+$w$, four points of the plane being affinely dependent) and its companion
+$[u_0u_3w]=[u_1u_3w]+[u_0u_1w]-[u_0u_1u_3]$ give, again with the
+$\delta_5\delta_6$ terms cancelling,
+\begin{align}
+ D(0,3,5,6)&=-A\,\delta_6D_1(y_5)-B\,\delta_6D_0(y_5)+B\,|D_0(y_3)|\,(\delta_5-\delta_6),
+   \label{hkc:eq-E1}\\
+ D(0,3,5,6)&=-B'\delta_5D_0(y_6)-A'\delta_5D_1(y_6)-K\,(\delta_5-\delta_6),
+   \qquad K:=[u_0u_1u_3]=-A'D_1(y_3)>0 .
+   \label{hkc:eq-E2}
+\end{align}
+In \eqref{hkc:eq-E1} the first two terms are negative; in \eqref{hkc:eq-E2} so
+are the first two, since $D_0(y_6),D_1(y_6)>0$. If $\delta_5\le\delta_6$ the
+third term of \eqref{hkc:eq-E1} is $\le0$; if $\delta_5\ge\delta_6$ the third
+term of \eqref{hkc:eq-E2} is $\le0$. Either way
+\begin{equation}\label{hkc:eq-d4}
+   D(0,3,5,6)<0 .
+\end{equation}
+
+\emph{Step 5: the Radon certificate.} Put $Y_\sigma:=(y_\sigma,1)\in\mathbb R^4$
+and, on the support $S=(0,2,3,5,6)$, $\mu_i:=(-1)^{\mathrm{pos}(i)}
+\det(Y_j)_{j\in S\setminus i}$; Laplace expansion gives
+$\sum_{i\in S}\mu_iY_i=0$, hence $\sum_i\mu_i=0$ and
+$\sum_i\mu_i\varphi(y_i)=0$ for every affine $\varphi$. By
+\eqref{hkc:eq-d1}--\eqref{hkc:eq-d4},
+\[
+  \mu_0=D(2,3,5,6)<0,\quad \mu_2=-D(0,3,5,6)>0,\quad \mu_3=D(0,2,5,6)<0,
+\]
+\[
+  \mu_5=-D(0,2,3,6)<0,\quad \mu_6=D(0,2,3,5)>0 .
+\]
+So $\mu_i>0$ exactly for $i\in\{2,6\}\subseteq\chi^{-1}(1)$ and $\mu_i<0$
+exactly for $i\in\{0,3,5\}\subseteq\chi^{-1}(0)$. If $\varphi$ were an affine
+functional with $\varphi(y_\sigma)>0$ iff $\chi(\sigma)=1$, every term
+$\mu_i\varphi(y_i)$, $i\in S$, would be strictly positive, contradicting
+$\sum_i\mu_i\varphi(y_i)=0$. Hence $(t,\chi)$ is not co-realisable.
+
+That $t$ is a Holt--Klee acyclic unique sink orientation of height $2$, and is
+realised, is checked in \Cref{hkc:realised}.
+\end{proof}
+
+\begin{proposition}[The obstructed datum is not empty]\label{hkc:realised}
+$t=(4,5,6,7,3,2,1,0)$ is an acyclic unique sink orientation of the $3$-cube
+with sink $7$, bottom-antipodal height $2$ (walk $0,4,7$), and is Holt--Klee (unit
+vertex-capacity max-flow on every face). Forty-three \emph{distinct} exact
+dyadic readout systems realising it were produced here (three at denominator
+$2^{10}$, forty at $2^{18},2^{20},2^{24}$) and turned into nondegenerate
+one-player stopping SSGs by \Cref{lem:dyadic-row}, on $37$ to $284$ vertices
+($3$ Max, the rest average); on every one of them the greatest trap is empty,
+the outmap computed \emph{from the game} is $t$, no incidence is tied, the
+identities \eqref{hkc:eq-VL}--\eqref{hkc:eq-E2} hold exactly, the five
+determinants \eqref{hkc:eq-d1}--\eqref{hkc:eq-d4} have the stated signs, and
+the Radon coefficients recomputed from the game's own value vectors have the
+signs of $\chi$. Seven of the forty-three have $\delta_5>\delta_6$, so both
+branches of \eqref{hkc:eq-E1}/\eqref{hkc:eq-E2} are exercised. The identities
+\eqref{hkc:eq-VL}, \eqref{hkc:eq-VM} were in addition verified symbolically in
+the eighteen row parameters. The smallest game,
+on $37$ vertices, has value configuration
+\[
+ y_0=(\tfrac12,\tfrac12,0),\ y_1=(0,\tfrac12,0),\ y_2=(\tfrac12,0,0),\ y_3=(0,0,0),
+\]
+\[
+ y_4=(\tfrac12,\tfrac12,\tfrac{1023}{1024}),\
+ y_5=(\tfrac{1046529}{1048576},\tfrac12,\tfrac{1023}{1024}),\
+ y_6=(\tfrac12,\tfrac{1046529}{1048576},\tfrac{1023}{1024}),\
+ y_7=(\tfrac{1046529}{1048576},\tfrac{1046529}{1048576},\tfrac{1023}{1024}),
+\]
+least $|$gap$|=522241/1048576$, and Radon coefficients
+$\mu=(-\tfrac{534252543}{2147483648},\ \tfrac{534252543}{1073741824},\
+-\tfrac{534252543}{2147483648},\ -\tfrac{1023}{4096},\ \tfrac{1023}{4096})$
+on $(0,2,3,5,6)$.
+\end{proposition}
+
+\begin{theorem}[Holt--Klee is not sufficient at $m=4$]\label{hkc:main}
+The orientation
+\[
+  s_0=(8,9,10,11,13,12,14,15,7,6,4,5,3,2,1,0)
+\]
+of the $4$-cube is an acyclic Holt--Klee unique sink orientation of
+bottom-antipodal height $2$, and it is \emph{not} the improvement orientation
+of any nondegenerate one-player stopping SSG. More generally, of the $12\,640$
+classes of acyclic unique sink orientations of the $4$-cube exactly $17$ carry
+a facet datum isomorphic to $(t,\chi)$, hence are not one-player realisable;
+$13$ of the $17$ are Holt--Klee (the other $4$ are excluded already by
+\Cref{prop:oneplayer-lp}), of heights $2,3,4$ with multiplicities $3,6,4$;
+class representatives, in the convention of \Cref{rem:hk-survey}:
+\[
+\begin{array}{ll}
+h=2: & (8,9,10,11,13,12,14,15,7,6,4,5,3,2,1,0)=s_0,\\
+     & (8,9,10,15,13,12,14,11,7,6,4,5,3,2,1,0),\quad
+       (8,9,14,11,13,12,10,15,7,6,4,5,3,2,1,0),\\
+h=3: & (8,9,10,11,14,13,12,15,7,4,5,6,2,3,1,0),\quad
+       (8,11,10,9,13,12,14,15,7,6,4,5,3,2,1,0),\\
+     & (8,13,10,11,14,9,12,15,7,4,5,6,2,3,1,0),\quad
+       (9,8,11,10,13,14,15,12,4,7,6,5,2,3,1,0),\\
+     & (9,8,15,10,13,14,11,12,4,7,6,5,2,3,1,0),\quad
+       (10,9,8,11,13,12,14,15,7,6,4,5,3,2,1,0),\\
+h=4: & (8,9,10,11,13,12,14,15,3,6,4,5,7,2,1,0),\quad
+       (8,9,11,10,12,13,14,15,7,4,5,6,2,3,1,0),\\
+     & (8,13,11,10,12,9,14,15,7,4,5,6,2,3,1,0),\quad
+       (10,9,8,11,13,12,14,15,3,6,4,5,7,2,1,0).
+\end{array}
+\]
+Consequently \Cref{prop:m3-realised} does not extend: at $m=4$
+one-player realisability is strictly stronger than the Holt--Klee condition,
+and the reading of \Cref{rem:hk-survey} --- ``at $m=4$ Holt--Klee appears to
+be the whole condition'' --- is false.
+\end{theorem}
+
+\begin{proof}
+$s_0$ is an acyclic unique sink orientation with sink $15$, its
+bottom-antipodal walk from $0$ is $0,8,15$, and the unit vertex-capacity
+max-flow test finds $d$ internally vertex-disjoint monotone source-to-sink
+paths on every $d$-face, so $s_0$ is Holt--Klee. Its facet at $u=0$, $a=0$,
+read on the coordinates $1,2,3$, is $t$, and $b_0$ there is $\chi$: indeed
+$b(\sigma)=\sigma\oplus s_0(\sigma)$ is
+$(8,8,8,8,9,9,8,8,15,15,14,14,15,15,15,15)$, so $b_1=b_2=\sigma_3$,
+$b_3\equiv1$ --- which is exactly $t$ --- and $b_0$ takes the value $1$ at
+$\sigma\in\{4,5,8,9,12,13,14,15\}$, i.e. $\chi^{-1}(1)=\{2,4,6,7\}$ in the
+facet's own indexing. By \Cref{hkc:facet} and \Cref{hkc:obstruction}, $s_0$ is
+not one-player realisable. The count of $17$ is by enumeration of the
+$4\cdot2$ facet data of each of the $12\,640$ class representatives against
+the $96$-element isomorphism orbit of $(t,\chi)$.
+\end{proof}
+
+\begin{remark}[What the law decides, and what it does not]\label{hkc:remark}
+(a) The law is vacuous below $m=4$: a facet datum of the shape used here is a
+$3$-cube orientation together with a colouring, so it constrains only
+$m\ge4$; this is consistent with \Cref{prop:m3-realised}.
+(b) It is not Holt--Klee in disguise: $s_0$ is Holt--Klee and $t$ is
+Holt--Klee and realised, so neither half of the datum is excluded by
+\Cref{prop:oneplayer-lp}; what is excluded is the pair.
+(c) The law is consistent with everything measured: of the $162$ Holt--Klee
+classes of the $4$-cube left unresolved by the round-$18$ survey
+(\Cref{rem:hk-survey}), exactly the $13$ named in \Cref{hkc:main} are excluded
+here, and \emph{none} of the $5951$ classes realised there is excluded --- a
+check that would have refuted either the law or one of those realisations.
+The remaining $149$ stay open.
+(d) The proof of \Cref{hkc:obstruction} uses only \eqref{hkc:eq-signs},
+\eqref{hkc:eq-order}, the nonnegativity of the rows with zero self-entry, and
+stopping (through $\lambda_{a,c},\mu_{b,c}>0$); it does not use the values'
+membership of $[0,1]$, nor any leak, nor $|p|_1+q\le1$.
+(e) \Cref{hkc:facet} is the general form of the local test of
+\Cref{cor:b2-min}: a forbidden pair $(F,c)$ with $c\notin F$ is exactly a
+$2$-dimensional datum of this kind whose colouring is the split by the face's
+own non-constant coordinate, excluded by \Cref{lem:crossing}(c) (the case
+$c\in F$ is that lemma itself). That test excludes none of the $6113$
+Holt--Klee classes of the $4$-cube ($4365$ of the $6527$ others, recomputed
+here from its statement, reproducing the counts of \Cref{cor:b2-min}), and
+$s_0$ has no forbidden pair; the $3$-dimensional datum of
+\Cref{hkc:obstruction} is therefore strictly stronger, and its proof is not a
+$2$-face argument --- the Radon circuit $\{0,2,3,5,6\}$ meets both facets
+$\sigma_2=0$ and $\sigma_2=1$ of the $3$-cube and no $4$-point subcircuit of
+it lies in a $2$-face.
+(f) The same argument applies verbatim to any $3$-dimensional subcube of an
+$m$-cube together with a frozen coordinate $u$, since freezing a set of
+coordinates again produces an affine readout system on the free ones
+(\Cref{lem:readout-reduce}, \Cref{lem:subgame}) and $D_u$ is again an affine
+functional of the free values; so \Cref{hkc:obstruction} obstructs at every
+$m\ge4$.
+\end{remark}

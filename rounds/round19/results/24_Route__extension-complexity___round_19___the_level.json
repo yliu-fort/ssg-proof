@@ -1,0 +1,119 @@
+{
+ "target": "Route \"extension-complexity\" (round 19): the level-j choice lift R_j(G) with the invariant lev(G), and the value polytope V(G) = conv{val_sigma} with its extension complexity.",
+ "sound": false,
+ "confidence": "high",
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "Transience of the merged matrix is sufficient but not necessary for level-one exactness (CYC)",
+   "defect": "The statement is already witnessed in the paper, and the route's own witness is strictly weaker than the paper's. rem:merged-matrix ends with: \"and WD(4,2,6) has rho_max = 2, a non-transient M, and is level-one exact.\" That is exactly 'transient M is sufficient but not necessary', in the same one-player setting; the route's why_not_implied (\"offers no converse\") is simply wrong about the closest label it itself named. Worse, CYC(3,2,3/8) is a FLAT (fully degenerate) game: I recomputed w* from the route's own CYC3_GAME.json and every Max vertex has BOTH successors of value 3/8, so every profile is optimal. WD(4,2,6) is value-distinguishing at both Max vertices. So the paper's existing witness dominates the new one.",
+   "evidence": "frontier.tex l.16664-16720 (rem:merged-matrix, WD(4,2,6) sentence). My own run: mycore.wstar on r19-extension-complexity/CYC3_GAME.json gives w* = 3/8 at vertices 0,1,2 and 3/8 at every one of their successors (6,8,10,12,14,16), i.e. no controlled vertex distinguishes its actions."
+  },
+  {
+   "severity": "major",
+   "result_name": "The router tree stops the choice hierarchy at level two (the HEADLINE)",
+   "defect": "The headline claim is already recorded in the paper as the same fact, one notch weaker in status, and it is an instance-level statement about a family the paper itself dismisses. prop:router-tree closes with \"whether level two is exact on it is measured only (d <= 2, exact dual certificates at the root)\", and the same proposition records that the family is easy by two counts (a constant, so thm:few-avg decides it; escape certificates of rate 1-Theta(1/log N)). The route's increment is: R_2 = {w*} in full (not just the root coordinate) at d = 1, 2, exactly, plus a symmetry reduction; d = 3 is floating point only and was cut short. No growth law, no family, and by the paper's own dismissal this is exactness where the problem is easy. Written as the route's headline sentence, it is a claim of novelty that the closest label refutes.",
+   "evidence": "frontier.tex l.16593-16663 (prop:router-tree and its proof); route's own results[4].verification (\"T_3 ... level two exact in FLOATING POINT only, the exact run was cut short\")."
+  },
+  {
+   "severity": "major",
+   "result_name": "The level-j choice lift, and the identification of level one with Balas' closure",
+   "defect": "This restates rem:choice-lift. That remark already introduces R_j(G) as the level-j Sherali-Adams/RLT lift over the choice variables y_v, already states it is an LP of size N^{O(j)}, already states level zero is Q(G), and already asserts \"the level-one set is Balas' disjunctive closure bigcap_v conv(F_v^0 u F_v^1)\" -- which prop:router-tree's published proof then uses as a fact. rem:merged-matrix even uses the phrase \"the first exact level\", i.e. lev under another name. What is genuinely added is (a) the explicit programme (L1)-(L4), (b) a PROOF of the parenthetical the paper asserts, (c) R_{|C|} = {w*}, which follows from thm:transport-objective in three lines (fix every choice variable; the only nonempty full-profile face is the optimal one, and it is the singleton {w*}). (a)+(b) are worth having; none of it is a new object.",
+   "evidence": "frontier.tex l.16555-16592 (rem:choice-lift), l.16633 (prop:router-tree's proof invoking R_1 = bigcap conv(F^0 u F^1) \"By rem:choice-lift\"), l.16700-16712 (rem:merged-matrix, \"level two as the first exact level in the route's formalisation\")."
+  },
+  {
+   "severity": "major",
+   "result_name": "The factorisation theorem, and the only form in which extension complexity counts against prob:main",
+   "defect": "The direction the route proposes as its remaining honest target is vacuous as a barrier. An exponential lower bound on xc(V(G_n)) would rule out exactly one thing: algorithms that CONSTRUCT a small extended formulation of V(G). No mechanism the paper studies does that -- not M1-M6, not all-switches, not def:bsi, not R_BR, not thm:qp -- and no algorithm needs to: optimising x(v_0) over V(G) is prob:main itself (the route's own restatement #2, positional determinacy in polytope language), and a solver may reach w* without ever writing V(G) down. So the model of the proposed barrier contains none of the paper's mechanisms and none of prob:main's known algorithms; the whole extension-complexity half is, as posed, a barrier against nobody.",
+   "evidence": "Route results[7](ii) and restatements[2] are the same fact one line apart; the paper's mechanism list (sec:gap, thm:matching-barrier ... thm:hybrid-convex-barrier) contains no EF-constructing method."
+  },
+  {
+   "severity": "minor",
+   "result_name": "The hierarchy is a Balas iteration, and the emptiness test that closes it",
+   "defect": "R_{j+1} subset B(R_j) follows from the route's own conditioning lemma (result 1) in three lines, and it is Balas' sequential convexification -- standard published mathematics. The route names Balas for the level-one closure but not here. The 'emptiness test' itself is the observation that an empty set carries weight zero in a convex combination. It is a useful design criterion for a search, not a result.",
+   "evidence": "Route results[1].argument (conditioning lemma) already gives the containment; results[5].argument is that same argument specialised to one vertex."
+  },
+  {
+   "severity": "minor",
+   "result_name": "The router tree stops the choice hierarchy at level two",
+   "defect": "Two defects inside the result's significance clause. (1) 'the number of splitters does not track lev, since the parenthetical extension of rem:merged-matrix would give lev(T_d) <= 2^d ... against the true 2' is a category error: that parenthetical is an UPPER bound, and a smaller true lev does not refute an upper bound; nothing is refuted. (2) The count is wrong anyway: in T_d every INTERNAL node is a splitter too, its two rows being e_{u0} and e_{u1}, which are incomparable componentwise. T_2 has 7 splitters (3 internal + 4 leaves), not 4, so the quoted '2^d' bound is not what the parenthetical gives.",
+   "evidence": "ROUTER1_GAME.json: vertex 0 (root) -> (1,2), both Max, giving rows e_1 and e_2; frontier.tex l.16700-16706 (the parenthetical, stated as an exactness criterion, i.e. an upper bound on the level)."
+  },
+  {
+   "severity": "minor",
+   "result_name": "The occupancy polytope does not carry the value vector",
+   "defect": "The positive half is already in the paper: prop:bias-shadow's proof sets c_{v,a} := q^{v,a} and states that val is the linear functional c.f over d'Epenoux's occupancy polytope for an initial distribution mu > 0. So only the negative half is new -- and it forecloses a claim nobody in the paper makes (nothing there uses one start's occupancy to read all starts' values). A four-point certificate on a seven-vertex game, of nil consequence.",
+   "evidence": "frontier.tex l.10498-10515 (prop:bias-shadow and its proof); route results[8]."
+  },
+  {
+   "severity": "note",
+   "result_name": "games_built / verification compliance",
+   "defect": "Compliance with round 18's lesson is genuine and I confirmed it independently: ROUTER1_GAME.json, CYC3_GAME.json and AND_GAME.json are all stopping by the trap test and carry exactly the stated values (3/8 at the three Max vertices of both routers; (1/4,1/8) at AND's two Max vertices), and the ladder identity phi(val_sigma) = (XOR_{k>=i} sigma_k) with image the whole of {0,1}^n holds for n = 1..10 in exact arithmetic in my own reimplementation. Two caveats for the record: the route's T_1(2,3/8) has 7 average vertices against the paper's 5 (same controlled rows, so R_j is unaffected), and T_2, T_3 and the ladders were built by scripts but not persisted as JSON. The 848 197 abstract systems and the 169 716 flat systems are random samples of non-games and, as the route itself says, are not evidence.",
+   "evidence": "My scripts /tmp/claude-1000/-data-ssg-proof/c506180a-e393-4ffa-a18f-efc78c98397e/scratchpad/r19-audit-xc-nov/chk_games.py and ladder_check.py; prop:router-tree states T_1(2,3/8) on 10 vertices (3 Max, 5 average)."
+  },
+  {
+   "severity": "note",
+   "result_name": "The level-j exit bound",
+   "defect": "This is the level-j form of a bound the paper proves at level one (rem:merged-matrix: D >= 0 and D <= MD), obtained by the same three moves (least element, tightness on the face, nonnegative inverse of I - P), with the frozen coordinates eliminated by a first-passage solve rather than kept. That elimination is exact vertex elimination (Meyer's stochastic complementation), on the paper's prior-art list; as a proof device that is fine, but it should be attributed. It is a strengthening, not a new relation, and the route's own measurement says it does not fire on T_2 or T_3, so it did not carry the headline.",
+   "evidence": "frontier.tex l.16664-16700 (rem:merged-matrix's proof of D <= MD); route results[2].verification (\"it does not fire on T_2 or T_3 at j <= 3\")."
+  }
+ ],
+ "novelty_table": [
+  {
+   "result_name": "The level-j choice lift, and the identification of level one with Balas' closure",
+   "closest_label": "rem:choice-lift",
+   "class": "restatement"
+  },
+  {
+   "result_name": "The level-j exit bound",
+   "closest_label": "rem:merged-matrix",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "Transience of the merged matrix is sufficient but not necessary for level-one exactness",
+   "closest_label": "rem:merged-matrix",
+   "class": "restatement"
+  },
+  {
+   "result_name": "The router tree stops the choice hierarchy at level two",
+   "closest_label": "prop:router-tree",
+   "class": "strengthening"
+  },
+  {
+   "result_name": "The hierarchy is a Balas iteration, and the emptiness test that closes it",
+   "closest_label": "rem:choice-lift",
+   "class": "restatement"
+  },
+  {
+   "result_name": "The value polytope of the ladder is a cube",
+   "closest_label": "thm:ladder",
+   "class": "new-object"
+  },
+  {
+   "result_name": "The factorisation theorem, and the only form in which extension complexity counts against prob:main",
+   "closest_label": "thm:determinacy",
+   "class": "restatement"
+  },
+  {
+   "result_name": "The occupancy polytope does not carry the value vector",
+   "closest_label": "prop:bias-shadow",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "[restatement, route-declared] V(G) = Psi(V_C(G))",
+   "closest_label": "lem:transport-dim",
+   "class": "restatement"
+  },
+  {
+   "result_name": "[restatement, route-declared] w* is the coordinatewise maximum of V(G)",
+   "closest_label": "thm:determinacy",
+   "class": "restatement"
+  },
+  {
+   "result_name": "[restatement, route-declared] |C| = 1 implies lev(G) <= 1",
+   "closest_label": "prop:hybrid-onectrl",
+   "class": "restatement"
+  }
+ ],
+ "verdict": "VERDICT: new-theorem at the minimum bar only, carried by a single result -- xc:ladder (V_C(L_n) is a parallelotope, xc <= 2n), which is proved, is about an object the paper does not own, and which I verified independently for n <= 10. Everything else fails the rubric: three results (1, 3, 5) restate statements already in rem:choice-lift and rem:merged-matrix, one (2) is a strengthening of rem:merged-matrix's D <= MD, one (4, the headline) is an instance-level upgrade of a fact prop:router-tree already records as measured, one (7) is Yannakakis reproved plus thm:determinacy in polytope language (which the route lists as a restatement of its own), and one (8) is a nil-consequence negative whose positive half is prop:bias-shadow.\n\nHEADLINE: STRUCK. \"On the router tree ... level two is exact: lev(T_1) = lev(T_2) = 2\" is not a new theorem -- prop:router-tree already says level two is exact there at d <= 2 with exact dual certificates at the root, and the same proposition calls the family easy on two counts. The route's real best sentence is \"the value polytope of the ladder is a parallelotope with 2n facets, so the natural candidate for an extension-complexity lower bound is refuted\" -- a negative about its own programme.\n\nDID IT CHANGE THE OBJECT? Half. The choice hierarchy is NOT a new object: rem:choice-lift introduced R_j(G), its size N^{O(j)}, its level zero and its level-one Balas closure, and rem:merged-matrix already speaks of \"the first exact level\"; lev(G) is a name for what the paper had. The value polytope V(G) = conv{val_sigma} IS new and does not collapse to Q(G) (Q(G) is an outer relaxation of dimension <= |C| with w* as a vertex, V(G) is the inner hull of the strategy values with w* as its coordinatewise maximum) -- but nothing about prob:main was proved through it beyond determinacy restated.\n\nCIRCULAR OR VACUOUS? Both halves terminate in known dead ends, and the route knows one of them. (i) The hierarchy: the paper states outright that exactness at any fixed level is target-equivalent and must not be conjectured, so the only general theorem available is the target itself; the alternative deliverable, a single lev >= 3 instance, carries no growth law and would be a datum. (ii) The extension complexity: an xc(V(G_n)) lower bound is a barrier whose model contains none of M1-M6, all-switches, def:bsi or R_BR, and is not needed by any algorithm for prob:main, so it bears on nothing.\n\nTHE REAL REMAINING GAP, stated more precisely than the route states it: exhibit a stopping SSG with two value-distinguishing Max vertices whose two level-one faces F_v^0, F_v^1 both meet R_1(G) at EVERY controlled vertex and for which R_2(G) is not the singleton {w*} -- with the further constraint, invisible in the route's write-up, that any such instance must be non-flat (the route's own flat search of 169 716 systems never failed even at level one) and must not be one on which thm:few-avg or an escape certificate already decides the game, since otherwise the answer is once again weakness where the problem is easy.\n\nINTEGRATION -- net WORSE if taken whole, slightly better if cut to three items. INTEGRATE: (a) the proof that R_1 equals Balas' closure, as two lines attached to rem:choice-lift's parenthetical, which prop:router-tree's published proof currently relies on without proof, together with the (L1)-(L4) programme as a definition; (b) xc:ladder plus the definition of V(G), as one short remark whose point is the closing of the extension-complexity direction (the new object, and the refutation of its own candidate); (c) at most one clause inside prop:router-tree upgrading \"measured only\" to \"the whole of R_2 is {w*} at d = 1,2, exactly\". DO NOT INTEGRATE: result 3 (CYC), the paper's WD(4,2,6) is the same statement with a better, non-degenerate witness; result 5, one line of result 1; result 7(i), Yannakakis with no SSG content; result 8; and result 2 unless the correctness lens confirms it and it is stated as incomparable with -- not an improvement on -- the freezing criterion rem:merged-matrix already declines to carry."
+}

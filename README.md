@@ -8,11 +8,13 @@ The repository holds two kinds of artefact:
 
 | Path | Purpose |
 | --- | --- |
-| `*.tex` (repo root) | the prose proof, compiled to PDF with `latexmk` |
+| `frontier.tex` (repo root) | the main document: the frontier of the search --- rigorous derivations of everything established, the exact remaining gaps, and the record of every refuted approach (about 276 pages at round 19); `boundary.tex` is a section fragment (the boundary-value calculus, labels `bv:*`) written for pasting into it; `make pdf TEX=frontier` compiles the main document with `latexmk` |
 | `lean/` | a Lean 4 + Mathlib project for machine-checking the argument; `SSGProof/Blowup.lean` formalises `thm:blowup` of `frontier.tex` (core library only, no `sorry`, standard axioms) |
 | `scripts/setup-env.sh` | one-shot environment setup |
-| `scripts/round15-verify/` | the root agent's exact-arithmetic re-verifications of the round-15 claims integrated into `frontier.tex` (see its README) |
-| `rounds/` | per-round records: workflow scripts, journals, and the structured route/audit results (`rounds/round15/results/`) |
+| `scripts/harness/` | the exact-arithmetic SSG core (games, positional values, traps, first-passage laws, an exact simplex) shared by the verification scripts |
+| `scripts/round15-verify/` … `scripts/round19-verify/` | the root agent's exact-arithmetic re-verifications, one directory per round, of every route claim integrated into `frontier.tex` in that round (each script's docstring states what it checks; witness games and certificates archived alongside) |
+| `scripts/blowup/`, `scripts/ceiling/` | the blow-up normal forms and the bottom-antipodal ceiling computations that several rounds share |
+| `rounds/` | per-round records (`rounds/round14/` … `rounds/round19/`): the brief, the workflow script, the run history, the structured route and audit results (`results/`), and a README whose Outcomes section says what each route found, how it was audited, what the root agent re-verified, and what entered the paper; each README ends with where the next round should start |
 | `Makefile` | build entry points |
 
 ## Quick start

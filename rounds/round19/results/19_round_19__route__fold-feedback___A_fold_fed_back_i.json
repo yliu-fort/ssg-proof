@@ -1,0 +1,108 @@
+{
+ "target": "round 19, route \"fold-feedback\": A fold fed back into its own drive (def:ff, thm:ff-bmap, lem:ff-cell, cor:ff-climb, cor:ff-level0, lem:ff-response, thm:ff-exhaust, prop:ff-sign, cor:ff-parity, prop:ff-blowup)",
+ "sound": false,
+ "confidence": "high",
+ "novelty_table": [
+  {
+   "result_name": "The B-map: every all-switches step of a fold is one of m maps (thm:ff-bmap)",
+   "closest_label": "rem:one-player-fold",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "The mismatch level climbs unless the drive leaves its cell (lem:ff-cell, cor:ff-climb)",
+   "closest_label": "prop:one-player-fold",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "Level zero of a feedback fold fires at most twice (cor:ff-level0)",
+   "closest_label": "rem:rbr-programme (frontier.tex l.11976), repeated at rem:blowup-realise l.7146",
+   "class": "restatement"
+  },
+  {
+   "result_name": "The drive response of a feedback fold (lem:ff-response)",
+   "closest_label": "lem:excursion",
+   "class": "restatement"
+  },
+  {
+   "result_name": "At m <= 4 the feedback buys nothing: the longest realisable feedback-fold run is m (thm:ff-exhaust)",
+   "closest_label": "prop:one-player-fold",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "A fold reads the sign of a difference of its own values, at one Max vertex (prop:ff-sign)",
+   "closest_label": "lem:dyadic-row",
+   "class": "restatement"
+  },
+  {
+   "result_name": "The blow-up escapes the fold model at level two (prop:ff-blowup)",
+   "closest_label": "prop:b2-realised",
+   "class": "new-relation"
+  },
+  {
+   "result_name": "declared restatement: rem:one-player-fold (the affine cascade identity under a fixed strategy)",
+   "closest_label": "rem:one-player-fold",
+   "class": "restatement"
+  },
+  {
+   "result_name": "declared restatement: cor:parity-unreadable (a fold presents a halfspace test, so it cannot read the inner parity)",
+   "closest_label": "cor:parity-unreadable",
+   "class": "restatement"
+  },
+  {
+   "result_name": "declared restatement: thm:component-bound (L <= m for a fold with a constant drive)",
+   "closest_label": "thm:component-bound",
+   "class": "restatement"
+  }
+ ],
+ "findings": [
+  {
+   "severity": "major",
+   "result_name": "At m <= 4 the feedback buys nothing (thm:ff-exhaust)",
+   "defect": "The theorem is stated as an equivalence with a completeness clause (\"is the all-switches run of SOME feedback fold ... if and only if one exact linear programme in the drive row w is feasible; the test is complete\"), but the linear programme actually solved carries two undeclared restrictions, so its infeasibility does not prove non-realisability, and the displayed maximum quantifies over all feedback folds on m levels while only three cascade parameterisations were exhausted.",
+   "evidence": "realise.build_lp(..., shrink=F(1,8), delta0=F(1,64)) and build_lp2(..., shrink=F(1,1000), delta0=F(1,64)): every cell [lo,hi] is shrunk by shrink*(hi-lo) at both ends, and the row `A_rows.append([Av[j]...]); b_rhs.append(F(1)-delta0)` imposes 1 - lambda_sigma >= 1/64, i.e. it caps the loop gain away from 1 -- exactly the regime the route's own next_steps names as the obstruction (\"1/(1-lambda) is unbounded ... the LP solutions do exploit it\"). search.py never overrides delta0; b1lp.py uses the 1/8 default. I re-ran the full exhaustive search with shrink = delta0 = 10^-6 (my relax.py): one player, extremal fold, m=3 gives 3 and m=4 gives 4, and the B(1-cube) LPs stay infeasible under both readings, so no reported conclusion changed in the cases I re-ran -- but the statement as written is not what was computed and must either declare the restrictions or be re-run relaxed for all parameterisations (two players and the dyadic folds were not re-run by me)."
+  },
+  {
+   "severity": "major",
+   "result_name": "Level zero of a feedback fold fires at most twice (cor:ff-level0)",
+   "defect": "Restatement reported as a result, with the wrong closest label. F_0's two options are X_0 (value s*t+p_0, affine in the drive) and Y_0 (the constant q_0), so F_0 is a Max vertex over a variable and a constant, and the paper already states the general fact twice, citing lem:switch; the round brief lists it among the known traps.",
+   "evidence": "frontier.tex l.11976: \"a Max vertex over a variable and a constant switches at most twice along any improving run, \\Cref{lem:switch}\"; l.7146 (rem:blowup-realise): \"a vertex with one constant option flips at most twice (\\Cref{lem:switch})\". The three lines: along a run val_sigma rises pointwise (lem:switch), so val(X_0) is nondecreasing while val(Y_0) is constant; hence sign(val X_0 - val Y_0) changes at most once, from - to +; so eps_0 takes at most the two values -1 then +1. The route's closest_label was cor:selfread, which bounds nothing of the kind -- a novelty pre-check failure."
+  },
+  {
+   "severity": "major",
+   "result_name": "The drive response of a feedback fold (lem:ff-response)",
+   "defect": "Restatement reported as a result: three lines from lem:excursion, and the route's own prior_art field identifies the content as the Kemeny-Snell Green-function/renewal identity that rem:impedance already names.",
+   "evidence": "The three lines: (1) by lem:excursion at the set {cascade vertices} u {sinks}, val_sigma(u) = sum_v w_v val_sigma(v) + w_1, and by lem:excursion again at {u} u {sinks} each val_sigma(v;t) is affine in the frozen drive with slope A_v^sigma = Pr_sigma[v -> u]; (2) so Phi(.,sigma) is affine of slope lambda_sigma with fixed point t_sigma, and subtracting the two fixed-point equations gives t' - t = lambda_{sigma'}(t'-t) + sum_v w_v delta_v; (3) solve. The route's own proof in result.tex is exactly these three lines."
+  },
+  {
+   "severity": "major",
+   "result_name": "A fold reads the sign of a difference of its own values, at one Max vertex (prop:ff-sign)",
+   "defect": "Restatement reported as a result, and the paste-ready statement contains a false clause. The construction is lem:dyadic-row applied to the row ((1-eta) on B, eta on t_1) followed by one line of arithmetic; and rem:blowup-realise already sketches sign reproduction against a threshold signal and already states the one-round-lag rest read (lem:max-tree, rem:closed-now-or-never).",
+   "evidence": "Three lines: by lem:dyadic-row a chain of r average vertices gives val(L_0) = (1-eta)val(B)+eta with eta = 2^{-r}; at a profile where F is optimal val(F) = max(a,b), so val(F)-val(L_0) = (a-b)_+ - eta(1-b); this is > 0 when a-b > eta and < 0 when a <= b < 1. Separately, result.tex asserts \"r = a+1 suffices by \\Cref{lem:denominator-sharp}\", which is false for arbitrary A,B: lem:denominator-sharp gives denominators up to 2^a each, so a nonzero difference is only guaranteed to exceed 2^{-2a} and r = 2a+1 is needed; the route's JSON argument field states this correctly, the LaTeX does not."
+  },
+  {
+   "severity": "major",
+   "result_name": "The mismatch level climbs unless the drive leaves its cell (cor:ff-climb) / At m <= 4 the feedback buys nothing (thm:ff-exhaust)",
+   "defect": "The contrast used to size the result -- \"the B-map alone admits Hamiltonian runs of length 2^m - 1 with a monotone drive\" -- inflates the gap the theorem closes by an order of magnitude, because the paper's own laws already forbid those paths as runs.",
+   "evidence": "cor:ceiling-general: every all-switches run of every stopping game, degenerate or not, is a bottom-antipodal walk of an AUSO, so h*(m) = 1,2,4,7 caps the run at m <= 4; and cor:law-u alone (switched sets pairwise distinct) cuts the longest monotone B-map path from 1,3,7,15 to 1,2,5,8 at m = 1..4 (my lawu.py, exact, exhaustive over the B-map graph with the route's own cell/monotonicity constraints). So the honest reading of thm:ff-exhaust is: feedback folds reach 1,2,3,4 against a ceiling of 1,2,4,7, and against the ALREADY REALISED one-player 1,2,4,6 (cor:hstar-one) -- i.e. at m = 4 the fold device is strictly worse than one-player devices the paper already owns, closing a gap of 0,0,1,3 rather than 0,1,4,11."
+  },
+  {
+   "severity": "minor",
+   "result_name": "headline",
+   "defect": "The headline is a sentence the route proved, but it drops two hypotheses of thm:ff-bmap and overstates lem:ff-cell.",
+   "evidence": "thm:ff-bmap needs nondegeneracy (psi_d != 0 at every level; my own randomised check had to skip 134 degenerate states out of 5976) and the gain condition mu_d >= 2 (the word \"fold\" carries it, but the headline says \"fold cascade\", which def:ff defines with arbitrary mu_d > 0). \"Dyadic cell\" is correct only for a tent fold (mu_d = 2); for mu_d > 2, J(eps,i) is an interval cut out by affine inequalities and is not dyadic (realise.gen_J computes it as a general interval). Everything else in the headline is proved; this is not a round-18-style false headline."
+  },
+  {
+   "severity": "note",
+   "result_name": "The blow-up escapes the fold model at level two (prop:ff-blowup)",
+   "defect": "Not a defect but the fact that bounds the whole route's significance: the class the barrier covers provably excludes the height-doubling device of the pivot, so nothing here bears on rem:blowup-realise. The route states this, and it is correct.",
+   "evidence": "I reproduced both counts independently from the printed orientation and walk (my mycheck.py, exact bit arithmetic): the BA walk 4,3,5,1,0 of B(1-cube) is a B-map path under exactly 2 of the 48 relabellings, with mismatch levels 0,0,2,1; the BA walk 12,19,13,17,8,16,0,7,1,5,4 of B^2 (prop:b2-realised) is a B-map path under 0 of the 3840. I also re-ran the three B(1-cube) realisability LPs with shrink = delta0 = 10^-6: all three stay infeasible."
+  },
+  {
+   "severity": "note",
+   "result_name": "games_built",
+   "defect": "No defect: the games_built field is genuine, which is the round-18 lesson the route was asked to respect.",
+   "evidence": "I rebuilt all eight games from FF_games.json in the harness (mycore.G), confirmed stopping by the trap test lem:trapchar, and computed all-switches from all 2^m starts with val_sigma taken as the componentwise minimum over ALL positional Min strategies (never greedy iteration): FF1(D)/FF2(D), D = 1..4, are stopping with n = 13,20,27,34 and 12,18,24,30 and maximal run length exactly D = m-1 at every size. I also re-verified thm:ff-bmap directly on 5842 nondegenerate (strategy, drive) states of independently generated abstract feedback folds with random substochastic drive rows and gains 2, 5/2, 3: zero failures."
+  }
+ ],
+ "verdict": "DID THE ROUTE CHANGE THE OBJECT? Yes, marginally and legitimately. The object is a fold cascade -- the paper's own device (thm:fold, prop:discount-fold, prop:one-player-fold) -- with its drive turned from a frozen payoff into an internal vertex, so that the cascade carries a cycle and the drive is the fixed point of a loop of gain lambda < 1. The paper does not own this: rem:one-player-fold names it in its last sentence (\"what survives is a fold fed back into its own drive\") and proves nothing about it. So def:ff is a new object, and the route's real deliverable is the proof that at m <= 4 the new object COLLAPSES behaviourally onto the old one (run length m, the run of a constant drive) -- a proved collapse, not a noticed one, which is the right outcome under rule 0, but proved only in the restricted model described below.\n\nVACUOUS OR CIRCULAR? Not circular: no oracle, no target-equivalent hypothesis, and the barrier's model contains the paper's central rule (all-switches) rather than a decision calculus. Not vacuous: the games were built and I re-verified them from the games. But the significance is self-limited in a way the route states honestly and I confirmed independently: prop:ff-blowup(b) proves that B^2's walk is not a B-map path under any of 3840 relabellings, so the class this barrier covers provably excludes the height-doubling device of the pivot; and thm:ff-exhaust's ceiling m = 1,2,3,4 sits BELOW the one-player ceiling h*_1(4) = 6 already realised in the paper (cor:hstar-one). The route therefore closes rem:one-player-fold's own proposal at small m; it does not advance rem:blowup-realise, and it produces no family that is hard for anything.\n\nVERDICT UNDER THE RUBRIC: new-theorem, narrowed. The bar (at least one proved result of class new-object or new-relation) is met three times over -- thm:ff-bmap (the all-switches step of a fold is one of m maps indexed by the first mismatch with the drive's itinerary; I re-verified it on 5842 independently generated states), cor:ff-climb (the mismatch level strictly increases unless the drive leaves its cell, hence a long fold run forces the drive to be a monotone counter through the cells), and prop:ff-blowup (reproduced exactly). Against that: three of the seven reported results are restatements under my independent search -- cor:ff-level0 (frontier.tex l.11976 and l.7146 state the general fact, citing lem:switch), lem:ff-response (three lines from lem:excursion; the classical renewal identity rem:impedance already names), prop:ff-sign (three lines from lem:dyadic-row, and its statement carries a false constant) -- and thm:ff-exhaust is stated as a complete iff while the programme solved caps the loop gain at 1 - lambda >= 1/64 and shrinks every cell, which is precisely the regime the route itself identifies as the obstruction. No unattributed standard mathematics: the tent map, the Gray code and the Green function are all attributed in prior_art.\n\nTHE REAL REMAINING GAP, more precisely than the route states it: what is missing is not \"the run has length at most m\" but a bound, uniform as the loop gain lambda -> 1, on the number E of cell-boundary crossings a monotone drive can make -- concretely, a bound on (sum_v w_v delta_v)/(1 - lambda_{sigma'}) in terms of the level scale e_d, valid without the cap 1 - lambda >= 1/64 that the m <= 4 computation imposed, without the cell margin, for cascade parameters other than the three tested, and for drives that are not pure average readouts (a drive containing controlled vertices adds cube coordinates and leaves both the LP and thm:ff-exhaust, though not thm:ff-bmap).\n\nINTEGRATION: better, on balance, if trimmed to about a page and a half placed immediately after rem:one-player-fold, whose closing sentence it answers. INTEGRATE: def:ff; thm:ff-bmap; cor:ff-climb (with lem:ff-cell folded into its proof rather than numbered -- its injectivity content is prop:one-player-fold's own argument re-sliced); prop:ff-blowup (both halves, and it must appear WITH thm:ff-exhaust, otherwise the barrier reads as though it covered the height-doubling device); thm:ff-exhaust only after (a) its hypotheses are stated truthfully (the loop-gain cap and cell margin declared, or the search re-run relaxed for all six parameterisations -- I re-ran two and the answer held) and (b) its closing contrast is re-based on h*(m) and cor:law-u instead of 2^m - 1. DO NOT INTEGRATE AS RESULTS: cor:ff-level0 (already in the paper, twice), lem:ff-response (a citation to lem:excursion and rem:impedance), prop:ff-sign (at most one sentence in rem:blowup-realise's sign paragraph, with r = 2a+1, the one-round lag, and the observation that it costs a cube coordinate), cor:ff-parity (the route itself calls it an application). Integrating the full ten-environment draft as written would make the paper worse: it would add three restatements and one overclaimed equivalence to a document whose value rests on every negative claim being exactly as strong as its verification."
+}

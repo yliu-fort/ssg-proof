@@ -1,0 +1,221 @@
+\subsection{A fold fed back into its own drive}\label{sec:ff}
+
+\begin{definition}[Fold cascade, and the feedback fold]\label{def:ff}
+Let $G$ be a stopping SSG. A \emph{fold cascade of depth $D$} in $G$ consists of
+a vertex $u$ (the \emph{drive}), vertices $X_d,Y_d$ $(0\le d\le D)$, Max vertices
+$F_d\to(X_d,Y_d)$ and \emph{partners} $Z_d\to(X_d,Y_d)$, each $Z_d$ either an
+average vertex (\emph{one player}) or a Min vertex (\emph{two players}), such
+that, writing $t$ for the value of $u$, $\varphi_d:=\val(X_d)-\val(Y_d)$ and
+$\varepsilon_d:=+1$ if $\sigma(F_d)=X_d$ and $-1$ otherwise, one has under
+\emph{every} strategy and with $u$ read as a frozen payoff
+\[
+  \varphi_0=s\,(t-q_0)\quad(s>0),\qquad
+  \varphi_d=\kappa_d\bigl(\val(F_{d-1})-\val(Z_{d-1})\bigr)-e_d
+  \quad(1\le d\le D),
+\]
+with $\kappa_d>0$ and $e_d>0$. Since $\val(F_{d-1})-\val(Z_{d-1})$ equals
+$\tfrac12\varepsilon_{d-1}\varphi_{d-1}$ with one player and
+$(\varepsilon_{d-1}\varphi_{d-1})_+$ with two, the normalised differences
+$\psi_d:=\varphi_d/e_d$, $e_0:=s/2$, obey
+\[
+  \psi_0=2t-1,\qquad
+  \psi_d=\mu_d\,\varepsilon_{d-1}\psi_{d-1}-1
+  \quad\text{resp.}\quad
+  \psi_d=\mu_d\,(\varepsilon_{d-1}\psi_{d-1})_+-1,
+\]
+$\mu_d:=\tfrac12\kappa_de_{d-1}/e_d$ resp.\ $\kappa_de_{d-1}/e_d$ the
+\emph{gains}. The cascade is a \emph{fold} if $\mu_d\ge2$ for every $d$, and a
+\emph{tent fold} if $\mu_d=2$: then the greedy signs
+$\varepsilon_d=\sign\psi_d$ give $\psi_d=2|\psi_{d-1}|-1$, so the greedy sign
+vector at drive $t$ is the tent itinerary of $t$
+(\Cref{thm:fold,prop:one-player-fold}). We call
+$\gamma(t):=(\sign\psi^{\mathrm{gr}}_d(t))_{d\le D}$ the \emph{itinerary} of the
+drive, $\psi^{\mathrm{gr}}$ being the greedy orbit
+$\psi^{\mathrm{gr}}_d=\mu_d|\psi^{\mathrm{gr}}_{d-1}|-1$ from $\psi_0=2t-1$.
+
+The cascade is a \emph{feedback fold} if $u$ is not a sink but a vertex whose
+first-passage row (\Cref{lem:excursion}) over the cascade's vertices and the
+sinks is $w$:
+$t=\val_\sigma(u)=\sum_vw_v\val_\sigma(v)+w_1$, $w\ge0$, $\sum_vw_v+w_1\le1$.
+Under a fixed $\sigma$ every cascade value is affine in the frozen drive,
+$\val_\sigma(v;t)=A^\sigma_vt+B^\sigma_v$ with
+$A^\sigma_v=\Pr_\sigma[v\to u]\in[0,1]$, so $t_\sigma$ is the unique solution of
+$t=\lambda_\sigma t+\bigl(w_1+\sum_vw_vB^\sigma_v\bigr)$ with
+$\lambda_\sigma:=\sum_vw_vA^\sigma_v=\Pr_\sigma[\text{the token returns to }u]<1$.
+The cascade is \emph{nondegenerate} at $\sigma$ if $\psi_d\ne0$ for every $d$.
+\end{definition}
+
+\begin{theorem}[Every all-switches step of a fold is one of $m$ maps]\label{thm:ff-bmap}
+Let the cascade be a fold ($\mu_d\ge2$), nondegenerate at $\sigma$, and let
+$\varepsilon$ be $\sigma$'s sign vector, $m=D+1$. Put
+$i:=\min\{d:\varepsilon_d\ne\gamma_d(t_\sigma)\}$ (and $i:=\infty$ if there is
+none). If $i=\infty$ no $F_d$ is strictly switchable. Otherwise the switched
+set is $S_\sigma=\{d:\varepsilon_d\ne B(\varepsilon,i)_d\}$, $\min S_\sigma=i$,
+and the sign vector of $\sigma[S_\sigma]$ is
+\[
+  B(\varepsilon,i)_d=\varepsilon_d\ (d<i),\qquad
+  B(\varepsilon,i)_i=-\varepsilon_i,\qquad
+  B(\varepsilon,i)_d=-\!\!\prod_{k=i+1}^{d-1}\!\!\varepsilon_k\ \ (d>i).
+\]
+So from a given $\sigma$ the all-switches step has at most $m$ possible
+outcomes, indexed by $i$ alone, whatever the drive is and whether it is fed
+back or not; and the same formula holds with one player and with two.
+\end{theorem}
+
+\begin{proof}
+$F_d$ is strictly switchable exactly when $\varepsilon_d\ne\sign\psi_d$, so the
+new sign vector is $d\mapsto\sign\psi_d$. For $d\le i$ every $\varepsilon_e$
+with $e<d$ agrees with $\gamma_e$, so $\psi_d=\psi^{\mathrm{gr}}_d$ (both
+recursions reduce to $\mu_d|\psi_{d-1}|-1$ when the signs match), whence
+$\sign\psi_d=\gamma_d$, i.e.\ $=\varepsilon_d$ for $d<i$ and $=-\varepsilon_i$
+at $d=i$. Above $i$: $\varepsilon_i\psi_i<0$, so with one player
+$\psi_{i+1}=\mu_{i+1}\varepsilon_i\psi_i-1\le-1$ and with two
+$\psi_{i+1}=\mu_{i+1}(\varepsilon_i\psi_i)_+-1=-1$; in both cases
+$|\psi_{i+1}|\ge1$ and $\sign\psi_{i+1}=-1$, the empty-product value.
+Inductively let $d>i$ with $|\psi_d|\ge1$. With one player,
+$\psi_{d+1}=\mu_{d+1}\varepsilon_d\psi_d-1$ has
+$|\mu_{d+1}\varepsilon_d\psi_d|\ge2>1$, so $\sign\psi_{d+1}=\sign(\varepsilon_d\psi_d)
+=\varepsilon_d\sign\psi_d$ and $|\psi_{d+1}|\ge\mu_{d+1}-1\ge1$. With two
+players the same holds when $\varepsilon_d\psi_d>0$, and when
+$\varepsilon_d\psi_d<0$ one gets $\psi_{d+1}=-1$, again of sign
+$\varepsilon_d\sign\psi_d$ and modulus $1$. Hence $n_d:=\sign\psi_d$ satisfies
+$n_{i+1}=-1$ and $n_{d+1}=\varepsilon_dn_d$, which is the display.
+\end{proof}
+
+\begin{lemma}[The drive's cell]\label{lem:ff-cell}
+For a sign vector $\varepsilon$ and $i\le D$ let
+$J(\varepsilon,i):=\{t:\gamma_d(t)=\varepsilon_d\ (d<i),\ \gamma_i(t)=-\varepsilon_i\}$
+and $J(\varepsilon,\infty):=\{t:\gamma(t)=\varepsilon\}$. Each is an interval:
+along the greedy orbit $\psi^{\mathrm{gr}}_d$ is affine in $t$ as long as the
+signs are prescribed, so the conditions are finitely many affine inequalities.
+For a tent fold $J(\varepsilon,i)$ is the dyadic interval of length
+$2^{-(i+1)}$ carrying the prefix, and $t\mapsto\gamma(t)$ is an order
+isomorphism from the $2^{m}$ dyadic cells of width $2^{-m}$, in their natural
+order, onto the sign vectors. A round of an all-switches run has mismatch level
+$i$ exactly when $t_\sigma\in J(\varepsilon,i)$.
+\end{lemma}
+
+\begin{corollary}[The mismatch level climbs unless the drive leaves its cell]\label{cor:ff-climb}
+Along an all-switches run of a feedback fold write $t_k$, $i_k$, $J_k$ for the
+drive, the mismatch level and its cell at round $k$. Then $t_k$ is
+nondecreasing (\Cref{lem:switch}), and
+\[
+  t_{k+1}\in J_k\ \Longrightarrow\ i_{k+1}>i_k .
+\]
+Consequently the run splits into at most $E+1$ segments of length at most $m$,
+$E$ being the number of rounds at which the drive leaves its cell; each such
+exit is a monotone crossing of an endpoint of one of the at most $2^{m}$ cells,
+so $L\le m(E+1)$. In particular a fold with a \emph{constant} drive has
+$L\le m$, and a fold run of length $L$ forces the drive to cross at least
+$L/m-1$ cell endpoints monotonically: for a tent fold, $L/m-1$ points of the
+dyadic grid $2^{-m}\mathbb Z$.
+\end{corollary}
+
+\begin{proof}
+$\sigma_{k+1}$ has sign vector $B(\varepsilon_k,i_k)$, which agrees with
+$\gamma(t_k)$ on $\{0,\dots,i_k\}$ by \Cref{thm:ff-bmap}. If $t_{k+1}\in J_k$
+then $\gamma(t_{k+1})$ agrees with $\gamma(t_k)$ there too, so
+$\varepsilon_{k+1}$ agrees with $\gamma(t_{k+1})$ on $\{0,\dots,i_k\}$ and the
+first mismatch is above $i_k$. Within a segment the levels
+$i_k<i_{k+1}<\dots$ are distinct, so a segment has at most $m$ rounds. The
+drive is monotone, so it crosses each endpoint at most once.
+\end{proof}
+
+\begin{corollary}[Level zero fires at most twice]\label{cor:ff-level0}
+At most two rounds of an all-switches run of a feedback fold have mismatch level
+$0$; equivalently $F_0$ switches at most twice.
+\end{corollary}
+
+\begin{proof}
+$\varepsilon_0$ changes only at rounds with $i_k=0$, and there it is set to
+$\gamma_0(t_k)=\sign(t_k-q_0)$, a nondecreasing function of $k$. Once it is
+$+1$ it stays $+1$ and $\gamma_0$ stays $+1$, so no further mismatch at level
+$0$ occurs; and it is $-1$ at most for the first such round.
+\end{proof}
+
+\begin{lemma}[The drive response]\label{lem:ff-response}
+For strategies $\sigma,\sigma'$ of a feedback fold,
+\[
+  t_{\sigma'}-t_\sigma=\frac{\sum_vw_v\,\delta_v}{1-\lambda_{\sigma'}},\qquad
+  \delta_v:=\val_{\sigma'}(v;t_\sigma)-\val_\sigma(v;t_\sigma),
+\]
+the numerator being the value change at \emph{frozen} drive; consequently
+\[
+  t_{\sigma'}-t_\sigma\ \le\ \max_{v:\,w_v>0}\ \frac{\delta_v}{1-A^{\sigma'}_v},
+\]
+$1-A^{\sigma'}_v$ being the probability that the token from $v$ reaches a sink
+without visiting the drive.
+\end{lemma}
+
+\begin{proof}
+$\Phi(t,\sigma):=\sum_vw_v\val_\sigma(v;t)+w_1$ is affine in $t$ of slope
+$\lambda_\sigma<1$ with fixed point $t_\sigma$, and
+$t'-t=\Phi(t',\sigma')-\Phi(t,\sigma)=\lambda_{\sigma'}(t'-t)+\sum_vw_v\delta_v$.
+For the bound put $M$ for the right-hand side; then
+$\sum_vw_v\delta_v\le M\sum_vw_v(1-A^{\sigma'}_v)\le M(1-\sum_vw_vA^{\sigma'}_v)$,
+the last step because $\sum_vw_v\le1$.
+\end{proof}
+
+\begin{theorem}[At $m\le4$ the feedback buys nothing]\label{thm:ff-exhaust}
+Fix a tent fold cascade of $m\le4$ levels in the pure form
+$\val(X_d)=c_d\val(F_{d-1})+a_d$, $\val(Y_d)=c_d\val(Z_{d-1})+b_d$. A prescribed
+sequence of $B$-map steps is the all-switches run of \emph{some} feedback fold
+built on that cascade if and only if one exact linear programme in the drive row
+$w$ is feasible; the test is complete, because by \Cref{lem:excursion} the
+drive's value is exactly a substochastic first-passage row over the cascade's
+vertices and $t_1$. Exhaustive depth-first search over all $B$-map paths with
+that programme as the oracle gives, for the extremal folds
+$c_d=1-e_d$ (the largest transmission a tent fold admits) and for the dyadic
+folds $c_d=\tfrac12$, with one player and with two,
+\[
+  \max\{\,L:\ \text{a feedback fold on $m$ levels has an all-switches run of length }L\,\}
+  \;=\;m \qquad (m\le4),
+\]
+attained only by the mismatch sequence $0,1,\dots,m-1$ --- the run of a constant
+drive. So no feedback fold on at most four levels beats the frozen fold, while
+the $B$-map alone admits Hamiltonian runs of length $2^{m}-1$ with a monotone
+drive.
+\end{theorem}
+
+\begin{proposition}[A fold reads the sign of its own difference, at one Max vertex]\label{prop:ff-sign}
+Let $A,B$ be vertices of a stopping SSG with $\val(B)<1$ and
+$|\val(A)-\val(B)|>\eta$ whenever $\val(A)\ne\val(B)$, and let $F\to(A,B)$ be a
+Max vertex. Let $L_0\to(B,L_1),\dots,L_{r-1}\to(B,t_1)$ be average vertices,
+$\eta=2^{-r}$, so $\val(L_0)=(1-\eta)\val(B)+\eta$, and let $W\to(F,L_0)$ be a
+Max vertex. Then, at every profile at which $F$ is optimal,
+\[
+  \val(F)-\val(L_0)=\bigl(\val(A)-\val(B)\bigr)_+-\eta\bigl(1-\val(B)\bigr),
+\]
+so $W$'s unique optimal action is $F$ if $\val(A)>\val(B)$ and $L_0$ if
+$\val(A)\le\val(B)$: the sign of a difference of two of the game's own values is
+presented to $W$ as a \emph{strict} value comparison, at the cost of one new
+Max vertex and $r$ average vertices, and $r=a+1$ suffices by
+\Cref{lem:denominator-sharp}. Applied to $A=X_d$, $B=Y_d$, $F=F_d$ of a fold
+cascade, $W$ reads $\sign\varphi_d$.
+\end{proposition}
+
+\begin{corollary}[The fold does not read the blow-up's parity]\label{cor:ff-parity}
+What a fold presents to a downstream Max vertex is exactly a comparison of two
+substochastic affine functionals of the values it reads --- a halfspace test.
+By \Cref{cor:parity-unreadable} no affine functional of the Max values reads the
+parity of the inner bottom-antipodal height, so no fold read of the shape of
+\Cref{prop:ff-sign} supplies the outer rule of \Cref{thm:blowup}; and each such
+read costs one Max vertex, i.e.\ one cube coordinate, so the device does not
+answer the additive-cost question of \Cref{rem:blowup-realise}.
+\end{corollary}
+
+\begin{proposition}[The blow-up escapes the fold model at level two]\label{prop:ff-blowup}
+(a) The bottom-antipodal walk of $B(1\text{-cube})$ (\Cref{thm:blowup}; the
+$3$-cube orientation $(0,1,3,6,7,4,5,2)$, walk $4,3,5,1,0$ of length $4$) is a
+$B$-map path in the sense of \Cref{thm:ff-bmap} under exactly $2$ of the $48$
+relabellings of the cube (permutation of the coordinates and complementation),
+with mismatch levels $0,0,2,1$ --- so it obeys \Cref{cor:ff-level0} with no room
+to spare. Yet the realisability programme of \Cref{thm:ff-exhaust} is infeasible
+for it, for the extremal one-player fold, the extremal two-player fold and the
+dyadic one-player fold alike: \emph{the first blow-up level is combinatorially
+the walk of a fold, and no drive delivers it.} (b) The bottom-antipodal walk
+$12,19,13,17,8,16,0,7,1,5,4$ of $B^{2}$ (\Cref{prop:b2-realised}, height $10$,
+$m=5$) is a $B$-map path under \emph{none} of the $3840$ relabellings. So the
+device that doubles the height is not a feedback fold from level two on, and the
+barrier of \Cref{cor:ff-climb,thm:ff-exhaust} does not touch it.
+\end{proposition}

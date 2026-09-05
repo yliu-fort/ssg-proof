@@ -1,0 +1,261 @@
+% Round-19 route: the handicap-zero class against its own cut.  Paste-ready; labels prefixed ht:.
+% Full text is also in /tmp/claude-1000/-data-ssg-proof/c506180a-e393-4ffa-a18f-efc78c98397e/scratchpad/r19-handicap-tangent/ht.tex
+
+\begin{definition}[Visit number]\label{ht:def-visits}
+Let $G$ be a stopping SSG with controlled set $C$, $k:=|C|\ge1$, and let
+$P_0,P_1$ be the first-passage matrices of the harmonic normal form over
+$C$ (\Cref{rem:handicap-base}): $P_a(v,u)$ is the probability that the
+walk started at $v^{(a)}$ meets $C$ first at $u$. For a \emph{selection}
+$\alpha\in\{0,1\}^{C}$ write $Q_\alpha$ for the matrix whose $v$-th row is
+$P_{\alpha(v)}(v,\cdot)$. Put
+\[
+  \kappa(G)\;:=\;\max_{\alpha\in\{0,1\}^{C}}\ \bigl\|(I-Q_\alpha)^{-1}\bigr\|_\infty ,
+\]
+the largest expected number of visits to $C$ under a positional pair,
+counting the start. (Each $I-Q_\alpha$ is invertible because $G$ is
+stopping, \Cref{lem:survival-contract}, and $(I-Q_\alpha)^{-1}=\sum_j Q_\alpha^j\ge0$.)
+\end{definition}
+
+\begin{lemma}[The handicap bounds every selection from below]\label{ht:lem-sigmin}
+Let $G$ be stopping and $B\succeq\lambda I$ with $\lambda>0$ (so
+$G\in\mathcal R_\lambda$). Then for every selection $\alpha$ and every
+$d\in\mathbb R^{C}$,
+\[
+  \|(I-Q_\alpha)d\|_2\;\ge\;\frac{\lambda}{3\sqrt k}\,\|d\|_2 ,
+\]
+hence $\|(I-Q_\alpha)^{-1}\|_2\le3\sqrt k/\lambda$ and
+$\kappa(G)\le3k/\lambda$.
+\end{lemma}
+
+\begin{proof}
+Write $\bar P:=\tfrac12(P_0+P_1)$, $\Delta:=\tfrac12(P_1-P_0)$,
+$\bar R:=I-\bar P$. Then $R_0d=\bar Rd+\Delta d$ and $R_1d=\bar Rd-\Delta d$,
+so $d^{\mathsf T}Bd=(R_0d)\cdot(R_1d)=\|\bar Rd\|^2-\|\Delta d\|^2$, which is the
+identity of \Cref{rem:handicap-base}. Put $A:=\|\bar Rd\|$, $c:=\|\Delta d\|$;
+the hypothesis gives $A^2-c^2\ge\lambda\|d\|^2>0$, so $A>c\ge0$.
+
+Each $Q_\alpha$ is $\bar P+S\Delta$ with $S=\operatorname{diag}(\pm1)$
+($+1$ where $\alpha(v)=1$), and $S$ is orthogonal, so
+$\|(I-Q_\alpha)d\|=\|\bar Rd-S\Delta d\|\ge A-c$. Now
+$A-c=(A^2-c^2)/(A+c)\ge\lambda\|d\|^2/(A+c)$. Every $P_a$ is substochastic,
+so $\|P_a\|_\infty\le1$ and $\|P_a\|_1\le k$, whence
+$\|P_a\|_2\le\sqrt{\|P_a\|_1\|P_a\|_\infty}\le\sqrt k$; therefore
+$A\le(1+\sqrt k)\|d\|$ and $c\le\sqrt k\,\|d\|$, so $A+c\le(1+2\sqrt k)\|d\|\le3\sqrt k\|d\|$.
+This gives the display. Consequently
+$\|(I-Q_\alpha)^{-1}\|_2\le3\sqrt k/\lambda$, and for a $k\times k$ matrix
+$\|M\|_\infty\le\sqrt k\|M\|_2$, so $\|(I-Q_\alpha)^{-1}\|_\infty\le3k/\lambda$.
+\end{proof}
+
+\begin{lemma}[Non-stationary play does not visit more]\label{ht:lem-nonstat}
+Let $G$ be stopping and let $h_n\in\mathbb R^{C}$ be defined by $h_0=0$ and
+$h_{n}=\bbone+\mathcal S h_{n-1}$, where $(\mathcal S y)_v:=\max_a(P_ay)_v$;
+$h_n(v)$ is the largest expected number of visits to $C$ among the first
+$n$, from $v$, over all history-dependent behaviours of both players. Then
+$h_n\le\kappa(G)\bbone$ for every $n$.
+\end{lemma}
+
+\begin{proof}
+$\mathcal S$ is monotone, so $h_n$ is nondecreasing in $n$; hence
+$h_n=\bbone+\mathcal Sh_{n-1}\le\bbone+\mathcal Sh_n=\bbone+Q_\alpha h_n$ for
+a selection $\alpha$ attaining the maxima at $h_n$. Thus
+$(I-Q_\alpha)h_n\le\bbone$, and multiplying by the nonnegative matrix
+$(I-Q_\alpha)^{-1}$ gives $h_n\le(I-Q_\alpha)^{-1}\bbone\le\kappa(G)\bbone$.
+\end{proof}
+
+\begin{lemma}[Survival decays at rate $\kappa$]\label{ht:lem-sigma}
+With $\sigma_n:=\|\mathcal S^n\bbone\|_\infty$ (the largest probability of
+$n$ further visits to $C$) one has $\sigma_n\le\kappa(G)/n$ for $n\ge1$;
+in particular $\sigma_{n_0}\le\tfrac12$ for $n_0:=\lceil2\kappa(G)\rceil$.
+\end{lemma}
+
+\begin{proof}
+Let $\beta_j$ be a selection attaining the maxima at $\mathcal S^{j-1}\bbone$,
+so that $\mathcal S^{n}\bbone=Q_{\beta_n}Q_{\beta_{n-1}}\cdots Q_{\beta_1}\bbone$.
+For $1\le i\le n$ the partial product satisfies
+$Q_{\beta_n}\cdots Q_{\beta_{n-i+1}}\bbone\ge Q_{\beta_n}\cdots Q_{\beta_{n-i+1}}(\mathcal S^{n-i}\bbone)=\mathcal S^{n}\bbone$
+pointwise, because $\bbone\ge\mathcal S^{n-i}\bbone$ and the matrices are
+nonnegative. The left-hand sides are the probabilities of $i$ further visits
+under the single non-stationary behaviour $(\beta_n,\dots,\beta_1)$, so their
+sum over $i=0,\dots,n-1$ is at most $h_n\le\kappa(G)\bbone$
+(\Cref{ht:lem-nonstat}). Hence $n\,\mathcal S^n\bbone\le\kappa(G)\bbone$.
+\end{proof}
+
+\begin{theorem}[Bounded visit number is a polynomial class]\label{ht:thm-kappa}
+There is an algorithm which, given a stopping SSG $G$ and a bound $K$, either
+reports $\kappa(G)>K$ or outputs $\val$ exactly, in time polynomial in $N$ and
+$K$. Consequently $\{G:\kappa(G)\le N^{O(1)}\}$ is a polynomial class.
+\end{theorem}
+
+\begin{proof}
+Compute $P_a,r_a$ (the first-passage rows over $C$ and the weights of $t_1$)
+by one exact linear solve on $\Vavg$; this is $O(a^3)$ rational operations on
+numbers of polynomial bit size. Let $T_C(y)_v:=\max_a(P_ay+r_a)_v$ at
+$v\in\Vmax$ and $\min_a$ at $v\in\Vmin$; by \Cref{lem:survival-contract}
+$\val|_C$ is its unique fixed point, and
+$|T_Cy-T_Cz|\le\mathcal S|y-z|$ pointwise, so
+$\|T_C^ny-T_C^nz\|_\infty\le\sigma_n\|y-z\|_\infty$.
+No test of the hypothesis is needed: set $n_0:=\lceil2K\rceil$ and iterate
+$y_{j+1}:=T_Cy_j$ from $y_0:=0$ for $J:=n_0(2a+3)$ steps; by
+\Cref{ht:lem-sigma}, $\|y_J-\val|_C\|_\infty\le2^{-(2a+3)}$. Every $\val(v)$
+has denominator dividing an integer $D\le2^{a}$
+(\Cref{lem:denominator-sharp}), and $2^{-(2a+3)}<1/(2D^2)$, so
+\Cref{lem:round-recover} recovers each $\val(v)$ exactly from $y_J$ by
+continued fractions. Finally check $T_C(\hat y)=\hat y$ on the recovered
+vector $\hat y$: if it holds then $\hat y=\val|_C$ by uniqueness
+(\Cref{lem:survival-contract}) and one further linear solve extends $\val$
+off $C$; if it fails, report $\kappa(G)>K$. The procedure is therefore sound
+whatever $K$ is, and complete when $\kappa(G)\le K$. The bit size of $y_j$
+grows by at most the bit size of $(P_a,r_a)$ per step, so all numbers stay of
+size $O(J\cdot\mathrm{poly}(N))$.
+\end{proof}
+
+\begin{corollary}[The strongly convex slice of $\mathcal R$ is polynomial]\label{ht:cor-rlambda}
+For $\lambda>0$ let $\mathcal R_\lambda:=\{G\ \text{stopping}: B\succeq\lambda I\}$.
+Then $\kappa(G)\le3|C|/\lambda$ on $\mathcal R_\lambda$, and $\val$ is computed
+exactly in time polynomial in $N$ and $1/\lambda$. In particular
+$\mathcal R_{1/p(N)}$ is a polynomial class for every polynomial $p$, and it
+contains $\mathrm{HZ}(n)$ of \Cref{prop:hz} ($\lambda=\tfrac14$), which lies
+outside all eight polynomial classes of this document. The question of
+\Cref{rem:handicap-base} therefore has no positive answer inside the strongly
+convex slice: no member of $\mathcal R_{1/\mathrm{poly}}$ is outside the
+tractable instances, and the reduced contraction that \Cref{prop:hz} exhibits
+by hand for $\mathrm{HZ}(n)$ is available on the whole slice, with rate
+$\tfrac12$ per $\lceil6|C|/\lambda\rceil$ applications of the reduced operator.
+Contrapositively, a family in $\mathcal R$ carrying a superpolynomial visit
+number must have $\lambda_{\min}(B)\le3|C|/\kappa$, superpolynomially small:
+as it is for $\mathrm{WD}(e,j,m)$ ($\lambda_{\min}=2^{-(e+j)}$, $\kappa=2^{2j}$)
+and $CC(L,m)$ ($\lambda_{\min}=2^{-3L}$, $\kappa=4^{L}$).
+\end{corollary}
+
+\begin{remark}[The class is freezing-closed]\label{ht:rem-freeze}
+Freezing a vertex at a payoff (\Cref{def:freeze}) turns it into a sink, so every
+first passage that met it now stops there and $\kappa$ cannot increase:
+$\{\kappa\le K\}$ is freezing-closed, and \Cref{thm:modulator} applies to it,
+giving $N^{O(\mu)}$ for the freezing-modulator number $\mu$ into it.
+($\mathcal R_\lambda$ itself is not obviously freezing-closed, $B$ being a
+global object.)
+\end{remark}
+
+\begin{proposition}[$\mathcal R$ is not closed under damping]\label{ht:prop-damping}
+For $r,L\ge1$ let $\mathrm{DR}(r,L)$ be the stopping SSG with
+$\Vmax=\{v_1,v_2\}$, $\Vmin=\emptyset$, four chains
+$a_j\to(v_2,a_{j+1})$, $a_r\to(v_2,t_0)$; $a'_j\to(v_2,a'_{j+1})$,
+$a'_r\to(v_2,t_1)$; $c_j\to(v_1,c_{j+1})$, $c_r\to(v_1,t_0)$;
+$c'_j\to(v_1,c'_{j+1})$, $c'_r\to(v_1,t_1)$; a delay
+$e_j\to(e_{j+1},e_{j+1})$, $e_L\to(c'_1,c'_1)$; and
+$v_1\to(a_1,a'_1)$, $v_2\to(c_1,e_1)$. Then $N=4r+L+4$, both Max vertices are
+value-distinguishing, and
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item both actions of each $v_i$ have the \emph{same} first-passage row over
+$C$ --- mass $p=1-2^{-r}$ on the other Max vertex --- so $P_0=P_1$,
+$B=R_0^{\mathsf T}R_0\succ0$ with $\lambda_{\min}(B)=(1-p)^2=4^{-r}$, and
+$\mathrm{DR}(r,L)\in\mathcal R$;
+\item in $G_\rho$ (\Cref{def:discount-path}) the rows are
+$p=q_0=\rho^2(1-(\rho/2)^r)/(2-\rho)$ and $q_1=\rho^{L}q_0$, so
+\[
+  B_\rho=\begin{psmallmatrix}1+q_0q_1&-\tfrac12(2p+q_0+q_1)\\
+  -\tfrac12(2p+q_0+q_1)&1+p^{2}\end{psmallmatrix},\qquad
+  4\det B_\rho=4(1+q_0q_1)(1+p^{2})-(2p+q_0+q_1)^{2},
+\]
+which is negative for $r=8$, $L=38$, $\rho=1-2^{-7}$ --- there $N=74$ and
+$d=(1,\tfrac{15}{16})$ has $d^{\mathsf T}B_\rho d<0$.
+\end{enumerate}
+Hence $\mathcal R$ is not closed under \Cref{def:discount-path}, and not under
+the damping gadget of \Cref{def:damping} either: the game $G_\rho$ above is an
+honest SSG on $1082$ vertices, obtained from $\mathrm{DR}(8,38)$ by
+\Cref{lem:gadget} with a chain of $7$ average vertices on every edge. A single
+edge suffices as well: let $\mathrm{DE}(r)$ be the same construction with the
+delay deleted, so $v_2\to(c_1,c'_1)$; it is in $\mathcal R$ with
+$\lambda_{\min}=4^{-r}$, and damping the one edge $v_2\to c'_1$ by
+$\beta=2^{-2}$ takes $\mathrm{DE}(4)$ ($N=20$) out of it ($N=22$ after the
+gadget). No stopping game on two non-sink vertices does this for any single
+edge and any $\beta=2^{-m}$, $m\le6$ (exhaustive).
+\end{proposition}
+
+\begin{proof}
+(a) If $P_0=P_1=:P$ then $B=R^{\mathsf T}R\succeq0$ with $R=I-P$; here
+$P=p\left(\begin{smallmatrix}0&1\\1&0\end{smallmatrix}\right)$, so
+$\lambda_{\min}(B)=(1-p)^2$. The two actions of $v_1$ enter the chains $a$ and
+$a'$, which have the same transition structure and differ only in the sink
+they leak to, so their first-passage rows over $C=\{v_1,v_2\}$ agree; the two
+actions of $v_2$ enter $c$ and, through the delay, $c'$, and the delay is
+lossless at $\rho=1$ (both successors of $e_j$ are $e_{j+1}$), so those rows
+agree too. The game is stopping because every cycle passes through a leaking
+chain.
+(b) With killing rate $1-\rho$ per step the chain $a$ contributes
+$\ell(a_1)=\sum_{j=1}^{r}(\rho/2)^{j}$ and the row of $v_1$ is $\rho\ell(a_1)$,
+which is the stated $p$; the delay multiplies by $\rho^{L}$. The displayed
+$B_\rho$ is $\tfrac12(R_0^{\mathsf T}R_1+R_1^{\mathsf T}R_0)$ for
+$R_a=\left(\begin{smallmatrix}1&-p\\-q_a&1\end{smallmatrix}\right)$. The
+numerical claim was checked in exact arithmetic both from the algebraic rows
+and from the built $1082$-vertex game, which agree.
+\end{proof}
+
+\begin{proposition}[The tangent cut is a complementarity pairing]\label{ht:prop-cutform}
+Write $\varepsilon_v=+1$ at $\Vmax$, $-1$ at $\Vmin$ and
+$u_{v,a}(z):=\varepsilon_v(z(v)-z(v^{(a)}))$, so that $u_{v,a}\ge0$ on $Q(G)$
+and $q=\sum_{v}u_{v,0}u_{v,1}$. For $x,y$ in the affine hull of $Q(G)$,
+\[
+  \nabla q(x)\cdot(y-x)\;=\;\sum_{v\in C}\bigl[u_{v,0}(x)u_{v,1}(y)+u_{v,1}(x)u_{v,0}(y)\bigr]-2q(x),
+\]
+so the tangent cut of \Cref{rem:tangent-cut} at $x$ is exactly
+\[
+  \sum_{v\in C}\bigl[u_{v,0}(x)u_{v,1}(y)+u_{v,1}(x)u_{v,0}(y)\bigr]\;\le\;q(x),
+\]
+an inequality between sums of \emph{nonnegative} products on $Q(G)$.
+\end{proposition}
+
+\begin{proof}
+$u_{v,a}$ is affine, so $\nabla u_{v,a}(x)\cdot(y-x)=u_{v,a}(y)-u_{v,a}(x)$;
+the product rule on $q=\sum_v u_{v,0}u_{v,1}$ gives the first display, and the
+cut $\nabla q(x)\cdot(y-x)\le-q(x)$ rearranges to the second. Nonnegativity of
+each $u_{v,a}$ on $Q(G)$ is the defining inequality of \Cref{def:transport}.
+\end{proof}
+
+\begin{corollary}[What one cut buys]\label{ht:cor-cutwidth}
+Let $P$ be the current polytope of \Cref{rem:tangent-cut}, let
+$M(v,a):=\max_{y\in P}u_{v,a}(y)$, let $x$ be the lexicographic maximiser of
+$u_{v,i}$ over $P$ --- one of the $8|C|$ cut points --- and suppose
+$M(v,i)>0$. Then the polytope $P'$ after adjoining the cut at $x$ satisfies
+\[
+  \max_{y\in P'}u_{v,\bar\imath}(y)\;\le\;\frac{q(x)}{M(v,i)}\;\le\;
+  \frac{1}{M(v,i)}\sum_{w\in C}\min_a M(w,a).
+\]
+Consequently, writing $\Phi(P):=\max_{w}\min_aM(w,a)$ and
+$\nu(P):=\min_v\max_aM(v,a)$, one round of \textup{M7} gives
+$\Phi(P')\le|C|\,\Phi(P)/\nu(P)$; and \textup{M7} is silent at $v$ at that
+round only if $\max_aM(v,a)>0$. A family that keeps \textup{M7} silent must
+therefore keep $q$ at the cut points as large as $\nu\Phi$ round after round.
+\end{corollary}
+
+\begin{proof}
+All the products in \Cref{ht:prop-cutform} are nonnegative on $Q(G)\supseteq P'$,
+so dropping every term but $u_{v,i}(x)u_{v,\bar\imath}(y)=M(v,i)u_{v,\bar\imath}(y)$
+gives the first inequality. For the second,
+$q(x)=\sum_wu_{w,0}(x)u_{w,1}(x)\le\sum_w\min_aM(w,a)\cdot\max_aM(w,a)\le\sum_w\min_aM(w,a)$
+because $u_{w,a}(x)\le M(w,a)\le1$. If $\max_aM(v,a)=0$ then
+$u_{v,0}\equiv u_{v,1}\equiv0$ on $P$ and reading~(i) of
+\Cref{rem:own-successor} fires at $v$.
+\end{proof}
+
+\begin{proposition}[\textup{M7} is not a one-round mechanism]\label{ht:prop-tworounds}
+On the stopping SSG $W_{10}$ with $\Vmax=\{0,2,3\}$, $\Vmin=\emptyset$, the
+other non-sinks average, $t_0=8$, $t_1=9$ and
+$0\to(5,5)$, $1\to(2,3)$, $2\to(6,1)$, $3\to(0,0)$, $4\to(t_1,1)$,
+$5\to(t_0,t_1)$, $6\to(7,5)$, $7\to(3,4)$ --- every vertex reachable from the
+start $2$, $w^\ast=(\tfrac12,\tfrac8{15},\tfrac{17}{30},\tfrac12,
+\tfrac{23}{30},\tfrac12,\tfrac{17}{30},\tfrac{19}{30})$, vertex $2$ the only
+value-distinguishing one --- the matrix $B$ over $C=(0,2,3)$ is
+$\left(\begin{smallmatrix}2&0&-1\\0&15/32&-5/16\\-1&-5/16&37/32\end{smallmatrix}\right)$,
+positive definite ($\lambda_{\min}\approx0.2136$, $\kappa=4$), so
+$W_{10}\in\mathcal R$; and \textup{M7} --- the $Z$-seeded transport polytope,
+the three readings of \Cref{rem:own-successor}, and the tangent cuts at the
+$8|C|$ lexicographic optima with the tie-break of
+\texttt{scripts/round18-verify/hz\_wedge.py} --- is silent at vertex $2$ at
+rounds $0$ and $1$ ($17$ cuts added at each) and fires there by clause~(ii) at
+round $2$. So the round-one decisions recorded in \Cref{rem:tangent-cut} are
+not a law: the tangent cut can be silent at round one on a game of
+$\mathcal R$, and the same driver reproduces the recorded round-one decisions
+on $\mathrm{WD}(4,2,6)$, $\mathrm{WD}(6,3,7)$ and on vertex $4$ of the
+seven-vertex game of \Cref{rem:own-stall}.
+\end{proposition}
